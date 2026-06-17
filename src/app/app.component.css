@@ -1,0 +1,13 @@
+/*app.component.css*/
+
+.dejaEspacio{
+    margin: auto;
+    text-align: left;
+
+
+
+    padding: 50px;
+}
+.btn-space {
+    margin-right: 5px;
+}

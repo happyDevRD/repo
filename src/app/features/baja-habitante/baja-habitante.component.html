@@ -1,0 +1,231 @@
+<div class="container py-3" *ngIf="persona">
+  <!-- Tarjeta de Datos de la Persona -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Datos de la Persona</h5>
+    </div>
+    <div class="card-body">
+      <!-- Información de la Persona (solo lectura) -->
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              placeholder="Nombre"
+              [(ngModel)]="persona.nombre"
+              disabled>
+            <label for="nombre">Nombre</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="ape1"
+              name="ape1"
+              placeholder="Primer apellido"
+              [(ngModel)]="persona.apellido1"
+              disabled>
+            <label for="ape1">Primer apellido</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="ape2"
+              name="ape2"
+              placeholder="Segundo apellido"
+              [(ngModel)]="persona.apellido2"
+              disabled>
+            <label for="ape2">Segundo apellido</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="numdocu"
+              name="numdocu"
+              placeholder="Número de Documento"
+              [value]="persona.numDocum"
+              disabled>
+            <label for="numdocu">Número de Documento</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Dirección -->
+      <div class="row g-3 mt-3">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="dir"
+              name="dir"
+              placeholder="Dirección"
+              [value]="persona.dirPosta"
+              disabled>
+            <label for="dir">Dirección</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="cp"
+              name="cp"
+              placeholder="Código Postal"
+              [value]="persona.codPosta"
+              disabled>
+            <label for="cp">Código Postal</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="provi"
+              name="provi"
+              placeholder="Provincia"
+              [value]="persona.provincia"
+              disabled>
+            <label for="provi">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="muni"
+              name="muni"
+              placeholder="Municipio"
+              [value]="persona.municipio"
+              disabled>
+            <label for="muni">Municipio</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Baja de Habitante -->
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Baja de Habitante</h5>
+    </div>
+    <div class="card-body">
+      <!-- Sección Baja de Habitante -->
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="tbaja"
+              name="tbaja"
+              title="Tipo de Baja"
+              [(ngModel)]="bajaHabitantes.tipBaja"
+              (change)="AccionTipoBaja()">
+              <option *ngFor="let tipo of TipoBaja" [value]="tipo.codigo">
+                {{ tipo.descripcion }}
+              </option>
+            </select>
+            <label for="tbaja">Tipo de Baja</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="date"
+              class="form-control"
+              id="startmovi"
+              name="trip-startmovi"
+              placeholder="Fecha Movimiento"
+              [(ngModel)]="bajaHabitantes.fecMovim">
+            <label for="startmovi">Fecha Movimiento</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="date"
+              class="form-control"
+              id="startreal"
+              name="trip-startreal"
+              placeholder="Fecha Real"
+              [(ngModel)]="bajaHabitantes.fecReal">
+            <label for="startreal">Fecha Real</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="pais"
+              name="pais"
+              title="País"
+              [(ngModel)]="bajaHabitantes.paiProDesti"
+              [disabled]="disablePais">
+              <option *ngFor="let p of pais" [value]="p.codPais">
+                {{ p.desPais }}
+              </option>
+            </select>
+            <label for="pais">País</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Provincia y Municipio para la Baja -->
+      <div class="row g-3 mt-3">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="provinciarn"
+              name="provinciarn"
+              title="Provincia"
+              [(ngModel)]="bajaHabitantes.proProDesti"
+              (change)="gestimunicip(bajaHabitantes.proProDesti)"
+              [disabled]="disableMunicipio">
+              <option *ngFor="let provincia of provin" [value]="provincia.id">
+                {{ provincia.nm }}
+              </option>
+            </select>
+            <label for="provinciarn">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="Municipiorn"
+              name="Municipiorn"
+              title="Municipio"
+              [(ngModel)]="bajaHabitantes.munProDesti"
+              [disabled]="disableMunicipio">
+              <option *ngFor="let municipio of municiflitro" [value]="municipio.id">
+                {{ municipio.nm }}
+              </option>
+            </select>
+            <label for="Municipiorn">Municipio</label>
+          </div>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button (click)="bajaHabitante()" type="button" class="btn btn-primary w-100">
+            Baja Habitante
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

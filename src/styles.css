@@ -1,0 +1,1535 @@
+/*styles.css*/
+
+/* ================================
+   VARIABLES GLOBALES — Design Tokens
+   ================================ */
+:root {
+  /* Marca iFlow */
+  --iflow-primary: #6978FF;
+  --iflow-primary-dark: #5A69E0;
+  --iflow-primary-light: #69B5FF;
+  --iflow-gradient: linear-gradient(90deg, #69B5FF 0%, #6978FF 70%);
+  --iflow-gradient-vertical: linear-gradient(180deg, #1E3C72, #2A5298);
+
+  /* Sidebar y layout */
+  --sidebar-bg: var(--iflow-gradient-vertical);
+  --sidebar-width: 260px;
+  --sidebar-shadow: 4px 0 24px rgba(15, 23, 42, 0.18);
+  --topbar-height: 3.25rem;
+  --z-sidebar: 1000;
+  --z-topbar: 900;
+  --footer-bg: linear-gradient(180deg, #2A5298, #162447);
+
+  /* UI */
+  --toggle-color: var(--iflow-primary);
+  --toggle-hover: #ffffff;
+  --notification-badge-bg: #ff4757;
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --surface-card: #ffffff;
+  --border-radius: 12px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 25px 60px rgba(105, 120, 255, 0.15);
+  --transition-base: 0.3s ease;
+  --surface-overlay: rgba(248, 250, 252, 0.82);
+  --border-subtle: rgba(105, 120, 255, 0.12);
+  --focus-ring: 0 0 0 3px rgba(105, 120, 255, 0.25);
+}
+
+/* ================================
+   ESTILOS DEL BODY
+   ================================ */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #eef1f8 !important;
+  background-image: url("/../../assets/new/fondo_new.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  font-family: Poppins, "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-bottom: 20px !important;
+  z-index: auto !important;
+}
+
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--surface-overlay);
+  z-index: -1;
+  pointer-events: none;
+}
+
+::selection {
+  background: rgba(105, 120, 255, 0.25);
+  color: var(--text-primary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(105, 120, 255, 0.4) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(105, 120, 255, 0.35);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(105, 120, 255, 0.55);
+}
+
+@media only screen and (max-width: 767px) {
+  body {
+    background-image: url("/../../assets/new/fondo_new.jpg") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+  }
+}
+
+/* ================================
+   CONTENEDOR PRINCIPAL
+   ================================ */
+.content_gen {
+  transition: all var(--transition-base);
+  padding-left: var(--sidebar-width) !important;
+  padding-right: 1.5rem !important;
+  padding-top: 0.75rem;
+  padding-bottom: 2rem;
+  max-width: 1600px;
+}
+
+@media screen and (max-width: 1200px) {
+  .content_gen {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+}
+
+/* Bloqueo de scroll cuando el menú móvil está abierto */
+@media screen and (max-width: 1200px) {
+  body.nav-mobile-open {
+    overflow: hidden;
+  }
+}
+
+/* ================================
+   FOOTER GLOBAL
+   ================================ */
+.global-footer {
+  background: var(--footer-bg);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  min-height: 50px;
+  color: white;
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  z-index: 100;
+}
+
+/* ================================
+   ESTILOS GLOBALES ADICIONALES
+   ================================ */
+.tit_app {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  max-width: 60%;
+}
+
+.tit_pag {
+  text-align: left;
+  position: relative;
+  font-size: 24px !important;
+  color: black;
+}
+
+/* ================================
+   DISEÑO GLOBAL DE MODALES
+   ================================ */
+.modal-content {
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: #ffffff;
+  border-bottom: none !important;
+  padding: 1.25rem 1.5rem 1rem;
+  position: relative;
+}
+
+.modal-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--iflow-gradient);
+}
+
+.modal-header,
+.modal-header * {
+  border-bottom: none !important;
+  border: none !important;
+}
+
+.modal-header .modal-title,
+.modal .modal-header .modal-title,
+html body .modal-header .modal-title {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 1.25rem !important;
+  letter-spacing: 0.2px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  line-height: 1.3 !important;
+}
+
+.modal-header .btn-close {
+  opacity: 0.45;
+  transition: opacity 0.2s ease;
+}
+
+.modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-title::after {
+  display: none !important;
+  content: none !important;
+}
+
+.modal-body {
+  padding: 1.25rem 1.5rem;
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+.modal-footer {
+  background: #f8f9fc !important;
+  border-top: 1px solid rgba(105, 120, 255, 0.12) !important;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+}
+
+/* Botones de footer de modales */
+.botones-modal,
+.submit_footer {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.botones-modal {
+  background: var(--iflow-primary) !important;
+  color: #fff !important;
+}
+
+.botones-modal:hover {
+  background: var(--iflow-primary-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(105, 120, 255, 0.3);
+}
+
+.submit_footer {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid #dee2e6;
+}
+
+.submit_footer:hover {
+  background: #fff;
+  color: var(--iflow-primary);
+  border-color: var(--iflow-primary);
+}
+
+/* Botón primario en footer: último submit_footer o type=submit */
+.modal-footer .submit_footer[type="submit"],
+.modal-footer button.submit_footer:last-child:not(:only-child) {
+  background: var(--iflow-primary);
+  color: #fff;
+  border-color: var(--iflow-primary);
+}
+
+.modal-footer .submit_footer[type="submit"]:hover,
+.modal-footer button.submit_footer:last-child:not(:only-child):hover {
+  background: var(--iflow-primary-dark);
+  border-color: var(--iflow-primary-dark);
+  color: #fff;
+}
+
+.tit_pag::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, rgb(56, 56, 56), transparent);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.content_inicio {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.img_sec_inicio {
+  display: inline-block;
+  max-height: 36px;
+  vertical-align: sub;
+  margin-right: 10px;
+}
+
+.tit_sec_inicio {
+  display: inline-block;
+}
+
+.padding-left-sub {
+  padding: 5px 20px 5px 40px;
+}
+
+.submit {
+  text-decoration: none;
+  font-size: 18px;
+  padding: 5px 20px;
+  border-radius: 0px 20px 20px 0px;
+  display: inline-block;
+  text-align: right;
+  background: rgb(105,181,255);
+  transition: all 0.2s;
+  margin-bottom: 5px;
+  background: linear-gradient(90deg, rgba(105,181,255,1) 0%, rgba(105,120,255,1) 70%);
+  color: white;
+  border: 0;
+}
+
+.submit:hover {
+  padding-right: 25px;
+}
+
+.jqx-widget-header {
+  background: initial !important;
+  color: white;
+}
+
+div[id^="columntablejqxWidget"] {
+  background: var(--iflow-gradient) !important;
+}
+
+.jqx-grid-pager {
+  background: var(--iflow-gradient) !important;
+  color: white;
+}
+
+.jqx-grid-cell-alt {
+  background-color: rgba(105, 120, 255, 0.04) !important;
+}
+
+.jqx-grid-cell:hover {
+  background-color: rgba(105, 120, 255, 0.08) !important;
+}
+
+.espacios {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.margin-right {
+  margin-right: 10px;
+}
+
+.mueveBottonR {
+  text-align: right;
+}
+
+.mueveBottonL {
+  text-align: left;
+}
+
+.icons_button {
+  vertical-align: middle;
+  font-size: 20px;
+}
+
+.icons_button_left {
+  vertical-align: middle;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.icons_button_right {
+  vertical-align: middle;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.dejaEspacio,
+.col-form-label {
+  padding: 12px !important;
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.9rem) !important;
+}
+
+/* ================================
+   OTROS ESTILOS PERSONALIZADOS
+   ================================ */
+.th {
+  font-weight: normal;
+}
+
+pdf-viewer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(5px 5px 5px #222222);
+}
+
+textarea {
+  margin-top: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.mt-n1 {
+  margin-top: -0.25rem !important;
+}
+
+.colorAzul {
+  color: rgba(0, 0, 255, 0.856);
+}
+
+.reservadiv {
+  height: 25px;
+}
+
+.dejaEspacio {
+  margin: auto;
+  text-align: left;
+  padding: 20px;
+}
+
+.dejaEspacioMas {
+  margin-top: 5px;
+  margin-left: auto;
+  text-align: left;
+  padding: 30px;
+}
+
+.dejaEspacioArea {
+  margin-top: 10px;
+  text-align: left;
+  padding: 20px;
+}
+
+.mueveBottonR {
+  text-align: right;
+}
+
+.mueveBottonD {
+  text-align: left;
+}
+
+.fuente {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+.btn-space {
+  margin-right: 5px;
+}
+
+.modal-operacion + .modal-backdrop {
+  z-index: 1059 !important;
+}
+
+.modal-backdrop {
+  pointer-events: none !important;
+}
+
+/* ================================
+   AJUSTES PARA MODALES Y RESPONSIVIDAD
+   ================================ */
+
+/* Por defecto para pantallas grandes */
+.modal-dialog {
+  max-width: 800px;         /* Modal normal */
+  margin: 1.75rem auto;     /* Centrado vertical y horizontal */
+}
+
+.modal-dialog.modal-xl {
+  max-width: 1400px;        /* Modal extra grande */
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  border-radius: var(--border-radius);
+}
+
+.modal-body {
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+.modal-footer {
+  background: #f8f9fc !important;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .modal-dialog,
+  .modal-dialog.modal-xl {
+    max-width: 95%;         /* Permite que el modal use casi el 100% del ancho */
+    margin: 1rem auto;
+  }
+
+  .modal-body {
+    max-height: calc(100vh - 160px); /* Ajusta la altura para mayor visibilidad en móviles */
+  }
+}
+
+/* Add these styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1060; /* Ensure it's above the previous modal */
+}
+
+.modal-overlay app-operacion-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+/* ================================
+   ESTILOS PARA VALIDACIÓN DE FORMULARIOS
+   ================================ */
+
+/* Campo inválido - borde rojo */
+.form-control.is-invalid,
+.form-select.is-invalid,
+.form-floating .form-control.is-invalid,
+.form-floating .form-select.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+  background-color: #fff5f5 !important;
+}
+
+/* Para selects sin form-floating */
+.form-select.is-invalid {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+
+/* Para form-select con form-floating */
+.form-floating .form-select {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.form-floating .form-select:focus {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.form-floating .form-select:not(:placeholder-shown) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+/* Mensaje de error debajo del campo */
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+/* Para campos que no usan Bootstrap */
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+
+/* Quitar el verde de Bootstrap globalmente - campos válidos sin color */
+input.is-valid,
+select.is-valid,
+textarea.is-valid,
+.form-control.is-valid,
+.form-select.is-valid,
+.form-floating .form-control.is-valid,
+.form-floating .form-select.is-valid {
+  border: 1px solid #dee2e6 !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Sobrescribir específicamente los estilos de Bootstrap para validación */
+.was-validated .form-control:valid,
+.was-validated .form-select:valid,
+.form-control.is-valid,
+.form-select.is-valid {
+  border-color: #dee2e6 !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Para form-floating específicamente */
+.was-validated .form-floating .form-control:valid,
+.was-validated .form-floating .form-select:valid,
+.form-floating .form-control.is-valid,
+.form-floating .form-select.is-valid {
+  border-color: #dee2e6 !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Animación para campos con error */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.is-invalid {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Estilo para labels de campos obligatorios */
+.required-field::after {
+  content: " *";
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Estilo para campos obligatorios vacíos */
+.field-required {
+  border-color: #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+
+/* Estilo para el mensaje de error general */
+.validation-error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Estilos de alta especificidad para quitar el verde de Bootstrap */
+html body .was-validated .form-control:valid,
+html body .was-validated .form-select:valid,
+html body .form-control.is-valid,
+html body .form-select.is-valid,
+html body .was-validated .form-floating .form-control:valid,
+html body .was-validated .form-floating .form-select:valid,
+html body .form-floating .form-control.is-valid,
+html body .form-floating .form-select.is-valid {
+  border-color: #dee2e6 !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  padding-right: 0.75rem !important;
+}
+
+/* ================================
+   ESTILOS GLOBALES PARA CAMPOS READONLY
+   ================================ */
+
+/* Campos readonly - estilo gris */
+.form-control[readonly] {
+  background-color: #e9ecef !important;
+  opacity: 1 !important;
+  color: #495057 !important;
+  border-color: #ced4da !important;
+}
+
+.form-control[readonly]:focus {
+  background-color: #e9ecef !important;
+  border-color: #ced4da !important;
+  box-shadow: none !important;
+}
+
+/* Etiquetas de campos readonly - sin fondo blanco */
+.form-floating .form-control[readonly] + label,
+.form-floating .form-control[readonly] ~ label,
+.form-floating label[for*="Ver"] {
+  background-color: transparent !important;
+  color: #6c757d !important;
+  background-image: none !important;
+  background-clip: unset !important;
+}
+
+/* Asegurar que las etiquetas de campos readonly no tengan fondo blanco */
+.form-floating .form-control[readonly] + .form-label,
+.form-floating .form-control[readonly] ~ .form-label,
+.form-floating .form-label[for*="Ver"] {
+  background-color: transparent !important;
+  color: #6c757d !important;
+  background-image: none !important;
+  background-clip: unset !important;
+}
+
+/* Estilos específicos para etiquetas en modales de expedientes */
+.modal .form-floating label,
+.modal .form-floating .form-label {
+  background-color: transparent !important;
+  color: #6c757d !important;
+  background-image: none !important;
+  background-clip: unset !important;
+}
+
+/* Forzar transparencia en todas las etiquetas de form-floating */
+.form-floating > label,
+.form-floating > .form-label {
+  background-color: transparent !important;
+  background-image: none !important;
+  background-clip: unset !important;
+}
+
+/* Estilos de alta especificidad para eliminar fondo blanco de etiquetas */
+html body .form-floating label,
+html body .form-floating .form-label,
+html body .modal .form-floating label,
+html body .modal .form-floating .form-label {
+  background-color: transparent !important;
+  background-image: none !important;
+  background-clip: unset !important;
+  color: #6c757d !important;
+}
+
+/* Estilos específicos para el modal de expedientes */
+#verexpedienteModal .form-floating label,
+#verexpedienteModal .form-floating .form-label,
+#verExpedienteModal .form-floating label,
+#verExpedienteModal .form-floating .form-label {
+  background-color: transparent !important;
+  background-image: none !important;
+  background-clip: unset !important;
+  color: #6c757d !important;
+}
+
+/* Estilos específicos para etiquetas con clase dejaEspacio */
+.form-label.dejaEspacio {
+  background-color: transparent !important;
+  background-image: none !important;
+  background-clip: unset !important;
+  color: #6c757d !important;
+}
+
+/* Estilos de alta especificidad para etiquetas dejaEspacio */
+html body .form-label.dejaEspacio,
+html body .modal .form-label.dejaEspacio,
+html body #verexpedienteModal .form-label.dejaEspacio,
+html body #verExpedienteModal .form-label.dejaEspacio {
+  background-color: transparent !important;
+  background-image: none !important;
+  background-clip: unset !important;
+  color: #6c757d !important;
+}
+
+/* Estilos de máxima especificidad para eliminar fondo blanco */
+html body .modal .form-floating .form-label.dejaEspacio,
+html body .modal .form-floating label.dejaEspacio,
+html body #verexpedienteModal .form-floating .form-label.dejaEspacio,
+html body #verExpedienteModal .form-floating .form-label.dejaEspacio,
+html body #verexpedienteModal .form-floating label.dejaEspacio,
+html body #verExpedienteModal .form-floating label.dejaEspacio {
+  background-color: transparent !important;
+  background-image: none !important;
+  background-clip: unset !important;
+  color: #6c757d !important;
+  box-shadow: none !important;
+}
+
+/* Estilos específicos para etiquetas dentro de form-floating con dejaEspacio */
+.form-floating .form-label.dejaEspacio,
+.form-floating label.dejaEspacio {
+  background-color: transparent !important;
+  background-image: none !important;
+  background-clip: unset !important;
+  color: #6c757d !important;
+  box-shadow: none !important;
+}
+
+/* Estilos específicos para form-floating con campos readonly */
+.form-floating .form-control[readonly] {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.form-floating .form-control[readonly]:focus {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.form-floating .form-control[readonly]:not(:placeholder-shown) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+/* ================================
+   ESTILOS GLOBALES PARA BOTONES
+   ================================ */
+
+/* Estilos para botones submit margin-right */
+.submit {
+  background-color: #6978FF !important;
+  color: white;
+  font-size: 13px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  letter-spacing: 0.3px;
+  text-transform: none;
+  line-height: 1.3;
+}
+
+.submit:hover {
+  background-color: #5a67d8 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  color: #ffffff;
+}
+
+.submit:active {
+  transform: translateY(0);
+}
+
+.margin-right {
+  margin-right: 4px;
+}
+
+/* Responsive para botones */
+@media (max-width: 768px) {
+  .submit {
+    width: 100%;
+    justify-content: center;
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+  
+  .margin-right {
+    margin-right: 0;
+  }
+}
+
+/* ================================
+   ESTILOS GLOBALES — PÁGINAS DE LISTADO
+   ================================ */
+
+/* Panel de contenido con tarjeta */
+.page-panel {
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Títulos de listados */
+.listado-titulo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+  min-height: 40px;
+  padding: 0.5rem 0;
+  width: 100%;
+  gap: 1rem;
+}
+
+.listado-titulo-principal {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  padding-bottom: 0.5rem;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  border-bottom: 2px solid var(--iflow-primary);
+  position: relative;
+}
+
+.listado-titulo-principal::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--iflow-gradient);
+}
+
+.listado-titulo-secundario {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  padding-bottom: 0.4rem;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  border-bottom: 1px solid rgba(105, 120, 255, 0.4);
+  position: relative;
+}
+
+.departamento-nombre {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--iflow-primary);
+  margin-left: 0.25rem;
+}
+
+.titulo-botones-container,
+.listado-botones-navegacion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.listado-titulo-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Botones de icono redondeados */
+.btn-rounded {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--iflow-gradient);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-rounded:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(105, 120, 255, 0.35);
+}
+
+.btn-rounded img {
+  filter: brightness(0) invert(1);
+}
+
+/* Barra de acciones */
+.acciones-botones-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(105, 120, 255, 0.06);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  border: 1px solid rgba(105, 120, 255, 0.12);
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.acciones-botones-container .submit {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+}
+
+/* Contenedor de grids */
+.grid-container,
+.mat-elevation-z5 {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm) !important;
+  margin-bottom: 1rem;
+}
+
+jqxGrid {
+  width: 100% !important;
+  border-radius: var(--border-radius);
+}
+
+/* Mensaje sin permiso */
+.mensaje-sin-permiso,
+.alerta-sin-permiso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.mensaje-sin-permiso h2,
+.alerta-sin-permiso h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.titulo-separador {
+  margin-bottom: 0.75rem;
+}
+
+/* Responsive listados */
+@media (max-width: 768px) {
+  .listado-titulo-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .titulo-botones-container,
+  .listado-botones-navegacion {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+
+  .listado-titulo-principal {
+    font-size: 1.15rem;
+    white-space: normal;
+  }
+
+  .acciones-botones-container {
+    justify-content: center;
+  }
+
+  .page-panel {
+    padding: 1rem;
+  }
+}
+
+/* ================================
+   HEADER DE EXPEDIENTE (edita-expediente)
+   ================================ */
+.expediente-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: rgba(105, 120, 255, 0.06);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(105, 120, 255, 0.12);
+}
+
+.expediente-titulo {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.expediente-numero {
+  color: var(--iflow-primary);
+  font-weight: 700;
+}
+
+.expediente-botones-navegacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.expediente-botones-navegacion .submit.btn-volver {
+  background: #fff !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid #dee2e6 !important;
+  box-shadow: none !important;
+}
+
+.expediente-botones-navegacion .submit.btn-volver:hover {
+  color: var(--iflow-primary) !important;
+  border-color: var(--iflow-primary) !important;
+  transform: none;
+}
+
+/* Spinner overlay global */
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Página 404 */
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(105, 181, 255, 0.1), rgba(105, 120, 255, 0.05));
+}
+
+.error-page__code {
+  font-size: clamp(4rem, 15vw, 8rem);
+  font-weight: 700;
+  background: var(--iflow-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+  margin: 0;
+}
+
+.error-page__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 1rem 0 0.5rem;
+}
+
+.error-page__message {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 400px;
+}
+
+.error-page__actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.error-page__logo {
+  max-width: 140px;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+/* ================================
+   SUBNAVEGACIÓN INICIO
+   ================================ */
+.inicio-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
+}
+
+.inicio-subnav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.inicio-subnav__link:hover {
+  color: var(--iflow-primary);
+  background: rgba(105, 120, 255, 0.06);
+}
+
+.inicio-subnav__link.active {
+  color: #fff;
+  background: var(--iflow-gradient);
+  box-shadow: 0 4px 12px rgba(105, 120, 255, 0.3);
+}
+
+.inicio-subnav__link i {
+  font-size: 1rem;
+}
+
+/* ================================
+   TABLAS DE DATOS
+   ================================ */
+.table-iflow {
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: #fff;
+}
+
+.table-iflow thead th {
+  background: var(--iflow-gradient);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.75rem 0.65rem;
+  border: none;
+  white-space: nowrap;
+}
+
+.table-iflow tbody td {
+  padding: 0.65rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+  border-color: rgba(105, 120, 255, 0.08);
+}
+
+.table-iflow tbody tr:hover {
+  background-color: rgba(105, 120, 255, 0.04);
+}
+
+.table-iflow .table-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .inicio-subnav {
+    flex-direction: column;
+  }
+
+  .inicio-subnav__link {
+    justify-content: center;
+  }
+}
+
+/* ================================
+   PESTAÑAS DE FORMULARIOS
+   ================================ */
+.nav-tabs-iflow {
+  border-bottom: 2px solid rgba(105, 120, 255, 0.15);
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.nav-tabs-iflow .nav-link {
+  border: none;
+  border-radius: 8px 8px 0 0;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs-iflow .nav-link:hover {
+  color: var(--iflow-primary);
+  background: rgba(105, 120, 255, 0.06);
+}
+
+.nav-tabs-iflow .nav-link.active {
+  color: var(--iflow-primary);
+  background: rgba(105, 120, 255, 0.1);
+  border-bottom: 2px solid var(--iflow-primary);
+  font-weight: 600;
+}
+
+.nav-tabs-iflow + .tab-content .card.bg-light {
+  background: transparent !important;
+  border: none;
+  box-shadow: none;
+}
+
+.submit.btn-volver {
+  background: #fff !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid #dee2e6 !important;
+  box-shadow: none !important;
+}
+
+.submit.btn-volver:hover {
+  color: var(--iflow-primary) !important;
+  border-color: var(--iflow-primary) !important;
+  transform: none;
+}
+
+/* ================================
+   CONTROLES DE FORMULARIO
+   ================================ */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border-color: #dee2e6;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--iflow-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+  color: var(--iflow-primary);
+}
+
+.btn-primary {
+  background: var(--iflow-gradient) !important;
+  border: none !important;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(105, 120, 255, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(105, 120, 255, 0.4);
+  filter: brightness(1.05);
+}
+
+.btn-outline-primary {
+  color: var(--iflow-primary) !important;
+  border-color: var(--iflow-primary) !important;
+  border-radius: 8px;
+}
+
+.btn-outline-primary:hover {
+  background: var(--iflow-primary) !important;
+  color: #fff !important;
+}
+
+.card.bg-light {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ================================
+   SWEETALERT2 — TEMA CORPORATIVO
+   ================================ */
+.swal2-popup {
+  border-radius: var(--border-radius) !important;
+  font-family: Poppins, sans-serif !important;
+  padding: 1.5rem !important;
+}
+
+.swal2-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+}
+
+.swal2-html-container {
+  color: var(--text-secondary) !important;
+  font-size: 0.95rem !important;
+}
+
+.swal2-styled.swal2-confirm {
+  background: var(--iflow-gradient) !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1.5rem !important;
+  box-shadow: 0 2px 8px rgba(105, 120, 255, 0.3) !important;
+}
+
+.swal2-styled.swal2-cancel {
+  border-radius: 8px !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid #dee2e6 !important;
+  background: #fff !important;
+}
+
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+  background-color: var(--iflow-primary) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: rgba(105, 120, 255, 0.3) !important;
+}
+
+.swal2-icon.swal2-error {
+  border-color: #ff4757 !important;
+}
+
+/* ================================
+   COMPONENTES Y UTILIDADES
+   ================================ */
+.page-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  background: rgba(105, 120, 255, 0.04);
+  border-radius: var(--border-radius);
+  border: 1px dashed var(--border-subtle);
+}
+
+.empty-state__icon {
+  font-size: 2.5rem;
+  color: var(--iflow-primary);
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  margin: 0 0 1rem;
+  max-width: 360px;
+}
+
+.action-panel {
+  background: rgba(105, 120, 255, 0.04) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--border-radius) !important;
+  padding: 1rem !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.form-section {
+  padding: 0.5rem 0;
+}
+
+.form-grid {
+  margin-top: 1rem;
+}
+
+.page-panel .card {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.page-panel .card.bg-light {
+  background: rgba(105, 120, 255, 0.03) !important;
+  border-color: var(--border-subtle);
+}
+
+.card-header.bg-primary,
+.card .card-header.bg-primary {
+  background: var(--iflow-gradient) !important;
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Focus visible para accesibilidad */
+a:focus-visible,
+button:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--iflow-primary);
+  outline-offset: 2px;
+}
+
+/* Spinner de carga global */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}

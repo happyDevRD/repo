@@ -1,0 +1,1246 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+    <div class="col-12 content_gen" id="hanging-icons">
+      <ng-container *ngIf="user">
+        <div *ngIf="soluser == '0'" class="mensaje-sin-permiso alerta-sin-permiso">
+          <h2>Acceso denegado</h2>
+          <p>Este usuario no tiene permisos de acceso a solicitudes</p>
+          <img src="assets/greenaall_logo.svg" alt="Greenall" width="200" height="100">
+        </div>
+
+        <div *ngIf="soluser == '1'" class="page-panel" id="solicitudeslist">
+          
+          <!-- CABECERA -->
+          <div class="listado-titulo-container titulo-separador">
+            <h2 class="listado-titulo-principal">
+              Listado de Solicitudes
+            </h2>
+            <div class="titulo-botones-container">
+              <button class="btn btn-rounded btn-sm" title="Nueva Solicitud" type="button"
+                (click)="abrirModal('nsolicitudModal')">
+                <img src="../assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
+              </button>
+              <button *ngIf="edicion==true && !expsolicitud" 
+                (click)="deleteSolicitudes(idsolicitud)"
+                class="btn btn-rounded btn-sm" title="Eliminar Solicitud" type="button">
+                <img src="../assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
+              </button>
+            </div>
+          </div>
+          <!-- ACCIONES DE SOLICITUD -->
+          <div *ngIf="edicion==true && veoIniciarExp && veoRechazaSolici" class="acciones-botones-container">
+            <button type="button" class="submit margin-right" title="Asignar a Instructor" 
+              (click)="abrirModal('asignarModal')">
+              Asignar Instructor <i class="bi bi-person-fill-add"></i>
+            </button>
+            <button type="button" class="submit margin-right" title="Rechazar Solicitud"
+              (click)="abrirModal('rechazaSoliModal')">
+              Rechazar Solicitud <i class="bi bi-x-circle"></i>
+            </button>
+            <button type="button" class="submit margin-right" title="Iniciar Expediente"
+              (click)="abrirModal('iniciarExpedieModal')">
+              Iniciar Expediente <i class="bi bi-play-fill"></i>
+            </button>
+          </div>
+          <!-- TABLA PRINCIPAL DE SOLICITUDES -->
+          <div class="grid-container">
+            <jqxGrid #grid 
+              (onRowclick)="selecsolicitudNueva($event)" 
+              (onRowdoubleclick)="abrirModalEdicionSolicitud($event)"
+              [altrows]="true" 
+              [autoheight]="true" 
+              [columns]="columnsSolici" 
+              [columnsautoresize]="true"
+              [filterable]="true" 
+              [localization]="localizationObject" 
+              [pageable]="true" 
+              [pagesize]="10"
+              [sortable]="true" 
+              [source]="sourceSolici" 
+              [width]="'100%'" 
+              class="mat-elevation-z5">
+            </jqxGrid>
+          </div>
+            <br><br>
+          
+          <!-- GESTIÓN DE DOCUMENTOS -->
+          <div *ngIf="verLisDoc" class="page-panel seccion-documentos-solicitud">
+            <!-- Título y botones de documentos -->
+            <div class="listado-titulo-container titulo-separador">
+              <h2 class="listado-titulo-principal">Listado de Documentos de la Solicitud</h2>
+              <div class="titulo-botones-container">
+                <button *ngIf="modificoSolicitud" class="btn btn-rounded btn-sm" title="Nuevo Documento"
+                  type="button" (click)="abrirModal('documentoModal')">
+                  <img src="../assets/new/ico_add.png" alt="Nuevo Documento" width="25" height="25">
+                </button>
+                <button *ngIf="listadocmenu && modificoSolicitud && iddocumento" 
+                  (click)="deleteDocumento(iddocumento)"
+                  class="btn btn-rounded btn-sm" title="Eliminar Documento" type="button">
+                  <img src="../assets/new/ico_elim.png" alt="Eliminar Documento" width="25" height="25">
+                </button>
+              </div>
+            </div>
+
+            <!-- Botones de acciones de documentos -->
+            <div *ngIf="listadocmenu && iddocumento" class="acciones-botones-container">
+              <button (click)="abreArchivo(descargafichero)" 
+                class="submit margin-right" 
+                title="Descargar Documento" 
+                type="button">
+                Descargar Documento <i class="bi bi-cloud-arrow-down"></i>
+              </button>
+            </div>
+
+            <!-- Grid de documentos -->
+            <div class="grid-container">
+              <jqxGrid #gridDocumentos 
+                (onRowclick)="selecDocumentoNuevos($event)" 
+                (onRowdoubleclick)="abrirModalVerDocumento($event)"
+                [altrows]="true" 
+                [autoheight]="true" 
+                [columns]="columnsListDoc" 
+                [columnsautoresize]="true"
+                [filterable]="true" 
+                [localization]="localizationObject" 
+                [pageable]="true" 
+                [pagesize]="10"
+                [sortable]="true" 
+                [source]="sourceListDoc" 
+                [width]="'100%'" 
+                class="mat-elevation-z5">
+              </jqxGrid>
+            </div>
+          </div>
+        </div> <!-- Fin page-panel solicitudes -->
+
+      </ng-container>
+
+      <!-- MENÚ CONTEXTUAL DE ACCIONES -->
+      
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item type="button" *ngIf="edicion==true" class="submit">
+          <i class="bi bi-pencil me-2"></i>
+          Editar
+        </button>
+        <button mat-menu-item type="button" *ngIf="edicion==true" (click)="abrirModal('asignarModal')" class="submit">
+          <i class="bi bi-person-fill-add me-2"></i>
+          Asignar Instructor
+        </button>
+        <button mat-menu-item type="button" *ngIf="edicion==true" class="submit"
+          (click)="rechazarSolicitud(idsolicitud)">
+          <i class="bi bi-x-circle me-2"></i>
+          Rechazar Solicitud
+        </button>
+        <button mat-menu-item type="button" *ngIf="edicion==true" (click)="abrirModal('iniciarExpedieModal')" class="submit">
+          <i class="bi bi-play-fill me-2"></i>
+          Iniciar Expediente
+        </button>
+        <button mat-menu-item type="button" *ngIf="edicion==true && !expsolicitud" (click)="abrirModal('documentoModal')" class="submit">
+          <i class="bi bi-file-earmark-plus me-2"></i>
+          Añadir Documentos
+        </button>
+        <button mat-menu-item type="button" *ngIf="edicion==true && !expsolicitud"
+          (click)="deleteSolicitudes(idsolicitud)" class="submit">
+          <i class="bi bi-trash me-2"></i>
+          Eliminar Solicitud
+        </button>
+      </mat-menu>
+  </div>
+</div>
+
+
+<!-- SECCIÓN DE MODALES -->
+
+
+<!-- Modal: Nueva Solicitud -->
+<div class="modal fade" id="nsolicitudModal" tabindex="-1" aria-labelledby="nsolicitudModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="nsolicitudModalLabel">Nueva Solicitud</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="limpiarErroresSolicitud(); cerrarModal('nsolicitudModal')"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formNuevaSolicitud" (ngSubmit)="validateAndCreateSolicitud($event)">
+          <!-- Campos principales -->
+          <div class="row">
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" id="asunto" name="asunto"
+                [(ngModel)]="creasolicitud.asunto" required>
+              <label class="form-label dejaEspacio" for="asunto">Asunto *</label>
+            </div>
+            <div class="col-6 form-floating mb-3">
+              <input class="form-control" data-mdb-inline="true" (change)="gestionEjercicio()"
+                type="date" id="startSolic" name="trip-startSolici" [(ngModel)]="creasolicitud.fecInicio" required>
+              <label class="form-label dejaEspacio" for="startSolic">Fecha Solicitud *</label>
+            </div>
+            <div class="col-6 form-floating mb-3">
+              <select class="form-select" id="asignado" name="asignado" [(ngModel)]="creasolicitud.usuario" required>
+                <option value="" disabled selected>Selecciona un usuario</option>
+                <option name="usuario" *ngFor="let procedipermisos of procedipermiso"
+                  [value]="procedipermisos.usuario">{{procedipermisos.usuario}}</option>
+              </select>
+              <label class="form-label dejaEspacio" for="asignado">Asignado a *</label>
+            </div>
+          </div>
+
+
+
+          <!-- Información del departamento e interesado -->
+          <div class="row">
+            <div class="col-6 form-floating mb-3">
+              <input type="text" class="form-control" disabled id="departamento" [value]="depart"
+                name="departamento">
+              <label for="departamento" class="form-label dejaEspacio">Departamento</label>
+            </div>
+            <div class="col-6 form-floating mb-3">
+              <input type="text" class="form-control" [(ngModel)]="creasolicitud.numDocum"
+                (change)="soliciUsuario(creasolicitud.numDocum)" id="interesado" name="interesado">
+              <label for="interesado" class="form-label dejaEspacio">Interesado DNI *</label>
+            </div>
+          </div>
+          
+          <!-- Tipo de documento (solo si no existe la persona) -->
+          <div class="row" *ngIf="existepersonaentidad">
+            <div class="col-4 form-floating mb-3">
+              <select class="form-select" (change)="selecTipPerso(creasolicitud.tipPerso)" id="tipPerso"
+                name="tipPerso" [(ngModel)]="creasolicitud.tipPerso">
+                <option value="" disabled selected>Selecciona tipo de documento</option>
+                <option name="correoP" value="1">D.N.I.</option>
+                <option name="telematico" value="2">C.I.F</option>
+                <option name="telematico" value="3">Tarjeta Residencia</option>
+              </select>
+              <label class="form-label dejaEspacio" for="tipPerso">Tipo de documento *</label>
+            </div>
+          </div>
+          <!-- Datos de la persona/entidad (solo si no existe) -->
+          <div class="row" *ngIf="existepersonaentidad">
+            <div class="col-12 form-floating mb-3" *ngIf="selectRazonSocial">
+              <input type="text" class="form-control" id="razSocia" name="razSocia"
+                [(ngModel)]="creasolicitud.razSocia">
+              <label class="form-label dejaEspacio" for="razSocia">Razón Social *</label>
+            </div>
+            <div class="col-4 form-floating mb-3" *ngIf="selectnombre">
+              <input type="text" class="form-control" id="nombreperso" name="nombreperso"
+                [(ngModel)]="creasolicitud.nombre">
+              <label class="form-label dejaEspacio" for="nombreperso">Nombre *</label>
+            </div>
+            <div class="col-4 form-floating mb-3" *ngIf="selectape1">
+              <input type="text" class="form-control" id="apellido1" name="apellido1"
+                [(ngModel)]="creasolicitud.apellido1">
+              <label class="form-label dejaEspacio" for="apellido1">Primer Apellido *</label>
+            </div>
+            <div class="col-4 form-floating mb-3" *ngIf="selectape2">
+              <input type="text" class="form-control" id="apellido2" name="apellido2"
+                [(ngModel)]="creasolicitud.apellido2">
+              <label class="form-label dejaEspacio" for="apellido2">Segundo Apellido *</label>
+            </div>
+          </div>
+          
+          <!-- Dirección y ubicación -->
+          <div class="row" *ngIf="existepersonaentidad">
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" id="direccion" name="direccion"
+                [(ngModel)]="creasolicitud.dirPosta">
+              <label for="direccion" class="form-label dejaEspacio">Dirección *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="number" class="form-control" id="cp" name="cp" [(ngModel)]="creasolicitud.codPosta">
+              <label class="form-label dejaEspacio" for="cp">Código Postal *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <select class="form-select" id="ps-prov" (change)="gestimunicip(creasolicitud.codProvi)"
+                name="provincia" title="Provincia" [(ngModel)]="creasolicitud.codProvi">
+                <option value="" disabled selected>Selecciona provincia</option>
+                <option name="usuario" *ngFor="let provincias of provin" [value]="provincias.id">{{provincias.nm}}</option>
+              </select>
+              <label class="form-label dejaEspacio" for="ps-prov">Provincia *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <select class="form-select" id="ps-mun" name="municipio" title="Municipio"
+                [(ngModel)]="creasolicitud.codMunic">
+                <option value="" disabled selected>Selecciona municipio</option>
+                <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
+                  {{municipio.nm}}</option>
+              </select>
+              <label class="form-label dejaEspacio" for="ps-mun">Municipio *</label>
+            </div>
+          </div>
+
+
+
+          <!-- Información adicional del interesado (solo si existe) -->
+          <div class="row" *ngIf="dniok">
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="nombredni" id="nombre" name="nombre">
+              <label class="form-label dejaEspacio" for="nombre">Nombre del Interesado</label>
+            </div>
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="direcciondni" id="direccion2" name="direccion2">
+              <label for="direccion2" class="form-label dejaEspacio">Dirección del Interesado</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="cpdni" id="cp2" name="cp2">
+              <label class="form-label dejaEspacio" for="cp2">Código Postal</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="provinciadni" id="provincia2" name="provincia2">
+              <label class="form-label dejaEspacio" for="provincia2">Provincia</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="nommunicipiodni" id="municipio2" name="municipio2">
+              <label class="form-label dejaEspacio" for="municipio2">Municipio</label>
+            </div>
+          </div>
+
+          <!-- Sección de representante -->
+          <div class="row" *ngIf="dniok">
+            <div class="col-2 mueveBottonD">
+              <!-- Espacio para título de representante -->
+            </div>
+            <div class="col-1 form-check mueveBottonR">
+              <!-- Checkbox para seleccionar representante -->
+            </div>
+            <div class="col-4">
+              <!-- Espacio -->
+            </div>
+            <div class="col-5 mueveBottonR">
+              <img (click)="cambiamosRepre()" src="../assets/new/ico_add.png" width="25" height="25" alt="Nuevo Representante" />
+            </div>
+          </div>
+
+          <!-- Datos del representante (cuando se cambia) -->
+          <div class="row" *ngIf="cambioRepresentante">
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="nrepren" name="nrepren"
+                [(ngModel)]="creasolicitud.nombreRepre">
+              <label class="form-label dejaEspacio" for="nrepren">Nombre Representante *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="ap1repren" name="ap1repren"
+                [(ngModel)]="creasolicitud.apellido1Repre">
+              <label class="form-label dejaEspacio" for="ap1repren">Primer Apellido *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="ap2repren" name="ap2repren"
+                [(ngModel)]="creasolicitud.apellido2Repre">
+              <label class="form-label dejaEspacio" for="ap2repren">Segundo Apellido *</label>
+            </div>
+          </div>
+
+          <!-- Dirección del representante -->
+          <div class="row" *ngIf="cambioRepresentante">
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" id="direccionn" name="direccionn"
+                [(ngModel)]="creasolicitud.dirPostaRepre">
+              <label for="direccionn" class="form-label dejaEspacio">Dirección *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="cpn" name="cpn"
+                [(ngModel)]="creasolicitud.codPostaRepre">
+              <label class="form-label dejaEspacio" for="cpn">Código Postal *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <select class="form-select" id="ps-provn" (change)="gestimunicip(creasolicitud.codProviRepre)"
+                name="provinciarn" title="provinciarn" [(ngModel)]="creasolicitud.codProviRepre">
+                <option value="" disabled selected>Selecciona provincia</option>
+                <option name="usuario" *ngFor="let provincias of provin" [value]="provincias.id">{{provincias.nm}}</option>
+              </select>
+              <label class="form-label dejaEspacio" for="ps-provn">Provincia *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <select class="form-select" id="ps-munn" name="Municipiorn" title="Municipiorn"
+                [(ngModel)]="creasolicitud.codMunicRepre">
+                <option value="" disabled selected>Selecciona municipio</option>
+                <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
+                  {{municipio.nm}}</option>
+              </select>
+              <label class="form-label dejaEspacio" for="ps-munn">Municipio *</label>
+            </div>
+          </div>
+
+          <!-- Grid de representantes -->
+          <div class="row" *ngIf="dniok">
+            <jqxGrid class="mat-elevation-z5" [width]="'100%'" [autoheight]="true" [columnsautoresize]="true"
+              [source]="sourceListRepre" (onRowclick)="selecrepresentante($event)" [pagesize]="4"
+              [autoheight]="true" [pageable]="true" [altrows]="true" [filterable]="true" [sortable]="true"
+              [columns]="columnsListRepre" [localization]="localizationObject" #grid></jqxGrid>
+          </div>
+
+          <!-- Sección de representante cuando no existe -->
+          <div class="row" *ngIf="documrepre">
+            <div class="col-12 mb-3">
+              <hr>
+              <h4>Datos nuevo representante {{creasolicitud.numDocumRepre}}</h4>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="numerorepre" name="numerorepre"
+                (change)="soliciUsuarioparaRepre(creasolicitud.numDocumRepre)"
+                [(ngModel)]="creasolicitud.numDocumRepre">
+              <label class="form-label dejaEspacio" for="numerorepre">Número documento Representante *</label>
+            </div>
+          </div>
+
+          <!-- Datos del representante cuando no existe -->
+          <div class="row" *ngIf="existeRepresentante">
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="nrepre" name="nrepre"
+                [(ngModel)]="creasolicitud.nombreRepre">
+              <label class="form-label dejaEspacio" for="nrepre">Nombre Representante *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="ap1repre" name="ap1repre"
+                [(ngModel)]="creasolicitud.apellido1Repre">
+              <label class="form-label dejaEspacio" for="ap1repre">Primer Apellido *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="ap2repre" name="ap2repre"
+                [(ngModel)]="creasolicitud.apellido2Repre">
+              <label class="form-label dejaEspacio" for="ap2repre">Segundo Apellido *</label>
+            </div>
+          </div>
+
+          <!-- Dirección del representante cuando no existe -->
+          <div class="row" *ngIf="existeRepresentante">
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" id="direccion3" name="direccion3"
+                [(ngModel)]="creasolicitud.dirPostaRepre">
+              <label for="direccion3" class="form-label dejaEspacio">Dirección *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" id="cp3" name="cp3" [(ngModel)]="creasolicitud.codPostaRepre">
+              <label class="form-label dejaEspacio" for="cp3">Código Postal *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <select class="form-select" id="ps-prov3" (change)="gestimunicip(creasolicitud.codProviRepre)"
+                name="provinciar" title="Provinciar" [(ngModel)]="creasolicitud.codProviRepre">
+                <option value="" disabled selected>Selecciona provincia</option>
+                <option name="usuario" *ngFor="let provincias of provin" [value]="provincias.id">{{provincias.nm}}</option>
+              </select>
+              <label class="form-label dejaEspacio" for="ps-prov3">Provincia *</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <select class="form-select" id="ps-mun3" name="Municipior" title="Municipior"
+                [(ngModel)]="creasolicitud.codMunicRepre">
+                <option value="" disabled selected>Selecciona municipio</option>
+                <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
+                  {{municipio.nm}}</option>
+              </select>
+              <label class="form-label dejaEspacio" for="ps-mun3">Municipio *</label>
+            </div>
+          </div>
+
+          <!-- Información del representante encontrado -->
+          <div class="row" *ngIf="representanteok">
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="nombredni" id="nombreRepre" name="nombreRepre">
+              <label class="form-label dejaEspacio" for="nombreRepre">Nombre del Representante</label>
+            </div>
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="direcciondni" id="direccionRepre" name="direccionRepre">
+              <label for="direccionRepre" class="form-label dejaEspacio">Dirección del Representante</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="cpdni" id="cpRepre" name="cpRepre">
+              <label class="form-label dejaEspacio" for="cpRepre">Código Postal</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="provinciadni" id="provinciaRepre" name="provinciaRepre">
+              <label class="form-label dejaEspacio" for="provinciaRepre">Provincia</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="nommunicipiodni" id="municipioRepre" name="municipioRepre">
+              <label class="form-label dejaEspacio" for="municipioRepre">Municipio</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="submit_footer" (click)="limpiarErroresSolicitud(); cerrarModal('nsolicitudModal')">Cancelar</button>
+        <button type="submit" class="submit_footer" form="formNuevaSolicitud" role="button">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal edicion solicitud -->
+<div class="modal fade" id="edicionSolicitudModal" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="edicionSolicitudModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="edicionSolicitudModalLabel">Modificar Solicitud</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('edicionSolicitudModal')"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formModificarSolicitud" (ngSubmit)="onModificarSolicitudSubmit()">
+          <div class="row">
+            <div class="col-9 form-floating">
+              <input 
+                type="text" 
+                [value]="versolicitud.asunto" 
+                class="form-control" 
+                id="asunto" 
+                name="asunto"
+                [(ngModel)]="editasolicitud.asunto"
+                required
+                [class.is-invalid]="isAsuntoModificarInvalid()">
+              <label class="form-label dejaEspacio" for="asunto">Asunto *</label>
+              <br>
+            </div>
+            <div class="col-3 form-floating">
+              <input 
+                [value]="versolicitud.fecInicio" 
+                class="form-control" 
+                type="date"
+                id="fechaSolicitud" 
+                name="fechaSolicitud" 
+                min="2023-01-01" 
+                max="2099-12-31"
+                [(ngModel)]="editasolicitud.fecInicio"
+                required
+                [class.is-invalid]="isFechaModificarInvalid()">
+              <label class="form-label dejaEspacio" for="fechaSolicitud">Fecha Solicitud *</label>
+              <br>
+            </div>
+            <div class="col-3 form-floating">
+              <select 
+                [value]="versolicitud.estado" 
+                disabled 
+                class="form-select" 
+                id="estado" 
+                name="estado"
+                [(ngModel)]="editasolicitud.estado">
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="ACEPTADA">Aceptada</option>
+                <option value="RECHAZADA">Rechazada</option>
+              </select>
+              <label class="form-label dejaEspacio" for="estado">Estado</label>
+              <br>
+            </div>
+            <div class="col-3 form-floating">
+              <select 
+                [value]="versolicitud.usuario" 
+                class="form-select" 
+                id="asignado" 
+                name="asignado"
+                [(ngModel)]="editasolicitud.usuario">
+                <option value="" disabled>Selecciona un usuario</option>
+                <option *ngFor="let procedipermisos of procedipermiso" [value]="procedipermisos.usuario">
+                  {{procedipermisos.usuario}}
+                </option>
+              </select>
+              <label class="form-label dejaEspacio" for="asignado">Asignado a</label>
+              <br>
+            </div>
+            <div class="col-6 form-floating">
+              <input 
+                type="text" 
+                class="form-control" 
+                disabled 
+                id="departamento" 
+                [value]="depart"
+                name="departamento">
+              <label class="dejaEspacio" for="departamento">Departamento</label>
+              <br>
+            </div>
+            <div class="col-4 form-floating">
+              <input 
+                type="text" 
+                class="form-control" 
+                required 
+                [(ngModel)]="editasolicitud.dni" 
+                (change)="soliciUsuario(editasolicitud.dni)" 
+                id="interesado"
+                name="interesado"
+                [class.is-invalid]="isDniModificarInvalid()">
+              <label for="interesado" class="form-label dejaEspacio">Interesado DNI *</label>
+              <br>
+            </div>
+            <div class="col-4 form-floating">
+              <input 
+                type="text" 
+                class="form-control" 
+                disabled 
+                [value]="representanteSolicitud" 
+                id="representante"
+                name="representante">
+              <label class="form-label dejaEspacio" for="representante">Representante</label>
+              <br>
+            </div>
+            <div *ngIf="editasolicitud.formaNotifi==1" class="col-12 form-floating">
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                name="email" 
+                [(ngModel)]="editasolicitud.email">
+              <label for="email" class="form-label dejaEspacio">Correo electrónico *</label>
+              <br>
+            </div>
+            <div class="col-12 form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="InteresadoSolicitud" 
+                id="nombre"
+                name="nombre">
+              <label class="form-label dejaEspacio" for="nombre">Interesado</label>
+              <br>
+            </div>
+            <div class="col-12 form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="dirPosta" 
+                id="direccion"
+                name="direccion">
+              <label for="direccion" class="form-label dejaEspacio">Dirección</label>
+              <br>
+            </div>
+            <div class="col-4 form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="codPosta" 
+                id="cp" 
+                name="cp">
+              <label class="form-label dejaEspacio" for="cp">Código Postal</label>
+              <br>
+            </div>
+            <div class="col-4 form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="provincia" 
+                id="provincia"
+                name="provincia">
+              <label class="form-label dejaEspacio" for="provincia">Provincia</label>
+              <br>
+            </div>
+            <div class="col-4 form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="Municipio" 
+                id="municipio"
+                name="municipio">
+              <label class="form-label dejaEspacio" for="municipio">Municipio</label>
+              <br>
+            </div>
+            <div class="col-10 form-floating">
+              <div class="checkbox-input-field">
+                <input 
+                  type="checkbox" 
+                  name="selecrepre" 
+                  id="selecrepre"
+                  [(ngModel)]="seleccionoRepre" 
+                  [value]="1">
+                <span class="checkbox-text">Seleccionar Representante</span>
+              </div>
+              <br>
+            </div>
+            <div class="col-4 form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control"
+                [value]="representanteexplistar.desPerEntid || representanteSolicitud" 
+                id="nombreRepresentante"
+                name="nombreRepresentante">
+              <label class="form-label dejaEspacio" for="nombreRepresentante">Representante</label>
+              <br>
+            </div>
+            <div class="col-8 form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control"
+                [value]="representanteexplistar.dirPosta || direccionRepresentante" 
+                id="direccionRepresentante"
+                name="direccionRepresentante">
+              <label class="form-label dejaEspacio" for="direccionRepresentante">Dirección</label>
+              <br>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="submit_footer" (click)="limpiaDatosEditarSolicitudes(); cerrarModal('edicionSolicitudModal')">Cancelar</button>
+            <button type="submit" class="submit_footer">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--   ASIGNAR A :  MODAL -->
+<div class="modal fade" id="asignarModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+  aria-labelledby="asignarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="asignarModalLabel">
+          <i class="fas fa-user-plus me-2"></i>Asignar Solicitud
+        </h4>
+        <button type="button" class="btn-close" (click)="cerrarModal('asignarModal')" aria-label="Close"></button>
+      </div>
+      
+      <form #asignarForm="ngForm" (ngSubmit)="onAsignarSubmit()">
+        <div class="modal-body">
+          <div class="mb-3 form-floating">
+            <select 
+              class="form-select" 
+              id="asignado" 
+              name="asignado" 
+              [(ngModel)]="editasolicitud.usuario" 
+              required
+              [class.is-invalid]="isUsuarioAsignadoInvalid()"
+              #usuarioSelect="ngModel">
+              <option value="" disabled selected>Selecciona un usuario</option>
+              <option *ngFor="let usupermiso of usupermisos" [value]="usupermiso.usuario">
+                {{usupermiso.usuario}}
+              </option>
+            </select>
+            <label class="form-label dejaEspacio" for="asignado">Asignar Solicitud *</label>
+            <div *ngIf="isUsuarioAsignadoInvalid()" class="invalid-feedback">
+              Debe seleccionar un usuario
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarModal('asignarModal')">
+            <i class="fas fa-times me-1"></i>Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary">
+            <span *ngIf="isAsignando" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <i *ngIf="!isAsignando" class="fas fa-save me-1"></i>
+            {{isAsignando ? 'Guardando...' : 'Guardar'}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ASIGNAR INSTRUCTOR EN EXPEDIENTE-->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Asignar Instructor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="editExpediente()">
+
+
+
+          <div class="mb-3 form-floating">
+
+            <select class="form-select " id="departamento" name="plantilladefecto"
+              [(ngModel)]="intructorExpediente">
+
+              <option name="usuario" *ngFor="let procedipermisos of procedipermiso"
+                value="{{procedipermisos.usuario}}">{{procedipermisos.usuario}}</option>
+
+            </select>
+            <label for="departamento" class="col-form-label form-label">Instructor:</label>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="submit_footer" data-bs-dismiss="modal">Cancelar</button>
+            <button class="submit_footer" role="button">Guardar</button>
+          </div>
+        </form>
+
+        ...
+      </div>
+
+    </div>
+  </div>
+
+
+
+</div> <!--  ASIGNAR INSTRUCTOR EN EXPEDIENTE  HASTA AQUI-->
+
+<!--    MODAL AÑADE DOCUMENTOS -->
+<div class="modal fade" id="documentoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">Nuevo Documento</h4>
+        <button type="button" class="btn-close" (click)="cerrarModal('documentoModal')" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form enctype="multipart/form-data">
+
+          <div class="row">
+
+            <div class="col-12 form-floating">
+
+              <textarea type="text" class="form-control" required="" id="descripcion" name="descripcion"
+                [(ngModel)]="descripcionArchivo" placeholder="Descripción del documento"> </textarea>
+
+              <label for="departamento" class="col-form-label dejaEspacio">Descripción*</label>
+              <br>
+
+
+            </div>
+            <div class="col-12 form-floating">
+
+              <input #fileInput class="form-control" (change)='upload($event,idsolicitud)' type="file"
+                id="formFile" accept=".pdf,.docx,.odt,.jpg,.jpeg,.png">
+              <label for="formFile" class="form-label dejaEspacio">Nuevo Documento * (PDF, DOCX, ODT, JPG, PNG)</label>
+            </div>
+
+          </div>
+          <br>
+          <div *ngIf="subidaArchivo" class="text-center my-3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Subiendo...</span>
+            </div>
+            <div>Subiendo archivo...</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="submit_footer" (click)="cancelarDocumento(); cerrarModal('documentoModal')">Cancelar</button>
+            <button type="button" class="submit_footer" (click)="guardarDocumento()">Guardar</button>
+          </div>
+
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!--   Iniciar Expediente MODAL -->
+<div class="modal fade" id="iniciarExpedieModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+  aria-labelledby="iniciarExpediModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="iniciarExpediModalLabel">
+          <i class="fas fa-play-circle me-2 text-success"></i>Iniciar Expediente
+        </h4>
+        <button type="button" class="btn-close" (click)="limpiadatosIniciarExpediente(); cerrarModal('iniciarExpedieModal')"
+          aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+        <form #iniciarExpedienteForm="ngForm" (ngSubmit)="onIniciarExpedienteSubmit()">
+          <!-- Datos de la Solicitud -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <h5 class="text-primary mb-3 border-bottom pb-2">
+                <i class="bi bi-file-text-fill me-2"></i>Datos de la Solicitud
+              </h5>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{asuntoSolicitud}}" id="asuntoSol" name="asuntoSol">
+              <label for="asuntoSol" class="form-label dejaEspacio">Asunto</label>
+            </div>
+            <div class="col-md-3 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="ejerNumeroSolicitud" id="ejercicioNum" name="ejercicioNum">
+              <label for="ejercicioNum" class="form-label dejaEspacio">Ejercicio/Número</label>
+            </div>
+            <div class="col-md-3 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="FIniSolicitud" id="fechaInicioSol" name="fechaInicioSol">
+              <label for="fechaInicioSol" class="form-label dejaEspacio">Fecha Inicio Solicitud</label>
+            </div>
+            <div class="col-md-3 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="NumeroRegistroSolicitud" id="numRegistro" name="numRegistro">
+              <label for="numRegistro" class="form-label dejaEspacio">Número de Registro</label>
+            </div>
+            <div class="col-md-3 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="ENTRADA" id="tipoRegistro" name="tipoRegistro">
+              <label for="tipoRegistro" class="form-label dejaEspacio">Tipo de Registro</label>
+            </div>
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="usuarioSolicitud" id="usuarioAsignado" name="usuarioAsignado">
+              <label for="usuarioAsignado" class="form-label dejaEspacio">Usuario Asignado</label>
+            </div>
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" disabled [value]="InteresadoSolicitud" id="interesadoSol" name="interesadoSol">
+              <label for="interesadoSol" class="form-label dejaEspacio">Interesado</label>
+            </div>
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{representanteSolicitud}}" id="representanteSol" name="representanteSol">
+              <label for="representanteSol" class="form-label dejaEspacio">Representante</label>
+            </div>
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{depart}}" id="departamentoSol" name="departamentoSol">
+              <label for="departamentoSol" class="form-label dejaEspacio">Departamento</label>
+            </div>
+          </div>
+
+          <!-- Información del Expediente -->
+          <div class="row mt-4 mb-4">
+            <div class="col-12">
+              <h5 class="text-success mb-3 border-bottom pb-2">
+                <i class="bi bi-folder-plus me-2"></i>Información del Expediente
+              </h5>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-12 form-floating mb-3">
+              <input 
+                type="text" 
+                class="form-control" 
+                required 
+                value="{{versolicitud.asunto}}" 
+                id="titulo"
+                name="titulo" 
+                [(ngModel)]="nuevoexpediente.titulo"
+                [class.is-invalid]="isTituloExpedienteInvalid()"
+                #tituloInput="ngModel">
+              <label for="titulo" class="form-label dejaEspacio">Título Expediente *</label>
+              <div *ngIf="isTituloExpedienteInvalid()" class="invalid-feedback">
+                El título del expediente es obligatorio
+              </div>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <input 
+                class="form-control" 
+                type="text" 
+                id="fecha" 
+                name="fecha"
+                value="{{FechaSistema}}" 
+                disabled>
+              <label class="form-label dejaEspacio" for="fecha">Fecha Inicio Expediente</label>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <select 
+                class="form-select" 
+                id="procedimiento" 
+                name="procedimiento"
+                [(ngModel)]="nuevoexpediente.procedimiento"
+                required
+                [class.is-invalid]="isProcedimientoInvalid()"
+                #procedimientoSelect="ngModel">
+                <option value="" disabled selected></option>
+                <option *ngFor="let procedimientos of procedimientos" [value]="procedimientos.id">
+                  {{procedimientos.descripcion}}
+                </option>
+              </select>
+              <label class="form-label dejaEspacio" for="procedimiento">Procedimiento *</label>
+              <div *ngIf="isProcedimientoInvalid()" class="invalid-feedback">
+                Debe seleccionar un procedimiento
+              </div>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <select 
+                class="form-select" 
+                id="fnotifi" 
+                name="fnotifi"
+                [(ngModel)]="nuevoexpediente.formaNotifi" 
+                disabled>
+                <option value="0">Correo postal</option>
+                <option value="1">Telemática</option>
+              </select>
+              <label class="form-label dejaEspacio" for="fnotifi">Forma Notificación *</label>
+            </div>
+          </div>
+          
+          <!-- Correo electrónico para notificación telemática -->
+          <div *ngIf="nuevoexpediente.formaNotifi==1" class="form-floating mb-3">
+            <input 
+              type="email" 
+              class="form-control" 
+              id="emailExp" 
+              name="emailExp" 
+              [(ngModel)]="nuevoexpediente.email"
+              placeholder="correo@ejemplo.com">
+            <label for="emailExp" class="form-label dejaEspacio">Correo electrónico</label>
+          </div>
+
+          <!-- Información del Interesado -->
+          <div *ngIf="dniok" class="row mt-4 mb-4">
+            <div class="col-12">
+              <h5 class="text-info mb-3 border-bottom pb-2">
+                <i class="bi bi-person-fill me-2"></i>Información del Interesado
+              </h5>
+            </div>
+          </div>
+          
+          <div *ngIf="dniok" class="row">
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" [value]="consultadni.nombre" id="nombreInt" name="nombreInt" readonly>
+              <label class="form-label dejaEspacio" for="nombreInt">Nombre</label>
+            </div>
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" [value]="consultadni.apellido1 + ' ' + consultadni.apellido2"
+                id="apellidosInt" name="apellidosInt" readonly>
+              <label class="form-label dejaEspacio" for="apellidosInt">Apellidos</label>
+            </div>
+            <div class="col-12 form-floating mb-3">
+              <input type="text" class="form-control" [value]="consultadni.dirPosta" id="direccionInt"
+                name="direccionInt" readonly>
+              <label for="direccionInt" class="form-label dejaEspacio">Dirección</label>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <input type="text" class="form-control" [value]="consultadni.codPosta" id="cpInt" name="cpInt" readonly>
+              <label class="form-label dejaEspacio" for="cpInt">Código Postal</label>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <input type="text" class="form-control" [value]="consultadni.provincia" id="provinciaInt"
+                name="provinciaInt" readonly>
+              <label class="form-label dejaEspacio" for="provinciaInt">Provincia</label>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <input type="text" class="form-control" [value]="consultadni.municipio" id="municipioInt"
+                name="municipioInt" readonly>
+              <label class="form-label dejaEspacio" for="municipioInt">Municipio</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="submit_footer" (click)="limpiadatosnuevoexpediente(); cerrarModal('iniciarExpedieModal')">Cancelar</button>
+        <button type="submit" class="submit_footer" form="iniciarExpedienteForm">Iniciar Expediente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--    MODAL DEVUELVE EXPEDIENTE -->
+<div class="modal fade" id="devueModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Devuelve expedienter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+
+            <input type="text" class="form-control" id="asunto" placeholder="Asunto">
+          </div>
+          <div class="mb-3">
+
+            <input type="text" class="form-control" id="tramitador" placeholder="Usuario tramitador">
+          </div>
+          <div class="mb-3">
+            <input class="form-control" data-mdb-inline="true" type="date" id="start" name="trip-start"
+              value="{{selected}}" min="2023-01-01" max="2023-12-31">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="submit_footer" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="submit_footer">Enviar</button>
+          </div>
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PARA VISUALIZADO DE PDF  -->
+
+<div class="modal fade" id="VerPdfModal" tabindex="-1" aria-labelledby="VerPdfModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="VerPdfModalLabel"> Ver PDF</h4>
+        <button type="button" class="btn-close" (click)="cerrarModal('VerPdfModal')" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="espacios">
+          <a href="#" id="linkView">vista del documento</a>
+          <div class="showPDF"></div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="submit_footer" (click)="cerrarModal('VerPdfModal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECHAZAR SOLICITUD -->
+<div class="modal fade" id="rechazaSoliModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+  aria-labelledby="rechazaSoliModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="rechazaSoliModalLabel">
+          <i class="fas fa-times-circle me-2 text-danger"></i>Rechazar Solicitud
+        </h4>
+        <button type="button" class="btn-close" (click)="cerrarModal('rechazaSoliModal')" aria-label="Close"></button>
+      </div>
+      
+      <form #rechazarForm="ngForm" (ngSubmit)="onRechazarSubmit()">
+        <div class="modal-body">
+          <div class="mb-3 form-floating">
+            <input 
+              class="form-control" 
+              type="text" 
+              id="rechazo" 
+              name="rechazo"
+              [(ngModel)]="editasolicitud.motivoRechazo"
+              required
+              [class.is-invalid]="isMotivoRechazoInvalid()"
+              #motivoRechazoInput="ngModel">
+            <label class="form-label dejaEspacio" for="rechazo">Motivo Rechazo *</label>
+            <div *ngIf="isMotivoRechazoInvalid()" class="invalid-feedback">
+              Debe indicar un motivo para rechazar la solicitud
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarModal('rechazaSoliModal')">
+            <i class="fas fa-times me-1"></i>Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-danger">
+            <span *ngIf="isRechazando" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <i *ngIf="!isRechazando" class="fas fa-save me-1"></i>
+            {{isRechazando ? 'Rechazando...' : 'Rechazar'}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal  solicitudes pendientes    anota esto  [rendergridrows]="rendergridrows" -->
+<div class="modal fade" id="SoliciPendientesModal" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="SoliciPendientesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="SoliciPendientesModalLabel">Solicitudes Pendientes/Rechazar</h4>
+        <button type="button" class="btn-close" (click)="limpiacadenaEstadoSolicitudes(); cerrarModal('SoliciPendientesModal')"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="espacios">
+          <jqxGrid hidden class="mat-elevation-z5" [width]="'100%'" [autoheight]="true" [columnsautoresize]="true"
+            [source]="sourceSoliciPendientes" (onRowclick)="selecsolicitudNueva($event)" [pagesize]="10"
+            [autoheight]="true" [pageable]="true" [altrows]="true" [filterable]="true" [sortable]="true"
+            [columns]="columnsSoliciPendi" [localization]="localizationObject" #grid></jqxGrid>
+          <div>
+            <div class="row">
+              <form>
+                <div class="col-3 form-floating">
+
+
+
+                  <select class="form-select " id="estado" name="estado"
+                    (change)="valorEstato(cadenaEstadoSolicitudes)" [(ngModel)]="cadenaEstadoSolicitudes">
+
+
+                    <option value="PENDIENTE">PENDIENTE</option>
+                    <option value="RECHAZADA">RECHAZADA</option>
+
+
+
+                  </select>
+                  <label class="form-label dejaEspacio" for="estado">Estado</label>
+                  <br>
+
+                </div>
+              </form>
+            </div>
+            <br>
+            <div #content>
+              <table *ngIf="cadenaEstadoSolicitudes =='PENDIENTE'" class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Ejercicio/Número</th>
+                    <th scope="col">Fecha Solicitud</th>
+                    <th scope="col">Asunto</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Asignado a</th>
+                    <th scope="col">Interesado</th>
+                    <th scope="col">N. Registro</th>
+
+                  </tr>
+                </thead>
+                <tbody *ngFor="let solicilistar of solicitudlistar">
+                  <tr *ngIf="solicilistar.estado !=estado">
+
+                    <td>{{solicilistar.ejercicio}}/{{solicilistar.numero}}</td>
+                    <td>{{solicilistar.fecInicio}}</td>
+                    <td>{{solicilistar.asunto}}</td>
+                    <td>{{solicilistar.estado}}</td>
+                    <td>{{solicilistar.usuario}}</td>
+                    <td>{{solicilistar.personaEntidad.desPerEntid}}</td>
+                    <td>{{solicilistar.ejeNumRegis}}</td>
+
+                  </tr>
+
+                </tbody>
+              </table>
+
+              <table *ngIf="cadenaEstadoSolicitudes =='RECHAZADA'" class="table table-borderless">
+                <thead>
+                  <tr>
+
+                    <th scope="col">Ejercicio/Número</th>
+                    <th scope="col">Fecha Solicitud</th>
+                    <th scope="col">Asunto</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Asignado a</th>
+                    <th scope="col">Interesado</th>
+                    <th scope="col">N. Registro</th>
+
+                  </tr>
+                </thead>
+                <tbody *ngFor="let solicilistar of solicitudlistar">
+                  <tr *ngIf="solicilistar.estado !=estado">
+
+                    <td>{{solicilistar.ejercicio}}/{{solicilistar.numero}}</td>
+                    <td>{{solicilistar.fecInicio}}</td>
+                    <td>{{solicilistar.asunto}}</td>
+                    <td>{{solicilistar.estado}}</td>
+                    <td>{{solicilistar.usuario}}</td>
+                    <td>{{solicilistar.personaEntidad.desPerEntid}}</td>
+                    <td>{{solicilistar.ejeNumRegis}}</td>
+
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="submit_footer" (click)="generaPdfSolicitudes()">PDF <i
+            class="bi bi-file-earmark-pdf icons_botton_left"></i> </button>
+        <button class="submit_footer" hidden role="button">Excel <i
+            class="bi bi-file-earmark-excel icons_button_left"></i></button>
+      </div>
+    </div>
+  </div>
+</div>

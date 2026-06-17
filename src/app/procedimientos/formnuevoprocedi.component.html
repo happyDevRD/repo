@@ -1,0 +1,306 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+
+    <div class="col-12 content_gen">
+      <app-menuprocedimiento></app-menuprocedimiento>
+      <div class="page-panel">
+        <ul class="nav nav-tabs nav-tabs-iflow" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="datosProcedi-tab" data-bs-toggle="tab" data-bs-target="#datosProcedi" type="button" role="tab" aria-controls="datosProcedi" aria-selected="true">Nuevo procedimiento</button>
+  </li>
+  <li class="nav-item"  id = "idtarea" role="presentation" *ngIf="vermenu ==true" >
+    <button   class="nav-link" id="tareaProcedi-tab" data-bs-toggle="tab" data-bs-target="#tareaProcedi" type="button" role="tab" aria-controls="tareaProcedi" aria-selected="false">Tareas procedimiento</button>
+  </li>
+  <li class="nav-item" id = "idpermi" role="presentation" *ngIf="vermenu ==true">
+    <button class="nav-link" id="permiProcedi-tab" data-bs-toggle="tab" data-bs-target="#permiProcedi" type="button" role="tab" aria-controls="permiProcedi" aria-selected="false">Permisos del procedimiento</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="datosProcedi" role="tabpanel" aria-labelledby="datosProcedi-tab">
+
+
+<div class="form-section">
+
+  <form (ngSubmit)="create(crearprocedi.descripcion, crearprocedi.codigoSia, crearprocedi.depart)">
+
+<div class="col-12">
+<div class="form-group row">
+  <div class="col-sm-3"></div>
+  <label for="descripcion" class="col-form-label col-sm-2">Descripción*</label>
+  <div class="col-sm-4">
+      <input type="text" class="form-control" [(ngModel)]="crearprocedi.descripcion" name="descripcion" id="descripcion" (blur)="validateField('descripcion', crearprocedi.descripcion)" required>
+  </div>
+</div>
+
+<br>
+
+
+
+<div class="form-group row">
+  <div class="col-sm-3"></div>
+  <label for="codigoSIA" class="col-form-label col-sm-2">Código SIA*</label>
+  <div class="col-sm-4">
+      <input type="text" class="form-control" [(ngModel)]="crearprocedi.codigoSia" name="codigoSIA" id="codigoSIA" (blur)="validateField('codigoSIA', crearprocedi.codigoSia)" required>
+  </div>
+</div>
+
+
+<div class="form-group row">
+
+  <div class="form-actions">
+      <button class="submit btn-volver" type="button" name="buttom" (click)="limpiarErrores()" [routerLink]="['/procedimientos']">Cancelar</button>
+      <button class="submit" type="submit">Guardar</button>
+  </div>
+</div>
+
+</div>
+</form>
+
+</div>
+</div>
+     <div class="tab-pane fade" id="tareaProcedi" role="tabpanel" aria-labelledby="tareaProcedi-tab">
+
+
+      <div class="col"></div>
+      <div class="col-1 mueveBottonC"></div>
+      <div   class="col-3 mueveBottonC">
+
+
+
+
+    </div>
+
+    <div class="row">
+
+      <div class="col"></div>
+      <div class="col-1 mueveBottonC"></div>
+      <div   class="col-3 mueveBottonC">
+
+        <!-- botonera de opciones -->
+
+        <button  class="btn btn-rounded  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#tareasModal" data-bs-whatever="@mdo"  ><img  src="../assets/nuevo.svg" width="25" height="25"/></button>
+        <button  *ngIf="edicion==true" class="btn btn-rounded bi bi-trash3  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="../assets/editar3.svg"/></button>
+          <button *ngIf="edicion==true"  (click)="vacio()" class="btn btn-rounded  btn-sm" type="button"  ><img width="25" height="25"  src="../assets/papelera2.svg"/></button>
+        </div>
+
+
+    </div>
+    <br>
+
+    <table class="table table-iflow table-bordered table-striped table-responsive rounded-3">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Descripción</th>
+            <th>Fase</th>
+            <th>Plazo</th>
+            <th>Tipo Plazo</th>
+
+        </tr>
+
+    </thead>
+    <tbody>
+        <tr *ngFor="let listatareasprocedi of listatareaprocedi " >
+          <td >
+
+              <div class=" form-check  ">
+                <input class="form-check-input" (click)="envioid(listatareasprocedi.id,listatareasprocedi.descripcion,listatareasprocedi.faseTarea,listatareasprocedi.plazo,listatareasprocedi.tipoPlazo,listatareasprocedi.plantillaDefecto)" type="radio"  value="" name="RadioId" id="RadioId">
+
+
+
+              </div>
+
+            </td>
+            <td>{{listatareasprocedi.descripcion }}</td>
+            <td>{{listatareasprocedi.faseTarea }}</td>
+            <td>{{listatareasprocedi.plazo }}</td>
+            <td>{{listatareasprocedi.tipoPlazo }}</td>
+
+
+    </tbody>
+
+    </table>
+   <!-- <pagination-controls (pageChange)='page = $event' previousLabel='Anterior' nextLabel='Siguiente'></pagination-controls>  -->
+
+   <!--   TAREAS PROCEDIMIENTOS  MODAL-->
+   <div class="modal fade  " id="tareasModal" tabindex="-1" aria-labelledby="tareasModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tareasModalLabel">Tareas procedimientos</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="createTareaProcedi(procedimientocreado.id)">
+              <div class="mb-3">
+
+                <input type="text" class="form-control" id="descripcion" placeholder="Descripción"  name="descripcion" [(ngModel)]="creatareaprocedi.descripcion">
+              </div>
+              <div class="mb-3">
+                <label for="departamento" class="col-form-label" >Seleccionar fase:</label>
+                <select class="form-select " id="departamento" name="fase" [(ngModel)]="creatareaprocedi.fasetarea">
+
+                  <option value="INICIO">Inicio</option>
+                  <option value="INSTRUCCION">Instrucción</option>
+                  <option value="RESOLUCION">Resolución</option>
+                </select>
+
+
+              </div>
+              <div class="mb-3">
+                <label for="departamento" class="col-form-label" >Plantilla por defecto:</label>
+                <select  class="form-select " id="departamento" name="plantilladefecto"  [(ngModel)]="creatareaprocedi.plantilladefecto">
+
+                  <option  *ngFor="let plantillatareas of plantillatarea"  value={{plantillatareas.plantilla}} >{{plantillatareas.desPlant}}</option>
+
+                </select>
+
+              </div>
+
+
+              <div class="row">
+
+                <div class="col-8 col-sm-6">
+                  <label for="departamento" class="col-form-label" >Plazo:</label>
+
+                  <input type="number"  class="form-control" id="plantilla" name="plazo" min="1" max="365" (change)="peparadatosfirma(creatareaprocedi.plantilladefecto)"  required="required"  [(ngModel)]="creatareaprocedi.plazo">
+                </div>
+                <div class="col-8 col-sm-6">
+                  <label for="departamento" class="col-form-label" >Seleccionar tipo plazo:</label>
+                  <select class="form-select " id="departamento"   name="tipoplazo" [(ngModel)]="creatareaprocedi.tipoplazo">
+
+                    <option value="DIAS">Dia</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                  </div>
+                </div>
+                  <div class="mb-3"  >
+                    <label for="departamento" class="col-form-label" >firma por defecto:</label>
+                    <select  class="form-select " id="departamento" name="firmapordefecto" [(ngModel)]="creatareaprocedi.firmapordefecto">
+
+                      <option  *ngFor="let firmaslistar of firmalistar"  value={{firmaslistar.idProFirma}} >{{firmaslistar.descripcionCircuito}}</option>
+
+                    </select>
+
+
+                    </div>
+                <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Atras</button>
+            <button class="btn btn-outline-primary "  role="button">Crear</button>
+          </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+  <!--
+  <div class="tab-pane fade" id="permiProcedi" role="tabpanel" aria-labelledby="permiProcedi-tab">PERMISOS PROCEDIMIENTOS</div>
+-->
+
+<!--  PERMISO PROCEDIMIENTOS -->
+<div class="tab-pane fade" id="permiProcedi" role="tabpanel" aria-labelledby="permiProcedi-tab">
+  <br>
+
+  <div class="row">
+
+    <div class="col"></div>
+    <div class="col-1 mueveBottonC"></div>
+    <div   class="col-3 mueveBottonC">
+
+      <!-- botonera de opciones -->
+      <button  class="btn btn-rounded  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" ><img  src="../assets/nuevo.svg" width="25" height="25"/></button>
+      <button   class="btn btn-rounded bi bi-trash3  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="../assets/editar3.svg"/></button>
+        <button   class="btn btn-rounded  btn-sm" type="button"  ><img width="25" height="25"  src="../assets/papelera2.svg"/></button>
+      </div>
+
+
+  </div>
+
+
+ <br>
+  <table class=" container table table-bordered table-striped table-responsive rounded-3">
+
+    <thead>
+      <tr>
+          <th></th>
+          <th>Usuario</th>
+          <th>Descripción Usuario</th>
+          <th>Acciones</th>
+
+
+      </tr>
+
+  </thead>
+  <tbody>
+    <tr  >
+      <td >
+
+          <div class=" form-check  ">
+            <input class="form-check-input"  type="radio"  value="" name="RadioId" id="RadioId">
+
+
+
+          </div>
+
+        </td>
+        <td></td>
+        <td></td>
+        <td>...</td>
+
+
+
+</tbody>
+<!-- MODAL PARA CREAR  NUEVO PERMISO PROCEDIMIENTO -->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Send message</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FIN MODAL PARA CREAR  NUEVO PERMISO PROCEDIMIENTO -->
+
+
+  </table>
+
+
+
+
+</div> <!--  PERMISO PROCEDIMIENTOS  HASTA AQUI-->
+
+      </div>
+    </div>
+  </div>
+</div>

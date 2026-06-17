@@ -1,0 +1,39 @@
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.admin-card {
+  background: rgba(105, 120, 255, 0.04);
+  border: 1px solid rgba(105, 120, 255, 0.12);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-card__icon {
+  font-size: 2rem;
+  color: var(--iflow-primary);
+  margin-bottom: 0.75rem;
+}
+
+.admin-card__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.admin-card__desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}

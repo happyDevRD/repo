@@ -1,0 +1,67 @@
+/* Estilos específicos del componente Expedientes */
+
+.seccion-acciones-expediente {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.grid-compacto {
+  height: 280px !important;
+}
+
+.sin-espacio {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.mueveBottonR { text-align: right; }
+.mueveBottonD { text-align: left; }
+
+.people-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.reservadiv { min-height: 40px; }
+.reservadiv2 { min-height: 50px; }
+
+.fuenteazul { color: #001F6C; }
+.colorAzul { color: #001F6C; }
+
+.dejaEspacio {
+  margin: auto;
+  text-align: left;
+  padding: 20px;
+}
+
+.dejaEspacioMas {
+  margin: auto;
+  text-align: left;
+  padding: 25px;
+}
+
+.botones-modal {
+  background-color: var(--iflow-primary) !important;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 6px;
+}
+
+.btn-space { margin-right: 5px; }
+.btn-space2 { padding: 25px; }
+
+.centered-input {
+  width: 200px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#NAtributosModal2 .modal-body,
+#NAtributosModal .modal-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}

@@ -1,0 +1,49 @@
+
+  <div class="header_login">
+    <img class="logo_login" src="../assets/images/greenaall_logo.png" alt="Greenall">
+    <div class="tit_portal_cont">
+      <div class="tit_portal_text">
+        <h1>Gestor de Expedientes iFlow</h1>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+  <main class="form-signin">
+    <div *ngIf="!veoFormuCodigo">
+      <form (ngSubmit)="login()">
+        <img class="iflow-logo" src="../assets/images/iflow.png" alt="iFlow">
+        <h1 class="h3 mb-3 fw-normal">Accede con tu cuenta</h1>
+        <div class="form-floating">
+          <input [(ngModel)]="usuario.usuario" type="text" class="form-control mb-3" id="floatingInput"
+                 name="usuario" autocomplete="username" autofocus required>
+          <label for="floatingInput">Usuario</label>
+        </div>
+        <div class="form-floating">
+          <input [(ngModel)]="usuario.password" type="password" class="form-control" id="floatingPassword"
+                 name="password" autocomplete="current-password" required>
+          <label for="floatingPassword">Contraseña</label>
+        </div>
+        <br>
+        <button class="btn-login" type="submit">{{titulo}}</button>
+        <div *ngIf="spinner" class="spinner-border text-primary" role="status"></div>
+      </form>
+    </div>
+
+    <div *ngIf="veoFormuCodigo">
+      <form (ngSubmit)="revisaCodigo(codigo)">
+        <h1 class="h3 mb-3 fw-normal">Introduce el código enviado a su correo</h1>
+        <div class="form-floating">
+          <input [(ngModel)]="codigo" type="text" class="form-control mb-3" id="floatingCodigo" name="codigointro"
+                 autofocus required>
+          <label for="floatingCodigo">Código</label>
+        </div>
+        <br>
+        <button class="btn-login" type="submit">Aceptar</button>
+      </form>
+    </div>
+  </main>
+
+  <div class="footer">
+    <app-footer></app-footer>
+  </div>
+</div>

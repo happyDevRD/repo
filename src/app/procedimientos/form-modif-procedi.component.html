@@ -1,0 +1,44 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+
+    <div class="col-12 content_gen">
+      <app-menuprocedimiento></app-menuprocedimiento>
+
+      <div class="page-panel">
+        <div class="listado-titulo-container">
+          <h2 class="listado-titulo-principal">{{ titulo }}</h2>
+          <div class="titulo-botones-container">
+            <a routerLink="/procedimientos" class="submit btn-volver">
+              <i class="bi bi-arrow-left"></i> Volver
+            </a>
+          </div>
+        </div>
+
+        <form (ngSubmit)="create()" class="form-grid">
+          <div class="row g-3">
+            <div class="col-md-8 form-floating">
+              <input type="text" class="form-control" id="descripcion"
+                     [(ngModel)]="procedimiento.descripcion" name="descripcion" placeholder="Descripción">
+              <label for="descripcion">Descripción</label>
+            </div>
+            <div class="col-md-4 form-floating">
+              <input type="text" class="form-control" id="codigoSIA"
+                     [(ngModel)]="procedimiento.codigoSia" name="codigoSIA" placeholder="Código SIA">
+              <label for="codigoSIA">Código SIA</label>
+            </div>
+            <div class="col-md-6 form-floating">
+              <input type="text" class="form-control" id="departamento"
+                     [(ngModel)]="procedimiento.departamento.desEleme" name="departamento" placeholder="Departamento" readonly>
+              <label for="departamento">Departamento</label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="submit">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

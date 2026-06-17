@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+
+    <div class="col-12 content_gen">
+      <app-menu-inicio></app-menu-inicio>
+
+      <div class="page-panel">
+        <div class="listado-titulo-container">
+          <h2 class="listado-titulo-principal">Pendientes de firma</h2>
+        </div>
+
+        <div class="grid-container">
+          <jqxGrid
+            [width]="'100%'"
+            [selectionmode]="'checkbox'"
+            [source]="source"
+            [theme]="'material'"
+            [autoheight]="true"
+            [pageable]="true"
+            [altrows]="true"
+            [filterable]="true"
+            [sortable]="true"
+            [columns]="columns"
+            [localization]="localizationObject"
+            class="mat-elevation-z5"
+            #grid>
+          </jqxGrid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

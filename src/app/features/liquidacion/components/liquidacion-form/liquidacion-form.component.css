@@ -1,0 +1,47 @@
+/*!* liquidacion-form.component.css *!*/
+
+/*!* Limitar el ancho del formulario y centrarlo *!*/
+/*form {*/
+/*  max-width: 800px;*/
+/*  margin: 0 auto;*/
+/*  padding: 1rem;*/
+/*}*/
+
+/*!* Mejorar el estado de foco de los inputs *!*/
+/*.form-control:focus {*/
+/*  border-color: #86b7fe;*/
+/*  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);*/
+/*}*/
+
+/*!* Transición suave en las etiquetas de los campos flotantes *!*/
+/*.form-floating > label {*/
+/*  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;*/
+/*}*/
+
+/*!* Personalizar el botón primario *!*/
+/*.btn-primary {*/
+/*  background-color: #0d6efd;*/
+/*  border-color: #0d6efd;*/
+/*  font-weight: bold;*/
+/*}*/
+
+/*!* Efecto hover para el botón *!*/
+/*.btn-primary:hover {*/
+/*  background-color: #0b5ed7;*/
+/*  border-color: #0a58ca;*/
+/*}*/
+
+/*!* Asegurar una separación adecuada entre secciones *!*/
+/*fieldset {*/
+/*  border: 1px solid #e0e0e0;*/
+/*  padding: 1rem;*/
+/*  border-radius: 0.5rem;*/
+/*}*/
+
+/*!* Legend personalizado para el fieldset *!*/
+/*legend {*/
+/*  font-size: 1.2rem;*/
+/*  font-weight: bold;*/
+/*  width: auto;*/
+/*  padding: 0 0.5rem;*/
+/*}*/

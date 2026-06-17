@@ -1,0 +1,137 @@
+<div class="container-fluid modal-custom">
+  <div *ngIf="loading" class="d-flex justify-content-center my-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <form *ngIf="!loading" (ngSubmit)="onSubmit()" #entradaForm="ngForm">
+    <fieldset class="mb-3">
+      <div class="row">
+        <div class="col-md-5 form-floating">
+          <select id="temaSelect" class="form-select" [(ngModel)]="selectedTema" (ngModelChange)="onTemaSelected()" name="temaSelect" required>
+            <option [ngValue]="null">-- Seleccione un tema --</option>
+            <option *ngFor="let tema of temasDocumentoListar" [ngValue]="tema">{{ tema.desTema }}</option>
+          </select>
+          <label for="temaSelect">Código Tema <span class="text-danger">*</span></label>
+        </div>
+
+        <div class="col-md-7 form-floating">
+          <input type="text" class="form-control" id="TextareaGSalida" name="extracto" [(ngModel)]="entrada.extracto" placeholder="Extracto"/>
+          <label for="TextareaGSalida">Extracto</label>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 form-floating">
+          <input type="text" class="form-control" id="ctema" name="observaciones" [(ngModel)]="entrada.observaciones" placeholder="Observaciones"/>
+          <label for="ctema">Observaciones</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="d-flex justify-content-center align-items-center mb-4 registrar-factura-wrapper">
+      <label for="registrarFactura" class="form-label mb-0 me-3 fw-semibold fs-5">Registrar Factura</label>
+      <div class="form-check form-switch m-0">
+        <input type="checkbox" class="form-check-input" id="registrarFactura"
+               [(ngModel)]="registrarFactura" name="registrarFactura"
+               (change)="onRegistrarFacturaChange()" />
+      </div>
+    </div>
+
+
+
+    <fieldset *ngIf="registrarFactura" class="factura-section">
+      <legend class="h6">Datos de la Factura</legend>
+
+      <div class="row">
+        <div class="col-md-8 form-floating mb-3">
+          <select class="form-select" id="contabilidad" [(ngModel)]="factura.idConta" name="idConta" [required]="registrarFactura">
+            <option [ngValue]="null">-- Seleccione --</option>
+            <option *ngFor="let conta of contabilidades" [value]="conta.idConta">{{ conta.rotConta }}</option>
+          </select>
+          <label for="contabilidad">Contabilidad <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-md-4 form-floating mb-3">
+          <input type="date" class="form-control readonly-field" id="fecRegistro" [ngModel]="fechaHoy" name="fecRegistro" disabled/>
+          <label for="fecRegistro">Fecha Registro</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 form-floating mb-3">
+          <input type="text" class="form-control" id="numJusExter" [(ngModel)]="factura.numJusExter" name="numJusExter" maxlength="50" [required]="registrarFactura" placeholder="Número de Factura"/>
+          <label for="numJusExter">Número de Factura <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-md-4 form-floating mb-3">
+          <input type="date" class="form-control" id="fecJusExter" [(ngModel)]="factura.fecJusExter" name="fecJusExter" [required]="registrarFactura"/>
+          <label for="fecJusExter">Fecha Factura <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-md-4 form-floating mb-3">
+          <select class="form-select" id="tipoDoc" [(ngModel)]="factura.indTipDocum" name="indTipDocum" [required]="registrarFactura">
+            <option [value]="null">-- Seleccione --</option>
+            <option [value]="1">Factura</option>
+            <option [value]="2">Justificante Gasto</option>
+          </select>
+          <label for="tipoDoc">Tipo de Documento <span class="text-danger">*</span></label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 form-floating mb-3">
+          <input type="text" class="form-control" id="impTotal" [(ngModel)]="factura.impTotal" name="impTotal" [required]="registrarFactura" (ngModelChange)="calcularImportes()" currencyMask [options]="currencyOptions" placeholder="Importe Total (€)"/>
+          <label for="impTotal">Importe Total (€) <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-md-4 form-floating mb-3">
+          <input type="text" class="form-control" id="impDto" [(ngModel)]="factura.impDto" name="impDto" (ngModelChange)="calcularImportes()" currencyMask [options]="currencyOptions" placeholder="Importe Descuentos (€)"/>
+          <label for="impDto">Importe Descuentos (€)</label>
+        </div>
+        <div class="col-md-4 form-floating mb-3">
+          <select class="form-select" id="tipoIVA" [(ngModel)]="tipoIVA" name="tipoIVA" [required]="registrarFactura" (ngModelChange)="calcularImportes()">
+            <option [value]="0.00">Sin IVA</option>
+            <option [value]="0.04">4%</option>
+            <option [value]="0.10">10%</option>
+            <option [value]="0.21">21%</option>
+          </select>
+          <label for="tipoIVA">Tipo IVA <span class="text-danger">*</span></label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 form-floating mb-3">
+          <select class="form-select" id="indArea" [(ngModel)]="factura.indArea" name="indArea" [required]="registrarFactura">
+            <option [value]="null">-- Seleccione --</option>
+            <option [value]="1">Gastos</option>
+            <option [value]="2">No presupuestaria</option>
+          </select>
+          <label for="indArea">Área <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-md-6 form-floating mb-3">
+          <input type="text" class="form-control" id="txtJusGasto" [(ngModel)]="factura.txtJusGasto" name="txtJusGasto" maxlength="200" placeholder="Descripción del Gasto"/>
+          <label for="txtJusGasto">Descripción del Gasto</label>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-4 form-floating mb-3">
+          <input type="text" class="form-control readonly-field" id="impIva" name="impIva" [(ngModel)]="factura.impIva" currencyMask [options]="currencyOptions" readonly placeholder="Importe IVA (€)"/>
+          <label for="impIva">Importe IVA (€)</label>
+        </div>
+        <div class="col-md-4 form-floating mb-3">
+          <input type="text" class="form-control readonly-field" id="impLiqui" name="impLiqui" [(ngModel)]="factura.impLiqui" currencyMask [options]="currencyOptions" readonly placeholder="Importe Líquido (€)"/>
+          <label for="impLiqui">Importe Líquido (€)</label>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="indIvaDeduc" [(ngModel)]="factura.indIvaDeduc" name="indIvaDeduc"/>
+            <label class="form-check-label" for="indIvaDeduc">IVA Deducible</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="modal-footer mt-2 d-flex justify-content-end gap-2">
+      <button type="button" class="submit_footer" (click)="closeModal()">Cancelar</button>
+      <button type="submit" class="submit_footer" [disabled]="entradaForm.invalid">Generar Entrada</button>
+    </div>
+  </form>
+</div>

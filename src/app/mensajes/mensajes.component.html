@@ -1,0 +1,290 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+    <div *ngIf="user" class="col-12 content_gen">
+      <div class="page-panel espacios">
+          <div *ngIf="veorecibidos" class="col-12"> 
+            <div class="listado-titulo-container">
+              <div class="listado-titulo-info">
+                <h2 class="listado-titulo-principal">Listado de Mensajes Recibidos</h2>
+              </div>
+              <div class="listado-botones-navegacion">
+                <button (click)="verEnviados()" class="submit" type="button" title="Ver Mensajes Enviados">
+                  Enviados <i class="bi bi-envelope-arrow-up icons_button_left"></i>
+                </button>
+                <button *ngIf="veoRecha" type="button" (click)="abrirModal('DevolverMensajeModal')" class="submit">
+                  Rechazar <i class="bi bi-envelope-x icons_button_left"></i>
+                </button>
+                <button *ngIf="veorechaTRami" type="button" (click)="TramitarMensaje()" class="submit">
+                  Tramitar <i class="bi bi-arrow-left-right icons_button_left"></i>
+                </button>
+              </div>
+            </div>
+              
+            <div class="grid-container">
+            <jqxGrid class="mat-elevation-z5"
+              [width]="'100%'"
+              [autoheight]="true"
+              [columnsautoresize]="true"
+              [source]="sourceMensajeRecibidos" 
+              [pagesize]="10"
+              [pageable]="true" 
+              [altrows]="true" 
+              [filterable]="true" 
+              [sortable]="true" 
+              (onRowclick)="ClickMensajesRecibidos($event)"
+              (onRowdoubleclick)="abrirModalVerMensaje($event)"
+              [columns]="columnsMensajeRecibidos" 
+              [localization]="localizationObject"
+              #grid>
+            </jqxGrid>
+            </div>
+          </div>
+
+          <div *ngIf="veoenviados" class="col-12">
+            <div class="listado-titulo-container">
+              <div class="listado-titulo-info">
+                <h2 class="listado-titulo-principal">Listado de Mensajes Enviados</h2>
+              </div>
+              <div class="listado-botones-navegacion">
+                <button (click)="verRecibidos()" class="submit" type="button" title="Ver Mensajes Recibidos">
+                  Recibidos <i class="bi bi-envelope-arrow-down icons_button_left"></i>
+                </button>
+              </div>
+            </div>
+            <div class="grid-container">
+            <jqxGrid class="mat-elevation-z5"
+              [width]="'100%'"
+              [autoheight]="true"
+              [columnsautoresize]="true"
+              [source]="sourceMensajeEnviados" 
+              [pagesize]="10"
+              [pageable]="true" 
+              [altrows]="true" 
+              [filterable]="true" 
+              [sortable]="true" 
+              (onRowclick)="ClickMensajesEnviados($event)"
+              (onRowdoubleclick)="abrirModalVerMensaje($event)"
+              [columns]="columnsMensajeEnviados" 
+              [localization]="localizationObject"
+              #grid>
+            </jqxGrid>
+            </div>
+          </div>
+        </div>
+
+      <mat-menu #menu="matMenu" >
+        <button  mat-menu-item type="button"  data-bs-toggle="modal" data-bs-target="#VerMensajeModal" data-bs-backdrop="static" data-bs-whatever="@vermensaje">Ver Mensaje</button>
+        <button  *ngIf="mensajeEstadoReci==1" mat-menu-item type="button"  data-bs-toggle="modal" data-bs-target="#EditarMensajeModal" data-bs-whatever="@editarmensaje">Editar Mensaje</button>
+        <button  *ngIf="mensajeEstadoReci==1" (click)="tramitarMensaje()" mat-menu-item type="button"  > Tramitar Mensaje</button>  
+        <button *ngIf="mensajeEstadoReci==1"  mat-menu-item type="button"  data-bs-toggle="modal" data-bs-target="#DevolverMensajeModal" data-bs-whatever="@devolvermensaje">Rechazo Mensaje </button>
+      </mat-menu>
+    </div>
+
+    <!-- ****************** zona para MODAL ************************************ -->
+
+
+    <!--    EDITAR MENSAJE-->
+    <div class="modal fade" id="EditarMensajeModal" tabindex="-1" aria-labelledby="EditarMensajeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="EditarMensajeModalLabel">Editar Mensaje</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('EditarMensajeModal')"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formEditarMensaje" (ngSubmit)="validateAndEditMensaje($event)">
+              <div class="row">
+                <div class="col-sm-6 form-floating">
+                  <input type="text" class="form-control" [value]="leemensaje.descripcion" name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="editarmensaje.descripcion" required>
+                  <label class="form-label dejaEspacio" for="descripcionMensaje">Descripción *</label>
+                </div>
+                <div class="col-sm-3 form-floating">
+                  <select class="form-select" id="destinatario" name="destinatario" [(ngModel)]="editarmensaje.destinatario" required>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let procedipermisos of procedipermiso" [value]="procedipermisos.idOrgUsuar">
+                      {{procedipermisos.usuario}}
+                    </option>
+                  </select>
+                  <label for="destinatario" class="form-label dejaEspacio">Destinatario *</label>
+                </div>
+                <div class="col-sm-3 form-floating">
+                  <select class="form-select" required id="informativo" name="informativo" [(ngModel)]="editarmensaje.informativo">
+                    <option value="" disabled selected></option>
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                  </select>
+                  <label class="form-label dejaEspacio" for="informativo">Informativo *</label>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-4 form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.estado" name="estado" id="estado">
+                  <label class="form-label dejaEspacio" for="estado">Estado</label>
+                </div>
+                <div class="col-sm-4 form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecLectura" name="fecLectura" id="fecLectura">
+                  <label class="form-label dejaEspacio" for="fecLectura">Fecha de lectura</label>
+                </div>
+                <div class="col-sm-4 form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecTramitacion" name="fecTramitacion" id="fecTramitacion">
+                  <label class="form-label dejaEspacio" for="fecTramitacion">Fecha de Tramitación</label>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="submit_footer" (click)="cerrarModal('EditarMensajeModal')">Cancelar</button>
+                <button type="submit" class="submit_footer">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--    RECHAZO MENSAJE-->
+    <div class="modal fade" id="DevolverMensajeModal" tabindex="-1" aria-labelledby="DevolverMensajeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="DevolverMensajeModalLabel">Rechazar Mensaje</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="limpiaRechazarMensaje(); cerrarModal('DevolverMensajeModal')"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formRechazarMensaje" (ngSubmit)="validateAndRechazarMensaje($event)">
+              <div class="mb-3 form-floating">
+                <textarea class="form-control" name="descripcionRechazoMensaje" id="descripcionRechazoMensaje" [(ngModel)]="rechazamensaje.descripcionRechazo" required></textarea>
+                <label class="form-label dejaEspacio" for="descripcionRechazoMensaje">Descripción Rechazo *</label>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="submit_footer" (click)="limpiaRechazarMensaje(); cerrarModal('DevolverMensajeModal')">Cancelar</button>
+                <button type="submit" class="submit_footer">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!--    VER MENSAJE-->
+    <div class="modal fade" id="VerMensajeModal" tabindex="-1" aria-labelledby="VerMensajeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="VerMensajeModalLabel">Ver Mensaje</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('VerMensajeModal')"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="row">
+                <div class="col-12 form-floating mb-3">
+                  <textarea class="form-control" disabled [value]="mensajeDescrip" name="descripcionMensaje" id="descripcionMensaje"></textarea>
+                  <label class="form-label dejaEspacio" for="descripcionMensaje">Descripción</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3 form-floating mb-3">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaInicio" name="fechaInicio" id="fechaInicio">
+                  <label class="form-label dejaEspacio" for="fechaInicio">Fecha de Emisión</label>
+                </div>
+                <div class="col-sm-3 form-floating mb-3">
+                  <input type="text" class="form-control" disabled [value]="mensajeRemitente" name="remitente" id="remitente">
+                  <label class="form-label dejaEspacio" for="remitente">Remitente</label>
+                </div>
+                <div class="col-sm-3 form-floating mb-3">
+                  <input type="text" class="form-control" disabled [value]="mensajeDestinatario" name="destinatario" id="destinatario">
+                  <label class="form-label dejaEspacio" for="destinatario">Destinatario</label>
+                </div>
+                <div class="col-sm-3 form-floating mb-3">
+                  <input type="text" class="form-control" disabled [value]="mensajeEstado" name="estado" id="estado">
+                  <label class="form-label dejaEspacio" for="estado">Estado</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 form-floating mb-3">
+                  <textarea class="form-control" disabled [value]="mensajeDescripcionRechazo" name="descripcionRechazo" id="descripcionRechazo"></textarea>
+                  <label class="form-label dejaEspacio" for="descripcionRechazo">Descripción Rechazo</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-floating mb-3">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaRechazo" name="fechaRechazo" id="fechaRechazo">
+                  <label class="form-label dejaEspacio" for="fechaRechazo">Fecha de Rechazo</label>
+                </div>
+                <div class="col-sm-4 form-floating mb-3">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaLectura" name="fechaLectura" id="fechaLectura">
+                  <label class="form-label dejaEspacio" for="fechaLectura">Fecha de lectura</label>
+                </div>
+                <div class="col-sm-4 form-floating mb-3">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaTramitacion" name="fechaTramitacion" id="fechaTramitacion">
+                  <label class="form-label dejaEspacio" for="fechaTramitacion">Fecha de Tramitación</label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="submit_footer" (click)="marcarLeido(); cerrarModal('VerMensajeModal')">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--    TRAMITAR MENSAJE-->
+    <div class="modal fade" id="TramitarMensajeModal" tabindex="-1" aria-labelledby="TramitarMensajeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="TramitarMensajeModalLabel">Tramitar Mensaje</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('TramitarMensajeModal')"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formTramitarMensaje" (ngSubmit)="validateAndTramitarMensaje($event)">
+              <div class="row">
+                <div class="col-sm-6 form-floating">
+                  <input type="text" class="form-control" [value]="leemensaje.descripcion" name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="editarmensaje.descripcion" required>
+                  <label class="form-label dejaEspacio" for="descripcionMensaje">Descripción *</label>
+                </div>
+                <div class="col-sm-3 form-floating">
+                  <select class="form-select" id="destinatario" name="destinatario" [(ngModel)]="editarmensaje.destinatario" required>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let procedipermisos of procedipermiso" [value]="procedipermisos.idOrgUsuar">
+                      {{procedipermisos.usuario}}
+                    </option>
+                  </select>
+                  <label for="destinatario" class="form-label dejaEspacio">Destinatario *</label>
+                </div>
+                <div class="col-sm-3 form-floating">
+                  <select class="form-select" required id="informativo" name="informativo" [(ngModel)]="editarmensaje.informativo">
+                    <option value="" disabled selected></option>
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                  </select>
+                  <label class="form-label dejaEspacio" for="informativo">Informativo *</label>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-4 form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.estado" name="estado" id="estado">
+                  <label class="form-label dejaEspacio" for="estado">Estado</label>
+                </div>
+                <div class="col-sm-4 form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecLectura" name="fecLectura" id="fecLectura">
+                  <label class="form-label dejaEspacio" for="fecLectura">Fecha de lectura</label>
+                </div>
+                <div class="col-sm-4 form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecTramitacion" name="fecTramitacion" id="fecTramitacion">
+                  <label class="form-label dejaEspacio" for="fecTramitacion">Fecha de Tramitación</label>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="submit_footer" (click)="cerrarModal('TramitarMensajeModal')">Cancelar</button>
+                <button type="submit" class="submit_footer">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

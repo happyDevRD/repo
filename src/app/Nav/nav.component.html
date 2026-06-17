@@ -1,0 +1,48 @@
+<div class="sidebar-overlay"
+     [class.sidebar-overlay--visible]="mobileMenuOpen"
+     (click)="closeMobileMenu()"
+     aria-hidden="true"></div>
+
+<aside id="sidebar"
+       class="app-sidebar"
+       role="navigation"
+       aria-label="Menú principal"
+       [class.app-sidebar--open]="mobileMenuOpen">
+
+  <div class="app-sidebar__header">
+    <img [src]="escudo" alt="Escudo del departamento" class="app-sidebar__logo" />
+  </div>
+
+  <nav class="app-sidebar__nav" aria-label="Secciones de la aplicación">
+    <ul class="app-sidebar__list" role="list">
+      <li class="app-sidebar__item" *ngFor="let link of navLinks">
+        <a class="app-sidebar__link"
+           [routerLink]="link.path"
+           routerLinkActive="app-sidebar__link--active"
+           [routerLinkActiveOptions]="{ exact: link.exact !== false }"
+           (click)="closeMobileMenu()">
+          <i class="bi app-sidebar__icon" [ngClass]="link.icon" aria-hidden="true"></i>
+          <span class="app-sidebar__label">{{ link.label }}</span>
+          <span *ngIf="getBadgeCount(link) > 0"
+                class="app-sidebar__badge"
+                [attr.aria-label]="getBadgeCount(link) + ' pendientes'">
+            {{ getBadgeCount(link) }}
+          </span>
+        </a>
+      </li>
+
+      <li class="app-sidebar__item app-sidebar__item--logout">
+        <button type="button"
+                class="app-sidebar__link app-sidebar__link--logout"
+                (click)="logout()">
+          <i class="bi bi-box-arrow-right app-sidebar__icon" aria-hidden="true"></i>
+          <span class="app-sidebar__label">Salir</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="app-sidebar__footer">
+    <img src="assets/images/iflow.png" alt="iFlow" class="app-sidebar__brand" />
+  </div>
+</aside>

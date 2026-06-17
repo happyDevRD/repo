@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+
+    <div class="col-12 content_gen">
+      <app-menuprocedimiento></app-menuprocedimiento>
+
+      <div class="page-panel">
+        <div class="listado-titulo-container">
+          <h2 class="listado-titulo-principal">Tareas del procedimiento</h2>
+          <div class="titulo-botones-container">
+            <button class="btn btn-rounded btn-sm"
+                    data-bs-target="#tareasModal"
+                    data-bs-toggle="modal"
+                    type="button"
+                    title="Nueva tarea">
+              <img src="assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive grid-container">
+          <table class="table table-iflow table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Descripción</th>
+                <th scope="col">Fase</th>
+                <th scope="col">Plazo</th>
+                <th scope="col">Tipo plazo</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let procedimiento of procedimientos; trackBy: trackByFn">
+                <td>{{ procedimiento.descripcion }}</td>
+                <td>{{ procedimiento.departamento?.idOrgan }}</td>
+                <td>{{ procedimiento.departamento?.cadEleme }}</td>
+                <td>{{ procedimiento.departamento?.organo }}</td>
+                <td>—</td>
+              </tr>
+              <tr *ngIf="!procedimientos?.length">
+                <td colspan="5" class="table-empty">No hay tareas registradas</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modales existentes -->
+<div class="modal fade" id="tareasModal" tabindex="-1" aria-labelledby="tareasModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tareasModalLabel">Nueva tarea</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary mb-0">Formulario de nueva tarea (en desarrollo).</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="submit_footer" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="submit_footer" data-bs-dismiss="modal">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

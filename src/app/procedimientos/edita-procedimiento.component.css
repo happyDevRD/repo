@@ -1,0 +1,33 @@
+
+.mueveBottonL{
+
+  text-align: left;
+}
+.mueveBottonR{
+
+    text-align: right;
+}
+
+
+.mueveBottonD{
+
+    text-align: left;
+}
+.imgUser {
+    display: flex;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    margin-top: 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    justify-content: center;
+  }
+.tipo {
+  font-size: 0.9rem;
+  color: var(--iflow-primary);
+}
+
+.btn-space {
+  margin-right: 5px;
+}

@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /iFlow/
+
+  # Si existe el fichero o carpeta, sírvelo directamente
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Si no existe, reescribe la petición a index.html
+  RewriteRule . /iFlow/index.html [L]
+</IfModule>

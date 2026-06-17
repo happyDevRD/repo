@@ -1,0 +1,446 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+
+    <div class="col-12 content_gen">
+      <app-menuprocedimiento></app-menuprocedimiento>
+      <div class="page-panel">
+        <ul class="nav nav-tabs nav-tabs-iflow" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button (click)="cambiamosDOM()" aria-controls="datosProcedi" aria-selected="true" class="nav-link active"
+      data-bs-target="#datosProcedi" data-bs-toggle="tab" id="datosProcedi-tab" role="tab" type="button">
+      Editar procedimiento
+    </button>
+  </li>
+  <li class="nav-item" id="idtarea" role="presentation">
+    <button aria-controls="tareaProcedi" aria-selected="false" class="nav-link" data-bs-target="#tareaProcedi"
+      data-bs-toggle="tab" id="tareaProcedi-tab" role="tab" type="button">
+      Tareas del procedimiento
+    </button>
+  </li>
+</ul>
+<!-- FIN DE MENU -->
+
+<div class="tab-content" id="myTabContent">
+  <!-- EDITAR PROCEDIMIENTO -->
+  <div aria-labelledby="datosProcedi-tab" class="tab-pane fade show active" id="datosProcedi" role="tabpanel">
+    <div class="form-section">
+          <form (ngSubmit)="editaProcedi(procedimiento.id)">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-sm-4 form-floating">
+                  <input [(ngModel)]="editarprocedi.descripcion" class="form-control" name="descripcion" type="text"
+                    value="{{procedimiento.descripcion}}">
+                  <label class="col-form-label col-sm-3 form-label" for="descripcion">
+                    Descripción:
+                  </label>
+                  <br>
+                </div>
+
+                <div class="col-sm-4 form-floating">
+                  <input [(ngModel)]="procedimiento.departamento.desEleme" class="form-control" name="departamento"
+                    readonly type="text">
+                  <label class="col-form-label col-sm-3 form-label" for="departamento">
+                    Departamento:
+                  </label>
+                  <br>
+                </div>
+
+                <div class="col-sm-4 form-floating">
+                  <input [(ngModel)]="editarprocedi.codigoSia" class="form-control" name="codigoSIA" type="text"
+                    value="{{procedimiento.codigoSia}}">
+                  <label class="col-form-label col-sm-3 form-label" for="codigoSIA">
+                    Código SIA :
+                  </label>
+                  <br>
+                </div>
+                <!-- hasta aqui -->
+              </div>
+
+              <div class="form-actions">
+                <button [routerLink]="['/procedimientos']" class="submit btn-volver" name="buttom" type="button">
+                  Cancelar
+                </button>
+                <button class="submit" type="submit">Modificar</button>
+              </div>
+            </div>
+          </form>
+    </div>
+  </div>
+  <br>
+
+  <!-- PERMISO PROCEDIMIENTOS -->
+  <div aria-labelledby="permiProcedi-tab" class="tab-pane fade" id="permiProcedi" role="tabpanel">
+    <div class="container">
+      <div class="row">
+        <div class="col-4">
+          <h5 class="display-6 tipo colorAzul">
+            Procedimiento : {{ procedimiento.descripcion }}
+          </h5>
+        </div>
+        <div class="col-3 mueveBottonL">
+          <!-- Botonera de opciones -->
+          <button class="btn btn-rounded btn-sm" data-bs-target="#staticBackdrop" data-bs-toggle="modal" type="button">
+            <img height="25" src="../assets/nuevo.svg" width="25" />
+          </button>
+          <button (click)="deletePermisoProcedimiento()" *ngIf="edicion==true" class="btn btn-rounded btn-sm"
+            title="Eliminar permiso" type="button">
+            <img height="25" src="../assets/papelera2.svg" width="25" alt="Eliminar" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <br>
+
+    <div class="grid-container" id="columnsPermi">
+      <jqxGrid #grid (onRowclick)="idpermisosPermi($event)" [altrows]="true" [autoheight]="true" [autoheight]="true"
+        [columns]="columnsPermi" [columnsautoresize]="true" [filterable]="true" [localization]="localizationObject"
+        [pageable]="true" [pagesize]="5" [sortable]="true" [source]="sourcePermi" [theme]="'material'" [width]="'100%'"
+        class="mat-elevation-z5" id="grid">
+      </jqxGrid>
+    </div>
+    <div class="col">
+      <h6>*Pulsa sobre el usuario para ver la descripción</h6>
+    </div>
+    <br>
+
+    <!-- Modal para nuevo permiso -->
+    <div aria-hidden="true" aria-labelledby="tareasModalLabel" class="modal fade" id="staticBackdrop" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Nuevo Permiso
+            </h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button">
+            </button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="createPermisoProcedi()">
+              <div class="mb-3 form-floating">
+                <select [(ngModel)]="creapermisoprocedi.usuario" class="form-select" id="departamento"
+                  name="plantilladefecto">
+                  <option *ngFor="let procedipermisos of procedipermiso" name="usuario"
+                    value="{{procedipermisos.usuario}}">
+                    {{ procedipermisos.usuario }}
+                  </option>
+                </select>
+                <label class="col-form-label form-label" for="departamento">
+                  Usuario:
+                </label>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">
+                  Cancelar
+                </button>
+                <button class="btn btn-outline-primary" data-bs-dismiss="modal" role="button">
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FIN PERMISO PROCEDIMIENTOS -->
+
+  <!-- TAREAS PROCEDIMIENTOS -->
+  <div aria-labelledby="tareaProcedi-tab" class="tab-panel fade" id="tareaProcedi" role="tabpanel">
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <h5 class="display-6 tipo">
+            Procedimiento : {{ procedimiento.descripcion }}
+          </h5>
+        </div>
+        <div class="col-6 mueveBottonR">
+          <button class="btn btn-rounded btn-sm" data-bs-target="#tareasModal" data-bs-toggle="modal"
+            data-bs-whatever="@mdo" title="Nueva Tarea" type="button">
+            <img height="25" src="../assets/nuevo.svg" width="25" />
+          </button>
+          <button (click)="deleteTareaProcedimiento()" *ngIf="edicion==true" class="btn btn-rounded btn-sm"
+            title="Eliminar tarea" type="button">
+            <img height="25" src="../assets/papelera2.svg" width="25" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="col"></div>
+      <div class="col-1"></div>
+      <div class="col-3"></div>
+    </div>
+    <br>
+
+    <div class="container">
+      <jqxGrid #grid (onRowclick)="envioid($event)" [altrows]="true" [autoheight]="true" [autoheight]="true"
+        [columns]="columns" [columnsautoresize]="true" [filterable]="true" [height]="332"
+        [localization]="localizationObject" [pageable]="true" [pagesize]="5" [sortable]="true" [source]="source"
+        [theme]="'material'" [width]="'100%'" class="mat-elevation-z5">
+      </jqxGrid>
+    </div>
+    <br>
+
+    <div class="container">
+      <br>
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-3"></div>
+        <div class="col-3"></div>
+        <div *ngIf="vermenu == true" class="col-3 action-panel">
+          <h6>Acciones de Permisos</h6>
+          <!-- Botonera de opciones -->
+          <button (click)="activaFormNuevoPermiso()" *ngIf="botonNuevoPermiso" class="btn btn-rounded btn-sm"
+            title="Nuevo permiso de la Tarea" type="button">
+            <img height="25" src="../assets/nuevo.svg" width="25" />
+          </button>
+          <button (click)="deletePermisoProcedimiento()" *ngIf="veoBorrarTarea" class="btn btn-rounded btn-sm"
+            title="Eliminar Permiso de la Tarea" type="button">
+            <img height="25" src="../assets/papelera2.svg" width="25" />
+          </button>
+          <br>
+          <form (ngSubmit)="createPermisoProcedi()" *ngIf="activoFormNuevoPermiso"
+            class="row row-cols-lg-auto g-3 align-items-center">
+            <div class="col-sm-3 form-floating">
+              <select [(ngModel)]="creapermisoprocedi.usuario" class="form-select" id="departamento"
+                name="plantilladefecto">
+                <option *ngFor="let procedipermisos of procedipermiso" name="usuario"
+                  value="{{procedipermisos.usuario}}">
+                  {{ procedipermisos.usuario }}
+                </option>
+              </select>
+              <label class="col-form-label form-label" for="departamento">
+                Usuario:
+              </label>
+            </div>
+            <div class="col footer">
+              <button class="btn btn-outline-primary" role="button">Crear</button>
+              <p></p>
+              <button (click)="atrasCrearPermisoProcedi()" class="btn btn-outline-warning">
+                Atras
+              </button>
+            </div>
+          </form>
+          <br>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-4">
+          <h5 *ngIf="usuarioTarea!" class="display-6 tipo">
+            Descripción Usuario : {{ usuarioTareaDescrip }}
+          </h5>
+        </div>
+        <div *ngIf="vermenu == true" class="col-4">
+          <h5 class="display-6 tipo">Permisos de la Tarea</h5>
+        </div>
+        <div class="col-4"></div>
+      </div>
+    </div>
+
+    <div *ngIf="vermenu == true" class="container" id="columnsPermi">
+      <jqxGrid #grid (onRowclick)="idpermisosPermi($event)" [altrows]="true" [autoheight]="true" [autoheight]="true"
+        [columns]="columnsPermi" [columnsautoresize]="true" [filterable]="true" [localization]="localizationObject"
+        [pageable]="true" [pagesize]="5" [sortable]="true" [source]="sourcePermi" [theme]="'material'" [width]="'100%'"
+        class="mat-elevation-z5" id="grid">
+      </jqxGrid>
+    </div>
+    <div class="col">
+      <h6 *ngIf="vermenu == true">
+        *Pulsa sobre el usuario para ver la descripción
+      </h6>
+    </div>
+    <br>
+    <br>
+
+    <!-- MODAL NUEVA TAREA PROCEDIMIENTO -->
+    <div aria-hidden="true" aria-labelledby="tareasModalLabel" class="modal fade" id="tareasModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tareasModalLabel">
+              Nueva tarea del procedimientos
+            </h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button">
+            </button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="createTareaProcedi(idProcedimiento)">
+              <div class="mb-3">
+                <input [(ngModel)]="creatareaprocedi.descripcion" class="form-control" id="descripcion"
+                  name="descripcion" placeholder="Descripción" type="text">
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label" for="departamento">
+                  Seleccionar fase:
+                </label>
+                <select [(ngModel)]="creatareaprocedi.fasetarea" class="form-select" id="departamento" name="fase">
+                  <option value="INICIO">Inicio</option>
+                  <option value="INSTRUCCION">Instrucción</option>
+                  <option value="RESOLUCION">Resolución</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label" for="departamento">
+                  Plantilla por defecto:
+                </label>
+                <select (change)="peparadatosfirma(creatareaprocedi.plantilladefecto)"
+                  [(ngModel)]="creatareaprocedi.plantilladefecto" class="form-select" id="departamento"
+                  name="plantilladefecto">
+                  <option value=""> Sin Plantilla</option>
+                  <option *ngFor="let plantillatareas of plantillatarea" value={{plantillatareas.plantilla}}>
+                    {{ plantillatareas.desPlant }}
+                  </option>
+                </select>
+              </div>
+              <div class="row">
+                <div class="col-8 col-sm-6">
+                  <label class="col-form-label" for="departamento">
+                    Plazo:
+                  </label>
+                  <input [(ngModel)]="creatareaprocedi.plazo" class="form-control" id="plantilla" max="365" min="1"
+                    name="plazo" required="required" type="number">
+                </div>
+                <div class="col-8 col-sm-6">
+                  <label class="col-form-label" for="departamento">
+                    Seleccionar tipo plazo:
+                  </label>
+                  <select [(ngModel)]="creatareaprocedi.tipoplazo" class="form-select" id="departamento"
+                    name="tipoplazo">
+                    <option value="SINPLAZO">Sin plazo</option>
+                    <option value="DIAS">Dia</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label" for="departamento">
+                  firma por defecto:
+                </label>
+                <select [(ngModel)]="creatareaprocedi.firmapordefecto" class="form-select" id="departamento"
+                  name="firmapordefecto">
+                  <option *ngFor="let firmaslistar of firmalistar" value={{firmaslistar.idProFirma}}>
+                    {{ firmaslistar.descripcionCircuito }}
+                  </option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">
+                  Cancelar
+                </button>
+                <button class="btn btn-outline-primary" data-bs-dismiss="modal" role="button">
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL MODIFICAR TAREA PROCEDIMIENTO -->
+    <div aria-hidden="true" aria-labelledby="ModifitareasModalLabel" class="modal fade" id="modifitareasModal"
+      tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="modifitareasModalLabel">
+              Modificar tarea procedimientos
+            </h4>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button">
+            </button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="editaTareaProcedim()">
+              <div class="mb-3 form-floating">
+                <input [(ngModel)]="editatareaprocedi.descripcion" class="form-control" id="descripcion"
+                  name="descripcion" type="text">
+                <label class="form-label" for="descripcion">
+                  Descripción
+                </label>
+              </div>
+              <div class="mb-3 form-floating">
+                <select [(ngModel)]="editatareaprocedi.faseTarea" class="form-select" id="fase"
+                  name="faseTarea">
+                  <option value="INICIO">Inicio</option>
+                  <option value="INSTRUCCION">Instrucción</option>
+                  <option value="RESOLUCION">Resolución</option>
+                </select>
+                <label class="form-label" for="fase">
+                  Selecciona Fase
+                </label>
+              </div>
+              <div class="mb-3 form-floating">
+                <select (change)="peparadatosfirma(editatareaprocedi.plantillaDefecto)"
+                  [(ngModel)]="editatareaprocedi.plantillaDefecto"
+                  class="form-select" id="departamento" name="plantillaDefecto"
+                  required="required">
+                  <option value=""> Sin Plantilla</option>
+                  <option *ngFor="let plantillatareas of plantillatarea" value={{plantillatareas.plantilla}}>
+                    {{ plantillatareas.desPlant }}
+                  </option>
+                </select>
+                <label class="col-form-label" for="departamento">
+                  Plantilla por defecto:
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-8 col-sm-6 form-floating">
+                  <input [(ngModel)]="editatareaprocedi.plazo" class="form-control" id="plazo" max="365" min="1"
+                    name="plazo" type="number">
+                  <label class="col-form-label" for="plazo">
+                    Plazo:
+                  </label>
+                </div>
+                <div class="col-8 col-sm-6 form-floating">
+                  <select [(ngModel)]="editatareaprocedi.tipoPlazo" class="form-select"
+                    id="tipoPlazo" name="tipoPlazo">
+                    <option value="SINPLAZO">Sin plazo</option>
+                    <option value="DIAS">Día</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                  <label class="col-form-label" for="tipoPlazo">
+                    Seleccionar tipo plazo:
+                  </label>
+                </div>
+              </div>
+              <div class="mb-3 form-floating">
+                <select [(ngModel)]="editatareaprocedi.firmaPorDefecto" class="form-select"
+                  id="firmaPorDefecto" name="firmaPorDefecto">
+                  <option value="">Sin firma</option>
+                  <option *ngFor="let firmaslistar of firmalistar" value={{firmaslistar.idProFirma}}>
+                    {{ firmaslistar.descripcionCircuito }}
+                  </option>
+                </select>
+                <label class="col-form-label" for="firmaPorDefecto">
+                  Firma por defecto:
+                </label>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">
+                  Cancelar
+                </button>
+                <button class="btn btn-outline-primary" data-bs-dismiss="modal" role="button">
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+.col-select {
+  width: 40px;
+}
+
+.table-row-selected {
+  background-color: rgba(105, 120, 255, 0.08) !important;
+}

@@ -1,0 +1,310 @@
+<div class="container-fluid">
+  <app-headers></app-headers>
+  <div class="row">
+    <app-nav></app-nav>
+
+    <div *ngIf="trauser == '0'" class="col-12 content_gen">
+      <div class="mensaje-sin-permiso">
+        <h2>Este usuario no tiene acceso a expedientes</h2>
+        <img src="../assets/greenaall_logo.svg" alt="Greenall" width="200" height="100">
+      </div>
+    </div>
+
+    <div *ngIf="trauser == '1'" class="col-12 content_gen" id="hanging-icons">
+      <div class="page-panel">
+        <!-- Header con información del expediente y navegación -->
+        <div class="expediente-header-container">
+          <div class="expediente-titulo-info">
+            <h3 class="expediente-titulo">Expediente: <span class="expediente-numero">{{verexpediente.ejercicio}}/{{verexpediente.numero}}</span></h3>
+          </div>
+          <div class="expediente-botones-navegacion">
+            <button class="submit margin-right btn-volver" type="button" (click)="volverListadoExpedientes()" 
+              title="Volver al Listado de Expedientes">
+              <i class="bi bi-arrow-left"></i> Volver al Listado
+            </button>
+          </div>
+        </div>
+
+        <!-- Título y botones de interesados -->
+        <div class="listado-titulo-container titulo-separador">
+          <h2 class="listado-titulo-principal">
+            <span>
+              Listado de Interesados
+            </span>
+          </h2>
+          <div class="titulo-botones-container">
+            <button *ngIf="veoBorraInteresado" class="btn btn-rounded btn-sm" type="button" (click)="abrirModal('verInteresadoModal')">
+              <img src="../assets/eye.svg" width="20" height="20"/>
+            </button>
+            <button class="btn btn-rounded btn-sm" type="button" title="Nuevo Interesado" (click)="abrirModal('ninteresadoModal')">
+              <img src="../assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
+            </button>
+            <button *ngIf="veoBorraInteresado" class="btn btn-rounded btn-sm" title="Borrar Interesado" type="button" (click)="borrarinteresados()">
+              <img src="../assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid de Interesados -->
+        <div class="grid-container">
+        <jqxGrid class="mat-elevation-z5" 
+                [width]="'100%'"
+                [autoheight]="true"
+                [columnsautoresize]="true"
+                [source]="sourceInteresado"  
+                [pagesize]="10"
+                [autoheight]="true" 
+                [pageable]="true" 
+                [altrows]="true" 
+                [filterable]="true" 
+                [sortable]="true" 
+                (onRowclick)="clickInteresado($event)"
+                (onRowdoubleclick)="abrirModalVerInteresado($event)"
+                [columns]="columnsInteresado" 
+                [localization]="localizationObject"
+                #grid>
+        </jqxGrid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO INTERESADO-->
+<div class="modal fade" id="ninteresadoModal" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" aria-labelledby="ninteresadoModalLabel" aria-hidden="true" data-bs-target="#staticBackdrop">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="ninteresadoModalLabel">Nuevo Interesado</h4>
+        <button type="button" class="btn-close" (click)="cerrarModal('ninteresadoModal')" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="crearInteresado()">
+          <!-- Datos de Identificación -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <h5 class="text-primary mb-3 border-bottom pb-2">
+                <i class="bi bi-person-plus-fill me-2"></i>Datos de Identificación
+              </h5>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" [(ngModel)]="crearinteresado.usuario" (change)="solicitadni(crearinteresado.usuario)" (blur)="validateField('interesado', crearinteresado.usuario)" id="interesado" name="interesado" required>                 
+              <label for="interesado" class="form-label dejaEspacio">Interesado DNI*</label>
+            </div>
+            <div class="col-md-6 form-floating mb-3">
+              <select class="form-select" id="fnotifi" name="fnotifi" [(ngModel)]="crearinteresado.tipForNotif" (change)="validateField('fnotifi', crearinteresado.tipForNotif)" required>
+                <option value="" disabled selected></option>
+                <option name="correoP" value=0>Correo postal</option>
+                <option name="telematico" value=1>Telemática</option>
+              </select>
+              <label class="form-label dejaEspacio" for="fnotifi">Forma Notificación*</label>
+            </div>
+          </div>
+                    
+          <div *ngIf="crearinteresado.tipForNotif==1" class="form-floating mb-3">
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="crearinteresado.email" (blur)="validateField('email', crearinteresado.email)" required>
+            <label for="email" class="form-label dejaEspacio">Correo electrónico*</label>
+          </div> 
+        
+          <!-- Datos del Interesado (cuando se consulta DNI) -->
+          <div *ngIf="dniok" class="row mb-4">
+            <div class="col-12">
+              <h5 class="text-success mb-3 border-bottom pb-2">
+                <i class="bi bi-person-check-fill me-2"></i>Datos del Interesado
+              </h5>
+            </div>
+          </div>
+          
+          <div *ngIf="dniok" class="row">
+            <div class="col-md-12 form-floating mb-3">
+              <input type="text" disabled class="form-control" value={{nombredni}} id="nombre" name="nombre">
+              <label class="form-label dejaEspacio" for="nombre">Nombre</label>
+            </div>
+          </div>
+          
+          <div *ngIf="dniok" class="form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{direcciondni}}" id="direccion" name="direccion">
+            <label for="direccion" class="form-label dejaEspacio">Dirección</label>
+          </div> 
+          
+          <div *ngIf="dniok" class="row">
+            <div class="col-md-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{cpdni}}" id="cp" name="cp">
+              <label class="form-label dejaEspacio" for="cp">Código Postal</label>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{provinciadni}}" id="provincia" name="provincia">
+              <label class="form-label dejaEspacio" for="provincia">Provincia</label>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{nommunicipiodni}}" id="Municipio" name="municipio">
+              <label class="form-label dejaEspacio" for="municipio">Municipio</label>
+            </div>     
+          </div>
+          
+          <!-- Datos del Representante -->
+          <div *ngIf="veorepresentante" class="row mt-4 mb-4">
+            <div class="col-12">
+              <h5 class="text-info mb-3 border-bottom pb-2">
+                <i class="bi bi-person-badge-fill me-2"></i>Datos del Representante
+              </h5>
+            </div>
+          </div>
+          
+          <div *ngIf="veorepresentante" class="row mb-3">
+            <div class="col-md-8">
+              <span class="text-muted small">Seleccione si desea incluir un representante</span>
+            </div>
+            <div class="col-md-4 form-check">
+              <input class="form-check-input" checked type="checkbox" name="selecrepre" [value]="1" id="selecrepre" [(ngModel)]="seleccionoRepre">
+              <label class="form-check-label" for="selecrepre">
+                Incluir Representante
+              </label>
+            </div>
+          </div>
+          
+          <div *ngIf="veorepresentante" class="row">
+            <div class="col-md-8 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{representanteexplistar.desPerEntid}}" id="Representante" name="Representante">
+              <label class="form-label dejaEspacio" for="Representante">Representante</label>
+            </div>
+            <div class="col-md-4 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{representanteexplistar.numDocum}}" id="dRepresentante" name="dRepresentante">
+              <label class="form-label dejaEspacio" for="dRepresentante">DNI Representante</label>
+            </div>
+            <div class="col-md-6 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{representanteexplistar.dirPosta}}" id="rDirección" name="rDirección">
+              <label class="form-label dejaEspacio" for="rDirección">Dirección Representante</label>
+            </div>
+            <div class="col-md-3 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{representanteexplistar.municipio}}" id="Municipio" name="Municipio">
+              <label class="form-label dejaEspacio" for="Municipio">Municipio</label>
+            </div>
+            <div class="col-md-3 form-floating mb-3">
+              <input type="text" class="form-control" disabled value="{{representanteexplistar.provincia}}" id="Provincia" name="Provincia">
+              <label class="form-label dejaEspacio" for="Provincia">Provincia</label>
+            </div>
+          </div>
+                                    
+          <div class="modal-footer">
+            <button type="button" class="submit_footer" (click)="cerrarModal('ninteresadoModal')">Cancelar</button>
+            <button type="submit" class="submit_footer" (click)="crearInteresado()">Guardar</button>
+          </div>        
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VER INTERESADO-->
+<div class="modal fade" id="verInteresadoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="verInteresadoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <div class="d-flex align-items-center">
+            <h4 class="modal-title mb-0">Ver Interesado</h4>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="status-indicator me-3" 
+                 [ngClass]="{'status-principal': veoprincipal, 'status-no-principal': !veoprincipal}">
+              <span class="status-text">
+                {{ veoprincipal ? 'Principal' : 'No Principal' }}
+              </span>
+              <img *ngIf="veoprincipal" src="../assets/boton_verde.png" width="16" height="16" alt="Principal" class="ms-2"/> 
+              <img *ngIf="!veoprincipal" src="../assets/boton_rojo.png" width="16" height="16" alt="No Principal" class="ms-2"/>
+            </div>
+            <button type="button" class="btn-close" (click)="cerrarModal('verInteresadoModal')" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <!-- Datos del Interesado -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <h5 class="text-primary mb-3 border-bottom pb-2">
+              <i class="bi bi-person-fill me-2"></i>Datos del Interesado
+            </h5>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-5 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{nombreinteresado}}" id="Interesado" name="Interesado">
+            <label class="form-label dejaEspacio" for="Interesado">Interesado</label>
+          </div>
+          <div class="col-md-4 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{numDocumInter}}" id="dInteresado" name="dInteresado">
+            <label class="form-label dejaEspacio" for="dInteresado">DNI Interesado</label>
+          </div>
+          <div class="col-md-3 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{forNotif}}" id="Notificación" name="Notificación">
+            <label class="form-label dejaEspacio" for="Notificación">Forma de Notificación</label>
+          </div>
+        </div>
+        
+        <div *ngIf="veoemail" class="form-floating mb-3">
+          <input type="text" class="form-control" disabled value="{{emailNotif}}" id="Correo" name="Correo">
+          <label class="form-label dejaEspacio" for="Correo">Correo Electrónico</label>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{dirInter}}" id="Dirección" name="Dirección">
+            <label class="form-label dejaEspacio" for="Dirección">Dirección Interesado</label>
+          </div>
+          <div class="col-md-3 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{desMunicInter}}" id="Municipio" name="Municipio">
+            <label class="form-label dejaEspacio" for="Municipio">Municipio</label>
+          </div>
+          <div class="col-md-3 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{desProviInter}}" id="Provincia" name="Provincia">
+            <label class="form-label dejaEspacio" for="Provincia">Provincia</label>
+          </div>
+        </div>
+
+        <!-- Datos del Representante -->
+        <div class="row mt-4 mb-4">
+          <div class="col-12">
+            <h5 class="text-primary mb-3 border-bottom pb-2">
+              <i class="bi bi-person-badge-fill me-2"></i>Datos del Representante
+            </h5>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-8 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{nomRepre}}" id="Representante" name="Representante">
+            <label class="form-label dejaEspacio" for="Representante">Representante</label>
+          </div>
+          <div class="col-md-4 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{numDocumRepre}}" id="dRepresentante" name="dRepresentante">
+            <label class="form-label dejaEspacio" for="dRepresentante">DNI Representante</label>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{dirRepre}}" id="rDirección" name="rDirección">
+            <label class="form-label dejaEspacio" for="rDirección">Dirección Representante</label>
+          </div>
+          <div class="col-md-3 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{desMunicRepre}}" id="Municipio" name="Municipio">
+            <label class="form-label dejaEspacio" for="Municipio">Municipio</label>
+          </div>
+          <div class="col-md-3 form-floating mb-3">
+            <input type="text" class="form-control" disabled value="{{desProviRepre}}" id="Provincia" name="Provincia">
+            <label class="form-label dejaEspacio" for="Provincia">Provincia</label>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="submit_footer" (click)="cerrarModal('verInteresadoModal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
