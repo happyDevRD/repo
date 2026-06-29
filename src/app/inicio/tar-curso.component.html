@@ -1,16 +1,11 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
-
-    <div class="col-12 content_gen">
-      <app-menu-inicio></app-menu-inicio>
+<app-shell>
+<app-menu-inicio></app-menu-inicio>
 
       <div class="page-panel">
         <div class="listado-titulo-container">
           <h2 class="listado-titulo-principal">Tareas en curso</h2>
           <div class="titulo-botones-container" *ngIf="numeroArchivo">
-            <button type="button" class="submit" (click)="abreArchivo()" title="Abrir archivo">
+            <button type="button" class="btn-iflow btn-iflow--primary" (click)="abreArchivo()" title="Abrir archivo">
               <i class="bi bi-file-earmark-arrow-down"></i> Abrir archivo
             </button>
           </div>
@@ -58,6 +53,4 @@
           </table>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+</app-shell>

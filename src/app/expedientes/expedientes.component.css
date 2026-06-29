@@ -1,5 +1,307 @@
-/* Estilos específicos del componente Expedientes */
+/* ── Página expedientes — paleta neutra ── */
+.expedientes-page {
+  --exp-btn-dark: #212529;
+  --exp-btn-dark-hover: #343a40;
+  --exp-btn-outline: #495057;
+  --exp-btn-danger: #b02a37;
+  --exp-btn-danger-hover: #9a2530;
+  --exp-bs-body: #212529;
+  --exp-bs-secondary: #6c757d;
+  --exp-bs-border: #dee2e6;
+  --exp-bs-light: #f8f9fa;
+  --exp-bs-disabled-bg: #e9ecef;
+  --exp-bs-disabled-text: #adb5bd;
 
+  padding-top: 0.5rem;
+}
+
+/* Cabecera */
+.expedientes-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--exp-bs-border);
+}
+
+.expedientes-header__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--exp-bs-secondary);
+}
+
+.expedientes-header__title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--exp-bs-body);
+  line-height: 1.25;
+}
+
+.expedientes-header__nuevo {
+  flex-shrink: 0;
+  background: var(--exp-btn-dark) !important;
+  border-color: var(--exp-btn-dark) !important;
+  box-shadow: none !important;
+}
+
+.expedientes-header__nuevo:hover:not(:disabled) {
+  background: var(--exp-btn-dark-hover) !important;
+  border-color: var(--exp-btn-dark-hover) !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+/* Panel acciones (encima del listado) */
+.expediente-workspace {
+  margin-bottom: 1.15rem;
+  padding: 0.85rem 1rem 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--exp-bs-border);
+  background: #fff;
+}
+
+/* Contexto — una línea compacta */
+.expediente-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.65rem;
+  min-height: 1.75rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--exp-bs-border);
+}
+
+.expediente-context__placeholder {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--exp-bs-secondary);
+}
+
+.expediente-context__placeholder i {
+  color: var(--exp-bs-secondary);
+  opacity: 1;
+}
+
+.expediente-context--activo {
+  gap: 0.5rem;
+}
+
+.expediente-context__numero {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--exp-bs-body);
+}
+
+.expediente-context__sep {
+  width: 1px;
+  height: 1.1rem;
+  background: var(--exp-bs-border);
+  flex-shrink: 0;
+}
+
+.expediente-context__titulo {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--exp-bs-body);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(100%, 28rem);
+}
+
+.expediente-context__procedimiento {
+  font-size: 0.78rem;
+  color: var(--exp-bs-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(100%, 20rem);
+}
+
+/* Barra de acciones — fila horizontal, botones rectangulares */
+.expediente-acciones__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.exp-acciones__sep {
+  display: inline-block;
+  width: 1px;
+  height: 2rem;
+  margin: 0 0.35rem;
+  background: var(--exp-bs-border);
+  flex-shrink: 0;
+}
+
+/* Botón rectangular base */
+.exp-acc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.exp-acc-btn i {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* Primario habilitado — oscuro (btn-dark) */
+.exp-acc-btn--primary:not(:disabled) {
+  background: var(--exp-btn-dark);
+  color: #fff;
+  border-color: var(--exp-btn-dark);
+  font-weight: 600;
+}
+
+.exp-acc-btn--primary:not(:disabled) i {
+  color: #fff;
+}
+
+.exp-acc-btn--primary:not(:disabled):hover {
+  background: var(--exp-btn-dark-hover);
+  border-color: var(--exp-btn-dark-hover);
+  color: #fff;
+}
+
+.exp-acc-btn--destacado:not(:disabled) {
+  font-weight: 600;
+}
+
+/* Outline habilitado — borde oscuro, fondo blanco */
+.exp-acc-btn--outline:not(:disabled) {
+  background: #fff;
+  color: var(--exp-btn-dark);
+  border-color: var(--exp-btn-outline);
+  font-weight: 600;
+}
+
+.exp-acc-btn--outline:not(:disabled) i {
+  color: var(--exp-btn-outline);
+}
+
+.exp-acc-btn--outline:not(:disabled):hover {
+  background: var(--exp-btn-dark);
+  border-color: var(--exp-btn-dark);
+  color: #fff;
+}
+
+.exp-acc-btn--outline:not(:disabled):hover i {
+  color: #fff;
+}
+
+/* Peligro habilitado — rojo apagado */
+.exp-acc-btn--danger:not(:disabled) {
+  background: var(--exp-btn-danger);
+  color: #fff;
+  border-color: var(--exp-btn-danger);
+  font-weight: 600;
+}
+
+.exp-acc-btn--danger:not(:disabled) i {
+  color: #fff;
+}
+
+.exp-acc-btn--danger:not(:disabled):hover {
+  background: var(--exp-btn-danger-hover);
+  border-color: var(--exp-btn-danger-hover);
+  color: #fff;
+}
+
+/* Deshabilitado — gris claro, bien distinto del activo */
+.exp-acc-btn:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  background: var(--exp-bs-disabled-bg);
+  color: var(--exp-bs-disabled-text);
+  border-color: #dee2e6;
+  font-weight: 500;
+}
+
+.exp-acc-btn:disabled i {
+  color: var(--exp-bs-disabled-text);
+}
+
+/* Listado */
+.expedientes-listado__titulo {
+  margin: 0 0 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--exp-bs-secondary);
+}
+
+/* Badges de estado — tonos Bootstrap en esta página */
+.expedientes-page .estado-badge--abierto {
+  background: #d1e7dd;
+  color: #0f5132;
+  border-color: #badbcc;
+}
+
+.expedientes-page .estado-badge--cerrado {
+  background: var(--exp-bs-disabled-bg);
+  color: var(--exp-bs-secondary);
+  border-color: var(--exp-bs-border);
+}
+
+.expedientes-page .estado-badge--cancelado {
+  background: #f8d7da;
+  color: #842029;
+  border-color: #f5c2c7;
+}
+
+@media (max-width: 768px) {
+  .expedientes-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expedientes-header__nuevo {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .expediente-acciones__fila {
+    gap: 0.4rem;
+  }
+
+  .exp-acciones__sep {
+    display: none;
+  }
+
+  .exp-acc-btn {
+    flex: 1 1 calc(50% - 0.4rem);
+    min-width: 0;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Legacy / modales */
 .seccion-acciones-expediente {
   margin-top: 8px;
   margin-bottom: 8px;

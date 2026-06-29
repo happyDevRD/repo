@@ -3,6 +3,7 @@ import {CrearProcedi, Procedimiento,} from './procedimiento';
 import {ProcedimientoService} from './procedimiento.service';
 import {ActivatedRoute, Router} from '@angular/router'
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {UserSessionService} from '../core/service/user-session.service';
 
 @Component({
   selector: 'app-ver-procedimiento',
@@ -17,8 +18,6 @@ export class VerProcedimientoComponent {
 
   public crearprocedi: CrearProcedi = new CrearProcedi();
   public titulo = 'Procedimiento: ';
-  public nivAcces = sessionStorage.getItem('nivAcces');
-  public depart = sessionStorage.getItem('departamento');
   procedimientos!: Procedimiento[];
   public procedimiento: Procedimiento = new Procedimiento();
 
@@ -26,8 +25,17 @@ export class VerProcedimientoComponent {
   constructor(public procedimientoService: ProcedimientoService,
               public http: HttpClient,
               public router: Router,
-              public activatedRoute: ActivatedRoute
+              public activatedRoute: ActivatedRoute,
+              public session: UserSessionService
   ) {
+  }
+
+  get nivAcces(): string | null {
+    return this.session.nivAcces;
+  }
+
+  get depart(): string | null {
+    return this.session.department;
   }
 
 

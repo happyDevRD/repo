@@ -5,6 +5,7 @@ import { EntradaService } from 'src/app/core/service/entrada.service';
 import { TemaDocumentoService } from '../../core/service/documento/tema-documento.service';
 import { ContabilidadService } from '../../core/service/contabilidad/contabilidad.service';
 import Swal from 'sweetalert2';
+import { UserSessionService } from '../../core/service/user-session.service';
 
 interface Contabilidad {
   idConta: number;
@@ -28,7 +29,6 @@ export class GenerarEntradaComponent implements OnInit {
   @ViewChild('entradaForm') entradaForm!: NgForm;
 
   // Propiedades del componente
-  public usuario = sessionStorage.getItem('user');
   public fechaHoy: string = new Date().toISOString().split('T')[0];
   public tipoIVA: number = 0.00;
   public currencyOptions = {
@@ -55,9 +55,14 @@ export class GenerarEntradaComponent implements OnInit {
   constructor(
     private entradaService: EntradaService,
     private temaDocumentoService: TemaDocumentoService,
-    private contabilidadService: ContabilidadService
+    private contabilidadService: ContabilidadService,
+    private session: UserSessionService
   ) {
     this.resetFactura(); // Inicializa la factura
+  }
+
+  get usuario(): string | null {
+    return this.session.user;
   }
 
   ngOnInit(): void {

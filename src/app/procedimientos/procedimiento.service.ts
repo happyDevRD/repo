@@ -18,6 +18,7 @@ import {map, Observable, of, tap, catchError, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from 'src/environments/environment';
+import {UserSessionService} from '../core/service/user-session.service';
 import {ReciboCabeceraDto} from "../core/models/recibo-cabecera.dto";
 import {TareaTramiteExpedienteVer} from "../core/models/tareaTramite/tarea-tramite-expediente-ver.dto";
 
@@ -27,13 +28,8 @@ import {TareaTramiteExpedienteVer} from "../core/models/tareaTramite/tarea-trami
 })
 export class ProcedimientoService {
 
-  public nivAcces = sessionStorage.getItem('nivAcces');
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
-  public user = sessionStorage.getItem('user');
   public identiprocedi!: number;
 
-
-  public urlEndPoint: string = `${environment.apiUrl}procedimiento/listar/${this.idOrgElemen}`;
   public urlModifica: string = `${environment.apiUrl}procedimiento/ver`;
   public urlCrear: string = `${environment.apiUrl}procedimiento/crear`;
   public urlCrearAtributo: string = `${environment.apiUrl}metadatoGrupoAtributo/crear`;
@@ -58,7 +54,28 @@ export class ProcedimientoService {
     {'Content-Type': 'application/json'}
   );
 
-  constructor( public http: HttpClient, public router: Router, public activatedRoute: ActivatedRoute ) { }
+  constructor(
+    public http: HttpClient,
+    public router: Router,
+    public activatedRoute: ActivatedRoute,
+    private session: UserSessionService
+  ) { }
+
+  get nivAcces(): string | null {
+    return this.session.nivAcces;
+  }
+
+  get idOrgElemen(): string | null {
+    return this.session.idOrgEleme;
+  }
+
+  get user(): string | null {
+    return this.session.user;
+  }
+
+  get urlEndPoint(): string {
+    return `${environment.apiUrl}procedimiento/listar/${this.idOrgElemen}`;
+  }
 
   getProcedimientos(): Observable<Procedimiento[]> {
 

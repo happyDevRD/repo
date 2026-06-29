@@ -3,6 +3,7 @@ import {LiquidacionDto} from "../../models/liquidacion.dto";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import {LiquidacionService} from "../../services/liquidacion.service";
+import {UserSessionService} from "../../../../core/service/user-session.service";
 
 @Component({
   selector: 'app-liquidacion-form',
@@ -15,7 +16,6 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
   @Input() idTipObjTribu: number;
   @Input() idHisTipObjTribu: number;
 
-  public user = sessionStorage.getItem('user');
   public nombreInteresado: string = '';
 
   localIdTipObjTribu: number;
@@ -52,7 +52,12 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
 
   constructor(
     private liquidacionService: LiquidacionService,
+    private session: UserSessionService
   ) { }
+
+  get user(): string | null {
+    return this.session.user;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idTipObjTribu']) {

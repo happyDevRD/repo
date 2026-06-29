@@ -1,10 +1,5 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
-
-    <div class="col-12 content_gen">
-      <app-menuprocedimiento></app-menuprocedimiento>
+<app-shell>
+<app-menuprocedimiento></app-menuprocedimiento>
 
       <div class="page-panel">
         <div class="listado-titulo-container">
@@ -16,9 +11,7 @@
         <div class="empty-state">
           <i class="bi bi-shield-lock empty-state__icon" aria-hidden="true"></i>
           <p>Seleccione un procedimiento y una tarea desde el listado para administrar permisos.</p>
-          <a routerLink="/procedimientos" class="submit">Ir a procedimientos</a>
+          <a routerLink="/procedimientos" class="btn-iflow btn-iflow--primary">Ir a procedimientos</a>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+</app-shell>

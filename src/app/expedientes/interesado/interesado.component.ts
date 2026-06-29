@@ -12,6 +12,7 @@ import { TablaClickHandler } from '../../core/helper/tabla-click-handler';
 import { NotificationService } from '../../core/service/notification.service';
 import { FormValidatorHelper } from '../../core/helper/form-validator.helper';
 import { ModalManagerService } from '../../core/service/modal-manager.service';
+import { UserSessionService } from '../../core/service/user-session.service';
 
 
 
@@ -21,12 +22,8 @@ import { ModalManagerService } from '../../core/service/modal-manager.service';
   styleUrls: ['./interesado.component.css']
 })
 export class InteresadoComponent {
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
   public title = 'Expedientes';
   public relleno:string = 'Datos de prueba';
-  public user = sessionStorage.getItem('user');// lo usamos para filtrar contenidos sin login
-  public soluser = sessionStorage.getItem('solUsuar');// lo usamos para filtrar contenidos
-  public trauser = sessionStorage.getItem('traUsuar');// lo usamos para filtrar contenidos
   public verexpediente:any = new VerExpediente();
   public crearinteresado:CrearInteresado = new CrearInteresado();
   public representanteexplistar:RepresentanteExpLIstar = new RepresentanteExpLIstar();
@@ -378,19 +375,19 @@ public columnrenderer = function (value) {
   return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">' + value + '</div>';
 }
 public columnrendererInteresado = function (value) {
-  return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">'+'<img  src="../assets/interesado.svg" width="20" height="20"/>' + value + '</div>';
+  return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">'+'<img  src="assets/interesado.svg" width="20" height="20"/>' + value + '</div>';
 }
 public columnrendererRepresentante = function (value) {
-  return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">'+'<img  src="../assets/representante.svg" width="20" height="20"/>' + value + '</div>';
+  return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">'+'<img  src="assets/representante.svg" width="20" height="20"/>' + value + '</div>';
 }
 public cellsrenderer = function (row, column, value) {
   return `<div style="text-align: center; margin-top: 5px;">` + value + '</div>';
 }
 public cellsrendererPrincipal = function (row, column, value) {
   if(value == 1){
-    return `<div style="text-align: center; margin-top: 5px;" title="Interesado Principal">` +'<img  src="../assets/boton_verde.png" width="20" height="20"/>'+ '</div>';
+    return `<div style="text-align: center; margin-top: 5px;" title="Interesado Principal">` +'<img  src="assets/boton_verde.png" width="20" height="20"/>'+ '</div>';
   } else {
-    return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>'+ '</div>';
+    return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>'+ '</div>';
   }
 }
 
@@ -537,9 +534,8 @@ public cellsrendererPrincipal = function (row, column, value) {
   public activatedRoute: ActivatedRoute,
   public http: HttpClient,
   private notificationService: NotificationService,
-  private modalManagerService: ModalManagerService
-
-  
+  private modalManagerService: ModalManagerService,
+  public session: UserSessionService
   ){};
 
   // Gestión de modales

@@ -10,12 +10,17 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
+import { UserSessionService } from '../service/user-session.service';
+
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private session: UserSessionService
+  ) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+    const token = this.session.token;
     let request = req;
     if (token && !req.headers.has('Authorization')) {
       request = req.clone({
@@ -25,8 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 && !req.url.includes('/usuario/')) {
-          sessionStorage.removeItem('token');
-          localStorage.removeItem('token');
+          this.session.clear();
           this.router.navigate(['/login']);
         }
         return throwError(() => error);

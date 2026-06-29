@@ -1,6 +1,7 @@
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
+import {UserSessionService} from '../core/service/user-session.service';
 
 @Component({
   selector: 'app-administracion',
@@ -11,7 +12,7 @@ import {MatCardModule} from '@angular/material/card';
 })
 
 export class AdministracionComponent{
-    public  title = 'Administración';
-    public user = sessionStorage.getItem('user');// lo usamos para filtrar contenidos sin login
+    public title = 'Administración';
 
+    constructor(public session: UserSessionService) {}
 }

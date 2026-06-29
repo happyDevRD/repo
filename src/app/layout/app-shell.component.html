@@ -1,0 +1,15 @@
+<div class="app-layout">
+  <app-nav></app-nav>
+
+  <div class="app-layout__workspace">
+    <app-headers class="app-layout__header"></app-headers>
+
+    <main class="app-layout__content"
+          role="main"
+          [attr.id]="contentId || null">
+      <ng-content></ng-content>
+    </main>
+
+    <app-footer class="app-layout__footer"></app-footer>
+  </div>
+</div>

@@ -1,10 +1,5 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
-
-    <div *ngIf="user" class="col-12 content_gen">
-      <div class="page-panel">
+<app-shell *ngIf="session.user">
+<div class="page-panel">
         <div class="listado-titulo-container">
           <h2 class="listado-titulo-principal">{{ title }}</h2>
         </div>
@@ -27,6 +22,4 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+</app-shell>

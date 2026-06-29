@@ -1,0 +1,53 @@
+<div class="modal fade dashboard-grid-modal"
+     [id]="modalId"
+     tabindex="-1"
+     [attr.aria-labelledby]="modalId + 'Label'"
+     aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered dashboard-grid-modal__dialog">
+    <div class="modal-content dashboard-grid-modal__content">
+      <div class="modal-header dashboard-grid-modal__header">
+        <div class="dashboard-grid-modal__header-text">
+          <h4 class="modal-title" [id]="modalId + 'Label'">{{ title }}</h4>
+          <p class="dashboard-grid-modal__meta" *ngIf="recordCount !== null">
+            {{ recordCount }} {{ recordCount === 1 ? 'registro' : 'registros' }}
+          </p>
+        </div>
+        <button type="button"
+                class="btn-close"
+                aria-label="Cerrar"
+                (click)="close()"></button>
+      </div>
+      <div class="modal-body dashboard-grid-modal__body">
+        <p *ngIf="isEmpty" class="dashboard-grid-modal__empty">
+          No hay registros pendientes en esta consulta.
+        </p>
+        <div *ngIf="!isEmpty"
+             class="dashboard-grid-modal__scroll"
+             [style.min-width.px]="gridMinWidth || null">
+          <jqxGrid #grid
+            [width]="'100%'"
+            [height]="gridHeight"
+            [source]="source"
+            [columns]="columns"
+            [filterable]="true"
+            [sortable]="true"
+            [pageable]="true"
+            [pagesize]="10"
+            [altrows]="true"
+            [columnsautoresize]="true"
+            [columnsresize]="true"
+            [localization]="localizationObject"
+            class="mat-elevation-z5 dashboard-grid-modal__grid">
+          </jqxGrid>
+        </div>
+      </div>
+      <div class="modal-footer dashboard-grid-modal__footer">
+        <button type="button"
+                class="btn-iflow btn-iflow--secondary"
+                (click)="close()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

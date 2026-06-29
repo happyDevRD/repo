@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router'
 import swal from 'sweetalert2';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
@@ -12,7 +13,7 @@ import { FileUploadService, FileUploadConfig } from '../core/service/file-upload
 import { ModalService } from '../core/service/modal.service';
 import { NotificationService } from '../core/service/notification.service';
 import { ModalManagerService } from '../core/service/modal-manager.service';
-import * as $ from "jquery";
+import { UserSessionService } from '../core/service/user-session.service';
 import { environment } from 'src/environments/environment';
 import { jqxGrid_ES } from 'src/translations/jqxGrid_translate';
 import { GridRadioSelector } from '../core/helper/grid-radio-selector';
@@ -41,16 +42,10 @@ export class SolicitudesComponent {
   @ViewChild('fileInput') fileInput: ElementRef | undefined; // para permitir borrar el nombre de archivo subido
 
   public title = 'Solicitudes';
-  public user = sessionStorage.getItem('user');// lo usamos para filtrar contenidos sin login
-  public idOrgEleme = sessionStorage.getItem('idOrgEleme');
-  public soluser = sessionStorage.getItem('solUsuar');// lo usamos para filtrar contenidos
-  public trauser = sessionStorage.getItem('traUsuar');// lo usamos para filtrar contenidos
   public edicion: boolean = false;
   public dniok: boolean = false;
   public activainiciaExpedi: boolean = false;
   public edicionPermisos: boolean = false;
-  //public depart = "sessionStorage.getItem('departamento')";
-  public depart = sessionStorage.getItem('departamento');
   public vermenu: boolean = false; // para ver el menu tiene que cambiar a true
   public listadocmenu: boolean = false; // para ver el menu tiene que cambiar a true
   public puedesver: boolean = false; // para ver el menu tiene que cambiar a true
@@ -85,6 +80,8 @@ export class SolicitudesComponent {
 
 
   public progreso: number = 0;
+  public pdfViewerUrl: string | null = null;
+  public pdfSafeUrl: SafeResourceUrl | null = null;
   public intervalo!: number;
 
   public httpHeaders = new HttpHeaders(
@@ -160,7 +157,7 @@ export class SolicitudesComponent {
 
 
 
-    if (this.soluser == "1") {
+    if (this.session.canManageSolicitudes) {
       console.log("TIENE PERMISO");
       // console.log( `VALOR CADENA : ${this.soluser}`);
 
@@ -213,28 +210,24 @@ export class SolicitudesComponent {
       console.log("NO TIENE PERMISO");
       //  console.log( `VALOR CADENA : ${cadena}`);
       //console.log( `VALOR trauser : ${this.trauser}`);
-      //console.log( `VALOR user : ${this.user}`);
+      //console.log( `VALOR user : ${this.session.user}`);
 
-      swal.fire(`Lo sentimos, el usuario ${this.user} No tiene aceso a Solicitudes.`);
+      swal.fire(`Lo sentimos, el usuario ${this.session.user} No tiene aceso a Solicitudes.`);
 
     }
   }
 
-  public veoPdf(ruta: any) {
+  public veoPdf(ruta: string): void {
+    this.pdfViewerUrl = ruta;
+    this.pdfSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(ruta);
+    this.abrirModal('VerPdfModal');
+  }
 
-    $(document).ready(function () {
-
-
-      console.log("Ruta pdf : " + ruta)
-      $('#linkView').click(function () {
-        var iframe = document.createElement("iframe");
-        iframe.width = '100%';
-        iframe.height = '700px';
-        iframe.src = `${environment.apiUrl}archivo/descargaSolicitud/3227`; //Aqui iría el src de tu archivo .PDF
-        $('.showPDF').append(iframe);
-      });
-    });
-
+  private updateProgressBar(): void {
+    const bar = document.getElementById('barprogreso');
+    if (!bar) { return; }
+    bar.style.width = `${this.progreso}%`;
+    bar.setAttribute('aria-valuenow', String(this.progreso));
   }
 
 
@@ -392,7 +385,7 @@ export class SolicitudesComponent {
     const uploadData = {
       descripcion: this.descripcionArchivo,
       fechaSubida: new Date(),
-      usuContr: sessionStorage.getItem('user'),
+      usuContr: this.session.user,
       idSolicitud: this.idsolicitud,
       nombreArchivo: this.selectedFile.name,
       ficBas64: this.base64code
@@ -419,8 +412,7 @@ export class SolicitudesComponent {
             if (modalInstance) {
               modalInstance.hide();
             } else {
-              // Fallback: cerrar usando jQuery si Bootstrap no está disponible
-              ($('#documentoModal') as any).modal('hide');
+              this.cerrarModal('documentoModal');
             }
           }
 
@@ -642,7 +634,7 @@ export class SolicitudesComponent {
 
 
   filtroUsuarios() {
-    if (this.soluser != "1") {
+    if (!this.session.canManageSolicitudes) {
       this.puedesver = true;
 
 
@@ -670,7 +662,7 @@ export class SolicitudesComponent {
       "descripcion": this.descripcionArchivo,
       "fechaSubida": this.fechaarchivo,
 
-      "usuContr": this.user,
+      "usuContr": this.session.user,
       "idSolicitud": id,
       "nombreArchivo": name,
 
@@ -694,7 +686,7 @@ export class SolicitudesComponent {
     let varios = {
       "descripcion": this.descripcionArchivo,
       "fecha": this.fechaarchivo,
-      "usuContr": this.user,
+      "usuContr": this.session.user,
       "file": this.filesToUpload,
 
     }
@@ -719,7 +711,18 @@ export class SolicitudesComponent {
     private fileUploadService: FileUploadService,
     private modalService: ModalService,
     private notificationService: NotificationService,
-    private modalManagerService: ModalManagerService) { }
+    private modalManagerService: ModalManagerService,
+    public session: UserSessionService,
+    private sanitizer: DomSanitizer
+  ) { }
+
+  get depart(): string | null {
+    return this.session.department;
+  }
+
+  get idOrgEleme(): string | null {
+    return this.session.idOrgEleme;
+  }
 
   /**
    * Método para abrir modales usando ModalManagerService
@@ -799,7 +802,7 @@ export class SolicitudesComponent {
     this.nombreArchivoSubido = nombre;
 
     this.progreso = this.progreso + 20;
-    $('#barprogreso').css("width", this.progreso + "%").attr("aria-valuenow", this.progreso);
+    this.updateProgressBar();
     console.log(`PROGRESO : ${this.progreso}`)
 
 
@@ -823,7 +826,7 @@ export class SolicitudesComponent {
     console.log("url ARCHIVO : " + this.descargafichero);
 
     this.progreso = this.progreso + 20;
-    $('#barprogreso').css("width", this.progreso + "%").attr("aria-valuenow", this.progreso);
+    this.updateProgressBar();
     console.log(`PROGRESO : ${this.progreso}`);
 
     console.log('Elemento CLICKEADO');
@@ -2216,7 +2219,7 @@ export class SolicitudesComponent {
     this.listadocmenu = false;
     this.verLisDoc = true;
     this.progreso = this.progreso + 20;
-    $('#barprogreso').css("width", this.progreso + "%").attr("aria-valuenow", this.progreso);
+    this.updateProgressBar();
     this.vermenu = true;
     this.edicion = true;
     this.idsolicitud = rowData.id;
@@ -2364,7 +2367,7 @@ export class SolicitudesComponent {
 
   public selecsolicitud(id, expedi, idexpedienteA) {
     this.progreso = this.progreso + 20;
-    $('#barprogreso').css("width", this.progreso + "%").attr("aria-valuenow", this.progreso);
+    this.updateProgressBar();
     this.vermenu = true;
     this.edicion = true;
     this.idsolicitud = id;
@@ -2799,7 +2802,7 @@ export class SolicitudesComponent {
 
     //console.log("El row data : "+rowData );
     const valor = rowData.testsensor;
-    let imgUrl = '../assets/opciones.svg';
+    let imgUrl = 'assets/opciones.svg';
 
 
 
@@ -2816,7 +2819,7 @@ export class SolicitudesComponent {
   public columnrenderer = function (value) {
 
     if (value == "Interesado") {
-      return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">' + '<img  src="../assets/asignar.svg" width="25" height="25"/>' + value + '</div>';
+      return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">' + '<img  src="assets/asignar.svg" width="25" height="25"/>' + value + '</div>';
 
     } else {
       return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">' + value + '</div>';

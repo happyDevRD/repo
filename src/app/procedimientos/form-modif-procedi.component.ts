@@ -4,6 +4,7 @@ import { Procedimiento } from './procedimiento';
 import { ProcedimientoService } from './procedimiento.service';
 import {Router, ActivatedRoute} from '@angular/router'
 import swal from 'sweetalert2';
+import { UserSessionService } from '../core/service/user-session.service';
 
 @Component({
   selector: 'app-form-modif-procedi',
@@ -13,7 +14,7 @@ import swal from 'sweetalert2';
 export class FormModifProcediComponent {
   
   public titulo:string = 'Nuevo Procedimiento';
-  public nivAcces = sessionStorage.getItem('nivAcces');
+  public nivAcces: string | null = null;
 
   public procedimiento: Procedimiento = new Procedimiento();
 
@@ -21,8 +22,11 @@ export class FormModifProcediComponent {
 
   constructor(public procedimientoService :ProcedimientoService, 
     public router:Router,
-    public activatedRoute: ActivatedRoute
-    ){}
+    public activatedRoute: ActivatedRoute,
+    private session: UserSessionService
+    ){
+      this.nivAcces = this.session.nivAcces;
+    }
 
     
 

@@ -1,0 +1,48 @@
+<app-dashboard-grid-modal
+  #solicitudesModal
+  modalId="modalSolicitudesPendientes"
+  title="Solicitudes pendientes"
+  [columns]="solicitudesColumns"
+  [gridMinWidth]="1050">
+</app-dashboard-grid-modal>
+
+<app-dashboard-grid-modal
+  #expedientesModal
+  modalId="modalExpedientesInstructor"
+  title="Expedientes del instructor"
+  [columns]="expedientesColumns"
+  [gridMinWidth]="720">
+</app-dashboard-grid-modal>
+
+<app-dashboard-grid-modal
+  #tareasModal
+  modalId="modalTareasPendientes"
+  title="Listado de tareas pendientes"
+  [columns]="tareasColumns"
+  [gridMinWidth]="1500"
+  [gridHeight]="420">
+</app-dashboard-grid-modal>
+
+<app-dashboard-grid-modal
+  #firmasPendientesModal
+  modalId="modalFirmasPendientes"
+  title="Listado de firmas pendientes"
+  [columns]="firmasColumns"
+  [gridMinWidth]="1000">
+</app-dashboard-grid-modal>
+
+<app-dashboard-grid-modal
+  #firmasTercerosModal
+  modalId="modalFirmasTerceros"
+  title="Listado de firmas solicitadas a terceros"
+  [columns]="firmasColumns"
+  [gridMinWidth]="1000">
+</app-dashboard-grid-modal>
+
+<app-dashboard-grid-modal
+  #notificacionesModal
+  modalId="modalNotificaciones"
+  title="Listado de notificaciones pendientes"
+  [columns]="notificacionesColumns"
+  [gridMinWidth]="900">
+</app-dashboard-grid-modal>

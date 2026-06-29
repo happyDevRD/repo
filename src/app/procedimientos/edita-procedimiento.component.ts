@@ -20,6 +20,7 @@ import {map, Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Location} from '@angular/common';
 import {jqxGrid_ES} from 'src/translations/jqxGrid_translate';
+import {UserSessionService} from '../core/service/user-session.service';
 declare var bootstrap: any;
 
 
@@ -134,18 +135,17 @@ export class EditaProcedimientoComponent {
   public plantillaT!: string;
   public firmaT!: string;
   // fin datos tarea
-  public idpro: any = sessionStorage.getItem('idprocedimiento');
-  public idpermis: any = sessionStorage.getItem('idpermiso');
-  public userctrl: any = sessionStorage.getItem('user');
-  public userorg: any = sessionStorage.getItem('idOrgEleme');
+  public idpro: string | null = null;
+  public idpermis: string | null = null;
+  public userctrl: string | null = null;
+  public userorg: string | null = null;
   public usuariopermiso!: string;
   public refrescavista: boolean = true;
   public respuesta = new Response;
   public respuestahttp: any = new RespuestasHttp;
   public headers = new HttpResponse;
-  navPosition: string = 'relative'; // Establece la posición inicial del nav
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
-
+  navPosition: string = 'relative';
+  public idOrgElemen: string | null = null;
   public usuarioTarea!: any;
 
 
@@ -163,8 +163,8 @@ export class EditaProcedimientoComponent {
   public crearprocedi: CrearProcedi = new CrearProcedi();
   public editarprocedi: EditarProcedi = new EditarProcedi();
   public editatareaprocedi: any = new EditaTareaProcedi();
-  public nivAcces = sessionStorage.getItem('nivAcces');
-  public depart = sessionStorage.getItem('departamento');
+  public nivAcces: string | null = null;
+  public depart: string | null = null;
   public datoslistapermiso: boolean = false;
 
   listatareaprocedi!: ListaTareaProcedi[];
@@ -243,8 +243,16 @@ export class EditaProcedimientoComponent {
     public changeDetectorRef: ChangeDetectorRef,
     public router: Router,
     public _location: Location,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    public session: UserSessionService
   ) {
+    this.idpro = this.session.idProcedimiento;
+    this.idpermis = this.session.idPermiso;
+    this.userctrl = this.session.user;
+    this.userorg = this.session.idOrgEleme;
+    this.idOrgElemen = this.session.idOrgEleme;
+    this.nivAcces = this.session.nivAcces;
+    this.depart = this.session.department;
   }
 
   refreshView() {
@@ -551,7 +559,7 @@ export class EditaProcedimientoComponent {
     }
     
     let idpermi = event.args.row.bounddata.id;
-    sessionStorage.setItem('idpermiso', idpermi);
+    this.session.setIdPermiso(idpermi);
 
     console.log('ID PERMISO : ' + idpermi);
 
@@ -859,7 +867,7 @@ export class EditaProcedimientoComponent {
     return ' <div style="padding-top:5px;  text-align: center;"  type="button" title="Selecciona Tarea"  ><input type="radio"  value="" name="RadioId" id="RadioId">   </div>';
   }
 
-  public cellsrenderer = function (row, column, value) {
+  public cellsrenderer = (row, column, value) => {
 
     // console.log("DATOS DE VALUE : "+value);
     if (value == 'Tarea inicial automática') {
@@ -871,7 +879,7 @@ export class EditaProcedimientoComponent {
 
 
     const descripTarea2 = value;
-    sessionStorage.setItem('descripTarea', descripTarea2);
+    this.session.setDescripTarea(String(descripTarea2));
     if (value == 'ANOS') {
       value = 'AÑOS';
       console.log("DATOS DE row : " + row);
@@ -906,7 +914,7 @@ export class EditaProcedimientoComponent {
 
       console.log("idpermis no tiene valor")
 
-      sessionStorage.setItem('idpermiso', this.idtrigger);
+      this.session.setIdPermiso(this.idtrigger);
 
       this.sourcePermi = ({
         dataType: 'json',
@@ -973,10 +981,10 @@ export class EditaProcedimientoComponent {
     return '<div style="text-align: center; font-weight: bold; font-family: Verdana; margin-top: 5px;">' + value + '</div>';
   }
 
-  public cellsrendererPermi = function (row, column, value) {
+  public cellsrendererPermi = (row, column, value) => {
 
     const resultado: any = value.id;
-    sessionStorage.setItem('usuarioTarea', resultado);
+    this.session.setUsuarioTarea(String(resultado));
 
     if (value == 'ANOS') {
       value = 'AÑOS';

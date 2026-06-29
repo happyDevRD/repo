@@ -7,6 +7,7 @@ import { ContabilidadDTO } from '../../core/models/contabilidad/contabilidad.dto
 import { Operacion } from '../../core/models/operacion.model';
 import { Subject, of, combineLatest } from 'rxjs';
 import { takeUntil, switchMap, catchError, startWith } from 'rxjs/operators';
+import { UserSessionService } from '../../core/service/user-session.service';
 
 @Component({
   selector: 'app-operacion-form',
@@ -16,8 +17,6 @@ import { takeUntil, switchMap, catchError, startWith } from 'rxjs/operators';
 export class OperacionFormComponent implements OnInit, OnDestroy {
   @Input() idExpediente: number;
   @Output() closeModal = new EventEmitter<void>();
-
-  public usuario = sessionStorage.getItem('user');
 
   opcionesAgrupacionAreaSeleccionada: any[] = [];
   operacionForm: FormGroup;
@@ -81,10 +80,15 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
     thousands: '.'
   };
 
+  get usuario(): string | null {
+    return this.session.user;
+  }
+
   constructor(
     private fb: FormBuilder,
     private contabilidadService: ContabilidadService,
-    private operacionService: OperacionService
+    private operacionService: OperacionService,
+    private session: UserSessionService
   ) {
     this.operacionForm = this.fb.group({
       idConta: ['', Validators.required],

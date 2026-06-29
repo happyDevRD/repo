@@ -1,115 +1,161 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
+﻿<app-shell contentId="hanging-icons">
+  <app-access-denied
+    *ngIf="!session.canManageExpedientes"
+    title="Sin acceso a expedientes"
+    message="Este usuario no tiene permisos para gestionar expedientes.">
+  </app-access-denied>
 
-    <!-- Mensaje para usuarios sin permiso -->
-    <div *ngIf="trauser == '0'" class="col-12 content_gen">
-      <div class="mensaje-sin-permiso">
-        <h2>Este usuario no tiene acceso a expedientes</h2>
-        <img src="../assets/greenaall_logo.svg" alt="Greenall" width="200" height="100">
+  <ng-container *ngIf="session.canManageExpedientes">
+      <div class="page-panel expedientes-page">
+        <header class="expedientes-header">
+          <div class="expedientes-header__text">
+            <p class="expedientes-header__eyebrow">Gestión documental</p>
+            <h2 class="expedientes-header__title">Expedientes</h2>
+          </div>
+          <button class="btn-iflow btn-iflow--primary expedientes-header__nuevo"
+                  title="Nuevo expediente" type="button" (click)="abrirModal('nexpedienteModal')">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            Nuevo expediente
+          </button>
+        </header>
+
+        <section class="expediente-workspace" aria-label="Acciones del expediente">
+          <div class="expediente-context" [class.expediente-context--activo]="editExpedientes">
+            <ng-container *ngIf="!editExpedientes">
+              <p class="expediente-context__placeholder">
+                <i class="bi bi-info-circle" aria-hidden="true"></i>
+                Seleccione un expediente en el listado para habilitar las acciones
+              </p>
+            </ng-container>
+            <ng-container *ngIf="editExpedientes">
+              <span class="expediente-context__numero">{{ ejerexpe }}/{{ numExp }}</span>
+              <span class="estado-badge"
+                    [ngClass]="'estado-badge--' + (valorEstado || '').toLowerCase()">
+                {{ valorEstado }}
+              </span>
+              <span class="expediente-context__sep" aria-hidden="true"></span>
+              <span class="expediente-context__titulo" [title]="expeSelecDescrip">{{ expeSelecDescrip }}</span>
+              <span *ngIf="descripcionProcedimiento" class="expediente-context__procedimiento">
+                · {{ descripcionProcedimiento }}
+              </span>
+            </ng-container>
+          </div>
+
+          <nav class="expediente-acciones" aria-label="Barra de acciones">
+            <div class="expediente-acciones__fila">
+              <button class="exp-acc-btn exp-acc-btn--primary"
+                      type="button" title="Ver expediente"
+                      [disabled]="!accionExpediente()"
+                      (click)="abrirModalVerExpediente()">
+                <i class="bi bi-eye" aria-hidden="true"></i> Ver
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Registro de entrada"
+                      [disabled]="!accionExpediente(VeoRegDoc)"
+                      (click)="CargoRegistroDocu()">
+                <i class="bi bi-file-earmark-text" aria-hidden="true"></i> Registro
+              </button>
+
+              <span class="exp-acciones__sep" aria-hidden="true"></span>
+
+              <button class="exp-acc-btn exp-acc-btn--primary exp-acc-btn--destacado"
+                      type="button" title="Tramitar expediente"
+                      [disabled]="!accionExpediente(cerrarexp)"
+                      (click)="reenvioEditar()">
+                <i class="bi bi-journal-check" aria-hidden="true"></i> Tramitar
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Interesados"
+                      [disabled]="!accionExpediente(cerrarexp && veoInteresado)"
+                      (click)="reenvioInteresados()">
+                <i class="bi bi-people" aria-hidden="true"></i> Interesados
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Asignar tramitador"
+                      [disabled]="!accionExpediente(cerrarexp && veoAsignoTramitador)"
+                      (click)="abrirModal('AsigfnarTramitadorModal')">
+                <i class="bi bi-person-plus" aria-hidden="true"></i> Tramitador
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Resumen de tareas"
+                      [disabled]="!accionExpediente(cerrarexp && veoAsignoTramitador)"
+                      (click)="abrirModalTareasExpediente()">
+                <i class="bi bi-list-task" aria-hidden="true"></i> Tareas
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Atributos"
+                      [disabled]="!accionExpediente(veoAtributos)"
+                      (click)="abrirModalAtributos()">
+                <i class="bi bi-node-plus" aria-hidden="true"></i> Atributo
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Devolver expediente"
+                      [disabled]="!accionExpediente(cerrarexp && verDevolver)"
+                      (click)="DevolverExpe()">
+                <i class="bi bi-arrow-return-left" aria-hidden="true"></i> Devolver
+              </button>
+
+              <span class="exp-acciones__sep" aria-hidden="true"></span>
+
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Cerrar expediente"
+                      [disabled]="!accionExpediente(cerrarexp && veoCerrar)"
+                      (click)="abrirModal('cerrarExpModal')">
+                <i class="bi bi-lock" aria-hidden="true"></i> Cerrar
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--danger"
+                      type="button" title="Cancelar expediente"
+                      [disabled]="!accionExpediente(cancelarexp && veoCancelar)"
+                      (click)="abrirModal('cancelarExpModal')">
+                <i class="bi bi-x-circle" aria-hidden="true"></i> Cancelar
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Abrir expediente"
+                      [disabled]="!accionExpediente(verAbrirExpediente && veoAbrir)"
+                      (click)="AbrirExpediente()">
+                <i class="bi bi-unlock" aria-hidden="true"></i> Abrir
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Archivar expediente"
+                      [disabled]="!accionExpediente(verArchivar && veoArchiva)"
+                      (click)="ArchivaExp()">
+                <i class="bi bi-archive" aria-hidden="true"></i> Archivar
+              </button>
+              <button class="exp-acc-btn exp-acc-btn--outline"
+                      type="button" title="Índice ENI"
+                      [disabled]="!accionExpediente(verArchivar && veoArchiva)"
+                      (click)="abrirModal('IndiceExpedienteModal')">
+                <i class="bi bi-folder-check" aria-hidden="true"></i> Índice ENI
+              </button>
+            </div>
+          </nav>
+        </section>
+
+        <section class="expedientes-listado" aria-label="Listado de expedientes">
+          <h3 class="expedientes-listado__titulo">Listado</h3>
+          <div class="grid-container">
+            <jqxGrid #gridExpedientes
+                     id="gridExpedientes"
+                     (onRowclick)="marcaExpedienteNuevo($event)"
+                     (onRowdoubleclick)="onExpedienteDoubleClick($event)"
+                     [altrows]="true"
+                     [autoheight]="true"
+                     [columns]="columnsExpe"
+                     [columnsautoresize]="true"
+                     [columnsresize]="true"
+                     [filterable]="true"
+                     [localization]="localizationObject"
+                     [pageable]="true"
+                     [pagesize]="10"
+                     [pagesizeoptions]="['5', '10', '20']"
+                     [sortable]="true"
+                     [source]="sourceExp"
+                     [width]="'100%'"
+                     class="mat-elevation-z5">
+            </jqxGrid>
+          </div>
+        </section>
       </div>
-    </div>
-
-    <!-- Contenido principal para usuarios con permiso -->
-    <div *ngIf="user && trauser == '1'" class="col-12 content_gen" id="hanging-icons">
-      <div class="page-panel">
-        <!-- Título y botones de expedientes -->
-        <div class="listado-titulo-container titulo-separador">
-          <h2 class="listado-titulo-principal">
-            Listado de Expedientes
-          </h2>
-                        <div class="titulo-botones-container">
-                <button *ngIf="editExpedientes" class="btn btn-rounded btn-sm"
-                        title="Ver Expediente" type="button" (click)="abrirModalVerExpediente()">
-                  <img src="../assets/eye.svg" alt="Ver" width="25" height="25">
-                </button>
-                <button class="btn btn-rounded btn-sm"
-                        title="Nuevo Expediente" type="button" (click)="abrirModal('nexpedienteModal')">
-                  <img src="../assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
-                </button>
-
-              </div>
-        </div>
-
-        <!-- Botones de Acciones del Expediente (ARRIBA de la tabla) -->
-        <div *ngIf="editExpedientes" class="acciones-botones-container">
-          <button *ngIf="VeoRegDoc" class="submit margin-right"
-                  title="Registro de Documentos" type="button" (click)="CargoRegistroDocu()">
-            Ver Registro Entrada
-          </button>
-          <button *ngIf="cerrarexp && veoAsignoTramitador" class="submit margin-right"
-                  title="Asignar a Tramitador" type="button" (click)="abrirModal('AsigfnarTramitadorModal')">
-            Asignar Tramitador <i class="bi bi-plus-circle"></i>
-          </button>
-          <button *ngIf="cerrarexp && veoInteresado" class="submit margin-right"
-                  title="Interesados" type="button" (click)="reenvioInteresados()">
-            Interesados <i class="bi bi-person-fill"></i>
-          </button>
-          <button *ngIf="cerrarexp" class="submit margin-right"
-                  title="Tramitar" type="button" (click)="reenvioEditar()">
-            Tramitar <i class="bi bi-journal-check"></i>
-          </button>
-          <button *ngIf="cerrarexp && veoAsignoTramitador" class="submit margin-right"
-                  title="Resumen de Tareas" type="button" (click)="abrirModalTareasExpediente()">
-            Resumen Tareas <i class="bi bi-journal-text"></i>
-          </button>
-          <button *ngIf="cancelarexp && veoCancelar" class="submit margin-right"
-                  title="Cancelar" type="button" (click)="abrirModal('cancelarExpModal')">
-            Cancelar <i class="bi bi-x-circle"></i>
-          </button>
-          <button *ngIf="cerrarexp && verDevolver" class="submit margin-right"
-                  title="Devolver" type="button" (click)="DevolverExpe()">
-            <i class="bi bi-sign-turn-left"></i> Devolver
-          </button>
-          <button *ngIf="verAbrirExpediente && veoAbrir" class="submit margin-right"
-                  title="Abrir Expediente" type="button" (click)="AbrirExpediente()">
-            Abrir <i class="bi bi-unlock-fill"></i>
-          </button>
-          <button *ngIf="cerrarexp && veoCerrar" class="submit margin-right"
-                  title="Cerrar" type="button" (click)="abrirModal('cerrarExpModal')">
-            Cerrar <i class="bi bi-power"></i>
-          </button>
-          <button *ngIf="verArchivar && veoArchiva" class="submit margin-right"
-                  title="Archivar" type="button" (click)="ArchivaExp()">
-            Archivar
-          </button>
-          <button *ngIf="verArchivar && veoArchiva" class="submit margin-right"
-                  title="Indice ENI" type="button" (click)="abrirModal('IndiceExpedienteModal')">
-            Indice ENI <i class="bi bi-folder-check"></i>
-          </button>
-          <button *ngIf="veoAtributos" class="submit margin-right"
-                  title="Nuevo Atributo" type="button" (click)="abrirModalAtributos()">
-            Atributo <i class="bi bi-node-plus-fill"></i>
-          </button>
-        </div>
-
-        <!-- Grid de Expedientes (ABAJO de las acciones) -->
-        <div class="grid-container">
-        <jqxGrid #gridExpedientes
-                 id="gridExpedientes"
-                 (onRowclick)="marcaExpedienteNuevo($event)"
-                 (onRowdoubleclick)="onExpedienteDoubleClick($event)"
-                 [altrows]="true"
-                 [autoheight]="true"
-                 [columns]="columnsExpe"
-                 [columnsautoresize]="true"
-                 [columnsresize]="true"
-                 [filterable]="true"
-                 [localization]="localizationObject"
-                 [pageable]="true"
-                 [pagesize]="10"
-                 [pagesizeoptions]="['5', '10', '20']"
-                 [sortable]="true"
-                 [source]="sourceExp"
-                 [width]="'100%'"
-                 class="mat-elevation-z5">
-        </jqxGrid>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- *********************** MODALES *********************** -->
 
@@ -165,11 +211,11 @@
         <!-- Footer -->
         <div class="modal-footer">
           <button type="button"
-                  class="btn btn-secondary"
+                  class="btn-iflow btn-iflow--secondary"
                   (click)="cerrarModal('NAtributosModal2')">
             Cerrar
           </button>
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn-iflow btn-iflow--primary">
             Guardar
           </button>
         </div>
@@ -204,7 +250,7 @@
               <input class="form-control" data-mdb-inline="true" required
                      [(ngModel)]="nuevoexpediente.fechaInicio" type="date" id="fechaExpediente" name="fechaExpediente"
                      [class.is-invalid]="isFechaExpedienteInvalid()">
-              <label class="form-label dejaEspacio" for="fechaExpediente">Fecha Expediente *</label>
+              <label class="form-label form-label--floating" for="fechaExpediente">Fecha Expediente *</label>
               <div *ngIf="isFechaExpedienteInvalid()" class="invalid-feedback">
                 La fecha del expediente es obligatoria
               </div>
@@ -217,7 +263,7 @@
                 <option name="instancia" value="INSTANCIA">Instancia</option>
                 <option name="oficio" value="OFICIO">Oficio</option>
               </select>
-              <label class="form-label dejaEspacio" for="formaApertura">Forma Apertura *</label>
+              <label class="form-label form-label--floating" for="formaApertura">Forma Apertura *</label>
               <div *ngIf="isFormaAperturaInvalid()" class="invalid-feedback">
                 Debe seleccionar una forma de apertura
               </div>
@@ -230,7 +276,7 @@
                 <option name="correoP" value=0>Correo postal</option>
                 <option name="telematico" value=1>Telemática</option>
               </select>
-              <label class="form-label dejaEspacio" for="formaNotificacion">Forma Notificación *</label>
+              <label class="form-label form-label--floating" for="formaNotificacion">Forma Notificación *</label>
               <div *ngIf="isFormaNotificacionInvalid()" class="invalid-feedback">
                 Debe seleccionar una forma de notificación
               </div>
@@ -241,7 +287,7 @@
             <input type="email" class="form-control" id="emailExpediente" name="emailExpediente" 
                    [(ngModel)]="nuevoexpediente.email" required
                    [class.is-invalid]="isEmailExpedienteInvalid()">
-            <label for="emailExpediente" class="form-label dejaEspacio">Correo electrónico *</label>
+            <label for="emailExpediente" class="form-label form-label--floating">Correo electrónico *</label>
             <div *ngIf="isEmailExpedienteInvalid()" class="invalid-feedback">
               El correo electrónico es obligatorio para notificación telemática
             </div>
@@ -251,7 +297,7 @@
             <input type="text" class="form-control" id="tituloExpediente" name="tituloExpediente"
                    [(ngModel)]="nuevoexpediente.titulo" required
                    [class.is-invalid]="isTituloExpedienteInvalid()">
-            <label for="tituloExpediente" class="form-label dejaEspacio">Título *</label>
+            <label for="tituloExpediente" class="form-label form-label--floating">Título *</label>
             <div *ngIf="isTituloExpedienteInvalid()" class="invalid-feedback">
               El título del expediente es obligatorio
             </div>
@@ -271,7 +317,7 @@
               <input type="text" class="form-control" [(ngModel)]="nuevoexpediente.usuario"
                      (change)="solicitadni(nuevoexpediente.usuario)" id="interesadoDNI" name="interesadoDNI" required
                      [class.is-invalid]="isInteresadoDNIInvalid()">
-              <label for="interesadoDNI" class="form-label dejaEspacio">Interesado DNI *</label>
+              <label for="interesadoDNI" class="form-label form-label--floating">Interesado DNI *</label>
               <div *ngIf="isInteresadoDNIInvalid()" class="invalid-feedback">
                 El DNI del interesado es obligatorio
               </div>
@@ -285,7 +331,7 @@
                         value="{{procedimientos.id}}">{{ procedimientos.descripcion }}
                 </option>
               </select>
-              <label class="form-label dejaEspacio" for="procedimientoExp">Procedimiento *</label>
+              <label class="form-label form-label--floating" for="procedimientoExp">Procedimiento *</label>
               <div *ngIf="isProcedimientoExpedienteInvalid()" class="invalid-feedback">
                 Debe seleccionar un procedimiento
               </div>
@@ -295,8 +341,8 @@
       </div>
       
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="cerrarModal('nexpedienteModal')">Cancelar</button>
-        <button type="submit" class="submit_footer" form="creaExpedienteForm" [disabled]="isCreandoExpediente">
+        <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('nexpedienteModal')">Cancelar</button>
+        <button type="submit" class="btn-iflow btn-iflow--primary" form="creaExpedienteForm" [disabled]="isCreandoExpediente">
           <span *ngIf="isCreandoExpediente" class="spinner-border spinner-border-sm me-2" role="status"></span>
           {{isCreandoExpediente ? 'Guardando...' : 'Guardar'}}
         </button>
@@ -322,7 +368,7 @@
           <div class="col-12">
             <div class="form-floating">
               <input type="text" class="form-control" id="tituloVer" [value]="verexpediente.titulo" readonly>
-              <label class="form-label dejaEspacio" for="tituloVer">Título</label>
+              <label class="form-label form-label--floating" for="tituloVer">Título</label>
             </div>
           </div>
         </div>
@@ -331,25 +377,25 @@
           <div class="col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="estadoVer" [value]="verexpediente.estado" readonly>
-              <label class="form-label dejaEspacio" for="estadoVer">Estado</label>
+              <label class="form-label form-label--floating" for="estadoVer">Estado</label>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="faseVer" [value]="verexpediente.fase" readonly>
-              <label class="form-label dejaEspacio" for="faseVer">Fase</label>
+              <label class="form-label form-label--floating" for="faseVer">Fase</label>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="formaNotificacionVer" [value]="verexpediente.formaNotificacion || verexpediente.forNotifTexto" readonly>
-              <label class="form-label dejaEspacio" for="formaNotificacionVer">Forma Notificación</label>
+              <label class="form-label form-label--floating" for="formaNotificacionVer">Forma Notificación</label>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-floating">
               <input type="email" class="form-control" id="correoVer" [value]="verexpediente.email" readonly>
-              <label class="form-label dejaEspacio" for="correoVer">Correo electrónico</label>
+              <label class="form-label form-label--floating" for="correoVer">Correo electrónico</label>
             </div>
           </div>
         </div>
@@ -358,25 +404,25 @@
           <div class="col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="dniVer" [value]="verexpediente.personaEntidad?.numDocum || ''" readonly>
-              <label class="form-label dejaEspacio" for="dniVer">Interesado DNI</label>
+              <label class="form-label form-label--floating" for="dniVer">Interesado DNI</label>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="fechaCancelacionVer" [value]="verexpediente.fecCancelacion | date:'yyyy-MM-dd'" readonly>
-              <label class="form-label dejaEspacio" for="fechaCancelacionVer">Fecha cancelación</label>
+              <label class="form-label form-label--floating" for="fechaCancelacionVer">Fecha cancelación</label>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="fechaExpedienteVer" [value]="verexpediente.fecInicio | date:'yyyy-MM-dd'" readonly>
-              <label class="form-label dejaEspacio" for="fechaExpedienteVer">Fecha Expediente</label>
+              <label class="form-label form-label--floating" for="fechaExpedienteVer">Fecha Expediente</label>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="representanteVer" [value]="verexpediente.nomRepre || ''" readonly>
-              <label class="form-label dejaEspacio" for="representanteVer">Representante</label>
+              <label class="form-label form-label--floating" for="representanteVer">Representante</label>
             </div>
           </div>
         </div>
@@ -385,13 +431,13 @@
           <div class="col-md-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="procedimientoVer" [value]="verexpediente.procedimiento?.descripcion || ''" readonly>
-              <label class="form-label dejaEspacio" for="procedimientoVer">Procedimiento</label>
+              <label class="form-label form-label--floating" for="procedimientoVer">Procedimiento</label>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="formaAperturaVer" [value]="verexpediente.formaApertura" readonly>
-              <label class="form-label dejaEspacio" for="formaAperturaVer">Forma Apertura</label>
+              <label class="form-label form-label--floating" for="formaAperturaVer">Forma Apertura</label>
             </div>
           </div>
         </div>
@@ -400,13 +446,13 @@
           <div class="col-md-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="nombreVer" [value]="verexpediente.personaEntidad?.nombre || ''" readonly>
-              <label class="form-label dejaEspacio" for="nombreVer">Nombre</label>
+              <label class="form-label form-label--floating" for="nombreVer">Nombre</label>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="apellidosVer" [value]="(verexpediente.personaEntidad?.apellido1 || '') + ' ' + (verexpediente.personaEntidad?.apellido2 || '')" readonly>
-              <label class="form-label dejaEspacio" for="apellidosVer">Apellidos</label>
+              <label class="form-label form-label--floating" for="apellidosVer">Apellidos</label>
             </div>
           </div>
         </div>
@@ -415,7 +461,7 @@
           <div class="col-12">
             <div class="form-floating">
               <input type="text" class="form-control" id="direccionVer" [value]="verexpediente.personaEntidad?.dirPosta || ''" readonly>
-              <label class="form-label dejaEspacio" for="direccionVer">Dirección</label>
+              <label class="form-label form-label--floating" for="direccionVer">Dirección</label>
             </div>
           </div>
         </div>
@@ -424,25 +470,25 @@
           <div class="col-md-4">
             <div class="form-floating">
               <input type="text" class="form-control" id="codigoPostalVer" [value]="verexpediente.personaEntidad?.codPosta || ''" readonly>
-              <label class="form-label dejaEspacio" for="codigoPostalVer">Código Postal</label>
+              <label class="form-label form-label--floating" for="codigoPostalVer">Código Postal</label>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-floating">
               <input type="text" class="form-control" id="provinciaVer" [value]="verexpediente.personaEntidad?.provincia || ''" readonly>
-              <label class="form-label dejaEspacio" for="provinciaVer">Provincia</label>
+              <label class="form-label form-label--floating" for="provinciaVer">Provincia</label>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-floating">
               <input type="text" class="form-control" id="municipioVer" [value]="verexpediente.personaEntidad?.municipio || ''" readonly>
-              <label class="form-label dejaEspacio" for="municipioVer">Municipio</label>
+              <label class="form-label form-label--floating" for="municipioVer">Municipio</label>
             </div>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="cerrarModal('verexpedienteModal')">Cerrar</button>
+        <button type="button" class="btn-iflow btn-iflow--primary" (click)="cerrarModal('verexpedienteModal')">Cerrar</button>
       </div>
     </div>
   </div>
@@ -462,17 +508,17 @@
           <div class="col-12 form-floating">
             <textarea type="text" class="form-control" disabled name="numero" [value]="verexpediente.titulo"
                       id="tituloCancelar"></textarea>
-            <label class="form-label dejaEspacio" for="tituloCancelar">Título Expediente </label>
+            <label class="form-label form-label--floating" for="tituloCancelar">Título Expediente </label>
           </div>
           <div class="col-12 form-floating">
             <input class="form-control" data-mdb-inline="true" required type="date" id="fechaCancelacion" 
                    name="fechaCancelacion" value="{{selected}}" [(ngModel)]="fechacancelacionexpedi"
                    min="2023-01-01" max="2099-12-31">
-            <label class="form-label dejaEspacio" for="fechaCancelacion">Fecha Cancelación* </label>
+            <label class="form-label form-label--floating" for="fechaCancelacion">Fecha Cancelación* </label>
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="cerrarModal('cancelarExpModal')">Cancelar</button>
-            <button class="submit_footer" (click)="cerrarModal('cancelarExpModal')" role="button">Aceptar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('cancelarExpModal')">Cancelar</button>
+            <button class="btn-iflow btn-iflow--primary" (click)="cerrarModal('cancelarExpModal')" role="button">Aceptar</button>
           </div>
         </form>
       </div>
@@ -495,16 +541,16 @@
             <input class="form-control" data-mdb-inline="true" required type="date" id="fechaCierre" 
                    name="fechaCierre" value="{{selected}}" [(ngModel)]="fechacierreexpedi"
                    min="2023-01-01" max="2099-12-31">
-            <label class="form-label dejaEspacio" for="fechaCierre">Fecha Cierre* </label>
+            <label class="form-label form-label--floating" for="fechaCierre">Fecha Cierre* </label>
           </div>
           <div class="col-12 form-floating">
             <input type="text" class="form-control" name="codseridocu" id="codseridocu"
                    [(ngModel)]="serieDocumental">
-            <label class="form-label dejaEspacio" for="codseridocu">Código Serie Documental *</label>
+            <label class="form-label form-label--floating" for="codseridocu">Código Serie Documental *</label>
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="cerrarModal('cerrarExpModal')">Cancelar</button>
-            <button class="submit_footer" (click)="cerrarModal('cerrarExpModal')" role="button">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('cerrarExpModal')">Cancelar</button>
+            <button class="btn-iflow btn-iflow--primary" (click)="cerrarModal('cerrarExpModal')" role="button">Guardar</button>
           </div>
         </form>
       </div>
@@ -528,16 +574,16 @@
               <input type="text" class="form-control" (click)="lanzaTareaProcedi()" name="descripcionMensaje"
                      id="descripcionMensaje" [(ngModel)]="crearmensaje.descripcion" required
                      [class.is-invalid]="isDescripcionMensajeInvalid()">
-              <label class="form-label dejaEspacio" for="descripcionMensaje">Asunto* </label>
+              <label class="form-label form-label--floating" for="descripcionMensaje">Asunto* </label>
               <div *ngIf="isDescripcionMensajeInvalid()" class="invalid-feedback">
                 El asunto es obligatorio
               </div>
             </div>
           </div>
           
-          <div *ngIf="veoasignatramitador" class="espacios">
+          <div *ngIf="veoasignatramitador" class="px-3">
             <div class="row">
-              <div class="col-8 mueveBottonD">
+              <div class="col-8 text-start">
                 <h4>Tareas Procedimientos</h4>
                 <jqxGrid class="mat-elevation-z5"
                          [width]="'100%'"
@@ -558,7 +604,7 @@
                          #grid>
                 </jqxGrid>
               </div>
-              <div *ngIf="veoPermisoProcedi" class="col-4 mueveBottonD">
+              <div *ngIf="veoPermisoProcedi" class="col-4 text-start">
                 <h4>Permiso Procedimientos</h4>
                 <jqxGrid class="mat-elevation-z5"
                          [width]="'100%'"
@@ -584,10 +630,10 @@
       </div>
       
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="cerrarModal('AsigfnarTramitadorModal')">
+        <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('AsigfnarTramitadorModal')">
           Cancelar
         </button>
-        <button type="submit" class="submit_footer" form="formAsignarTramitador" [disabled]="isAsignandoTramitador">
+        <button type="submit" class="btn-iflow btn-iflow--primary" form="formAsignarTramitador" [disabled]="isAsignandoTramitador">
           <span *ngIf="isAsignandoTramitador" class="spinner-border spinner-border-sm me-2" role="status"></span>
           {{isAsignandoTramitador ? 'Asignando...' : 'Guardar'}}
         </button>
@@ -608,16 +654,16 @@
                 aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="espacios">
-          <div class="row">
-            <div *ngIf="numeroArchivo" class="col-12 mueveBottonR">
-              <button class="submit" type="button" title="Descargar Documento Original" (click)="abreArchivo()">
+        <div class="px-3">
+            <div class="row">
+            <div *ngIf="numeroArchivo" class="col-12 text-end">
+              <button class="btn-iflow btn-iflow--primary" type="button" title="Descargar Documento Original" (click)="abreArchivo()">
                 Descarga Documento <i class="bi bi-cloud-arrow-down"></i></button>
             </div>
           </div>
           
           <div *ngIf="cargotareasexpedi">
-            <jqxGrid class="mat-elevation-z5 espacios"
+            <jqxGrid class="mat-elevation-z5"
                      [width]="'100%'"
                      [autoheight]="true"
                      [columnsautoresize]="true"
@@ -638,7 +684,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="cerrarModal('TareaExpedienteModal')">Cerrar
+        <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('TareaExpedienteModal')">Cerrar
         </button>
       </div>
     </div>
@@ -673,12 +719,10 @@
         </jqxGrid>
       </div>
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="cerrarModal('IndiceExpedienteModal')">Cerrar</button>
+        <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('IndiceExpedienteModal')">Cerrar</button>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
+</ng-container>
+</app-shell>

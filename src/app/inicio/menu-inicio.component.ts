@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserSessionService } from '../core/service/user-session.service';
 
 @Component({
   selector: 'app-menu-inicio',
@@ -6,6 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./menu-inicio.component.css']
 })
 export class MenuInicioComponent {
-  public BandejaEntrada = sessionStorage.getItem('MensRecibido');
-
+  constructor(public session: UserSessionService) {}
 }

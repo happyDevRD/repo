@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs';
 import { __await } from 'tslib';
 import { environment } from 'src/environments/environment';
+import { UserSessionService } from '../core/service/user-session.service';
 import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { NotificationService } from '../core/service/notification.service';
@@ -115,8 +116,8 @@ export class FormnuevoprocediComponent {
   public creatareaprocedi:CreaTareaProcedi = new CreaTareaProcedi();
   public idProcedimiento!:number;
   public titulo:string = 'Nuevo procedimiento';
-  public nivAcces = sessionStorage.getItem('nivAcces');
-  public depart = sessionStorage.getItem('departamento');
+  public nivAcces: string | null = null;
+  public depart: string | null = null;
   procedimientos!: Procedimiento[];
   plantillatarea!:PlantillaTarea[];
   firmalistar!:FirmaListar[];
@@ -139,8 +140,12 @@ export class FormnuevoprocediComponent {
     public http: HttpClient,
     public router:Router,
     public activatedRoute: ActivatedRoute,
-    private notificationService: NotificationService
-    ){}
+    private notificationService: NotificationService,
+    private session: UserSessionService
+    ){
+      this.nivAcces = this.session.nivAcces;
+      this.depart = this.session.department;
+    }
 
 
     envioid(id:number,descrip:string,fase:string,plazo:number,tipoplaz:string,planti:string){

@@ -17,9 +17,15 @@ import {SolicitudListar} from '../solicitudes/solicitudes';
 import {jqxGridComponent} from 'jqwidgets-ng/jqxgrid';
 import { GridRadioSelector } from '../core/helper/grid-radio-selector';
 import { TablaClickHandler } from '../core/helper/tabla-click-handler';
+import { UserSessionService } from '../core/service/user-session.service';
+import { finalize } from 'rxjs/operators';
+import {
+  DashboardCountKey,
+  DashboardCounts,
+  InicioDashboardService,
+} from './services/inicio-dashboard.service';
+import { DashboardModalsHostComponent } from './components/dashboard-modals-host/dashboard-modals-host.component';
 import { NotificationService } from '../core/service/notification.service';
-import { ModalManagerService } from '../core/service/modal-manager.service';
-
 
 export class FiltroUser {
   id!: number;
@@ -61,6 +67,16 @@ export class FiltroUser {
 }
 
 
+export interface DashboardCardConfig {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  accent: 'blue' | 'violet' | 'teal' | 'amber' | 'rose' | 'indigo';
+  countKey: DashboardCountKey;
+}
+
+
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
@@ -69,18 +85,12 @@ export class FiltroUser {
 export class InicioComponent implements OnInit {
 
   @ViewChild('grid', {static: false}) grid: jqxGridComponent;
-  @ViewChild('gridSolicitudes', {static: false}) gridSolicitudes: jqxGridComponent;
-  @ViewChild('gridExpedientes', {static: false}) gridExpedientes: jqxGridComponent;
-  @ViewChild('gridTareas', {static: false}) gridTareas: jqxGridComponent;
-  @ViewChild('gridFirmasPendientes', {static: false}) gridFirmasPendientes: jqxGridComponent;
-  @ViewChild('gridFirmasTerceros', {static: false}) gridFirmasTerceros: jqxGridComponent;
-  @ViewChild('gridNotificaciones', {static: false}) gridNotificaciones: jqxGridComponent;
+  @ViewChild(DashboardModalsHostComponent) modalsHost!: DashboardModalsHostComponent;
   @ViewChild('content', {static: false}) content: ElementRef;
   @ViewChild('contentExp', {static: false}) contentExp: ElementRef;
 
 
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
-  public fil: boolean = false;
+  public filtrotramitador: any;
   public accionesExpedi: boolean = false;
   public idexpediente!: number;
   public idtramite!: number;
@@ -100,6 +110,67 @@ export class InicioComponent implements OnInit {
   public isLoadingFirmasPendientes: boolean = false;
   public isLoadingFirmasTerceros: boolean = false;
   public isLoadingNotificaciones: boolean = false;
+  public isLoadingSummary = true;
+
+  readonly dashboardCards: DashboardCardConfig[] = [
+    {
+      id: 'solicitudes',
+      title: 'Solicitudes',
+      description: 'Consulta de las solicitudes pendientes o rechazadas del departamento.',
+      icon: 'assets/new/ico_solicitudes.png',
+      accent: 'blue',
+      countKey: 'solicitudes',
+    },
+    {
+      id: 'expedientes',
+      title: 'Expedientes',
+      description: 'Consulta de tareas de expedientes de los que soy Instructor.',
+      icon: 'assets/new/ico_user.png',
+      accent: 'violet',
+      countKey: 'expedientes',
+    },
+    {
+      id: 'tareas',
+      title: 'Tareas',
+      description: 'Listado de tareas pendientes de las que soy tramitador.',
+      icon: 'assets/new/ico_tareas.png',
+      accent: 'teal',
+      countKey: 'tareas',
+    },
+    {
+      id: 'firmasPendientes',
+      title: 'Firmas pendientes',
+      description: 'Listado de firmas pendientes.',
+      icon: 'assets/new/ico_firmas_pen.png',
+      accent: 'amber',
+      countKey: 'firmasPendientes',
+    },
+    {
+      id: 'firmasTerceros',
+      title: 'Firmas solicitadas',
+      description: 'Listado de firmas pendientes solicitadas a terceros.',
+      icon: 'assets/new/ico_firmas_sol.png',
+      accent: 'rose',
+      countKey: 'firmasTerceros',
+    },
+    {
+      id: 'notificaciones',
+      title: 'Notificaciones',
+      description: 'Listado de notificaciones pendientes de recepcionar.',
+      icon: 'assets/new/ico_circulo_exc.png',
+      accent: 'indigo',
+      countKey: 'notificaciones',
+    },
+  ];
+
+  dashboardCounts: DashboardCounts = {
+    solicitudes: null,
+    expedientes: null,
+    tareas: null,
+    firmasPendientes: null,
+    firmasTerceros: null,
+    notificaciones: null,
+  };
 
   public editExpedientes: boolean = false;
   public filtrouser: FiltroUser = new FiltroUser;
@@ -111,12 +182,7 @@ export class InicioComponent implements OnInit {
   public page!: number;
   public npagina: number = 4;
 // filtros Pipe
-  public filtrotramitador: any = this.idOrgElemen; // pipe/filtramitador
-
-
-  public user: any = sessionStorage.getItem('user');// lo usamos para filtrar contenidos sin login
-  public soluser = sessionStorage.getItem('SolUsuari');// lo usamos para filtrar contenidos 1 ok 0 no
-  public trauser = sessionStorage.getItem('TraUsuari');// lo usamos para filtrar contenidos 1 ok 0 no
+  public fil: boolean = false;
 
   usuario = new Usuario;
   selected = new Date();
@@ -137,15 +203,114 @@ export class InicioComponent implements OnInit {
 // --------------------------------------
 
   ngOnInit(): void {
+    this.filtrotramitador = this.session.idOrgEleme;
     this.cargoExpedientes();
-    this.expedientesService.getExpedientesInstructor().subscribe(
-      data => this.verexpedientesinstructor = data,
-      error => console.error("Error en getExpedientesInstructor: ", error)
-    );
-    this.expedientesService.getTareaTramiteExpedientesUsuario().subscribe(
-      data => this.vertareatramiteexpporusuario = data,
-      error => console.error("Error en getTareaTramiteExpedientesUsuario: ", error)
-    );
+    this.loadDashboardSummary();
+  }
+
+  get totalPendientes(): number {
+    return Object.values(this.dashboardCounts)
+      .filter((value): value is number => value !== null)
+      .reduce((sum, value) => sum + value, 0);
+  }
+
+  get sectionsWithPending(): number {
+    return Object.values(this.dashboardCounts)
+      .filter((value): value is number => value !== null && value > 0).length;
+  }
+
+  getCardCount(key: DashboardCountKey): number | null {
+    return this.dashboardCounts[key];
+  }
+
+  isCardLoading(cardId: string): boolean {
+    switch (cardId) {
+      case 'solicitudes': return this.isLoadingSolicitudes;
+      case 'expedientes': return this.isLoadingExpedientes;
+      case 'tareas': return this.isLoadingTareas;
+      case 'firmasPendientes': return this.isLoadingFirmasPendientes;
+      case 'firmasTerceros': return this.isLoadingFirmasTerceros;
+      case 'notificaciones': return this.isLoadingNotificaciones;
+      default: return false;
+    }
+  }
+
+  runCardAction(cardId: string): void {
+    void this.openDashboardModal(cardId);
+  }
+
+  private async openDashboardModal(cardId: string): Promise<void> {
+    const loadingKey = this.getLoadingKey(cardId);
+    if (!loadingKey || !this.modalsHost) {
+      return;
+    }
+
+    this.setLoading(loadingKey, true);
+    try {
+      let count = 0;
+      switch (cardId) {
+        case 'solicitudes':
+          count = await this.modalsHost.openSolicitudes();
+          this.dashboardCounts.solicitudes = count;
+          break;
+        case 'expedientes':
+          count = await this.modalsHost.openExpedientes();
+          this.dashboardCounts.expedientes = count;
+          break;
+        case 'tareas':
+          count = await this.modalsHost.openTareas();
+          this.dashboardCounts.tareas = count;
+          break;
+        case 'firmasPendientes':
+          count = await this.modalsHost.openFirmasPendientes();
+          this.dashboardCounts.firmasPendientes = count;
+          break;
+        case 'firmasTerceros':
+          count = await this.modalsHost.openFirmasTerceros();
+          this.dashboardCounts.firmasTerceros = count;
+          break;
+        case 'notificaciones':
+          count = await this.modalsHost.openNotificaciones();
+          this.dashboardCounts.notificaciones = count;
+          break;
+      }
+    } catch (error) {
+      this.notificationService.error('No se pudo cargar la consulta seleccionada');
+      console.error('Error al abrir consulta del panel:', error);
+    } finally {
+      this.setLoading(loadingKey, false);
+    }
+  }
+
+  private getLoadingKey(cardId: string): keyof InicioComponent | null {
+    const map: Record<string, keyof InicioComponent> = {
+      solicitudes: 'isLoadingSolicitudes',
+      expedientes: 'isLoadingExpedientes',
+      tareas: 'isLoadingTareas',
+      firmasPendientes: 'isLoadingFirmasPendientes',
+      firmasTerceros: 'isLoadingFirmasTerceros',
+      notificaciones: 'isLoadingNotificaciones',
+    };
+    return map[cardId] ?? null;
+  }
+
+  private setLoading(key: keyof InicioComponent, value: boolean): void {
+    (this as Record<string, unknown>)[key as string] = value;
+  }
+
+  private loadDashboardSummary(): void {
+    this.isLoadingSummary = true;
+    this.dashboardService.loadSummary()
+      .pipe(finalize(() => { this.isLoadingSummary = false; }))
+      .subscribe({
+        next: (summary) => {
+          this.solicitudlistar = summary.solicitudes;
+          this.verexpedientesinstructor = summary.expedientes;
+          this.vertareatramiteexpporusuario = summary.tareas;
+          this.dashboardCounts = { ...summary.counts };
+        },
+        error: (error) => console.error('Error al cargar resumen del panel:', error),
+      });
   }
 
   public cadenaEstadoSolicitudes: string;
@@ -244,107 +409,17 @@ export class InicioComponent implements OnInit {
     public router: Router,
     public http: HttpClient,
     private notificationService: NotificationService,
-    private modalManagerService: ModalManagerService
+    private dashboardService: InicioDashboardService,
+    public session: UserSessionService
   ) {
 
-  }
-
-  // ===== GESTIÓN DE MODALES =====
-  
-  public abrirModal(modalId: string): void {
-    this.modalManagerService.openModal(modalId);
-  }
-
-  public cerrarModal(modalId: string): void {
-    this.modalManagerService.closeModal(modalId);
-  }
-
-  // ===== FUNCIONES DE CONSULTA CON ESTADOS DE CARGA =====
-
-  public async consultarSolicitudes(): Promise<void> {
-    try {
-      this.isLoadingSolicitudes = true;
-      await this.cargarSolicitudes();
-      this.abrirModal('modalSolicitudesPendientes');
-    } catch (error) {
-      this.notificationService.error('Error al cargar las solicitudes pendientes');
-      console.error('Error loading solicitudes:', error);
-    } finally {
-      this.isLoadingSolicitudes = false;
-    }
-  }
-
-  public async consultarExpedientes(): Promise<void> {
-    try {
-      this.isLoadingExpedientes = true;
-      this.ordenarTabla();
-      await this.cargarExpedientesInstructor();
-      this.abrirModal('modalExpedientesInstructor');
-    } catch (error) {
-      this.notificationService.error('Error al cargar los expedientes del instructor');
-      console.error('Error loading expedientes:', error);
-    } finally {
-      this.isLoadingExpedientes = false;
-    }
-  }
-
-  public async consultarTareas(): Promise<void> {
-    try {
-      this.isLoadingTareas = true;
-      await this.cargarTareasUsuario();
-      this.abrirModal('modalTareasPendientes');
-    } catch (error) {
-      this.notificationService.error('Error al cargar las tareas pendientes');
-      console.error('Error loading tareas:', error);
-    } finally {
-      this.isLoadingTareas = false;
-    }
-  }
-
-  public async consultarFirmasPendientes(): Promise<void> {
-    try {
-      this.isLoadingFirmasPendientes = true;
-      await this.cargaFirmasPendientes();
-      this.abrirModal('modalFirmasPendientes');
-    } catch (error) {
-      this.notificationService.error('Error al cargar las firmas pendientes');
-      console.error('Error loading firmas pendientes:', error);
-    } finally {
-      this.isLoadingFirmasPendientes = false;
-    }
-  }
-
-  public async consultarFirmasTerceros(): Promise<void> {
-    try {
-      this.isLoadingFirmasTerceros = true;
-      await this.cargaFirmasTerceros();
-      this.abrirModal('modalFirmasTerceros');
-    } catch (error) {
-      this.notificationService.error('Error al cargar las firmas solicitadas a terceros');
-      console.error('Error loading firmas terceros:', error);
-    } finally {
-      this.isLoadingFirmasTerceros = false;
-    }
-  }
-
-  public async consultarNotificaciones(): Promise<void> {
-    try {
-      this.isLoadingNotificaciones = true;
-      await this.cargaNotificaciones();
-      this.abrirModal('modalNotificaciones');
-    } catch (error) {
-      this.notificationService.error('Error al cargar las notificaciones pendientes');
-      console.error('Error loading notificaciones:', error);
-    } finally {
-      this.isLoadingNotificaciones = false;
-    }
   }
 
 // ordena tabla expedientes
 
   public ordenarTabla() {
 
-    console.log(`URL DE EXPEDIENTES : ${environment.apiUrl}expediente/listarPorInstructor/${this.user!}`)
+    console.log(`URL DE EXPEDIENTES : ${environment.apiUrl}expediente/listarPorInstructor/${this.session.user!}`)
     var table, rows, switching, i, x, y, shouldSwitch;
     table = document.getElementById("tablaExpedi");
     switching = true;
@@ -377,118 +452,12 @@ export class InicioComponent implements OnInit {
   }
 
 
-  public sourceSolici: any = new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      {name: 'id', type: 'any'},
-      {name: 'fecInicio', type: 'any'},
-      {name: 'asunto', type: 'any'},
-      {name: 'numDocum', type: 'any'},
-      {name: 'estado', type: 'any'},
-      {name: 'usuario', type: 'any'},
-      {name: 'expediente', type: 'any'},
-      {name: 'personaEntidad', type: 'any'},
-      {name: 'ejeNumRegis', type: 'any'},
-      {name: 'numero', type: 'any'},
-      {name: 'ejercicio', type: 'any'},
-      {name: 'idExpediente', type: 'any'},
-      {name: 'nomRepre', type: 'any'},
-      {name: 'idRepre', type: 'any'},
-      {name: 'idHisRepre', type: 'any'},
-      {name: 'dirRepre', type: 'any'},
-      {
-        name: 'ejercicioNumero',
-        type: 'string',
-        map: (data: any) => data.ejercicio + '/' + data.numero,
-      },
-      {
-        name: 'desPerEntid',
-        type: 'string',
-        map: (data: any) => data.personaEntidad ? data.personaEntidad.desPerEntid : '',
-      },
-    ],
-    localdata: [],
-    url: `${environment.apiUrl}tareaTramiteExpediente/listarSolicitudesPendientesPorUsuario/${this.user}`
-  });
-
-  public cargarSolicitudes(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.solicitudesServices.getSolicitudes().subscribe(
-        data => {
-          this.solicitudlistar = data;
-          this.sourceSolici.localdata = data;
-          if (this.gridSolicitudes) {
-            this.gridSolicitudes.source(new jqx.dataAdapter(this.sourceSolici));
-            this.gridSolicitudes.updatebounddata();
-          }
-          resolve();
-        },
-        error => {
-          console.error("Error al obtener las solicitudes: ", error);
-          reject(error);
-        }
-      );
-    });
-  }
-
-  public cargarExpedientesInstructor(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.expedientesService.getExpedientesInstructor().subscribe(
-        data => {
-          this.verexpedientesinstructor = data;
-          this.sourceExpedientesInstructor.localdata = data;
-          if (this.gridExpedientes) {
-            this.gridExpedientes.source(new jqx.dataAdapter(this.sourceExpedientesInstructor));
-            this.gridExpedientes.updatebounddata();
-          }
-          resolve();
-        },
-        error => {
-          console.error("Error al obtener los expedientes del instructor: ", error);
-          reject(error);
-        }
-      );
-    });
-  }
-
-  public cargarTareasUsuario(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.expedientesService.getTareaTramiteExpedientesUsuario().subscribe(
-        data => {
-          this.vertareatramiteexpporusuario = data;
-          this.sourceTareasTramiteUsuarios.localdata = data;
-          if (this.gridTareas) {
-            this.gridTareas.source(new jqx.dataAdapter(this.sourceTareasTramiteUsuarios));
-            this.gridTareas.updatebounddata();
-          }
-          resolve();
-        },
-        error => {
-          console.error("Error al obtener las tareas del usuario: ", error);
-          reject(error);
-        }
-      );
-    });
-  }
-
-
-  public columnsSolici = [
-    {text: 'Ejercicio/Número', datafield: 'ejercicioNumero', width: 140, align: 'center', cellsalign: 'center'},
-    {text: 'Fecha Solicitud', datafield: 'fecInicio', width: 120, align: 'center', cellsalign: 'center'},
-    {text: 'Asunto', datafield: 'asunto', width: 280, align: 'center', cellsalign: 'center'},
-    {text: 'Estado', datafield: 'estado', width: 100, align: 'center', cellsalign: 'center'},
-    {text: 'Asignado a', datafield: 'usuario', width: 150, align: 'center', cellsalign: 'center'},
-    {text: 'Interesado', datafield: 'desPerEntid', width: 280, align: 'center', cellsalign: 'center'},
-    {text: 'N. Registro', datafield: 'ejeNumRegis', width: 100, align: 'center', cellsalign: 'center'}
-  ];
-
-
   public modificaformatoEstado(valor: string): string {
     switch (valor) {
       case "VERDE":
-        return '<img src="../assets/boton_verde.png" width="20" height="20"/>';
+        return '<img src="assets/boton_verde.png" width="20" height="20"/>';
       case "AMARILLO":
-        return '<img src="../assets/boton_amarillo.png" width="20" height="20"/>';
+        return '<img src="assets/boton_amarillo.png" width="20" height="20"/>';
       default:
         return "";
     }
@@ -565,10 +534,10 @@ export class InicioComponent implements OnInit {
 
   public cargoExpedientes(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log(`URL CARGA EXPEDIENTES: ${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.user}`);
+      console.log(`URL CARGA EXPEDIENTES: ${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.session.user}`);
       
       // Usar HTTP client para obtener los datos
-      this.http.get<any[]>(`${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.user}`).subscribe(
+      this.http.get<any[]>(`${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.session.user}`).subscribe(
         data => {
           this.sourceTareasExpediente = new jqx.dataAdapter({
             dataType: 'json',
@@ -717,13 +686,13 @@ export class InicioComponent implements OnInit {
 
   public cellsrendererColor = function (row, column, value) {
     if (value == "VERDE") {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
     }
     if (value == "AMARILLO") {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_amarillo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_amarillo.png" width="20" height="20"/>' + '</div>';
     }
     if (value == "ROJO") {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
     }
     if (!value) {
       return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + 'SIN DATOS' + '</div>';
@@ -740,10 +709,10 @@ export class InicioComponent implements OnInit {
 
   public cellsrendererContieneArchivo = function (row, column, value) {
     if (value) {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
 
     } else {
-      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
     }
 
   }
@@ -754,9 +723,9 @@ export class InicioComponent implements OnInit {
 
   public cellsrendererArchivo = function (row, column, value) {
     if (value == "1") {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
     } else {
-      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
     }
 
   }
@@ -983,540 +952,8 @@ export class InicioComponent implements OnInit {
       {name: 'numExped', type: 'any'},
       {name: 'titulo', type: 'any'},
     ],
-    url: `${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.user!}`,
+    url: `${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.session.user!}`,
     id: 'id',
   });
 
-  columnsExpedientesInstructor = [
-    {text: 'id', datafield: 'id', width: '1%', hidden: true},
-    {
-      text: '',
-      width: '5%',
-      datafield: '',
-      cellsrenderer: this.columnseleccionExpInstructor,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Ejercicio',
-      width: '8%',
-      datafield: 'ejercicio',
-      cellsrenderer: this.cellsrendererExpInstructor,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Número',
-      width: '8%',
-      datafield: 'numero',
-      cellsrenderer: this.cellsrendererExpInstructor,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Título',
-      datafield: 'titulo',
-      cellsrenderer: this.cellsrendererExpInstructor,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Estado',
-      width: '15%',
-      datafield: 'estado',
-      cellsrenderer: this.cellsrendererExpInstructor,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Fecha Inicio',
-      datafield: 'fecInicio',
-      cellsrenderer: this.cellsrendererExpInstructor,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-  ];
-
-
-  public sourceExpedientesInstructor = new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      {name: 'numero', type: 'number'},
-      {name: 'ejercicio', type: 'number'},
-      {name: 'titulo', type: 'string'},
-      {name: 'id', type: 'any'},
-      {name: 'estado', type: 'string'},
-      {name: 'fecInicio', type: 'string'},
-    ],
-    url: `${environment.apiUrl}expediente/listarPorInstructor/${this.user!}`,
-  });
-
-
-  columnsTareasTramiteUsuarios = [
-    {text: 'id', datafield: 'id', width: '1%', hidden: true},
-    {text: 'TareaProcedimiento', datafield: 'tareaProcedimiento', width: '1%', hidden: true},
-    {text: '', datafield: '', cellsrenderer: this.columnseleccionTareaTramite, renderer: this.columnrenderer},
-    {
-      text: 'Ejerc. Exp.',
-      width: '10%',
-      datafield: 'ejeExped',
-      cellsrenderer: this.cellsrendererTareaExpedi,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Número Exp.',
-      width: '10%',
-      datafield: 'numExped',
-      cellsrenderer: this.cellsrendererTareaExpedi,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Nº Tarea',
-      width: '10%',
-      datafield: 'numero',
-      cellsrenderer: this.cellsrendererTareaExpedi,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Descripción Tarea',
-      width: '25%',
-      datafield: 'descripcion',
-      cellsrenderer: this.cellsrenderer,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Descripción Trámite',
-      width: '25%',
-      datafield: 'desTramite',
-      cellsrenderer: this.cellsrendererTareaExpedi,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Fecha Tarea',
-      width: '10%',
-      datafield: 'fecInicio',
-      cellsrenderer: this.cellsrendererFecha,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Fecha Finalización',
-      width: '15%',
-      datafield: 'fecFin',
-      cellsrenderer: this.cellsrendererFecha,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Fecha Plazo',
-      width: '10%',
-      datafield: 'fecPlazo',
-      cellsrenderer: this.cellsrendererFechaPlazo,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Estado',
-      width: '10%',
-      datafield: 'color',
-      cellsrenderer: this.cellsrendererColor,
-      renderer: this.columnrendererDescarga
-    },
-    {
-      text: 'Archivo',
-      width: '10%',
-      datafield: 'archivo',
-      cellsrenderer: this.cellsrendererContieneArchivo,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Nombre archivo',
-      width: '35%',
-      datafield: 'nombreArchivo',
-      cellsrenderer: this.cellsrendererTramiteTarea,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Firmado',
-      width: '8%',
-      datafield: 'firmado',
-      cellsrenderer: this.cellsrendererArchivo,
-      renderer: this.columnrendererDescarga
-    },
-    {
-      text: 'Propuesta',
-      width: '8%',
-      datafield: 'propuestaResolucion',
-      cellsrenderer: this.cellsrendererTramiteTarea,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Salida',
-      width: '8%',
-      datafield: 'numRegis',
-      cellsrenderer: this.cellsrendererTramiteTarea,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Notificación',
-      width: '8%',
-      datafield: 'ejeNumNotif',
-      cellsrenderer: this.cellsrendererTramiteTarea,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Tablón',
-      width: '8%',
-      datafield: 'idAnunc',
-      cellsrenderer: this.cellsrendererTramiteTarea,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Usuario',
-      width: '8%',
-      datafield: 'usuario',
-      cellsrenderer: this.cellsrendererTramiteTarea,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'tipAnexo',
-      width: '8%',
-      datafield: 'tipAnexo',
-      cellsrenderer: this.cellsrendererPlazo,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'docAport',
-      width: '8%',
-      datafield: 'docAport',
-      cellsrenderer: this.cellsrendererPlazo,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'tipDocEni',
-      width: '8%',
-      datafield: 'tipDocEni',
-      cellsrenderer: this.cellsrendererPlazo,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'documentacion',
-      width: '8%',
-      datafield: 'documentacion',
-      cellsrenderer: this.cellsrendererPlazo,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'visible',
-      width: '8%',
-      datafield: 'visible',
-      cellsrenderer: this.cellsrendererPlazo,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'idHisDocum',
-      width: '8%',
-      datafield: 'idHisDocum',
-      cellsrenderer: this.cellsrendererPlazo,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-  ];
-
-
-  public sourceTareasTramiteUsuarios = new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      {name: 'numero', type: 'number'},
-      {name: 'descripcion', type: 'string'},
-      {name: 'fecInicio', type: 'string'},
-      {name: "fecFin", type: 'string'},
-      {name: "propuestaResolucion", type: 'string'},
-      {name: "usuario", type: 'string'},
-      {name: "firmado", type: 'string'},
-      {name: "fecPlazo", type: 'string'},
-      {name: "color", type: 'string'},
-      {name: "archivo", type: 'string'},
-      {name: "ejeExped", type: 'string'},
-      {name: "numExped", type: 'string'},
-      {name: 'tareaProcedimiento', type: 'any'},
-      {name: 'id', type: 'any'},
-      {name: 'tipAnexo', type: 'any'},
-      {name: 'docAport', type: 'any'},
-      {name: 'tipDocEni', type: 'any'},
-      {name: 'documentacion', type: 'any'},
-      {name: 'visible', type: 'any'},
-      {name: 'visible', type: 'any'},
-      {name: 'numRegis', type: 'any'},
-      {name: 'idHisDocum', type: 'any'},
-      {name: 'ejeNumNotif', type: 'any'},
-      {name: 'nombreArchivo', type: 'any'},
-      {name: 'idAnunc', type: 'any'},
-      {name: 'desTramite', type: 'any'},
-    ],
-    url: `${environment.apiUrl}tareaTramiteExpediente/listarTareasPendientesPorUsuario/${this.user!}`,
-    id: 'id',
-  });
-
-
-  columnsNotificaciones = [
-    {text: 'id', datafield: 'id', width: '1%', hidden: true},
-    {
-      text: '',
-      width: '5%',
-      datafield: '',
-      cellsrenderer: this.columnseleccionExpInstructor,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'Ejercicio',
-      width: '8%',
-      datafield: 'ejeExped',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Número',
-      width: '8%',
-      datafield: 'numExped',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Nº Tarea',
-      width: '8%',
-      datafield: 'numero',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Descripción',
-      datafield: 'descripcion',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-  ];
-
-
-  public sourceNotificaciones = new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      {name: 'ejeExped', type: 'number'},
-      {name: 'numExped', type: 'number'},
-      {name: 'numero', type: 'string'},
-      {name: 'id', type: 'any'},
-      {name: 'descripcion', type: 'string'},
-    ],
-    url: `${environment.apiUrl}tareaTramiteExpediente/listarNotificacionPendiente/${this.user!}`,
-  });
-
-  public cargaNotificaciones(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.sourceNotificaciones = new jqx.dataAdapter({
-        dataType: 'json',
-        dataFields: [
-          {name: 'ejeExped', type: 'number'},
-          {name: 'numExped', type: 'number'},
-          {name: 'numero', type: 'string'},
-          {name: 'id', type: 'any'},
-          {name: 'descripcion', type: 'string'},
-        ],
-        url: `${environment.apiUrl}tareaTramiteExpediente/listarNotificacionPendiente/${this.user}`
-      });
-      
-      if (this.gridNotificaciones) {
-        this.gridNotificaciones.source(this.sourceNotificaciones);
-        this.gridNotificaciones.updatebounddata();
-      }
-      resolve();
-    });
-  }
-
-
-  columnsFirmasTerceros = [
-    {text: 'id', datafield: 'id', width: '1%', hidden: true},
-    {
-      text: '',
-      width: '5%',
-      datafield: '',
-      cellsrenderer: this.columnseleccionExpInstructor,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'Ejercicio',
-      width: '8%',
-      datafield: 'ejeExped',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Número',
-      width: '8%',
-      datafield: 'numExped',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Nº Tarea',
-      width: '8%',
-      datafield: 'numero',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Descripción',
-      datafield: 'descripcion',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Archivo',
-      datafield: 'nombreArchivo',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Firmante',
-      datafield: 'firmante',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-  ];
-
-
-  sourceFirmasTerceros = new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      {name: 'ejeExped', type: 'number'},
-      {name: 'numExped', type: 'number'},
-      {name: 'numero', type: 'string'},
-      {name: 'id', type: 'any'},
-      {name: 'descripcion', type: 'string'},
-      {name: 'nombreArchivo', type: 'string'},
-      {name: 'firmante', type: 'string'},
-    ],
-    url: `${environment.apiUrl}tareaTramiteExpediente/listarFirmaPendienteTerceros/${this.user!}`,
-  });
-
-
-  public cargaFirmasTerceros(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.sourceFirmasTerceros = new jqx.dataAdapter({
-        dataType: 'json',
-        dataFields: [
-          {name: 'ejeExped', type: 'number'},
-          {name: 'numExped', type: 'number'},
-          {name: 'numero', type: 'string'},
-          {name: 'id', type: 'any'},
-          {name: 'descripcion', type: 'string'},
-          {name: 'nombreArchivo', type: 'string'},
-          {name: 'firmante', type: 'string'},
-        ],
-        url: `${environment.apiUrl}tareaTramiteExpediente/listarFirmaPendienteTerceros/${this.user}`
-      });
-      
-      if (this.gridFirmasTerceros) {
-        this.gridFirmasTerceros.source(this.sourceFirmasTerceros);
-        this.gridFirmasTerceros.updatebounddata();
-      }
-      resolve();
-    });
-  }
-
-
-  columnsFirmasPendientes = [
-    {text: 'id', datafield: 'id', width: '1%', hidden: true},
-    {
-      text: '',
-      width: '5%',
-      datafield: '',
-      cellsrenderer: this.columnseleccionExpInstructor,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'Ejercicio',
-      width: '8%',
-      datafield: 'ejeExped',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Número',
-      width: '8%',
-      datafield: 'numExped',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Nº Tarea',
-      width: '8%',
-      datafield: 'numero',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Descripción',
-      datafield: 'descripcion',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Archivo',
-      datafield: 'nombreArchivo',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-    {
-      text: 'Firmante',
-      datafield: 'firmante',
-      cellsrenderer: this.cellsrendererNotificacion,
-      renderer: this.columnrenderer
-    },
-  ];
-
-
-  public sourceFirmasPendientes = new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      {name: 'ejeExped', type: 'number'},
-      {name: 'numExped', type: 'number'},
-      {name: 'numero', type: 'string'},
-      {name: 'id', type: 'any'},
-      {name: 'descripcion', type: 'string'},
-      {name: 'nombreArchivo', type: 'string'},
-      {name: 'firmante', type: 'string'},
-
-    ],
-
-    url: `${environment.apiUrl}tareaTramiteExpediente/listarFirmaPendiente/${this.user!}`,
-  });
-
-
-  public cargaFirmasPendientes(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.sourceFirmasPendientes = new jqx.dataAdapter({
-        dataType: 'json',
-        dataFields: [
-          {name: 'ejeExped', type: 'number'},
-          {name: 'numExped', type: 'number'},
-          {name: 'numero', type: 'string'},
-          {name: 'id', type: 'any'},
-          {name: 'descripcion', type: 'string'},
-          {name: 'nombreArchivo', type: 'string'},
-          {name: 'firmante', type: 'string'},
-        ],
-        url: `${environment.apiUrl}tareaTramiteExpediente/listarFirmaPendiente/${this.user}`
-      });
-      
-      if (this.gridFirmasPendientes) {
-        this.gridFirmasPendientes.source(this.sourceFirmasPendientes);
-        this.gridFirmasPendientes.updatebounddata();
-      }
-      resolve();
-    });
-  }
 }
-
-
-
-

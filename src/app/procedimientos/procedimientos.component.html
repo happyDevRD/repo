@@ -1,18 +1,11 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
+﻿<app-shell contentId="hanging-icons">
+  <app-access-denied
+    *ngIf="!session.canManageProcedimientos"
+    title="Sin acceso a procedimientos"
+    message="Este usuario no tiene permisos para gestionar procedimientos.">
+  </app-access-denied>
 
-    <!-- Mensaje para usuarios sin permiso -->
-    <div *ngIf="userorg != '6'" class="col-12 content_gen">
-      <div class="mensaje-sin-permiso">
-        <h2>Este usuario no tiene permiso de acceso a procedimientos</h2>
-        <img src="../assets/greenaall_logo.svg" alt="Greenall" width="200" height="100">
-      </div>
-    </div>
-
-    <!-- Contenido principal para usuarios con permiso -->
-    <div *ngIf="userorg == '6'" class="col-12 content_gen" id="hanging-icons">
+  <ng-container *ngIf="session.canManageProcedimientos">
       <app-menuprocedimiento></app-menuprocedimiento>
       <div class="page-panel">
         <!-- Título y botones de procedimientos -->
@@ -21,13 +14,13 @@
             Listado de Procedimientos del Departamento : <span class="departamento-nombre">{{ departamento }}</span>
           </h2>
           <div *ngIf="verListProcedi" class="titulo-botones-container">
-                    <button class="btn btn-rounded btn-sm"
+                    <button class="btn-iflow btn-iflow--icon"
                 title="Nuevo Procedimiento" type="button" (click)="abrirModal('NprocediModal')">
-              <img src="../assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
+              <img src="assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
             </button>
             <button *ngIf="veoeliminaProcedimiento" (click)="deleteProcedimiento(idprocedi)"
-                    class="btn btn-rounded btn-sm" title="Eliminar Procedimiento" type="button">
-              <img src="../assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
+                    class="btn-iflow btn-iflow--icon" title="Eliminar Procedimiento" type="button">
+              <img src="assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
             </button>
           </div>
         </div>
@@ -64,14 +57,14 @@
             <div class="listado-titulo-container">
               <h2 class="listado-titulo-secundario">Listado de Tareas del Procedimiento</h2>
               <div class="titulo-botones-container">
-                <button class="btn btn-rounded btn-sm" data-bs-target="#tareasModal" data-bs-toggle="modal"
+                <button class="btn-iflow btn-iflow--icon" data-bs-target="#tareasModal" data-bs-toggle="modal"
                         title="Nueva Tarea del Procedimiento" type="button"
                         (click)="borravaloresNuevaTarea()">
-                  <img src="../assets/new/ico_add.png" alt="Nueva Tarea" width="25" height="25">
+                  <img src="assets/new/ico_add.png" alt="Nueva Tarea" width="25" height="25">
                 </button>
-                <button *ngIf="verEliminaTarea" class="btn btn-rounded btn-sm" type="button"
+                <button *ngIf="verEliminaTarea" class="btn-iflow btn-iflow--icon" type="button"
                         (click)="deleteTareaProcedimiento()">
-                  <img src="../assets/new/ico_elim.png" alt="Eliminar Tarea" width="25" height="25">
+                  <img src="assets/new/ico_elim.png" alt="Eliminar Tarea" width="25" height="25">
                 </button>
               </div>
             </div>
@@ -102,15 +95,15 @@
             <div class="listado-titulo-container">
               <h2 class="listado-titulo-secundario">Listado de Permisos de la Tarea</h2>
               <div class="titulo-botones-container">
-                <button class="btn btn-rounded btn-sm"
+                <button class="btn-iflow btn-iflow--icon"
                         title="Nuevo permiso de la Tarea" type="button"
                         (click)="activaFormNuevoPermiso(); abrirModal('nuevoPermisoModal')">
-                  <img src="../assets/new/ico_add.png" alt="Nuevo Permiso" width="25" height="25">
+                  <img src="assets/new/ico_add.png" alt="Nuevo Permiso" width="25" height="25">
                 </button>
-                <button *ngIf="veoBorrarTarea" class="btn btn-rounded btn-sm" type="button"
+                <button *ngIf="veoBorrarTarea" class="btn-iflow btn-iflow--icon" type="button"
                         (click)="deletePermisoProcedimiento()"
                         title="Eliminar Permiso de la Tarea">
-                  <img src="../assets/new/ico_elim.png" alt="Eliminar Permiso" width="25" height="25">
+                  <img src="assets/new/ico_elim.png" alt="Eliminar Permiso" width="25" height="25">
                 </button>
               </div>
             </div>
@@ -142,13 +135,13 @@
         <div class="listado-titulo-container titulo-separador">
           <h2 class="listado-titulo-secundario">Listado de Atributos del procedimiento</h2>
           <div class="titulo-botones-container">
-            <button *ngIf="edicion" class="btn btn-rounded btn-sm"
+            <button *ngIf="edicion" class="btn-iflow btn-iflow--icon"
                     title="Nuevo Atributo" type="button" (click)="abrirModal('NAtributosModal')" (blur)="actualizaSourceAtributo(idProcedi)">
-              <img src="../assets/new/ico_add.png" alt="Nuevo Atributo" width="25" height="25">
+              <img src="assets/new/ico_add.png" alt="Nuevo Atributo" width="25" height="25">
             </button>
-            <button *ngIf="veoborraratributo" class="btn btn-rounded btn-sm" title="Eliminar Atributo"
+            <button *ngIf="veoborraratributo" class="btn-iflow btn-iflow--icon" title="Eliminar Atributo"
                     type="button" (click)="deleteatributo()">
-              <img src="../assets/new/ico_elim.png" alt="Eliminar Atributo" width="25" height="25">
+              <img src="assets/new/ico_elim.png" alt="Eliminar Atributo" width="25" height="25">
             </button>
           </div>
         </div>
@@ -173,9 +166,6 @@
                  class="mat-elevation-z5 grid-compacto">
         </jqxGrid>
       </div>
-    </div>
-  </div>
-</div>
 
 
 <!-- *********************** MODALES *********************** -->
@@ -206,10 +196,10 @@
           </div>
           <!-- Pie -->
           <div class="modal-footer">
-            <button type="button" class="submit_footer"
+            <button type="button" class="btn-iflow btn-iflow--secondary"
                     (click)="atrasCrearPermisoProcedi(); cerrarModal('nuevoPermisoModal')">Cancelar
             </button>
-            <button type="submit" class="submit_footer">Guardar</button>
+            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -300,10 +290,10 @@
 
         <!-- Footer -->
         <div class="modal-footer">
-          <button type="button" class="submit_footer"
+          <button type="button" class="btn-iflow btn-iflow--secondary"
                   (click)="limpioAtributosformulario(); cerrarModal('EditoAtributosModal')">Cancelar
           </button>
-          <button type="submit" class="submit_footer">Guardar</button>
+          <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
         </div>
       </form>
 
@@ -435,12 +425,12 @@
         <!-- Footer -->
         <div class="modal-footer">
           <button type="button"
-                  class="submit_footer"
+                  class="btn-iflow btn-iflow--secondary"
                   (click)="limpioAtributosformulario(); cerrarModal('NAtributosModal')">
             Cancelar
           </button>
           <button type="submit"
-                  class="submit_footer">
+                  class="btn-iflow btn-iflow--secondary">
             Guardar
           </button>
         </div>
@@ -534,8 +524,8 @@
             <label class="col-form-label" for="departamento1">Firma por defecto *</label>
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="limpiarErroresModificarTarea(); cerrarModal('modifitareasModalListado')">Cancelar</button>
-            <button type="submit" class="submit_footer">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresModificarTarea(); cerrarModal('modifitareasModalListado')">Cancelar</button>
+            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -628,8 +618,8 @@
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="borravaloresNuevaTarea(); cerrarModal('tareasModal')">Cancelar</button>
-            <button type="submit" class="submit_footer">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="borravaloresNuevaTarea(); cerrarModal('tareasModal')">Cancelar</button>
+            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -655,19 +645,19 @@
             <div class="col-12 form-floating">
                   <textarea class="form-control" id="descripcion" name="descripcion"
                             [(ngModel)]="editarprocedi.descripcion" [value]="descripProcedimiento" required></textarea>
-              <label class="form-label dejaEspacio" for="descripcion">Descripción *</label>
+              <label class="form-label form-label--floating" for="descripcion">Descripción *</label>
               <br>
             </div>
             <div class="col-6 form-floating">
               <input class="form-control" id="departamento" name="departamento" type="text"
                      [value]="departProcedimiento" disabled>
-              <label class="dejaEspacio" for="departamento">Departamento</label>
+              <label class="form-label form-label--floating" for="departamento">Departamento</label>
               <br>
             </div>
             <div class="col-6 form-floating">
               <input class="form-control" id="codigoSIA" name="codigoSIA" type="text"
                      [(ngModel)]="editarprocedi.codigoSia" [value]="siaProcedimiento" required>
-              <label class="form-label dejaEspacio" for="codigoSIA">Código SIA *</label>
+              <label class="form-label form-label--floating" for="codigoSIA">Código SIA *</label>
               <br>
             </div>
             <div class="col-6 form-floating">
@@ -680,7 +670,7 @@
                 <option value="4">Presencial y Web con certificado</option>
                 <option value="5">Presencial y Web sin certificado</option>
               </select>
-              <label class="form-label dejaEspacio" for="modalidad">Modalidad *</label>
+              <label class="form-label form-label--floating" for="modalidad">Modalidad *</label>
             </div>
             <div class="col-6 form-floating">
               <select class="form-select" id="Materia" name="Materia"
@@ -690,13 +680,13 @@
                   {{ materiaprocedi.descripcion }}
                 </option>
               </select>
-              <label class="form-label dejaEspacio" for="Materia">Materia *</label>
+              <label class="form-label form-label--floating" for="Materia">Materia *</label>
               <br>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="limpiarErroresEditarProcedimiento(); cerrarModal('editarProcedimientoModal')">Cancelar</button>
-            <button type="submit" class="submit_footer">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresEditarProcedimiento(); cerrarModal('editarProcedimientoModal')">Cancelar</button>
+            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -719,12 +709,12 @@
             <div class="mb-3 form-floating">
               <input class="form-control" id="descripcion" name="descripcion" type="text"
                      [(ngModel)]="crearprocedi.descripcion" required>
-              <label class="col-form-label dejaEspacio" for="descripcion">Descripción *</label>
+              <label class="col-form-label form-label--floating" for="descripcion">Descripción *</label>
             </div>
             <div class="mb-3 form-floating">
               <input class="form-control" id="codigoSIA" name="codigoSIA" type="text"
                      [(ngModel)]="crearprocedi.codigoSia" required>
-              <label class="col-form-label dejaEspacio" for="codigoSIA">Código SIA *</label>
+              <label class="col-form-label form-label--floating" for="codigoSIA">Código SIA *</label>
               <br>
             </div>
             <div class="col-4 form-floating">
@@ -737,7 +727,7 @@
                 <option value="4">Presencial y Web con certificado</option>
                 <option value="5">Presencial y Web sin certificado</option>
               </select>
-              <label class="form-label dejaEspacio" for="modalidad">Modalidad*</label>
+              <label class="form-label form-label--floating" for="modalidad">Modalidad*</label>
             </div>
             <div class="col-4 form-floating">
               <select class="form-select" id="Materia" name="Materia"
@@ -747,25 +737,25 @@
                   {{ materiaprocedi.descripcion }}
                 </option>
               </select>
-              <label class="form-label dejaEspacio" for="Materia">Materia*</label>
+              <label class="form-label form-label--floating" for="Materia">Materia*</label>
               <br>
             </div>
             <div class="col-4 form-floating">
               <input class="form-control" id="siglas" name="siglas" type="text" maxlength="5"
                      [(ngModel)]="crearprocedi.siglas" required>
-              <label class="col-form-label dejaEspacio" for="siglas">Siglas *</label>
+              <label class="col-form-label form-label--floating" for="siglas">Siglas *</label>
               <br>
             </div>
           </div>
           <br>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="limpiarErrores(); cerrarModal('NprocediModal')">Cancelar</button>
-            <button type="submit" class="submit_footer">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErrores(); cerrarModal('NprocediModal')">Cancelar</button>
+            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
+</ng-container>
+</app-shell>

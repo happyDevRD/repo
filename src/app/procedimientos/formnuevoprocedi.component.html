@@ -1,10 +1,5 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
-
-    <div class="col-12 content_gen">
-      <app-menuprocedimiento></app-menuprocedimiento>
+﻿<app-shell>
+<app-menuprocedimiento></app-menuprocedimiento>
       <div class="page-panel">
         <ul class="nav nav-tabs nav-tabs-iflow" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -50,8 +45,8 @@
 <div class="form-group row">
 
   <div class="form-actions">
-      <button class="submit btn-volver" type="button" name="buttom" (click)="limpiarErrores()" [routerLink]="['/procedimientos']">Cancelar</button>
-      <button class="submit" type="submit">Guardar</button>
+      <button class="btn-iflow btn-iflow--secondary" type="button" name="buttom" (click)="limpiarErrores()" [routerLink]="['/procedimientos']">Cancelar</button>
+      <button class="btn-iflow btn-iflow--primary" type="submit">Guardar</button>
   </div>
 </div>
 
@@ -64,8 +59,8 @@
 
 
       <div class="col"></div>
-      <div class="col-1 mueveBottonC"></div>
-      <div   class="col-3 mueveBottonC">
+      <div class="col-1 text-center"></div>
+      <div   class="col-3 text-center">
 
 
 
@@ -75,14 +70,14 @@
     <div class="row">
 
       <div class="col"></div>
-      <div class="col-1 mueveBottonC"></div>
-      <div   class="col-3 mueveBottonC">
+      <div class="col-1 text-center"></div>
+      <div   class="col-3 text-center">
 
         <!-- botonera de opciones -->
 
-        <button  class="btn btn-rounded  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#tareasModal" data-bs-whatever="@mdo"  ><img  src="../assets/nuevo.svg" width="25" height="25"/></button>
-        <button  *ngIf="edicion==true" class="btn btn-rounded bi bi-trash3  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="../assets/editar3.svg"/></button>
-          <button *ngIf="edicion==true"  (click)="vacio()" class="btn btn-rounded  btn-sm" type="button"  ><img width="25" height="25"  src="../assets/papelera2.svg"/></button>
+        <button  class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#tareasModal" data-bs-whatever="@mdo"  ><img  src="assets/nuevo.svg" width="25" height="25"/></button>
+        <button  *ngIf="edicion==true" class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="assets/editar3.svg"/></button>
+          <button *ngIf="edicion==true"  (click)="vacio()" class="btn-iflow btn-iflow--icon" type="button"  ><img width="25" height="25"  src="assets/papelera2.svg"/></button>
         </div>
 
 
@@ -214,13 +209,13 @@
   <div class="row">
 
     <div class="col"></div>
-    <div class="col-1 mueveBottonC"></div>
-    <div   class="col-3 mueveBottonC">
+    <div class="col-1 text-center"></div>
+    <div   class="col-3 text-center">
 
       <!-- botonera de opciones -->
-      <button  class="btn btn-rounded  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" ><img  src="../assets/nuevo.svg" width="25" height="25"/></button>
-      <button   class="btn btn-rounded bi bi-trash3  btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="../assets/editar3.svg"/></button>
-        <button   class="btn btn-rounded  btn-sm" type="button"  ><img width="25" height="25"  src="../assets/papelera2.svg"/></button>
+      <button  class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" ><img  src="assets/nuevo.svg" width="25" height="25"/></button>
+      <button   class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="assets/editar3.svg"/></button>
+        <button   class="btn-iflow btn-iflow--icon" type="button"  ><img width="25" height="25"  src="assets/papelera2.svg"/></button>
       </div>
 
 
@@ -280,8 +275,8 @@
             <textarea class="form-control" id="message-text"></textarea>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Send message</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn-iflow btn-iflow--primary">Send message</button>
           </div>
         </form>
       </div>
@@ -302,5 +297,4 @@
 
       </div>
     </div>
-  </div>
-</div>
+</app-shell>

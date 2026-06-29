@@ -14,8 +14,9 @@
   /* Sidebar y layout */
   --sidebar-bg: var(--iflow-gradient-vertical);
   --sidebar-width: 260px;
-  --sidebar-shadow: 4px 0 24px rgba(15, 23, 42, 0.18);
-  --topbar-height: 3.25rem;
+  --sidebar-shadow: 2px 0 16px rgba(15, 23, 42, 0.12);
+  --layout-gutter: 1.25rem;
+  --topbar-height: 3.5rem;
   --z-sidebar: 1000;
   --z-topbar: 900;
   --footer-bg: linear-gradient(180deg, #2A5298, #162447);
@@ -35,6 +36,15 @@
   --surface-overlay: rgba(248, 250, 252, 0.82);
   --border-subtle: rgba(105, 120, 255, 0.12);
   --focus-ring: 0 0 0 3px rgba(105, 120, 255, 0.25);
+
+  /* Botones */
+  --btn-radius: 10px;
+  --btn-height: 2.5rem;
+  --btn-height-sm: 2.125rem;
+  --btn-font-size: 0.875rem;
+  --btn-font-weight: 600;
+  --btn-shadow: 0 4px 12px rgba(105, 120, 255, 0.22);
+  --btn-shadow-hover: 0 6px 16px rgba(105, 120, 255, 0.32);
 }
 
 /* ================================
@@ -102,21 +112,20 @@ html::before {
 }
 
 /* ================================
-   CONTENEDOR PRINCIPAL
+   CONTENEDOR PRINCIPAL (legado)
    ================================ */
 .content_gen {
-  transition: all var(--transition-base);
-  padding-left: var(--sidebar-width) !important;
-  padding-right: 1.5rem !important;
-  padding-top: 0.75rem;
-  padding-bottom: 2rem;
-  max-width: 1600px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  transition: padding var(--transition-base);
+  padding: 0.75rem var(--layout-gutter, 1.25rem) 1.5rem;
 }
 
 @media screen and (max-width: 1200px) {
   .content_gen {
-    padding-left: 1.25rem !important;
-    padding-right: 1.25rem !important;
+    padding-left: var(--layout-gutter, 1.25rem);
+    padding-right: var(--layout-gutter, 1.25rem);
   }
 }
 
@@ -125,39 +134,6 @@ html::before {
   body.nav-mobile-open {
     overflow: hidden;
   }
-}
-
-/* ================================
-   FOOTER GLOBAL
-   ================================ */
-.global-footer {
-  background: var(--footer-bg);
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: auto;
-  min-height: 50px;
-  color: white;
-  padding: 12px 16px;
-  font-size: 0.85rem;
-  z-index: 100;
-}
-
-/* ================================
-   ESTILOS GLOBALES ADICIONALES
-   ================================ */
-.tit_app {
-  position: absolute;
-  right: 0;
-  top: 50px;
-  max-width: 60%;
-}
-
-.tit_pag {
-  text-align: left;
-  position: relative;
-  font-size: 24px !important;
-  color: black;
 }
 
 /* ================================
@@ -236,16 +212,16 @@ html body .modal-header .modal-title {
   padding: 0.875rem 1.25rem;
 }
 
-/* Botones de footer de modales */
+/* Botones de footer de modales — base en .btn-iflow--secondary */
 .botones-modal,
+.modal-footer__btn,
 .submit_footer {
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 1.25rem;
-  border-radius: 8px;
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  min-height: var(--btn-height-sm);
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--btn-radius);
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -254,41 +230,207 @@ html body .modal-header .modal-title {
 }
 
 .botones-modal {
-  background: var(--iflow-primary) !important;
+  background: var(--iflow-gradient) !important;
   color: #fff !important;
+  border: none !important;
+  box-shadow: var(--btn-shadow);
 }
 
 .botones-modal:hover {
-  background: var(--iflow-primary-dark) !important;
+  filter: brightness(1.05);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(105, 120, 255, 0.3);
+  box-shadow: var(--btn-shadow-hover);
 }
 
-.submit_footer {
-  background: transparent;
+/* ================================
+   SISTEMA DE BOTONES IFLOW
+   ================================ */
+.btn-iflow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: var(--btn-height);
+  padding: 0.5rem 1.15rem;
+  border-radius: var(--btn-radius);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-iflow:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.btn-iflow:disabled,
+.btn-iflow[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.btn-iflow--primary,
+.submit:not(.btn-volver):not(.btn-secondary):not(.btn-danger),
+.btn-login,
+.botones-modal,
+.btn-primary {
+  background: var(--iflow-gradient);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--btn-shadow);
+}
+
+.btn-iflow--primary:hover:not(:disabled),
+.submit:not(.btn-volver):not(.btn-secondary):not(.btn-danger):hover,
+.btn-login:hover,
+.botones-modal:hover,
+.btn-primary:hover {
+  filter: brightness(1.05);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+.btn-iflow--secondary,
+.modal-footer__btn,
+.submit_footer,
+.submit.btn-volver,
+.btn-secondary {
+  background: #fff;
   color: var(--text-secondary);
-  border: 1px solid #dee2e6;
+  border-color: #d5dbe8;
+  box-shadow: none;
 }
 
-.submit_footer:hover {
+.btn-iflow--secondary:hover:not(:disabled),
+.modal-footer__btn:hover,
+.submit_footer:hover,
+.submit.btn-volver:hover,
+.btn-secondary:hover {
   background: #fff;
   color: var(--iflow-primary);
   border-color: var(--iflow-primary);
+  transform: none;
 }
 
-/* Botón primario en footer: último submit_footer o type=submit */
+.btn-iflow--ghost {
+  background: transparent;
+  color: var(--iflow-primary);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.btn-iflow--ghost:hover:not(:disabled) {
+  background: rgba(105, 120, 255, 0.08);
+}
+
+.btn-iflow--danger,
+.btn-danger {
+  background: #e74c5c;
+  color: #fff;
+  border-color: #e74c5c;
+  box-shadow: 0 4px 12px rgba(231, 76, 92, 0.25);
+}
+
+.btn-iflow--danger:hover:not(:disabled),
+.btn-danger:hover {
+  background: #d63f4f;
+  border-color: #d63f4f;
+  color: #fff;
+  filter: none;
+  transform: translateY(-1px);
+}
+
+.btn-iflow--on-dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: none;
+}
+
+.btn-iflow--on-dark:hover:not(:disabled) {
+  background: rgba(255, 95, 109, 0.28);
+  border-color: rgba(255, 95, 109, 0.45);
+  color: #fff;
+}
+
+.btn-iflow--sm {
+  min-height: var(--btn-height-sm);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+}
+
+.btn-iflow--block {
+  width: 100%;
+}
+
+.btn-iflow--icon,
+.btn-rounded {
+  width: 2.5rem;
+  height: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--iflow-gradient);
+  color: #fff;
+  border: none;
+  box-shadow: var(--btn-shadow);
+}
+
+.btn-iflow--icon:hover:not(:disabled),
+.btn-rounded:hover {
+  transform: scale(1.06);
+  box-shadow: var(--btn-shadow-hover);
+  filter: brightness(1.05);
+}
+
+.btn-iflow--icon img,
+.btn-rounded img {
+  filter: brightness(0) invert(1);
+}
+
+.btn-iflow__spinner {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: iflow-spin 0.75s linear infinite;
+}
+
+@keyframes iflow-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Footer modal: acción principal a la derecha */
+.modal-footer .modal-footer__btn[type="submit"],
+.modal-footer button.modal-footer__btn:last-child:not(:only-child),
 .modal-footer .submit_footer[type="submit"],
 .modal-footer button.submit_footer:last-child:not(:only-child) {
-  background: var(--iflow-primary);
+  background: var(--iflow-gradient);
   color: #fff;
-  border-color: var(--iflow-primary);
+  border-color: transparent;
+  box-shadow: var(--btn-shadow);
 }
 
+.modal-footer .modal-footer__btn[type="submit"]:hover,
+.modal-footer button.modal-footer__btn:last-child:not(:only-child):hover,
 .modal-footer .submit_footer[type="submit"]:hover,
 .modal-footer button.submit_footer:last-child:not(:only-child):hover {
-  background: var(--iflow-primary-dark);
-  border-color: var(--iflow-primary-dark);
+  filter: brightness(1.05);
   color: #fff;
+  transform: translateY(-1px);
+  box-shadow: var(--btn-shadow-hover);
 }
 
 .tit_pag::after {
@@ -324,21 +466,17 @@ html body .modal-header .modal-title {
 
 .submit {
   text-decoration: none;
-  font-size: 18px;
-  padding: 5px 20px;
-  border-radius: 0px 20px 20px 0px;
-  display: inline-block;
-  text-align: right;
-  background: rgb(105,181,255);
-  transition: all 0.2s;
-  margin-bottom: 5px;
-  background: linear-gradient(90deg, rgba(105,181,255,1) 0%, rgba(105,120,255,1) 70%);
-  color: white;
-  border: 0;
-}
-
-.submit:hover {
-  padding-right: 25px;
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  min-height: var(--btn-height-sm);
+  padding: 0.45rem 1rem;
+  border-radius: var(--btn-radius);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.3;
 }
 
 .jqx-widget-header {
@@ -363,21 +501,14 @@ div[id^="columntablejqxWidget"] {
   background-color: rgba(105, 120, 255, 0.08) !important;
 }
 
-.espacios {
+.espacios,
+.px-section {
   margin-left: 20px;
   margin-right: 20px;
 }
 
 .margin-right {
   margin-right: 10px;
-}
-
-.mueveBottonR {
-  text-align: right;
-}
-
-.mueveBottonL {
-  text-align: left;
 }
 
 .icons_button {
@@ -397,6 +528,8 @@ div[id^="columntablejqxWidget"] {
   margin-right: 10px;
 }
 
+/* Etiquetas flotantes en modales (sustituye dejaEspacio) */
+.form-label--floating,
 .dejaEspacio,
 .col-form-label {
   padding: 12px !important;
@@ -437,6 +570,7 @@ textarea {
   height: 25px;
 }
 
+.form-label--floating,
 .dejaEspacio {
   margin: auto;
   text-align: left;
@@ -456,12 +590,16 @@ textarea {
   padding: 20px;
 }
 
-.mueveBottonR {
-  text-align: right;
+/* Alineación legacy — usar utilidades Bootstrap text-start / text-end */
+.text-start,
+.mueveBottonD,
+.mueveBottonL {
+  text-align: left;
 }
 
-.mueveBottonD {
-  text-align: left;
+.text-end,
+.mueveBottonR {
+  text-align: right;
 }
 
 .fuente {
@@ -764,7 +902,8 @@ html body .modal .form-floating .form-label {
   color: #6c757d !important;
 }
 
-/* Estilos específicos para etiquetas con clase dejaEspacio */
+/* Etiquetas flotantes en form-floating */
+.form-label.form-label--floating,
 .form-label.dejaEspacio {
   background-color: transparent !important;
   background-image: none !important;
@@ -773,9 +912,13 @@ html body .modal .form-floating .form-label {
 }
 
 /* Estilos de alta especificidad para etiquetas dejaEspacio */
+html body .form-label.form-label--floating,
 html body .form-label.dejaEspacio,
+html body .modal .form-label.form-label--floating,
 html body .modal .form-label.dejaEspacio,
+html body #verexpedienteModal .form-label.form-label--floating,
 html body #verexpedienteModal .form-label.dejaEspacio,
+html body #verExpedienteModal .form-label.form-label--floating,
 html body #verExpedienteModal .form-label.dejaEspacio {
   background-color: transparent !important;
   background-image: none !important;
@@ -784,10 +927,16 @@ html body #verExpedienteModal .form-label.dejaEspacio {
 }
 
 /* Estilos de máxima especificidad para eliminar fondo blanco */
+html body .modal .form-floating .form-label.form-label--floating,
+html body .modal .form-floating label.form-label--floating,
 html body .modal .form-floating .form-label.dejaEspacio,
 html body .modal .form-floating label.dejaEspacio,
+html body #verexpedienteModal .form-floating .form-label.form-label--floating,
+html body #verExpedienteModal .form-floating .form-label.form-label--floating,
 html body #verexpedienteModal .form-floating .form-label.dejaEspacio,
 html body #verExpedienteModal .form-floating .form-label.dejaEspacio,
+html body #verexpedienteModal .form-floating label.form-label--floating,
+html body #verExpedienteModal .form-floating label.form-label--floating,
 html body #verexpedienteModal .form-floating label.dejaEspacio,
 html body #verExpedienteModal .form-floating label.dejaEspacio {
   background-color: transparent !important;
@@ -798,6 +947,8 @@ html body #verExpedienteModal .form-floating label.dejaEspacio {
 }
 
 /* Estilos específicos para etiquetas dentro de form-floating con dejaEspacio */
+.form-floating .form-label.form-label--floating,
+.form-floating label.form-label--floating,
 .form-floating .form-label.dejaEspacio,
 .form-floating label.dejaEspacio {
   background-color: transparent !important;
@@ -826,40 +977,6 @@ html body #verExpedienteModal .form-floating label.dejaEspacio {
 /* ================================
    ESTILOS GLOBALES PARA BOTONES
    ================================ */
-
-/* Estilos para botones submit margin-right */
-.submit {
-  background-color: #6978FF !important;
-  color: white;
-  font-size: 13px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  cursor: pointer;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 500;
-  text-decoration: none;
-  white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  letter-spacing: 0.3px;
-  text-transform: none;
-  line-height: 1.3;
-}
-
-.submit:hover {
-  background-color: #5a67d8 !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  color: #ffffff;
-}
-
-.submit:active {
-  transform: translateY(0);
-}
 
 .margin-right {
   margin-right: 4px;
@@ -967,30 +1084,7 @@ html body #verExpedienteModal .form-floating label.dejaEspacio {
   min-width: 0;
 }
 
-/* Botones de icono redondeados */
-.btn-rounded {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: var(--iflow-gradient);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn-rounded:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(105, 120, 255, 0.35);
-}
-
-.btn-rounded img {
-  filter: brightness(0) invert(1);
-}
+/* Botones de icono redondeados — ver .btn-iflow--icon */
 
 /* Barra de acciones */
 .acciones-botones-container {
@@ -1006,9 +1100,14 @@ html body #verExpedienteModal .form-floating label.dejaEspacio {
   align-items: center;
 }
 
-.acciones-botones-container .submit {
+.acciones-botones-container .submit,
+.acciones-botones-container .btn-iflow {
   font-size: 0.8rem;
   padding: 6px 12px;
+}
+
+.acciones-botones-container .btn-iflow--icon {
+  padding: 0;
 }
 
 /* Contenedor de grids */
@@ -1034,7 +1133,8 @@ jqxGrid {
   justify-content: center;
   padding: 3rem 2rem;
   text-align: center;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-md);
   margin: 2rem auto;
@@ -1115,17 +1215,50 @@ jqxGrid {
   gap: 0.5rem;
 }
 
-.expediente-botones-navegacion .submit.btn-volver {
+.expediente-botones-navegacion .submit.btn-volver,
+.expediente-botones-navegacion .btn-iflow--secondary {
   background: #fff !important;
   color: var(--text-secondary) !important;
   border: 1px solid #dee2e6 !important;
   box-shadow: none !important;
 }
 
-.expediente-botones-navegacion .submit.btn-volver:hover {
+.expediente-botones-navegacion .submit.btn-volver:hover,
+.expediente-botones-navegacion .btn-iflow--secondary:hover {
   color: var(--iflow-primary) !important;
   border-color: var(--iflow-primary) !important;
   transform: none;
+}
+
+/* Badges de estado (expedientes, grids) */
+.estado-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.estado-badge--abierto {
+  background: rgba(34, 197, 94, 0.14);
+  color: #15803d;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.estado-badge--cerrado {
+  background: rgba(100, 116, 139, 0.14);
+  color: #475569;
+  border: 1px solid rgba(100, 116, 139, 0.35);
+}
+
+.estado-badge--cancelado {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 /* Spinner overlay global */
@@ -1320,19 +1453,6 @@ jqxGrid {
   box-shadow: none;
 }
 
-.submit.btn-volver {
-  background: #fff !important;
-  color: var(--text-secondary) !important;
-  border: 1px solid #dee2e6 !important;
-  box-shadow: none !important;
-}
-
-.submit.btn-volver:hover {
-  color: var(--iflow-primary) !important;
-  border-color: var(--iflow-primary) !important;
-  transform: none;
-}
-
 /* ================================
    CONTROLES DE FORMULARIO
    ================================ */
@@ -1356,24 +1476,17 @@ jqxGrid {
 }
 
 .btn-primary {
-  background: var(--iflow-gradient) !important;
-  border: none !important;
-  border-radius: 8px;
-  font-weight: 500;
-  box-shadow: 0 2px 8px rgba(105, 120, 255, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(105, 120, 255, 0.4);
-  filter: brightness(1.05);
+  min-height: var(--btn-height-sm);
+  border-radius: var(--btn-radius) !important;
+  font-weight: var(--btn-font-weight) !important;
 }
 
 .btn-outline-primary {
   color: var(--iflow-primary) !important;
   border-color: var(--iflow-primary) !important;
-  border-radius: 8px;
+  border-radius: var(--btn-radius) !important;
+  font-weight: var(--btn-font-weight);
+  min-height: var(--btn-height-sm);
 }
 
 .btn-outline-primary:hover {

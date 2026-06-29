@@ -17,13 +17,12 @@ import {
   VerSolicitud
 } from './solicitudes';
 import {environment} from 'src/environments/environment';
+import {UserSessionService} from '../core/service/user-session.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SolicitudesService {
-  public departamento = sessionStorage.getItem('departamento');
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
   public urlborrarsolicitud: string = `${environment.apiUrl}solicitud/borrar/`;
   public urlsolicilistar: string = `${environment.apiUrl}solicitud/listar`;
   public urlsolicilistarEstado: string = `${environment.apiUrl}solicitud/listarPorEstado`;
@@ -41,8 +40,6 @@ export class SolicitudesService {
   public urlexpedientelistar: string = `${environment.apiUrl}expediente/listar`;
   public urlexpedientecrear: string = `${environment.apiUrl}expediente/crear`;
   public urlexpedienteAsignaInstruc: string = `${environment.apiUrl}expediente/editar`;
-  public urlAsignarA: string = `${environment.apiUrl}organizacionUsuario/usuDepTraExped/${this.idOrgElemen}`;
-
 
   public vacio: string = 'vacio';
 
@@ -51,11 +48,27 @@ export class SolicitudesService {
     {'Content-Type': 'application/json'}
   );
 
-  public user = sessionStorage.getItem('user');
+  constructor(
+    public http: HttpClient,
+    public router: Router,
+    public activatedRoute: ActivatedRoute,
+    private session: UserSessionService
+  ) {}
 
-  constructor(public http: HttpClient,
-              public router: Router,
-              public activatedRoute: ActivatedRoute,) {
+  get urlAsignarA(): string {
+    return `${environment.apiUrl}organizacionUsuario/usuDepTraExped/${this.idOrgElemen}`;
+  }
+
+  get departamento(): string | null {
+    return this.session.department;
+  }
+
+  get idOrgElemen(): string | null {
+    return this.session.idOrgEleme;
+  }
+
+  get user(): string | null {
+    return this.session.user;
   }
 
   getSolicitudes(): Observable<SolicitudListar[]> {

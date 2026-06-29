@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { EditExpediente,VerExpediente } from '../expedientes/expedientes';
 import { Observable, map } from 'rxjs';
+import { UserSessionService } from '../core/service/user-session.service';
 
 
 @Component({
@@ -19,15 +20,16 @@ export class ModalExpedientesComponent {
   selected= new Date();
   public modal1!:string;
 
-  idexpediente:any = sessionStorage.getItem("idexpediente");
-
-
-
+  idexpediente: string | null = null;
 
  constructor(
   public expedientesService:ExpedientesService,
   public router:Router,
-  public http: HttpClient){};
+  public http: HttpClient,
+  private session: UserSessionService
+ ){
+  this.idexpediente = this.session.idExpediente;
+ };
 
 
   ngOnInit(){
@@ -61,13 +63,13 @@ public prueba(){
 
 
   if (this.modal1 ==null || this.modal1 == ""){
-    sessionStorage.setItem("asuntoModal","SIN DATOS");
+    this.session.setAsuntoModal('SIN DATOS');
     console.log(`NO HAY DATOS : ${this.modal1}`);
     Swal.fire('Error Entrada de datos','el campo no puede estar vacio!!!', 'error');
 
   }else{
 
-  sessionStorage.setItem("asuntoModal",this.modal1);
+  this.session.setAsuntoModal(this.modal1);
   console.log(`datos modal asunto : ${this.modal1}`);
 
 

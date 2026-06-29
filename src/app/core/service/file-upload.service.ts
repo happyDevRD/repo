@@ -4,6 +4,7 @@ import { Observable, Subject, throwError, timer } from 'rxjs';
 import { catchError, timeout, retry, finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
+import { UserSessionService } from './user-session.service';
 
 export interface FileUploadConfig {
   maxFileSize?: number; // en MB
@@ -44,7 +45,10 @@ export class FileUploadService {
 
   private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private session: UserSessionService
+  ) {}
 
   /**
    * Convierte un archivo a base64
@@ -121,7 +125,7 @@ export class FileUploadService {
           const uploadData = {
             descripcion: descripcion,
             fechaSubida: new Date(),
-            usuContr: sessionStorage.getItem('user'),
+            usuContr: this.session.user,
             idSolicitud: solicitudId,
             nombreArchivo: file.name,
             ficBas64: base64
@@ -194,7 +198,7 @@ export class FileUploadService {
           this.uploadStatusSubject.next('Subiendo archivo...');
           
           const uploadData = {
-            usuContr: sessionStorage.getItem('user') || '',
+            usuContr: this.session.user || '',
             ejeExped: expedienteData.ejercicio || null,
             numExped: expedienteData.numero || null,
             sNomFiche: file.name,

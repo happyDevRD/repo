@@ -64,6 +64,7 @@ import { TablaClickHandler } from '../core/helper/tabla-click-handler';
 import { GridRadioSelector } from '../core/helper/grid-radio-selector';
 import { NotificationService } from '../core/service/notification.service';
 import { ModalManagerService } from '../core/service/modal-manager.service';
+import { UserSessionService } from '../core/service/user-session.service';
 import { ModalService } from '../core/service/modal.service';
 
 class Pais {
@@ -198,9 +199,26 @@ export class EditaExpedienteComponent implements OnInit {
     private tramitesService: TramitesService,
     private notificationService: NotificationService,
     private modalManagerService: ModalManagerService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    public session: UserSessionService
   ) {
     console.log('Constructor - creartramiteexp inicializado:', this.creartramiteexp);
+  }
+
+  get user(): string | null {
+    return this.session.user;
+  }
+
+  get usuContrl(): string | null {
+    return this.session.user;
+  }
+
+  get idOrgElemen(): string | null {
+    return this.session.idOrgEleme;
+  }
+
+  get idprocedi(): string | null {
+    return this.session.idProcedimiento;
   }
 
   /**
@@ -277,11 +295,6 @@ export class EditaExpedienteComponent implements OnInit {
   public verEditartareatramite: boolean = false;
   public verborrarinteresado: boolean = false;
   public verojointeresado: boolean = true;
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
-  public user = sessionStorage.getItem('user');
-  public soluser = sessionStorage.getItem('solUsuar');
-  public trauser = sessionStorage.getItem('traUsuar');
-  public idprocedi = sessionStorage.getItem('idprocedimiento');
   public tareatramiteexpedientever: any = new TareaTramiteExpedienteVer();
   public creartablonanuncio: CrearTablonAnuncio = new CrearTablonAnuncio();
 
@@ -1230,13 +1243,9 @@ export class EditaExpedienteComponent implements OnInit {
     } catch (error) {
       console.error('Error al cerrar modal:', error);
 
-      // Método de respaldo: usar jQuery si está disponible
-      if ((window as any).$) {
-        (window as any).$('#NuevaTareaTra').modal('hide');
-        (window as any).$('#ntareatramiteModal').modal('hide');
-        (window as any).$('.modal-backdrop').remove();
-        (window as any).$('body').removeClass('modal-open');
-      }
+      // Método de respaldo
+      this.modalManagerService.closeModal('NuevaTareaTra');
+      this.modalManagerService.closeModal('ntareatramiteModal');
     }
   }
 
@@ -1767,9 +1776,6 @@ export class EditaExpedienteComponent implements OnInit {
 
 
   public objetotributario: ObjetoTributarioDto;
-
-  public usuContrl = sessionStorage.getItem('user');
-
 
   public tareatramiteprocedimiento: TareaProcedimientoDTO;
 
@@ -5138,12 +5144,8 @@ export class EditaExpedienteComponent implements OnInit {
 
     } catch (error) {
       console.error('Error al cerrar modal:', error);
-      // Método de respaldo: usar jQuery si está disponible
-      if ((window as any).$) {
-        (window as any).$('#verNotifiModal').modal('hide');
-        (window as any).$('.modal-backdrop').remove();
-        (window as any).$('body').removeClass('modal-open');
-      }
+      // Método de respaldo
+      this.modalManagerService.closeModal('verNotifiModal');
     }
   }
 
@@ -5723,10 +5725,7 @@ export class EditaExpedienteComponent implements OnInit {
 
 
   public CierraPopup() {
-
-    $("#CrearNotificacionModal").modal('hide');//ocultamos el modal
-    $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
-    $('.modal-backdrop').remove();//eliminamos el backdrop del modal
+    this.cerrarModal('CrearNotificacionModal');
   }
 
   public formanotificacion: boolean = false
@@ -6058,8 +6057,7 @@ export class EditaExpedienteComponent implements OnInit {
         if (modal) {
           modal.hide();
         } else {
-          // Fallback: usar jQuery si Bootstrap no está disponible
-          $('#CrearNotificacionModal').modal('hide');
+          this.cerrarModal('CrearNotificacionModal');
         }
       }
 
@@ -6134,8 +6132,7 @@ export class EditaExpedienteComponent implements OnInit {
         if (modal) {
           modal.hide();
         } else {
-          // Fallback: usar jQuery si Bootstrap no está disponible
-          $('#CrearNotificacionModal').modal('hide');
+          this.cerrarModal('CrearNotificacionModal');
         }
       }
 
@@ -6450,7 +6447,7 @@ export class EditaExpedienteComponent implements OnInit {
   public columnseleccionDEscargaHistorico = function (value) {
 
 
-    return ' <div style="padding-top:5px;  text-align: center;"  type="button" title="Descarga Historico"  ><img (click)="descargaficheroHistorico()" src="../assets/cloud-download.svg" width="20" height="20"/>   </div>';
+    return ' <div style="padding-top:5px;  text-align: center;"  type="button" title="Descarga Historico"  ><img (click)="descargaficheroHistorico()" src="assets/cloud-download.svg" width="20" height="20"/>   </div>';
 
 
   }
@@ -6690,11 +6687,11 @@ export class EditaExpedienteComponent implements OnInit {
 
     if (value) {
       // value = "Pulsa para descargar"
-      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
 
     } else {
 
-      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
     }
 
 
@@ -6704,11 +6701,11 @@ export class EditaExpedienteComponent implements OnInit {
 
     if (value == "1") {
       // value = "Pulsa para descargar"
-      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
 
     } else {
 
-      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
     }
 
 
@@ -6718,17 +6715,17 @@ export class EditaExpedienteComponent implements OnInit {
 
     if (value == "VERDE") {
 
-      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
 
     }
     if (value == "AMARILLO") {
 
-      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_amarillo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_amarillo.png" width="20" height="20"/>' + '</div>';
 
     }
     if (value == "ROJO") {
 
-      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
 
     }
 

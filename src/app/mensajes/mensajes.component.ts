@@ -16,6 +16,7 @@ import {
 import {ExpedientesService} from '../expedientes/expedientes.service';
 import {NotificationService} from '../core/service/notification.service';
 import {ModalManagerService} from '../core/service/modal-manager.service';
+import {UserSessionService} from '../core/service/user-session.service';
 import {ProcediPermisos} from '../procedimientos/procedimiento';
 import {ProcedimientoService} from '../procedimientos/procedimiento.service';
 import {environment} from 'src/environments/environment';
@@ -50,10 +51,6 @@ export class MensajesComponent {
 
   public errorHTML!: any;
   public statusHTMLcode!: number;
-  public BandejaEntrada = sessionStorage.getItem('MensRecibido');
-  public user = sessionStorage.getItem('user');// lo usamos para filtrar contenidos sin login
-  public idOrgEleme = sessionStorage.getItem('idOrgEleme');
-  public idOrgUsuar = sessionStorage.getItem('idOrgUsuar');
   public page = 5;
   public cambiofecha!: string;
   public pageLabel: string
@@ -248,7 +245,7 @@ export class MensajesComponent {
         if (this.leermensajerecibido[index].estado == "PENDIENTE") {
           this.nmensajespendientes++;
           console.log("Número de Mensajes Sin leer : " + this.nmensajespendientes);
-          sessionStorage.setItem('MensajesRecibidos', this.nmensajespendientes.toString());
+          this.session.setMensajesRecibidosCount(this.nmensajespendientes.toString());
 
         }
 
@@ -285,7 +282,7 @@ export class MensajesComponent {
 
 
       // consulta para ver el mensaje de error
-      this.http.get(`${environment.apiUrl}mensaje/listarRecibidos/${this.idOrgUsuar}`).subscribe(
+      this.http.get(`${environment.apiUrl}mensaje/listarRecibidos/${this.session.idOrgUsuar}`).subscribe(
         data => console.log(),
         (error: HttpErrorResponse) => {
 
@@ -350,7 +347,7 @@ export class MensajesComponent {
     try {
 
       // consulta para ver el mensaje de error
-      this.http.get(`${environment.apiUrl}mensaje/listarEnviados/${this.idOrgUsuar}`).subscribe(
+      this.http.get(`${environment.apiUrl}mensaje/listarEnviados/${this.session.idOrgUsuar}`).subscribe(
         data => console.log(),
         (error: HttpErrorResponse) => {
           this.errorHTML = error.status;
@@ -413,7 +410,7 @@ export class MensajesComponent {
 
         this.mensajesRecibidosNumero = this.leermensajerecibido.length;
         let MensRecibi = this.leermensajerecibido.length.toString();
-        sessionStorage.setItem('MensRecibido', MensRecibi);
+        this.session.setMensRecibido(MensRecibi);
 
 
         if (this.leermensajerecibido[index].fecLectura != null) {
@@ -497,17 +494,18 @@ export class MensajesComponent {
     public procedimientoService: ProcedimientoService,
     public activatedRoute: ActivatedRoute,
     private notificationService: NotificationService,
-    private modalManagerService: ModalManagerService
+    private modalManagerService: ModalManagerService,
+    public session: UserSessionService
   ) {
 
   }
 
   ngOnInit() {
     this.actualizaSourceMensajesRecibidos();
-    console.log("idOrgUsuar: " + this.idOrgUsuar);
+    console.log("idOrgUsuar: " + this.session.idOrgUsuar);
 
     this.actualizaSourceMensajesEnviados();
-    //console.log(` URL MENSAJES ENVIADOS : ${environment.apiUrl}expediente/mensaje/listarEnviados/${this.idOrgUsuar}`)
+    //console.log(` URL MENSAJES ENVIADOS : ${environment.apiUrl}expediente/mensaje/listarEnviados/${this.session.idOrgUsuar}`)
 
     this.vermensajesrecibido();
     this.vermensajesEnviados();
@@ -537,7 +535,7 @@ export class MensajesComponent {
         {name: "idTarea", type: 'string'},
         {name: "idExped", type: 'string'},
       ],
-      url: `${environment.apiUrl}mensaje/listarRecibidos/${this.idOrgUsuar}`,
+      url: `${environment.apiUrl}mensaje/listarRecibidos/${this.session.idOrgUsuar}`,
       // postData:{estado:'estado'    },
 
       // id: 'id',
@@ -567,7 +565,7 @@ export class MensajesComponent {
         {name: "descripcionRechazo", type: 'string'},
         {name: "nomRemit", type: 'string'},
       ],
-      url: `${environment.apiUrl}mensaje/listarEnviados/${this.idOrgUsuar}`,
+      url: `${environment.apiUrl}mensaje/listarEnviados/${this.session.idOrgUsuar}`,
 
       id: 'id',
       // sortname: 'id',
@@ -1022,7 +1020,7 @@ export class MensajesComponent {
   }
 
   public ClickMensajesEnviados(event) {
-    console.log("URL : " + `${environment.apiUrl}mensaje/listarEnviados/${this.idOrgUsuar}`)
+    console.log("URL : " + `${environment.apiUrl}mensaje/listarEnviados/${this.session.idOrgUsuar}`)
 
     let fechaordenadaEnvio!: string;
     let fechaordenadaRechazo!: string;
@@ -1242,7 +1240,7 @@ export class MensajesComponent {
       {name: "descripcionRechazo", type: 'string'},
       {name: "nomRemit", type: 'string'},
     ],
-    url: `${environment.apiUrl}mensaje/listarEnviados/${this.idOrgUsuar}`,
+    url: `${environment.apiUrl}mensaje/listarEnviados/${this.session.idOrgUsuar}`,
     postData: {
       estado: "LEIDO"
     }
@@ -1349,7 +1347,7 @@ export class MensajesComponent {
       {name: "idTarea", type: 'string'},
       {name: "idExped", type: 'string'},
     ],
-    url: `${environment.apiUrl}expediente/mensaje/listarRecibidos/${this.idOrgUsuar}`,
+    url: `${environment.apiUrl}expediente/mensaje/listarRecibidos/${this.session.idOrgUsuar}`,
     // postData:{estado:'estado'    },
 
     // id: 'id',

@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { UserSessionService } from '../core/service/user-session.service';
 
 
 @Component({
@@ -27,13 +28,18 @@ export class LoginComponent {
 
 
 
- constructor(public authService: AuthService,  private http: HttpClient, public router: Router){
+ constructor(
+  public authService: AuthService,
+  private http: HttpClient,
+  public router: Router,
+  private session: UserSessionService
+ ){
   this.usuario = new Usuario();
-
+  this.rutaTxt = this.session.ruta;
  }
 
 
- rutaTxt :string | null =sessionStorage.getItem('ruta');
+ rutaTxt: string | null = null;
 
 
  // lectura de txt para poder configurar la conexion  a la API-REST desde un fichero txt
@@ -55,7 +61,7 @@ export class LoginComponent {
        this.conectorSensores= lines[1].slice(12);
        console.log("ruta txt 1: " + this.conectorApi!);
        //console.log("ruta txt 2: " + this.conectorSensores!);
-       sessionStorage.setItem('ruta',data.slice(9)); // enviamos valor al sesionStorage
+       this.session.setRuta(data.slice(9));
        localStorage.setItem('api',data.slice(9)); // enviamos valor al localStorage
 
       console.log("ruta txt del sessionStorage : " + this.rutaTxt!)
@@ -122,15 +128,17 @@ login_certifi(){
 localStorage.setItem('user',user);
 localStorage.setItem('nivAcces',nivAcces);
 localStorage.setItem('token',token);
-sessionStorage.setItem('idOrgan',idOrgan);
-sessionStorage.setItem('idOrgEleme',idOrgElemen);
-sessionStorage.setItem('departamento',depart);
-sessionStorage.setItem('token',token);
-sessionStorage.setItem('user',user);
-sessionStorage.setItem('nivAcces',nivAcces);
-sessionStorage.setItem('solUsuar',solUsuar);
-sessionStorage.setItem('traUsuar',traUsuar);
-sessionStorage.setItem('idOrgUsuar',idOrgUsuar);
+this.session.persistLogin({
+  idOrgan,
+  idOrgEleme: idOrgElemen,
+  departamento: depart,
+  token,
+  user,
+  nivAcces,
+  solUsuar,
+  traUsuar,
+  idOrgUsuar,
+});
 
 
     this.router.navigate(['/inicio']);
@@ -236,15 +244,17 @@ localStorage.setItem('codigo-login',response.codigo);
 localStorage.setItem('user',user);
 localStorage.setItem('nivAcces',nivAcces);
 localStorage.setItem('token',token);
-sessionStorage.setItem('idOrgan',idOrgan);
-sessionStorage.setItem('idOrgEleme',idOrgElemen);
-sessionStorage.setItem('departamento',depart);
-sessionStorage.setItem('token',token);
-sessionStorage.setItem('user',user);
-sessionStorage.setItem('nivAcces',nivAcces);
-sessionStorage.setItem('solUsuar',solUsuar);
-sessionStorage.setItem('traUsuar',traUsuar);
-sessionStorage.setItem('idOrgUsuar',idOrgUsuar);
+this.session.persistLogin({
+  idOrgan,
+  idOrgEleme: idOrgElemen,
+  departamento: depart,
+  token,
+  user,
+  nivAcces,
+  solUsuar,
+  traUsuar,
+  idOrgUsuar,
+});
 
 if (response.codigo == 0 ){
   this.veoFormuCodigo = false;

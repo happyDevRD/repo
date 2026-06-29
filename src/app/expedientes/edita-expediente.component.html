@@ -1,10 +1,5 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
-
-    <div class="col-12 content_gen" id="hanging-icons">
-      <div class="page-panel">
+﻿<app-shell contentId="hanging-icons">
+<div class="page-panel">
         
         <!-- Información del Expediente y Botones de Navegación -->
         <div class="expediente-header-container">
@@ -17,15 +12,15 @@
           <div class="expediente-botones-navegacion">
             <!-- Botones de navegación desde trámites -->
             <div *ngIf="botonVerNotifi && vertramite">
-              <button (click)="verNotificaciones()" class="submit margin-right"
+              <button (click)="verNotificaciones()" class="btn-iflow btn-iflow--primary"
                 title="Ver Notificaciones" type="button">
                 Ver Notificaciones <i class="bi bi-bell"></i>
               </button>
-              <button (click)="veotramitadores()" class="submit margin-right" 
+              <button (click)="veotramitadores()" class="btn-iflow btn-iflow--primary" 
                 title="Ver tramitadores" type="button">
                 Ver Tramitadores <i class="bi bi-people"></i>
               </button>
-              <button (click)="volverListadoExpedientes()" class="submit margin-right btn-volver" 
+              <button (click)="volverListadoExpedientes()" class="btn-iflow btn-iflow--secondary" 
                 title="Volver al Listado de Expedientes" type="button">
                 <i class="bi bi-arrow-left"></i> Volver al Listado
               </button>
@@ -33,7 +28,7 @@
             
             <!-- Botón de retorno desde notificaciones -->
             <div *ngIf="veonotificaciones">
-              <button (click)="noverNotificaciones()" class="submit margin-right btn-volver"
+              <button (click)="noverNotificaciones()" class="btn-iflow btn-iflow--secondary"
                 title="Volver a Trámites" type="button">
                 <i class="bi bi-arrow-left"></i> Volver a Trámites
               </button>
@@ -41,7 +36,7 @@
             
             <!-- Botón de retorno desde tramitadores -->
             <div *ngIf="veoTramitadores">
-              <button (click)="noverNotificaciones()" class="submit margin-right btn-volver" 
+              <button (click)="noverNotificaciones()" class="btn-iflow btn-iflow--secondary" 
                 title="Volver a Trámites" type="button">
                 <i class="bi bi-arrow-left"></i> Volver a Trámites
               </button>
@@ -64,12 +59,12 @@
             </span>
           </h2>
           <div *ngIf="botonVerNotifi && vertramite" class="titulo-botones-container">
-            <button (click)="habilitaTramiteExp(); abrirModal('NuevoTramiteModal')" class="btn btn-rounded btn-sm" title="Nuevo Trámite" type="button">
-              <img src="../assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
+            <button (click)="habilitaTramiteExp(); abrirModal('NuevoTramiteModal')" class="btn-iflow btn-iflow--icon" title="Nuevo Trámite" type="button">
+              <img src="assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
             </button>
             <button (click)="borrarTramite()" *ngIf="verasignatramite"
-              class="btn btn-rounded btn-sm" title="Borrar Trámite" type="button">
-              <img src="../assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
+              class="btn-iflow btn-iflow--icon" title="Borrar Trámite" type="button">
+              <img src="assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
             </button>
           </div>
         </div>
@@ -86,15 +81,15 @@
         <!-- Botones de acciones de notificaciones -->
         <div *ngIf="veonotificaciones && verInfoNotifi && idNotificacion" class="acciones-botones-container">
           <!-- Enviar T.E.U. -->
-          <button *ngIf="veoteu && !veoReenviarTeu" class="submit margin-right" data-bs-target="#EnvioTeu"
+          <button *ngIf="veoteu && !veoReenviarTeu" class="btn-iflow btn-iflow--primary" data-bs-target="#EnvioTeu"
             data-bs-toggle="modal" title="Enviar T.E.U." type="button" (click)="inicializarFormularioTEU()">
-            Enviar T.E.U. <img src="../assets/envioNotifi.svg" alt="Enviar TEU" width="20" height="20" />
+            Enviar T.E.U. <img src="assets/envioNotifi.svg" alt="Enviar TEU" width="20" height="20" />
           </button>
 
           <!-- Reenviar T.E.U. -->
-          <button *ngIf="veoReenviarTeu" class="submit margin-right" data-bs-target="#EnvioTeu"
+          <button *ngIf="veoReenviarTeu" class="btn-iflow btn-iflow--primary" data-bs-target="#EnvioTeu"
             data-bs-toggle="modal" title="Reenviar T.E.U." type="button" (click)="inicializarFormularioTEU()">
-            Reenviar T.E.U. <img src="../assets/envioNotifi.svg" alt="Reenviar TEU" width="20" height="20" />
+            Reenviar T.E.U. <img src="assets/envioNotifi.svg" alt="Reenviar TEU" width="20" height="20" />
           </button>
 
           <!-- Panel Notifica (plataforma PAe) -->
@@ -107,49 +102,49 @@
           </app-notificaciones-notifica-panel>
 
           <!-- Enviar Notificación -->
-          <button *ngIf="veoenviar" class="submit margin-right" data-bs-target="#EnvioNotifi" data-bs-toggle="modal"
+          <button *ngIf="veoenviar" class="btn-iflow btn-iflow--primary" data-bs-target="#EnvioNotifi" data-bs-toggle="modal"
             title="Enviar Notificación" type="button">
-            Enviar <img src="../assets/enviar.svg" alt="Enviar" width="20" height="20" />
+            Enviar <img src="assets/enviar.svg" alt="Enviar" width="20" height="20" />
           </button>
 
           <!-- Recepcionar Notificación -->
-          <button *ngIf="veorecepcionar" class="submit margin-right" data-bs-target="#RecepNotifi"
+          <button *ngIf="veorecepcionar" class="btn-iflow btn-iflow--primary" data-bs-target="#RecepNotifi"
             data-bs-toggle="modal" title="Recepcionar Notificación" type="button">
-            Recepcionar <img src="../assets/archivar.svg" alt="Recepcionar" width="20" height="20" />
+            Recepcionar <img src="assets/archivar.svg" alt="Recepcionar" width="20" height="20" />
           </button>
 
           <!-- Devolver Notificación -->
-          <button *ngIf="veodevolver" class="submit margin-right" data-bs-target="#DevolverNotifi"
+          <button *ngIf="veodevolver" class="btn-iflow btn-iflow--primary" data-bs-target="#DevolverNotifi"
             data-bs-toggle="modal" title="Devolver Notificación" type="button">
-            Devolver <img src="../assets/devolver.svg" alt="Devolver" width="20" height="20" />
+            Devolver <img src="assets/devolver.svg" alt="Devolver" width="20" height="20" />
           </button>
 
           <!-- Publicar Notificación -->
-          <button *ngIf="veopublicar" class="submit margin-right" data-bs-target="#PubliNotifModal"
+          <button *ngIf="veopublicar" class="btn-iflow btn-iflow--primary" data-bs-target="#PubliNotifModal"
             data-bs-toggle="modal" title="Publicar Notificación" type="button">
-            Publicar <img src="../assets/publicar.png" alt="Publicar" width="20" height="20" />
+            Publicar <img src="assets/publicar.png" alt="Publicar" width="20" height="20" />
           </button>
 
           <!-- Anular Notificación -->
-          <button *ngIf="veoanular" class="submit margin-right" (click)="anularNotificacion()"
+          <button *ngIf="veoanular" class="btn-iflow btn-iflow--primary" (click)="anularNotificacion()"
             title="Anular Notificación" type="button">
             Anular <i class="bi bi-ban"></i>
           </button>
 
           <!-- Ver/Editar Notificación -->
-          <button class="submit margin-right" (click)="verNotificacion(idNotificacion)" title="Ver Notificación"
+          <button class="btn-iflow btn-iflow--primary" (click)="verNotificacion(idNotificacion)" title="Ver Notificación"
             type="button">
-            Ver <img src="../assets/eye2.svg" alt="Ver" width="20" height="20" />
+            Ver <img src="assets/eye2.svg" alt="Ver" width="20" height="20" />
           </button>
 
           <!-- Borrar Notificación -->
-          <button *ngIf="veoborrar" class="submit margin-right" (click)="borrarNotificacion(idNotificacion)"
+          <button *ngIf="veoborrar" class="btn-iflow btn-iflow--primary" (click)="borrarNotificacion(idNotificacion)"
             title="Borrar Notificación" type="button">
             Borrar <i class="bi bi-trash"></i>
           </button>
 
           <!-- Descargar Fichero TEU -->
-          <button *ngIf="mostrarBotonDescargaTEUPrincipal" class="submit margin-right"
+          <button *ngIf="mostrarBotonDescargaTEUPrincipal" class="btn-iflow btn-iflow--primary"
             (click)="descargarFicheroTEU()" title="Descargar Fichero TEU" type="button">
             Descargar TEU <i class="bi bi-cloud-arrow-down"></i>
           </button>
@@ -179,12 +174,12 @@
             <h2 class="listado-titulo-principal">Listado de Tareas del Trámite</h2>
             <div class="titulo-botones-container">
               <button *ngIf="botonNuevaTareaTramite" (click)="abrirModalNuevaTarea()"
-                class="btn btn-rounded btn-sm" title="Nueva tarea" type="button">
-                <img src="../assets/new/ico_add.png" alt="Nueva Tarea" width="25" height="25">
+                class="btn-iflow btn-iflow--icon" title="Nueva tarea" type="button">
+                <img src="assets/new/ico_add.png" alt="Nueva Tarea" width="25" height="25">
               </button>
               <button *ngIf="verAccionesdeTarea && veoBorrar && borrarconfirma" (click)="borrarTareaTramiteExp()"
-                class="btn btn-rounded btn-sm" title="Borrar tarea del trámite" type="button">
-                <img src="../assets/new/ico_elim.png" alt="Eliminar Tarea" width="25" height="25">
+                class="btn-iflow btn-iflow--icon" title="Borrar tarea del trámite" type="button">
+                <img src="assets/new/ico_elim.png" alt="Eliminar Tarea" width="25" height="25">
               </button>
             </div>
           </div>
@@ -193,11 +188,11 @@
           <div *ngIf="verAccionesdeTarea" class="acciones-botones-container">
             <!-- Contenedor para botones dependientes del archivo -->
             <ng-container *ngIf="verAbreArchivo">
-              <button *ngIf="verxml && veoXml" (click)="descargaXml()" class="submit margin-right"
+              <button *ngIf="verxml && veoXml" (click)="descargaXml()" class="btn-iflow btn-iflow--primary"
                 title="Descargar Modelo TEU" type="button">
                 Modelo TEU <i class="bi bi-cloud-arrow-down"></i>
               </button>
-              <button (click)="conviertePDF()" [disabled]="veoconviertePDF" class="submit margin-right"
+              <button (click)="conviertePDF()" [disabled]="veoconviertePDF" class="btn-iflow btn-iflow--primary"
                 title="Convertir a PDF" type="button">
                 Convertir a PDF <i class="bi bi-file-earmark-pdf"></i>
                 <div [hidden]="spinnervisible" class="spinner-border text-info" role="status">
@@ -205,27 +200,27 @@
                 </div>
               </button>
               <button *ngIf="veoMetadatos" (click)="fechaMetadata(vermetadatos.fecCaptura)"
-                class="submit margin-right" data-bs-target="#metadatosModal" data-bs-toggle="modal"
+                class="btn-iflow btn-iflow--primary" data-bs-target="#metadatosModal" data-bs-toggle="modal"
                 data-bs-whatever="@mdo" title="Datos ENI" type="button">
                 Datos ENI <i class="bi bi-chat-left-quote"></i>
               </button>
               <button *ngIf="!tareayafirmada && !firmaDesatendida" (click)="abreArchiFirmado()"
-                class="submit margin-right" title="Documento Firmado" type="button">
+                class="btn-iflow btn-iflow--primary" title="Documento Firmado" type="button">
                 Doc. Firmado <i class="bi bi-cloud-arrow-down"></i>
               </button>
-              <button *ngIf="firmaDesatendida" (click)="abreArchivo()" class="submit margin-right"
+              <button *ngIf="firmaDesatendida" (click)="abreArchivo()" class="btn-iflow btn-iflow--primary"
                 title="Descargar Documento Firmado" type="button">
                 Descargar Documento <i class="bi bi-cloud-arrow-down"></i>
               </button>
               <button *ngIf="!firmaDesatendida && veoDocOriginal" (click)="abreArchivo()"
-                class="submit margin-right" title="Descargar Documento Original" type="button">
+                class="btn-iflow btn-iflow--primary" title="Descargar Documento Original" type="button">
                 Doc. Original <i class="bi bi-cloud-arrow-down"></i>
               </button>
             </ng-container>
 
             <!-- Botones que NO dependen del archivo -->
             <button *ngIf="verAccionesdeTarea && tareayafirmada && firmaAtendida && !veoFirmaAtendida"
-              class="submit margin-right" data-bs-target="#archifirmaef" data-bs-toggle="modal"
+              class="btn-iflow btn-iflow--primary" data-bs-target="#archifirmaef" data-bs-toggle="modal"
               data-bs-whatever="@mdo" id="docufirmado" title="Firmar Digitalmente" type="button">
               Firma Atendida <i class="bi bi-pen"></i>
               <div [hidden]="spinnervisiblefirma" class="spinner-border text-info" role="status">
@@ -233,32 +228,32 @@
               </div>
             </button>
             <button *ngIf="verAccionesdeTarea && tareayafirmada && firmaDesatendida && !veoFirmaDEsatendida"
-              (click)="descargaArchivoFirmado()" class="submit margin-right" id="docufirmado"
+              (click)="descargaArchivoFirmado()" class="btn-iflow btn-iflow--primary" id="docufirmado"
               title="Firmar Digitalmente" type="button">
               Firma Desatendida <i class="bi bi-pen"></i>
             </button>
-            <button *ngIf="verAccionesdeTarea && veoPropuestaResolucion" class="submit margin-right"
+            <button *ngIf="verAccionesdeTarea && veoPropuestaResolucion" class="btn-iflow btn-iflow--primary"
               data-bs-target="#GenerarPropuestaResolucionModal" data-bs-toggle="modal" data-bs-whatever="@mdo"
               title="Generar Propuesta Resolución" type="button">
               Prop. Resolución <i class="bi bi-award"></i>
             </button>
             <button *ngIf="verAccionesdeTarea && veoNotificacion" (click)="clickNuevaNotificacion()"
-              class="submit margin-right" data-bs-target="#CrearNotificacionModal" data-bs-toggle="modal"
+              class="btn-iflow btn-iflow--primary" data-bs-target="#CrearNotificacionModal" data-bs-toggle="modal"
               data-bs-whatever="@mdo" title="Crear Notificación" type="button">
               Crear Notificación <i class="bi bi-bell"></i>
             </button>
             <button *ngIf="verAccionesdeTarea && veoGenerarSalida" (click)="clickGenerarSalida()"
-              class="submit margin-right" data-bs-target="#GenerarSalidaModal" data-bs-toggle="modal"
+              class="btn-iflow btn-iflow--primary" data-bs-target="#GenerarSalidaModal" data-bs-toggle="modal"
               data-bs-whatever="@mdo" title="Generar Salida" type="button">
               Generar Salida <i class="bi bi-send"></i>
             </button>
             <button *ngIf="verAccionesdeTarea && veoGenerarSalida" (click)="crearTablonAnuncio()"
-              class="submit margin-right" data-bs-target="#TablonAnunciosModal" data-bs-toggle="modal"
+              class="btn-iflow btn-iflow--primary" data-bs-target="#TablonAnunciosModal" data-bs-toggle="modal"
               data-bs-whatever="@mdo" title="Tablón de Anuncios" type="button">
               Tablón de Anuncios <i class="bi bi-megaphone"></i>
             </button>
             <button *ngIf="verAccionesdeTarea && veoFinalizar" (click)="finalizartarea()"
-              class="submit margin-right" title="Finalizar Tarea" type="button">
+              class="btn-iflow btn-iflow--primary" title="Finalizar Tarea" type="button">
               Finalizar Tarea <i class="bi bi-check-circle"></i>
             </button>
           </div>
@@ -285,16 +280,16 @@
                  Interesados del Expediente: <span class="expediente-nombre">{{ verExpediente.ejercicio }}/{{ verExpediente.numero }}</span>
                </h2>
                <div class="titulo-botones-container">
-                 <button class="btn btn-rounded btn-sm" data-bs-target="#ninteresadoModal" data-bs-toggle="modal"
+                 <button class="btn-iflow btn-iflow--icon" data-bs-target="#ninteresadoModal" data-bs-toggle="modal"
                    data-bs-whatever="@mdo" title="Nuevo Interesado" type="button">
-                   <img src="../assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
+                   <img src="assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
                  </button>
-                 <button *ngIf="verojointeresado" class="btn btn-rounded btn-sm" title="Ver Interesado" type="button">
-                   <img src="../assets/eye2.svg" alt="Ver" width="25" height="25">
+                 <button *ngIf="verojointeresado" class="btn-iflow btn-iflow--icon" title="Ver Interesado" type="button">
+                   <img src="assets/eye2.svg" alt="Ver" width="25" height="25">
                  </button>
-                 <button *ngIf="verborrarinteresado" class="btn btn-rounded btn-sm" title="Borrar Interesado"
+                 <button *ngIf="verborrarinteresado" class="btn-iflow btn-iflow--icon" title="Borrar Interesado"
                    type="button" (click)="borrarInteresados()">
-                   <img src="../assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
+                   <img src="assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
                  </button>
                </div>
              </div>
@@ -331,7 +326,7 @@
                 <th>
                   <div aria-label="..." class="btn-group btn-group-sm" role="group">
                     <button class="btn btn-outline-secondary" type="button">Devolver Exp <img [alt]="AsignaT"
-                        height="15" src="../assets/archive.svg" width="15" />
+                        height="15" src="assets/archive.svg" width="15" />
                     </button>
                   </div>
 
@@ -350,9 +345,9 @@
             <div class="listado-titulo-container">
               <h2 class="listado-titulo-secundario">Histórico del Expediente</h2>
               <div class="titulo-botones-container">
-                <button class="btn btn-rounded btn-sm" data-bs-target="#verexpedienteModal" data-bs-toggle="modal"
+                <button class="btn-iflow btn-iflow--icon" data-bs-target="#verexpedienteModal" data-bs-toggle="modal"
                   data-bs-whatever="@mdo" title="Ver Expediente" type="button">
-                  <img src="../assets/eye2.svg" alt="Ver" width="25" height="25" />
+                  <img src="assets/eye2.svg" alt="Ver" width="25" height="25" />
                 </button>
               </div>
             </div>
@@ -398,19 +393,6 @@
 
         <!-- AQUI SE ACABAN LOS CONTENIDOS DE CADA SECCION-->
         <!--  FIN MENU -->
-
-        <mat-menu #Tramenu="matMenu" id="tramitadormenu">
-          <button [routerLink]="['/editaexpediente', idExpediente]" mat-menu-item type="button">Editar</button>
-          <button mat-menu-item type="button">Asignar tramitador</button>
-          <button mat-menu-item type="button">Cancelar expediente</button>
-          <button mat-menu-item type="button">Devolver expediente</button>
-        </mat-menu>
-
-
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ======================================== -->
 <!-- SECCIÓN DE MODALES - MOVIDOS AL FINAL -->
@@ -530,14 +512,14 @@
                 <div class="col-sm-6 form-floating">
                   <input [(ngModel)]="modeloteucrear.procedimiento " class="form-control" id="procedimiento"
                     name="procedimiento" type="text">
-                  <label class="form-label dejaEspacio" for="procedimiento">Procedimiento </label>
+                  <label class="form-label form-label--floating" for="procedimiento">Procedimiento </label>
                 </div>
                 <div class="col-sm-6 form-floating">
                   <select [(ngModel)]="modeloteucrear.forPubli " class="form-select " id="forPublic" name="forPublic">
                     <option value=1>En Extracto</option>
                     <option value=2>Íntegra</option>
                   </select>
-                  <label class="form-label dejaEspacio" for="forPublic">Forma Publicación </label>
+                  <label class="form-label form-label--floating" for="forPublic">Forma Publicación </label>
                   <br>
                 </div>
               </div>
@@ -546,17 +528,17 @@
 
                   <input [(ngModel)]="modeloteucrear.email " class="form-control form-floating" id="email" name="email"
                     type="text">
-                  <label class="form-label dejaEspacio" for="email">Correo Electrónico </label>
+                  <label class="form-label form-label--floating" for="email">Correo Electrónico </label>
                   <br>
                 </div>
                 <div class="col-sm-12 form-floating">
                   <input [(ngModel)]="modeloteucrear.url " class="form-control " id="url" name="url" type="text">
-                  <label class="form-label dejaEspacio" for="url">Url </label>
+                  <label class="form-label form-label--floating" for="url">Url </label>
                   <br>
                 </div>
                 <div class="col-3 "></div>
                 <div class="col-3 "></div>
-                <div class="col-3 mueveBottonD ">
+                <div class="col-3 text-start">
                   <input [(ngModel)]="modeloteucrear.datPerso " id="datoperso" name="datoperso" type="checkbox">Incluir
                   datos personales eee
                   <input [(ngModel)]="modeloteucrear.texPlura " id="incltex" name="incltex" type="checkbox">
@@ -567,8 +549,8 @@
               </div>
               <div class="col-1 "></div>
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
           </div>
@@ -594,12 +576,12 @@
                 <div class="col-sm-4 form-floating">
                   <input [(ngModel)]="creanotificacion.fecRecNotif" class="form-control" data-mdb-inline="true"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="documento">Fecha de Devolución</label>
+                  <label class="form-label form-label--floating" for="documento">Fecha de Devolución</label>
 
                 </div>
                 <div class="col-sm-4 form-floating">
                   <select [(ngModel)]="creanotificacion.motNotif" [value]="notificacionver.motNotif"
-                    class="form-select dejaEspacio" id="desMotNotif" name="desMotNotif" required>
+                    class="form-select" id="desMotNotif" name="desMotNotif" required>
 
                     <option *ngFor="let motivosnotificacioneslistar of motivonotificacioneslistar"
                       name="descripcionMotivo" value={{motivosnotificacioneslistar.motNotif}}> {{
@@ -607,10 +589,10 @@
                     </option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="desMotNotif">Motivo Notificación* </label>
+                  <label class="form-label form-label--floating" for="desMotNotif">Motivo Notificación* </label>
                 </div>
                 <div class="col-sm-4 form-floating">
-                  <select [(ngModel)]="creanotificacion.notificador" class="form-select dejaEspacio" id="notificador"
+                  <select [(ngModel)]="creanotificacion.notificador" class="form-select" id="notificador"
                     name="notificador" required>
 
                     <option *ngFor="let notificalistar of notificadorlistar" name="notificadorNotifi"
@@ -619,13 +601,13 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="receptor">Notificador* </label>
+                  <label class="form-label form-label--floating" for="receptor">Notificador* </label>
                 </div>
               </div>
 
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
           </div>
@@ -653,7 +635,7 @@
 
                   <input [value]="notificacionver.ejeNotif" class="form-control" id="ejeNotif" name="ejeNotif" readonly
                     type="text">
-                  <label class="form-label dejaEspacio" for="ejeNotif">Ejercicio </label>
+                  <label class="form-label form-label--floating" for="ejeNotif">Ejercicio </label>
 
 
                 </div>
@@ -661,7 +643,7 @@
 
                   <input [value]="notificacionver.numNotif" class="form-control" id="numNotif" name="numNotif" readonly
                     type="text">
-                  <label class="form-label dejaEspacio" for="numNotif">Número Notificación </label>
+                  <label class="form-label form-label--floating" for="numNotif">Número Notificación </label>
 
 
                 </div>
@@ -676,7 +658,7 @@
                     <option name="telematico" value=1>Telemática</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="fnotifi">Forma Notificaciòn </label>
+                  <label class="form-label form-label--floating" for="fnotifi">Forma Notificaciòn </label>
 
 
                   <br>
@@ -684,14 +666,14 @@
                 <div class="col-sm-3 form-floating">
 
                   <input [value]="fechNotifi" class="form-control" disabled id="numNotif" name="FechNotif" type="text">
-                  <label class="form-label dejaEspacio" for="numNotif">Fecha Notificación </label>
+                  <label class="form-label form-label--floating" for="numNotif">Fecha Notificación </label>
                 </div>
                 <div class="col-sm-3 form-floating">
                   <input (change)="solicitadni(creanotificacion.dni)" [(ngModel)]="creanotificacion.dni"
                     [value]="notificacionver?.personaEntidad?.numDocum || ''" class="form-control" id="interesado"
                     name="interesado" type="text" [disabled]="modoVerNotificacion">
 
-                  <label class="col-form-label dejaEspacio" for="interesado"> Interesado DNI*</label>
+                  <label class="col-form-label form-label--floating" for="interesado"> Interesado DNI*</label>
 
                   <br>
                 </div>
@@ -704,7 +686,7 @@
                   <input [(ngModel)]="creanotificacion.observacion " [value]="notificacionver.observacion"
                     class="form-control" id="observacion" name="observacion" type="text"
                     [disabled]="modoVerNotificacion">
-                  <label class="form-label dejaEspacio" for="observacion">Observaciones* </label>
+                  <label class="form-label form-label--floating" for="observacion">Observaciones* </label>
                   <br>
 
 
@@ -732,7 +714,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="desMotNotif">Motivo Notificación* </label>
+                  <label class="form-label form-label--floating" for="desMotNotif">Motivo Notificación* </label>
 
                 </div>
                 <div class="col-sm-3 form-floating">
@@ -745,7 +727,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="receptor">Recepción* </label>
+                  <label class="form-label form-label--floating" for="receptor">Recepción* </label>
 
                 </div>
                 <div class="col-sm-3 form-floating">
@@ -758,7 +740,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="receptor">Notificador* </label>
+                  <label class="form-label form-label--floating" for="receptor">Notificador* </label>
 
                 </div>
                 <div class="col-sm-3 form-floating">
@@ -774,7 +756,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="situacion">Situación* </label>
+                  <label class="form-label form-label--floating" for="situacion">Situación* </label>
                   <br>
 
 
@@ -792,13 +774,13 @@
                 <div *ngIf="dniok" class="col-8 col-sm-6 form-floating">
 
                   <input class="form-control" id="nombre" name="nombre" type="text" value={{consultadni.nombre}}>
-                  <label class="form-label dejaEspacio" for="representante">Nombre</label>
+                  <label class="form-label form-label--floating" for="representante">Nombre</label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-6 form-floating">
 
                   <input class="form-control" id="Apellidos" name="Apellidos" type="text"
                     value="{{consultadni.apellido1}} {{consultadni.apellido2}}">
-                  <label class="form-label dejaEspacio" for="asignado">Apellidos </label>
+                  <label class="form-label form-label--floating" for="asignado">Apellidos </label>
                 </div>
 
 
@@ -817,29 +799,29 @@
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" id="cp" name="cp" type="text" value="{{consultadni.codPosta}}">
-                  <label class="form-label dejaEspacio" for="cp">Código Postal</label>
+                  <label class="form-label form-label--floating" for="cp">Código Postal</label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" id="provincia" name="provincia" type="text"
                     value="{{consultadni.provincia}}">
-                  <label class="form-label dejaEspacio" for="provincia">Provincia </label>
+                  <label class="form-label form-label--floating" for="provincia">Provincia </label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" id="Municipio" name="municipio" type="text"
                     value="{{consultadni.municipio}}">
-                  <label class="form-label dejaEspacio" for="municipio">Municipio </label>
+                  <label class="form-label form-label--floating" for="municipio">Municipio </label>
                 </div>
 
               </div>
               <br>
               <div class="modal-footer">
                 <br>
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button *ngIf="!modoVerNotificacion" class="submit_footer" data-bs-dismiss="modal"
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button *ngIf="!modoVerNotificacion" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal"
                   role="button">Guardar</button>
-                <button *ngIf="modoVerNotificacion" class="submit_footer" type="button"
+                <button *ngIf="modoVerNotificacion" class="btn-iflow btn-iflow--secondary" type="button"
                   (click)="modoVerNotificacion = false">Editar Notificación</button>
               </div>
             </form>
@@ -893,13 +875,13 @@
 
                   <input [(ngModel)]="crearinteresado.fechaInicio" class="form-control" data-mdb-inline="true"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="documento">Fecha Inicio*</label>
+                  <label class="form-label form-label--floating" for="documento">Fecha Inicio*</label>
                 </div>
                 <div class="col-8 col-sm-4 form-floating">
                   <input (change)="solicitadni(crearinteresado.usuario)" [(ngModel)]="crearinteresado.usuario"
                     class="form-control" id="interesado" name="interesado" type="text">
 
-                  <label class="col-form-label dejaEspacio" for="interesado"> Interesado DNI*</label>
+                  <label class="col-form-label form-label--floating" for="interesado"> Interesado DNI*</label>
 
                   <br>
                 </div>
@@ -911,7 +893,7 @@
                     <option name="telematico" value=1>Telemática</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="asignado">Forma Notificacion </label>
+                  <label class="form-label form-label--floating" for="asignado">Forma Notificacion </label>
 
 
                   <br>
@@ -920,7 +902,7 @@
               <div *ngIf="crearinteresado.tipForNotif==1" class="mb-3 form-floating">
 
                 <input [(ngModel)]="crearinteresado.email" class="form-control" id="email" name="email" type="text">
-                <label class="col-form-label dejaEspacio" for="titulo">Correo electrónico</label>
+                <label class="col-form-label form-label--floating" for="titulo">Correo electrónico</label>
 
 
               </div>
@@ -964,13 +946,13 @@
                 <div *ngIf="dniok" class="col-8 col-sm-6 form-floating">
 
                   <input class="form-control" id="nombre" name="nombre" type="text" value={{consultadni.nombre}}>
-                  <label class="form-label dejaEspacio" for="representante">Nombre*</label>
+                  <label class="form-label form-label--floating" for="representante">Nombre*</label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-6 form-floating">
 
                   <input class="form-control" id="Apellidos" name="Apellidos" type="text"
                     value="{{consultadni.apellido1}} {{consultadni.apellido2}}">
-                  <label class="form-label dejaEspacio" for="asignado">Apellidos* </label>
+                  <label class="form-label form-label--floating" for="asignado">Apellidos* </label>
                 </div>
 
 
@@ -980,7 +962,7 @@
 
                 <input class="form-control" id="direccion" name="direccion" type="text"
                   value="{{consultadni.dirPosta}}">
-                <label class="col-form-label dejaEspacio" for="direccion">Direccion* </label>
+                <label class="col-form-label form-label--floating" for="direccion">Direccion* </label>
 
 
               </div>
@@ -989,26 +971,26 @@
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" id="cp" name="cp" type="text" value="{{consultadni.codPosta}}">
-                  <label class="form-label dejaEspacio" for="cp">Código Postal*</label>
+                  <label class="form-label form-label--floating" for="cp">Código Postal*</label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" id="provincia" name="provincia" type="text"
                     value="{{consultadni.provincia}}">
-                  <label class="form-label dejaEspacio" for="provincia">Provincia* </label>
+                  <label class="form-label form-label--floating" for="provincia">Provincia* </label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" id="Municipio" name="municipio" type="text"
                     value="{{consultadni.municipio}}">
-                  <label class="form-label dejaEspacio" for="municipio">Municipio* </label>
+                  <label class="form-label form-label--floating" for="municipio">Municipio* </label>
                 </div>
 
               </div>
               <br>
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
 
@@ -1046,7 +1028,7 @@
                 <div class="col-6 form-floating">
                   <input [(ngModel)]="creanotificacion.fecEnvio" class="form-control" data-mdb-inline="true" id="start"
                     max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="documento">Fecha de Envio</label>
+                  <label class="form-label form-label--floating" for="documento">Fecha de Envio</label>
 
                 </div>
                 <div class="col-sm-4 form-floating">
@@ -1058,8 +1040,8 @@
 
 
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
 
             </form>
@@ -1080,19 +1062,19 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="espacios">
+              <div class="px-section">
                 <div class="row">
                   <div class="col-12 form-floating">
                     <input [value]="vermetadatos.versionNTI" class="form-control" disabled id="nti" name="nti"
                       type="text">
-                    <label class="form-label dejaEspacio" for="nti">Versión NTI </label>
+                    <label class="form-label form-label--floating" for="nti">Versión NTI </label>
                     <br>
 
                   </div>
                   <div class="col-12 form-floating">
                     <input [value]="vermetadatos.identificador" class="form-control" disabled id="Identificadord"
                       name="Identificadord" type="text">
-                    <label class="form-label dejaEspacio" for="Identificadord">Identificador del
+                    <label class="form-label form-label--floating" for="Identificadord">Identificador del
                       Documento </label>
                     <br>
 
@@ -1101,35 +1083,35 @@
                   <div class="col-12 form-floating">
                     <input [value]="vermetadatos.organo" class="form-control" disabled id="Órgano" name="Órgano"
                       type="text">
-                    <label class="form-label dejaEspacio" for="Órgano">Órgano </label>
+                    <label class="form-label form-label--floating" for="Órgano">Órgano </label>
                     <br>
 
                   </div>
                   <div class="col-12 form-floating">
                     <input [value]="fechametadatabuena" class="form-control" disabled id="Captura" name="Captura"
                       type="text">
-                    <label class="form-label dejaEspacio" for="Captura">Fecha de Captura</label>
+                    <label class="form-label form-label--floating" for="Captura">Fecha de Captura</label>
                     <br>
 
                   </div>
                   <div class="col-12 form-floating">
                     <input [value]="vermetadatos.origen" class="form-control" disabled id="Origen" name="Origen"
                       type="text">
-                    <label class="form-label dejaEspacio" for="Origen">Origen </label>
+                    <label class="form-label form-label--floating" for="Origen">Origen </label>
                     <br>
 
                   </div>
                   <div class="col-12 form-floating">
                     <input [value]="vermetadatos.versionNTI" class="form-control" disabled id="Estado" name="Estado"
                       type="text">
-                    <label class="form-label dejaEspacio" for="Estado">Estado </label>
+                    <label class="form-label form-label--floating" for="Estado">Estado </label>
                     <br>
 
                   </div>
                   <div class="col-12 form-floating">
                     <input [value]="vermetadatos.tipDocum" class="form-control" disabled id="tDocumento"
                       name="tDocumento" type="text">
-                    <label class="form-label dejaEspacio" for="tDocumento">Tipo de Documento</label>
+                    <label class="form-label form-label--floating" for="tDocumento">Tipo de Documento</label>
                     <br>
 
                   </div>
@@ -1139,7 +1121,7 @@
               </div>
 
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cerrar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cerrar</button>
 
               </div>
 
@@ -1174,7 +1156,7 @@
                 <div class="col-sm-4 form-floating">
                   <input [(ngModel)]="creanotificacion.fecRecNotif" class="form-control" data-mdb-inline="true"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="documento">Fecha de Recepción</label>
+                  <label class="form-label form-label--floating" for="documento">Fecha de Recepción</label>
 
                 </div>
                 <div class="col-sm-4 form-floating">
@@ -1187,7 +1169,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="receptor">Receptor* </label>
+                  <label class="form-label form-label--floating" for="receptor">Receptor* </label>
 
                 </div>
                 <div class="col-sm-4 form-floating">
@@ -1200,10 +1182,10 @@
 
               <br>
               <div class="modal-footer">
-                <button (click)="borraDatosRecepcion()" class="submit_footer" data-bs-dismiss="modal"
+                <button (click)="borraDatosRecepcion()" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal"
                   type="button">Cancelar
                 </button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
 
@@ -1231,13 +1213,13 @@
                 <div class="col-12 form-floating">
                   <input [(ngModel)]="archivofirmadoef.asunto" class="form-control" id="asunto" name="asunto"
                     type="text">
-                  <label class="form-label dejaEspacio" for="asunto">Asunto * </label>
+                  <label class="form-label form-label--floating" for="asunto">Asunto * </label>
                   <br>
 
                 </div>
                 <div class="col-12 form-floating">
                   <input [(ngModel)]="archivofirmadoef.texto" class="form-control" id="texto" name="texto" type="text">
-                  <label class="form-label dejaEspacio" for="asunto">Texto * </label>
+                  <label class="form-label form-label--floating" for="asunto">Texto * </label>
                   <br>
 
                 </div>
@@ -1250,13 +1232,13 @@
                     <option value="2">Alta</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="prioridad">Prioridad * </label>
+                  <label class="form-label form-label--floating" for="prioridad">Prioridad * </label>
                   <br>
 
 
                 </div>
-                <div class="espacios">
-                  <h4 class="modal-title mueveBottonD">Firmantes </h4>
+                <div class="px-section">
+                  <h4 class="modal-title text-start">Firmantes </h4>
                   <div class="row">
 
                     <div class="col-1"></div>
@@ -1293,10 +1275,10 @@
 
 
               <div class="modal-footer">
-                <button (click)="limpiaarchivofirmaEF()" class="submit_footer" data-bs-dismiss="modal"
+                <button (click)="limpiaarchivofirmaEF()" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal"
                   type="button">Cancelar
                 </button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
 
             </form>
@@ -1327,7 +1309,7 @@
             </app-liquidacion-form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="cerrarModalLiquidacion()">Cerrar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModalLiquidacion()">Cerrar</button>
           </div>
         </div>
       </div>
@@ -1379,7 +1361,7 @@
                 <div class="col-sm-4 form-floating">
                   <input [(ngModel)]="creanotificacion.fecRecNotif" class="form-control" data-mdb-inline="true"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="documento">Fecha de Devolución *</label>
+                  <label class="form-label form-label--floating" for="documento">Fecha de Devolución *</label>
 
                 </div>
                 <div class="col-sm-4 form-floating">
@@ -1393,7 +1375,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="desMotNotif">Motivo Devolución* </label>
+                  <label class="form-label form-label--floating" for="desMotNotif">Motivo Devolución* </label>
                 </div>
                 <div class="col-sm-4 form-floating">
                   <select [(ngModel)]="creanotificacion.notificador" class="form-select " id="notificador"
@@ -1405,7 +1387,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="receptor">Notificador* </label>
+                  <label class="form-label form-label--floating" for="receptor">Notificador* </label>
 
                 </div>
 
@@ -1415,8 +1397,8 @@
 
 
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
 
@@ -1445,7 +1427,7 @@
 
                   <input [value]="notificacionver.ejeNotif" class="form-control" id="ejeNotif" name="ejeNotif" disabled
                     type="text">
-                  <label class="form-label dejaEspacio" for="ejeNotif">Ejercicio </label>
+                  <label class="form-label form-label--floating" for="ejeNotif">Ejercicio </label>
 
 
                 </div>
@@ -1453,7 +1435,7 @@
 
                   <input [value]="notificacionver.numNotif" class="form-control" id="numNotif" name="numNotif" disabled
                     type="text">
-                  <label class="form-label dejaEspacio" for="numNotif">Número Notificación </label>
+                  <label class="form-label form-label--floating" for="numNotif">Número Notificación </label>
 
 
                 </div>
@@ -1468,7 +1450,7 @@
                     <option name="telematico" value=1>Telemática</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="fnotifi">Forma Notificación </label>
+                  <label class="form-label form-label--floating" for="fnotifi">Forma Notificación </label>
 
 
                   <br>
@@ -1477,7 +1459,7 @@
 
                   <input [value]="fechNotifi" class="form-control" disabled id="numNotif" name="FechNotif" type="text">
 
-                  <label class="form-label dejaEspacio" for="numNotif">Fecha Notificación </label>
+                  <label class="form-label form-label--floating" for="numNotif">Fecha Notificación </label>
                 </div>
                 <div class="col-sm-3 form-floating">
 
@@ -1496,7 +1478,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="situacion">Estado Notificación *</label>
+                  <label class="form-label form-label--floating" for="situacion">Estado Notificación *</label>
 
 
                   <br>
@@ -1510,7 +1492,7 @@
                   <input [value]="dniNotifi" class="form-control" disabled id="interesado" name="interesado"
                     type="text">
 
-                  <label class="col-form-label dejaEspacio" for="interesado"> Interesado DNI</label>
+                  <label class="col-form-label form-label--floating" for="interesado"> Interesado DNI</label>
 
 
                 </div>
@@ -1525,7 +1507,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="receptor">Notificador </label>
+                  <label class="form-label form-label--floating" for="receptor">Notificador </label>
                   <br>
                 </div>
               </div>
@@ -1535,13 +1517,13 @@
                   <input [(ngModel)]="creanotificacion.fecEnvio" [value]="fechaordenadafenvio" class="form-control"
                     data-mdb-inline="true" id="start1" name="trip-start1" type="date"
                     (input)="onFechaEnvioChange($event)" (change)="limpiarErroresVisuales()">
-                  <label class="form-label dejaEspacio" for="boe">Fecha Envio</label>
+                  <label class="form-label form-label--floating" for="boe">Fecha Envio</label>
                 </div>
                 <div class="col-3 form-floating">
                   <input [(ngModel)]="creanotificacion.fecRecNotif" [value]="fechaordenadafrecep" class="form-control"
                     data-mdb-inline="true" id="start2" max="2999-12-31" min="2020-01-01" name="trip-start2" type="date"
                     (input)="onFechaRecNotifChange($event)" (change)="limpiarErroresVisuales()">
-                  <label class="form-label dejaEspacio" for="boe">Fecha Recepción / Devolución</label>
+                  <label class="form-label form-label--floating" for="boe">Fecha Recepción / Devolución</label>
                 </div>
                 <div class="col-sm-3 form-floating">
                   <select [(ngModel)]="creanotificacion.receptor" class="form-select " id="receptor" name="receptor"
@@ -1551,7 +1533,7 @@
                       value={{receptornotifislistar.receptor}}> {{ receptornotifislistar.descripcion }}
                     </option>
                   </select>
-                  <label class="form-label dejaEspacio" for="receptor">Receptor </label>
+                  <label class="form-label form-label--floating" for="receptor">Receptor </label>
 
                 </div>
 
@@ -1567,7 +1549,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="desMotNotif">Motivo Devolución </label>
+                  <label class="form-label form-label--floating" for="desMotNotif">Motivo Devolución </label>
                   <br>
 
                 </div>
@@ -1579,7 +1561,7 @@
                   <input [(ngModel)]="creanotificacion.fecRegistSalid" [value]="fechaenvioTEU" class="form-control"
                     data-mdb-inline="true" id="startenvioteu" name="trip-startenvioteu" type="date"
                     (input)="onFechaRegistSalidChange($event)" (change)="limpiarErroresVisuales()">
-                  <label class="form-label dejaEspacio" for="boe">Fecha Envio TEU</label>
+                  <label class="form-label form-label--floating" for="boe">Fecha Envio TEU</label>
                   <br>
                 </div>
 
@@ -1587,7 +1569,7 @@
 
                   <input [(ngModel)]="creanotificacion.numEnvioTeu " [value]="notificacionver.numEnvioTeu"
                     class="form-control" id="nteu" name="nteu" type="text">
-                  <label class="form-label dejaEspacio" for="boe">Número T.E.U.</label>
+                  <label class="form-label form-label--floating" for="boe">Número T.E.U.</label>
                   <br>
 
                 </div>
@@ -1607,7 +1589,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="sboe">Situación B.O.E. *</label>
+                  <label class="form-label form-label--floating" for="sboe">Situación B.O.E. *</label>
 
                 </div>
                 <div class="col-3 form-floating">
@@ -1615,7 +1597,7 @@
                   <input [(ngModel)]="creanotificacion.fecPubBop " [value]="fechaordenadafpubli " class="form-control"
                     data-mdb-inline="true" id="start6" name="trip-start6" type="date"
                     (input)="onFechaPubBopChange($event)" (change)="limpiarErroresVisuales()">
-                  <label class="form-label dejaEspacio" for="boeP">Fecha Publicación B.O.E.</label>
+                  <label class="form-label form-label--floating" for="boeP">Fecha Publicación B.O.E.</label>
 
                 </div>
 
@@ -1624,7 +1606,7 @@
 
                   <input [(ngModel)]="creanotificacion.numBop " [value]="notificacionver.numBop" class="form-control"
                     id="boe" name="boe" type="text">
-                  <label class="form-label dejaEspacio" for="boe"> Número B.O.E. </label>
+                  <label class="form-label form-label--floating" for="boe"> Número B.O.E. </label>
                   <br>
                 </div>
 
@@ -1635,20 +1617,20 @@
 
                   <input [(ngModel)]="creanotificacion.observacion " [value]="notificacionver.observacion"
                     class="form-control" id="observacion" name="observacion" type="text">
-                  <label class="form-label dejaEspacio" for="observacion">Observaciones </label>
+                  <label class="form-label form-label--floating" for="observacion">Observaciones </label>
                   <br>
                 </div>
               </div>
 
               <br>
               <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" (click)="cerrarModalNotificacion()">
+                <button class="btn-iflow btn-iflow--secondary" type="button" (click)="cerrarModalNotificacion()">
                   <i class="bi bi-x-circle me-1"></i>Cerrar
                 </button>
-                <button *ngIf="!modoVerNotificacion" class="btn btn-primary" type="button" (click)="editaNotifi()">
+                <button *ngIf="!modoVerNotificacion" class="btn-iflow btn-iflow--primary" type="button" (click)="editaNotifi()">
                   <i class="bi bi-check-circle me-1"></i>Guardar Cambios
                 </button>
-                <button *ngIf="modoVerNotificacion" class="btn btn-primary" type="button"
+                <button *ngIf="modoVerNotificacion" class="btn-iflow btn-iflow--primary" type="button"
                   (click)="modoVerNotificacion = false">
                   <i class="bi bi-pencil-square me-1"></i>Editar Notificación
                 </button>
@@ -1678,22 +1660,22 @@
                   <input (blur)="fechamas15()" [(ngModel)]="creanotificacion.fecPubBop" class="form-control"
                     data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date"
                     value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="documento">Fecha de Publicación *</label>
+                  <label class="form-label form-label--floating" for="documento">Fecha de Publicación *</label>
                 </div>
 
                 <div class="col-sm-4 form-floating">
                   <input [(ngModel)]="creanotificacion.numBop " class="form-control" id="procedimiento"
                     name="procedimiento" type="text">
-                  <label class="form-label dejaEspacio" for="procedimiento">B.O.E. * </label>
+                  <label class="form-label form-label--floating" for="procedimiento">B.O.E. * </label>
                   <br>
                 </div>
 
               </div>
               <div class="modal-footer">
-                <button (click)="borrarDatosPublicacion()" class="submit_footer" data-bs-dismiss="modal"
+                <button (click)="borrarDatosPublicacion()" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal"
                   type="button">Cancelar
                 </button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
 
@@ -1728,21 +1710,21 @@
                       value={{temasdocumentolistar.codTema}}> {{ temasdocumentolistar.codTema }}
                     </option>
                   </select>
-                  <label class="form-label dejaEspacio" for="ctema1">Código Tema </label>
+                  <label class="form-label form-label--floating" for="ctema1">Código Tema </label>
                 </div>
 
 
                 <div class="col-sm-4 form-floating">
                   <input [(ngModel)]="creargenerarsalida.extracto" class="form-control" id="TextareaGSalida"
                     name="extracto">
-                  <label class="form-label dejaEspacio" for="TextareaGSalida">Extracto*</label>
+                  <label class="form-label form-label--floating" for="TextareaGSalida">Extracto*</label>
                   <br>
                 </div>
 
                 <div class="col-sm-12 form-floating">
                   <input [(ngModel)]="creargenerarsalida.observaciones" class="form-control" id="ctema"
                     name="observaciones" type="text">
-                  <label class="form-label dejaEspacio" for="observaciones">Observaciones </label>
+                  <label class="form-label form-label--floating" for="observaciones">Observaciones </label>
                   <br>
                 </div>
 
@@ -1751,10 +1733,10 @@
               <br>
 
               <div class="modal-footer">
-                <button (click)="clickAtrasGenerarSalida()" class="submit_footer" data-bs-dismiss="modal"
+                <button (click)="clickAtrasGenerarSalida()" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal"
                   type="button">Cancelar
                 </button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
 
             </form>
@@ -1779,7 +1761,7 @@
 
                 <input [(ngModel)]="creartablonanuncio.desAnunc" class="form-control" id="Descripción"
                   name="Descripción" type="text">
-                <label class="form-label dejaEspacio" for="municipio">Descripción * </label>
+                <label class="form-label form-label--floating" for="municipio">Descripción * </label>
                 <br>
               </div>
               <div class="row">
@@ -1792,20 +1774,20 @@
                     <option value=1>Anuncio</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="fnotifi">Tipo de anuncio *</label>
+                  <label class="form-label form-label--floating" for="fnotifi">Tipo de anuncio *</label>
 
                 </div>
 
                 <div class="col-4 form-floating">
                   <input [(ngModel)]="creartablonanuncio.fecDesde " class="form-control" data-mdb-inline="true"
                     id="desde" max="2099-12-31" min="2023-01-01" name="hasta" type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="desde">Desde</label>
+                  <label class="form-label form-label--floating" for="desde">Desde</label>
                 </div>
 
                 <div class="col-4 form-floating">
                   <input [(ngModel)]="creartablonanuncio.fecHasta " class="form-control" data-mdb-inline="true"
                     id="hasta" max="2099-12-31" min="2023-01-01" name="hasta" type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="hasta">Hasta</label>
+                  <label class="form-label form-label--floating" for="hasta">Hasta</label>
                   <br>
 
                 </div>
@@ -1813,8 +1795,8 @@
 
 
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
           </div>
@@ -1833,7 +1815,7 @@
           </div>
           <div class="modal-body">
             <form (ngSubmit)="vacio()">
-              <div *ngIf="vertramite" class="espacios">
+              <div *ngIf="vertramite" class="px-section">
                 <br>
 
                 <jqxGrid #grid (onRowclick)="descargaficheroHistorico($event)"
@@ -1844,7 +1826,7 @@
                 <br>
               </div>
               <div class="modal-footer">
-                <button class="submit_footer" data-bs-dismiss="modal" type="button">Cerrar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cerrar</button>
               </div>
             </form>
           </div>
@@ -1947,7 +1929,7 @@
 
                 <!-- Botón de acción -->
                 <div *ngIf="veoAcciones && tareatramiteprocedimiento?.accion !== -1" class="col-1 d-flex align-items-end">
-                  <button type="button" class="btn btn-primary" (click)="onConsultaAccionClick()">
+                  <button type="button" class="btn-iflow btn-iflow--primary" (click)="onConsultaAccionClick()">
                     {{ getAccionButtonText() }}
                   </button>
                 </div>
@@ -2151,8 +2133,8 @@
               </div>
 
               <div class="modal-footer">
-                <button type="button" class="submit_footer" (click)="limpiarErroresNuevaTarea(); cerrarModal('NuevaTareaTra')">Cancelar</button>
-                <button type="submit" class="submit_footer">Guardar</button>
+                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresNuevaTarea(); cerrarModal('NuevaTareaTra')">Cancelar</button>
+                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
               </div>
             </form>
           </div>
@@ -2196,7 +2178,7 @@
           </div>
           <!-- Pie del modal -->
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
       </div>
@@ -2220,12 +2202,12 @@
                     <option value="INSTRUCCION">INSTRUCCION</option>
                     <option value="RESOLUCION">RESOLUCION</option>
                   </select>
-                  <label class="form-label dejaEspacio" for="fase">Fase *</label>
+                  <label class="form-label form-label--floating" for="fase">Fase *</label>
                 </div>
                 <div class="col-6 form-floating">
                   <input class="form-control" id="fecTramite" name="fecTramite" type="date"
                          [(ngModel)]="creartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31">
-                  <label class="col-form-label dejaEspacio" for="fecTramite">Fecha Trámite</label>
+                  <label class="col-form-label form-label--floating" for="fecTramite">Fecha Trámite</label>
                 </div>
               </div>
               <div class="row">
@@ -2233,14 +2215,14 @@
                   <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
                             [(ngModel)]="creartramiteexp.descripcion" required minlength="1" maxlength="500"
                             placeholder="Describa el trámite..."></textarea>
-                  <label class="col-form-label dejaEspacio" for="descripcion">Descripción *</label>
+                  <label class="col-form-label form-label--floating" for="descripcion">Descripción *</label>
                 </div>
               </div>
               <div class="row mt-2 mb-4">
               </div>
               <div class="modal-footer">
-                <button type="button" class="submit_footer" (click)="limpiarErroresTramite(); cerrarModal('NuevoTramiteModal')">Cancelar</button>
-                <button type="submit" class="submit_footer">Guardar</button>
+                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresTramite(); cerrarModal('NuevoTramiteModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
               </div>
             </form>
           </div>
@@ -2266,12 +2248,12 @@
                     <option value="INSTRUCCION">INSTRUCCION</option>
                     <option value="RESOLUCION">RESOLUCION</option>
                   </select>
-                  <label class="form-label dejaEspacio" for="faseEdit">Fase *</label>
+                  <label class="form-label form-label--floating" for="faseEdit">Fase *</label>
                 </div>
                 <div class="col-6 form-floating">
                   <input class="form-control" id="fecTramiteEdit" name="fecTramiteEdit" type="date"
                          [(ngModel)]="editartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31">
-                  <label class="col-form-label dejaEspacio" for="fecTramiteEdit">Fecha Trámite</label>
+                  <label class="col-form-label form-label--floating" for="fecTramiteEdit">Fecha Trámite</label>
                 </div>
               </div>
               <div class="row">
@@ -2279,15 +2261,15 @@
                   <textarea class="form-control" id="descripcionEdit" name="descripcionEdit" rows="4"
                             [(ngModel)]="editartramiteexp.descripcion" required minlength="1" maxlength="500"
                             placeholder="Describa el trámite..."></textarea>
-                  <label class="col-form-label dejaEspacio" for="descripcionEdit">Descripción *</label>
+                  <label class="col-form-label form-label--floating" for="descripcionEdit">Descripción *</label>
                 </div>
               </div>
               <div class="row mt-2 mb-4">
 
               </div>
               <div class="modal-footer">
-                <button type="button" class="submit_footer" (click)="limpiarErroresEditarTramite(); cerrarModal('editarTramiteModal')">Cancelar</button>
-                <button type="submit" class="submit_footer">Guardar</button>
+                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresEditarTramite(); cerrarModal('editarTramiteModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
               </div>
             </form>
           </div>
@@ -2313,7 +2295,7 @@
                   <input [(ngModel)]="tareatramiteexpedienteeditar.fecInicio"
                     [(ngModel)]="tareatramiteexpedienteeditar.fecInicio" [value]="FecIniTarea" class="form-control"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date">
-                  <label class="form-label dejaEspacio" for="documento">Fecha de Tarea* </label>
+                  <label class="form-label form-label--floating" for="documento">Fecha de Tarea* </label>
 
 
                 </div>
@@ -2329,7 +2311,7 @@
                       <p *ngIf="TramiteFase ==listastareaprocedi.faseTarea "> {{ listastareaprocedi.descripcion }}</p>
                     </option>
                   </select>
-                  <label class="form-label dejaEspacio" for="tareap">Tarea Procedimiento *</label>
+                  <label class="form-label form-label--floating" for="tareap">Tarea Procedimiento *</label>
                   <br>
                 </div>
 
@@ -2337,14 +2319,14 @@
                   <input #fileInput (change)='upload($event,idTramite)'
                     [(ngModel)]="tareatramiteexpedienteeditar.archivo" accept=".pdf" class="form-control" id="formFile"
                     name="doc" type="file" required>
-                  <label class="form-label dejaEspacio" for="doc">Seleccione Documento *</label>
+                  <label class="form-label form-label--floating" for="doc">Seleccione Documento *</label>
                   <br>
                 </div>
 
                 <div class="col-sm-6 form-floating">
                   <input [value]="nombreArchivoTarea" class="form-control" disabled id="descripcion" name="descripcion"
                     type="text">
-                  <label class="form-label dejaEspacio" for="descripcion"> Nombre Documento Actual </label>
+                  <label class="form-label form-label--floating" for="descripcion"> Nombre Documento Actual </label>
                   <br>
                 </div>
               </div>
@@ -2355,7 +2337,7 @@
                   <input [(ngModel)]="tareatramiteexpedienteeditar.descripcion"
                     [value]="tareatramiteexpedienteeditar.descripcion" class="form-control" id="descripcion"
                     name="descripcion" required type="text">
-                  <label class="form-label dejaEspacio" for="descripcion">Descripción* </label>
+                  <label class="form-label form-label--floating" for="descripcion">Descripción* </label>
                   <br>
                 </div>
 
@@ -2371,7 +2353,7 @@
                     <option value=3>Documentación Física Complementaria</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="anexo">Anexo *</label>
+                  <label class="form-label form-label--floating" for="anexo">Anexo *</label>
 
                 </div>
                 <div class="col-6 form-floating">
@@ -2384,7 +2366,7 @@
                     <option value=4>Original</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="docapor">Documentación Aportada *</label>
+                  <label class="form-label form-label--floating" for="docapor">Documentación Aportada *</label>
                   <br>
                 </div>
                 <div class="col-6 form-floating">
@@ -2413,7 +2395,7 @@
                     <option value="TD21">Otros</option>
 
                   </select>
-                  <label class="form-label dejaEspacio" for="tipoDocumEni">Tipo Documento ENI *</label>
+                  <label class="form-label form-label--floating" for="tipoDocumEni">Tipo Documento ENI *</label>
                 </div>
                 <div class="col-6 form-floating">
                   <select [(ngModel)]="tareatramiteexpedienteeditar.documentacion " [value]="DocumentacionTarea"
@@ -2422,7 +2404,7 @@
                     <option value=2>Documentación Adjunta en Soporte Papel</option>
                     <option value=3>Documentación Adjunta Digitalizada y en Papel</option>
                   </select>
-                  <label class="form-label dejaEspacio" for="documentacion">Documentación *</label>
+                  <label class="form-label form-label--floating" for="documentacion">Documentación *</label>
                   <br>
                 </div>
               </div>
@@ -2430,10 +2412,10 @@
 
               <div class="modal-footer">
                 <br>
-                <button (click)="verListadoTareasModal()" class="submit_footer" data-bs-dismiss="modal" type="button">
+                <button (click)="verListadoTareasModal()" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">
                   Cancelar
                 </button>
-                <button *ngIf="puedoEditarTarea" class="submit_footer" data-bs-dismiss="modal" role="button">Guardar
+                <button *ngIf="puedoEditarTarea" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar
                 </button>
               </div>
             </form>
@@ -2459,33 +2441,33 @@
                 <div class="col-sm-4 form-floating">
                   <input [(ngModel)]="insertabolsacrear.fecAlta" class="form-control" data-mdb-inline="true" id="start"
                     max="2099-12-31" min="2023-01-01" name="trip-start" required type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="falta">Fecha Alta* </label>
+                  <label class="form-label form-label--floating" for="falta">Fecha Alta* </label>
 
                 </div>
                 <div class="col-sm-4 form-floating">
 
                   <input [(ngModel)]="insertabolsacrear.fecPrefe" class="form-control" data-mdb-inline="true" id="start"
                     max="2099-12-31" min="2023-01-01" name="trip-start" required type="date" value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="fpreferente">Fecha Preferente* </label>
+                  <label class="form-label form-label--floating" for="fpreferente">Fecha Preferente* </label>
                 </div>
                 <div class="col-sm-4 form-floating">
 
                   <input [(ngModel)]="insertabolsacrear.fecMaxResol" class="form-control" data-mdb-inline="true"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" required type="date"
                     value="{{selected}}">
-                  <label class="form-label dejaEspacio" for="fecMaxResol">Fecha Max Resolución* </label>
+                  <label class="form-label form-label--floating" for="fecMaxResol">Fecha Max Resolución* </label>
                   <br>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-6 form-floating">
                   <input [(ngModel)]="insertabolsacrear.extracto" class="form-control" id="extracto" name="extracto">
-                  <label class="form-label dejaEspacio" for="extracto">Extracto </label>
+                  <label class="form-label form-label--floating" for="extracto">Extracto </label>
 
                 </div>
                 <div class="col-sm-6 form-floating">
                   <input [(ngModel)]="insertabolsacrear.dictamen" class="form-control" id="dictamen" name="dictamen">
-                  <label class="form-label dejaEspacio" for="dictamen">Dictamen </label>
+                  <label class="form-label form-label--floating" for="dictamen">Dictamen </label>
                   <br>
 
                 </div>
@@ -2495,7 +2477,7 @@
 
                   <input [(ngModel)]="insertabolsacrear.observaciones" class="form-control" id="observa" name="observa"
                     type="text">
-                  <label class="form-label dejaEspacio" for="observa">Observaciones </label>
+                  <label class="form-label form-label--floating" for="observa">Observaciones </label>
                   <br>
                 </div>
 
@@ -2506,7 +2488,7 @@
                 <div class="col-sm-4 form-floating">
                   <input [(ngModel)]="insertabolsacrear.expMotiv" class="form-control" id="mexpe" name="mexpe"
                     type="text">
-                  <label class="form-label dejaEspacio" for="mexpe">Exposición Motivo </label>
+                  <label class="form-label form-label--floating" for="mexpe">Exposición Motivo </label>
                   <br>
                 </div>
               </div>
@@ -2520,7 +2502,7 @@
                     <option name="2" value="2">ALTA</option>
                     <option name="3" value="3">MUY ALTA</option>
                   </select>
-                  <label class="form-label dejaEspacio" for="prioridad">Prioridad* </label>
+                  <label class="form-label form-label--floating" for="prioridad">Prioridad* </label>
 
                 </div>
                 <div class="col-sm-3 form-floating">
@@ -2532,7 +2514,7 @@
                     <option name="3" value=3>NO APARECE</option>
                     <option name="4" value=4>PLENO Y COMISION INFORMATIVA</option>
                   </select>
-                  <label class="form-label dejaEspacio" for="tsesion">Tipo Sesión* </label>
+                  <label class="form-label form-label--floating" for="tsesion">Tipo Sesión* </label>
 
                 </div>
 
@@ -2546,7 +2528,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="tsesion">Tipo Punto* </label>
+                  <label class="form-label form-label--floating" for="tsesion">Tipo Punto* </label>
 
                   <br>
                 </div>
@@ -2556,10 +2538,10 @@
 
 
               <div class="modal-footer">
-                <button (click)="clickAtrasBolsaCrear()" class="submit_footer" data-bs-dismiss="modal" type="button">
+                <button (click)="clickAtrasBolsaCrear()" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" type="button">
                   Cancelar
                 </button>
-                <button class="submit_footer" data-bs-dismiss="modal" role="button">Guardar</button>
+                <button class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
               </div>
             </form>
 
@@ -2588,7 +2570,7 @@
                   <input (change)="cambioYearEjercicio()" [(ngModel)]="creanotificacion.fecNotif" class="form-control"
                     id="fechaNotificacion" name="fechaNotificacion" required type="date" max="2099-12-31"
                     min="2020-01-01">
-                  <label class="form-label dejaEspacio" for="fechaNotificacion">Fecha Notificación*</label>
+                  <label class="form-label form-label--floating" for="fechaNotificacion">Fecha Notificación*</label>
                 </div>
                 <div class="col-sm-5 form-floating">
                   <select (change)="cargarDatosInteresado(creanotificacion.dni)" [(ngModel)]="creanotificacion.dni"
@@ -2600,13 +2582,13 @@
                       - {{ listarinteresado.nomInter }}
                     </option>
                   </select>
-                  <label class="form-label dejaEspacio" for="IntereDni">Interesado* </label>
+                  <label class="form-label form-label--floating" for="IntereDni">Interesado* </label>
                   <br>
                 </div>
 
                 <div class="col-sm-2 form-floating">
                   <input class="form-control" id="fnotifi" name="fnotifi" [value]="textoFormaNotif" disabled>
-                  <label class="form-label dejaEspacio" for="fnotifi">Forma Notificacion*</label>
+                  <label class="form-label form-label--floating" for="fnotifi">Forma Notificacion*</label>
                   <br>
                 </div>
                 <div class="col-sm-3 form-floating">
@@ -2618,7 +2600,7 @@
                       value={{notificalistar.notificador}}> {{ notificalistar.descripcion }}
                     </option>
                   </select>
-                  <label class="form-label dejaEspacio" for="notificador">Notificador*</label>
+                  <label class="form-label form-label--floating" for="notificador">Notificador*</label>
                   <br>
                 </div>
               </div>
@@ -2634,13 +2616,13 @@
 
                   <input class="form-control" disabled id="nombre" name="nombre" type="text"
                     value={{consultadni.nombre}}>
-                  <label class="form-label dejaEspacio" for="representante">Nombre</label>
+                  <label class="form-label form-label--floating" for="representante">Nombre</label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-6 form-floating">
 
                   <input class="form-control" disabled id="Apellidos" name="Apellidos" type="text"
                     value="{{consultadni.apellido1}} {{consultadni.apellido2}}">
-                  <label class="form-label dejaEspacio" for="asignado">Apellidos </label>
+                  <label class="form-label form-label--floating" for="asignado">Apellidos </label>
                 </div>
               </div>
               <br>
@@ -2648,41 +2630,41 @@
 
                 <input class="form-control" disabled id="direccion" name="direccion" type="text"
                   value="{{consultadni.dirPosta}}">
-                <label class="col-form-label dejaEspacio" for="direccion">Direccion </label>
+                <label class="col-form-label form-label--floating" for="direccion">Direccion </label>
               </div>
 
               <div class="row">
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" disabled id="cp" name="cp" type="text" value="{{consultadni.codPosta}}">
-                  <label class="form-label dejaEspacio" for="cp">Código Postal</label>
+                  <label class="form-label form-label--floating" for="cp">Código Postal</label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" disabled id="provincia" name="provincia" type="text"
                     value="{{consultadni.provincia}}">
-                  <label class="form-label dejaEspacio" for="provincia">Provincia </label>
+                  <label class="form-label form-label--floating" for="provincia">Provincia </label>
                 </div>
                 <div *ngIf="dniok" class="col-8 col-sm-4 form-floating">
 
                   <input class="form-control" disabled id="Municipio" name="municipio" type="text"
                     value="{{consultadni.municipio}}">
-                  <label class="form-label dejaEspacio" for="municipio">Municipio </label> <br>
+                  <label class="form-label form-label--floating" for="municipio">Municipio </label> <br>
                 </div>
                 <div class="col-12 form-floating">
                   <input [(ngModel)]="creanotificacion.observacion " class="form-control" id="observacion"
                     name="observacion" type="text">
-                  <label class="form-label dejaEspacio" for="observacion">Observaciones</label>
+                  <label class="form-label form-label--floating" for="observacion">Observaciones</label>
                   <br>
                 </div>
               </div>
               <br>
               <div class="modal-footer">
                 <br>
-                <button (click)="cerrarModalCrearNotificacion()" class="submit_footer" type="button">
+                <button (click)="cerrarModalCrearNotificacion()" class="btn-iflow btn-iflow--secondary" type="button">
                   Cancelar
                 </button>
-                <button class="submit_footer" id="botonguardar" role="button" (click)="crearnotificacion()"
+                <button class="btn-iflow btn-iflow--secondary" id="botonguardar" role="button" (click)="crearnotificacion()"
                   [disabled]="!formularioNotificacionValido" [class.btn-disabled]="!formularioNotificacionValido">
                   <i class="fas fa-save me-2"></i>
                   Guardar Notificación
@@ -2779,9 +2761,10 @@
 
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</app-shell>

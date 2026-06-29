@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { ExpedientesService } from '../expedientes/expedientes.service';
 import { LeerMensajeRecibidos } from '../expedientes/expedientes';
 import { NavUiService } from './nav-ui.service';
+import { UserSessionService } from '../core/service/user-session.service';
 
 export interface NavLink {
   path: string;
@@ -47,7 +48,8 @@ export class NavComponent implements OnInit, OnDestroy {
     public router: Router,
     public expedientesService: ExpedientesService,
     public http: HttpClient,
-    private navUi: NavUiService
+    private navUi: NavUiService,
+    private session: UserSessionService
   ) { }
 
   ngOnInit(): void {
@@ -85,6 +87,14 @@ export class NavComponent implements OnInit, OnDestroy {
     return 0;
   }
 
+  get userName(): string {
+    return this.session.user || 'Usuario';
+  }
+
+  get departmentName(): string {
+    return this.session.department || 'Departamento';
+  }
+
   public numeroMensajespendientes(): void {
     this.nmensajespendientes = 0;
     this.nmensajestramitados = 0;
@@ -99,12 +109,12 @@ export class NavComponent implements OnInit, OnDestroy {
         this.nmensajesrechazados++;
       }
     });
-    sessionStorage.setItem('MensajesRecibidos', this.nmensajespendientes.toString());
-    sessionStorage.setItem('nmensajestramitados', this.nmensajestramitados.toString());
+    this.session.setMensajesRecibidosCount(this.nmensajespendientes.toString());
+    this.session.setMensajesTramitadosCount(this.nmensajestramitados.toString());
   }
 
   public verMensajesRecibido(): void {
-    const idOrgUsuar = sessionStorage.getItem('idOrgUsuar');
+    const idOrgUsuar = this.session.idOrgUsuar;
     if (!idOrgUsuar) { return; }
 
     this.expedientesService.getMensajeListarRecibidos().subscribe({
@@ -130,8 +140,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   public logout(): void {
-    sessionStorage.clear();
-    localStorage.removeItem('token');
+    this.session.clear();
     this.closeMobileMenu();
     this.router.navigate(['/login']);
   }

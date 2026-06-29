@@ -31,6 +31,7 @@ import { GridRadioSelector } from "../core/helper/grid-radio-selector";
 import { NotificationService } from "../core/service/notification.service";
 import { FormValidatorHelper } from "../core/helper/form-validator.helper";
 import { ModalManagerService } from "../core/service/modal-manager.service";
+import { UserSessionService } from '../core/service/user-session.service';
 
 class RespuestasHttp {
   error!: any;
@@ -94,20 +95,33 @@ export class ProcedimientosComponent {
   public headers = new HttpResponse;
   public edicion: boolean = false;
   public idver!: number;
-  public nivAcces = localStorage.getItem('nivAcces');
-  public userorg = sessionStorage.getItem('nivAcces');
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
-  public departamento = sessionStorage.getItem('departamento');
   public procedimiento: Procedimiento = new Procedimiento();
   public respuestahttp: any = new RespuestasHttp;
   public respuesta = new Response;
   public vermenu: boolean = false; // para ver el menu tiene que cambiar a true
-  public idpermis: any = sessionStorage.getItem('idpermiso');
   public editarprocedi: EditarProcedi = new EditarProcedi();
   public atributoscrear: AtributosCrear = new AtributosCrear();
   public firmaT!: string;
-  public userctrl: any = sessionStorage.getItem('user');
 
+  get nivAcces(): string | null {
+    return this.session.nivAcces;
+  }
+
+  get idOrgElemen(): string | null {
+    return this.session.idOrgEleme;
+  }
+
+  get departamento(): string | null {
+    return this.session.department;
+  }
+
+  get idpermis(): string | null {
+    return this.session.idPermiso;
+  }
+
+  get userctrl(): string | null {
+    return this.session.user;
+  }
 
   // --------------------Eleazar garcia
   public editatareaprocedi: any = new EditaTareaProcedi();
@@ -360,7 +374,8 @@ export class ProcedimientosComponent {
     public _location: Location,
     private modalService: ModalService,
     private notificationService: NotificationService,
-    private modalManagerService: ModalManagerService) { }
+    private modalManagerService: ModalManagerService,
+    public session: UserSessionService) { }
 
   public disabledAtrib: boolean = false;
 
@@ -374,7 +389,7 @@ export class ProcedimientosComponent {
     this.procedimientoService.getPlantillaTareas().subscribe(
       plantillatarea => this.plantillatarea = plantillatarea
     );
-    if (this.nivAcces === '6') {
+    if (this.nivAcces === '6' || this.session.canManageProcedimientos) {
       this.procedimientoService.getProcedimientos().subscribe(
         procedimientos => this.procedimientos = procedimientos
       );
@@ -906,7 +921,7 @@ export class ProcedimientosComponent {
       this.getListaTareas(rowData.id);
 
       let idprocedimiento = rowData.id;
-      sessionStorage.setItem('idprocedimiento', idprocedimiento);
+      this.session.setIdProcedimiento(idprocedimiento);
 
       console.log("Valor del ID :" + rowData.id);
       this.lanzaSourceTarea();
@@ -942,7 +957,7 @@ export class ProcedimientosComponent {
       this.plazot = rowData.plazo;
       this.tipoPlazoT = rowData.tipoPlazo;
       this.firmaT = rowData.procesoFirmadoDefecto;
-      sessionStorage.setItem('idpermiso', rowData.id);
+      this.session.setIdPermiso(rowData.id);
       this.peparadatosfirma(rowData.plantillaDefecto);
       
       // Cargar los atributos de la tarea seleccionada

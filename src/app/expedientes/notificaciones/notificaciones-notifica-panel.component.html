@@ -1,17 +1,17 @@
-<div class="notifica-panel" *ngIf="veoEnviarNotifica || veoSincronizarNotifica || envioNotifica">
+﻿<div class="notifica-panel" *ngIf="veoEnviarNotifica || veoSincronizarNotifica || envioNotifica">
   <div class="notifica-envio-info small text-muted mb-1" *ngIf="envioNotifica">
     <span *ngIf="envioNotifica.idEnvioExterno">Envío Notifica: {{ envioNotifica.idEnvioExterno }}</span>
     <span *ngIf="envioNotifica.estadoNotifica"> — Estado: {{ envioNotifica.estadoNotifica }}</span>
     <span *ngIf="envioNotifica.idAcuseExterno"> — Acuse: {{ envioNotifica.idAcuseExterno }}</span>
   </div>
 
-  <button *ngIf="veoEnviarNotifica" class="submit margin-right" (click)="enviar.emit()"
+  <button *ngIf="veoEnviarNotifica" class="btn-iflow btn-iflow--primary" (click)="enviar.emit()"
     title="Enviar a Notifica" type="button">
-    Enviar a Notifica <img src="../assets/envioNotifi.svg" alt="Enviar a Notifica" width="20" height="20" />
+    Enviar a Notifica <img src="assets/envioNotifi.svg" alt="Enviar a Notifica" width="20" height="20" />
   </button>
 
-  <button *ngIf="veoSincronizarNotifica" class="submit margin-right" (click)="sincronizar.emit()"
+  <button *ngIf="veoSincronizarNotifica" class="btn-iflow btn-iflow--primary" (click)="sincronizar.emit()"
     title="Sincronizar con Notifica" type="button">
-    Sincronizar Notifica <img src="../assets/notificaciones.svg" alt="Sincronizar" width="20" height="20" />
+    Sincronizar Notifica <img src="assets/notificaciones.svg" alt="Sincronizar" width="20" height="20" />
   </button>
 </div>

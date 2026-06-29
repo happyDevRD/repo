@@ -1,16 +1,12 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
-    <div class="col-12 content_gen" id="hanging-icons">
-      <ng-container *ngIf="user">
-        <div *ngIf="soluser == '0'" class="mensaje-sin-permiso alerta-sin-permiso">
-          <h2>Acceso denegado</h2>
-          <p>Este usuario no tiene permisos de acceso a solicitudes</p>
-          <img src="assets/greenaall_logo.svg" alt="Greenall" width="200" height="100">
-        </div>
+﻿<app-shell contentId="hanging-icons">
+  <app-access-denied
+    *ngIf="!session.canManageSolicitudes"
+    title="Acceso denegado"
+    message="Este usuario no tiene permisos de acceso a solicitudes.">
+  </app-access-denied>
 
-        <div *ngIf="soluser == '1'" class="page-panel" id="solicitudeslist">
+  <ng-container *ngIf="session.canManageSolicitudes">
+        <div class="page-panel" id="solicitudeslist">
           
           <!-- CABECERA -->
           <div class="listado-titulo-container titulo-separador">
@@ -18,28 +14,28 @@
               Listado de Solicitudes
             </h2>
             <div class="titulo-botones-container">
-              <button class="btn btn-rounded btn-sm" title="Nueva Solicitud" type="button"
+              <button class="btn-iflow btn-iflow--icon" title="Nueva Solicitud" type="button"
                 (click)="abrirModal('nsolicitudModal')">
-                <img src="../assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
+                <img src="assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
               </button>
               <button *ngIf="edicion==true && !expsolicitud" 
                 (click)="deleteSolicitudes(idsolicitud)"
-                class="btn btn-rounded btn-sm" title="Eliminar Solicitud" type="button">
-                <img src="../assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
+                class="btn-iflow btn-iflow--icon" title="Eliminar Solicitud" type="button">
+                <img src="assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
               </button>
             </div>
           </div>
           <!-- ACCIONES DE SOLICITUD -->
           <div *ngIf="edicion==true && veoIniciarExp && veoRechazaSolici" class="acciones-botones-container">
-            <button type="button" class="submit margin-right" title="Asignar a Instructor" 
+            <button type="button" class="btn-iflow btn-iflow--primary" title="Asignar a Instructor" 
               (click)="abrirModal('asignarModal')">
               Asignar Instructor <i class="bi bi-person-fill-add"></i>
             </button>
-            <button type="button" class="submit margin-right" title="Rechazar Solicitud"
+            <button type="button" class="btn-iflow btn-iflow--primary" title="Rechazar Solicitud"
               (click)="abrirModal('rechazaSoliModal')">
               Rechazar Solicitud <i class="bi bi-x-circle"></i>
             </button>
-            <button type="button" class="submit margin-right" title="Iniciar Expediente"
+            <button type="button" class="btn-iflow btn-iflow--primary" title="Iniciar Expediente"
               (click)="abrirModal('iniciarExpedieModal')">
               Iniciar Expediente <i class="bi bi-play-fill"></i>
             </button>
@@ -71,14 +67,14 @@
             <div class="listado-titulo-container titulo-separador">
               <h2 class="listado-titulo-principal">Listado de Documentos de la Solicitud</h2>
               <div class="titulo-botones-container">
-                <button *ngIf="modificoSolicitud" class="btn btn-rounded btn-sm" title="Nuevo Documento"
+                <button *ngIf="modificoSolicitud" class="btn-iflow btn-iflow--icon" title="Nuevo Documento"
                   type="button" (click)="abrirModal('documentoModal')">
-                  <img src="../assets/new/ico_add.png" alt="Nuevo Documento" width="25" height="25">
+                  <img src="assets/new/ico_add.png" alt="Nuevo Documento" width="25" height="25">
                 </button>
                 <button *ngIf="listadocmenu && modificoSolicitud && iddocumento" 
                   (click)="deleteDocumento(iddocumento)"
-                  class="btn btn-rounded btn-sm" title="Eliminar Documento" type="button">
-                  <img src="../assets/new/ico_elim.png" alt="Eliminar Documento" width="25" height="25">
+                  class="btn-iflow btn-iflow--icon" title="Eliminar Documento" type="button">
+                  <img src="assets/new/ico_elim.png" alt="Eliminar Documento" width="25" height="25">
                 </button>
               </div>
             </div>
@@ -86,7 +82,7 @@
             <!-- Botones de acciones de documentos -->
             <div *ngIf="listadocmenu && iddocumento" class="acciones-botones-container">
               <button (click)="abreArchivo(descargafichero)" 
-                class="submit margin-right" 
+                class="btn-iflow btn-iflow--primary" 
                 title="Descargar Documento" 
                 type="button">
                 Descargar Documento <i class="bi bi-cloud-arrow-down"></i>
@@ -115,42 +111,6 @@
           </div>
         </div> <!-- Fin page-panel solicitudes -->
 
-      </ng-container>
-
-      <!-- MENÚ CONTEXTUAL DE ACCIONES -->
-      
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item type="button" *ngIf="edicion==true" class="submit">
-          <i class="bi bi-pencil me-2"></i>
-          Editar
-        </button>
-        <button mat-menu-item type="button" *ngIf="edicion==true" (click)="abrirModal('asignarModal')" class="submit">
-          <i class="bi bi-person-fill-add me-2"></i>
-          Asignar Instructor
-        </button>
-        <button mat-menu-item type="button" *ngIf="edicion==true" class="submit"
-          (click)="rechazarSolicitud(idsolicitud)">
-          <i class="bi bi-x-circle me-2"></i>
-          Rechazar Solicitud
-        </button>
-        <button mat-menu-item type="button" *ngIf="edicion==true" (click)="abrirModal('iniciarExpedieModal')" class="submit">
-          <i class="bi bi-play-fill me-2"></i>
-          Iniciar Expediente
-        </button>
-        <button mat-menu-item type="button" *ngIf="edicion==true && !expsolicitud" (click)="abrirModal('documentoModal')" class="submit">
-          <i class="bi bi-file-earmark-plus me-2"></i>
-          Añadir Documentos
-        </button>
-        <button mat-menu-item type="button" *ngIf="edicion==true && !expsolicitud"
-          (click)="deleteSolicitudes(idsolicitud)" class="submit">
-          <i class="bi bi-trash me-2"></i>
-          Eliminar Solicitud
-        </button>
-      </mat-menu>
-  </div>
-</div>
-
-
 <!-- SECCIÓN DE MODALES -->
 
 
@@ -169,12 +129,12 @@
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" id="asunto" name="asunto"
                 [(ngModel)]="creasolicitud.asunto" required>
-              <label class="form-label dejaEspacio" for="asunto">Asunto *</label>
+              <label class="form-label form-label--floating" for="asunto">Asunto *</label>
             </div>
             <div class="col-6 form-floating mb-3">
               <input class="form-control" data-mdb-inline="true" (change)="gestionEjercicio()"
                 type="date" id="startSolic" name="trip-startSolici" [(ngModel)]="creasolicitud.fecInicio" required>
-              <label class="form-label dejaEspacio" for="startSolic">Fecha Solicitud *</label>
+              <label class="form-label form-label--floating" for="startSolic">Fecha Solicitud *</label>
             </div>
             <div class="col-6 form-floating mb-3">
               <select class="form-select" id="asignado" name="asignado" [(ngModel)]="creasolicitud.usuario" required>
@@ -182,7 +142,7 @@
                 <option name="usuario" *ngFor="let procedipermisos of procedipermiso"
                   [value]="procedipermisos.usuario">{{procedipermisos.usuario}}</option>
               </select>
-              <label class="form-label dejaEspacio" for="asignado">Asignado a *</label>
+              <label class="form-label form-label--floating" for="asignado">Asignado a *</label>
             </div>
           </div>
 
@@ -193,12 +153,12 @@
             <div class="col-6 form-floating mb-3">
               <input type="text" class="form-control" disabled id="departamento" [value]="depart"
                 name="departamento">
-              <label for="departamento" class="form-label dejaEspacio">Departamento</label>
+              <label for="departamento" class="form-label form-label--floating">Departamento</label>
             </div>
             <div class="col-6 form-floating mb-3">
               <input type="text" class="form-control" [(ngModel)]="creasolicitud.numDocum"
                 (change)="soliciUsuario(creasolicitud.numDocum)" id="interesado" name="interesado">
-              <label for="interesado" class="form-label dejaEspacio">Interesado DNI *</label>
+              <label for="interesado" class="form-label form-label--floating">Interesado DNI *</label>
             </div>
           </div>
           
@@ -212,7 +172,7 @@
                 <option name="telematico" value="2">C.I.F</option>
                 <option name="telematico" value="3">Tarjeta Residencia</option>
               </select>
-              <label class="form-label dejaEspacio" for="tipPerso">Tipo de documento *</label>
+              <label class="form-label form-label--floating" for="tipPerso">Tipo de documento *</label>
             </div>
           </div>
           <!-- Datos de la persona/entidad (solo si no existe) -->
@@ -220,22 +180,22 @@
             <div class="col-12 form-floating mb-3" *ngIf="selectRazonSocial">
               <input type="text" class="form-control" id="razSocia" name="razSocia"
                 [(ngModel)]="creasolicitud.razSocia">
-              <label class="form-label dejaEspacio" for="razSocia">Razón Social *</label>
+              <label class="form-label form-label--floating" for="razSocia">Razón Social *</label>
             </div>
             <div class="col-4 form-floating mb-3" *ngIf="selectnombre">
               <input type="text" class="form-control" id="nombreperso" name="nombreperso"
                 [(ngModel)]="creasolicitud.nombre">
-              <label class="form-label dejaEspacio" for="nombreperso">Nombre *</label>
+              <label class="form-label form-label--floating" for="nombreperso">Nombre *</label>
             </div>
             <div class="col-4 form-floating mb-3" *ngIf="selectape1">
               <input type="text" class="form-control" id="apellido1" name="apellido1"
                 [(ngModel)]="creasolicitud.apellido1">
-              <label class="form-label dejaEspacio" for="apellido1">Primer Apellido *</label>
+              <label class="form-label form-label--floating" for="apellido1">Primer Apellido *</label>
             </div>
             <div class="col-4 form-floating mb-3" *ngIf="selectape2">
               <input type="text" class="form-control" id="apellido2" name="apellido2"
                 [(ngModel)]="creasolicitud.apellido2">
-              <label class="form-label dejaEspacio" for="apellido2">Segundo Apellido *</label>
+              <label class="form-label form-label--floating" for="apellido2">Segundo Apellido *</label>
             </div>
           </div>
           
@@ -244,11 +204,11 @@
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" id="direccion" name="direccion"
                 [(ngModel)]="creasolicitud.dirPosta">
-              <label for="direccion" class="form-label dejaEspacio">Dirección *</label>
+              <label for="direccion" class="form-label form-label--floating">Dirección *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="number" class="form-control" id="cp" name="cp" [(ngModel)]="creasolicitud.codPosta">
-              <label class="form-label dejaEspacio" for="cp">Código Postal *</label>
+              <label class="form-label form-label--floating" for="cp">Código Postal *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <select class="form-select" id="ps-prov" (change)="gestimunicip(creasolicitud.codProvi)"
@@ -256,7 +216,7 @@
                 <option value="" disabled selected>Selecciona provincia</option>
                 <option name="usuario" *ngFor="let provincias of provin" [value]="provincias.id">{{provincias.nm}}</option>
               </select>
-              <label class="form-label dejaEspacio" for="ps-prov">Provincia *</label>
+              <label class="form-label form-label--floating" for="ps-prov">Provincia *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <select class="form-select" id="ps-mun" name="municipio" title="Municipio"
@@ -265,7 +225,7 @@
                 <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
                   {{municipio.nm}}</option>
               </select>
-              <label class="form-label dejaEspacio" for="ps-mun">Municipio *</label>
+              <label class="form-label form-label--floating" for="ps-mun">Municipio *</label>
             </div>
           </div>
 
@@ -275,39 +235,39 @@
           <div class="row" *ngIf="dniok">
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="nombredni" id="nombre" name="nombre">
-              <label class="form-label dejaEspacio" for="nombre">Nombre del Interesado</label>
+              <label class="form-label form-label--floating" for="nombre">Nombre del Interesado</label>
             </div>
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="direcciondni" id="direccion2" name="direccion2">
-              <label for="direccion2" class="form-label dejaEspacio">Dirección del Interesado</label>
+              <label for="direccion2" class="form-label form-label--floating">Dirección del Interesado</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="cpdni" id="cp2" name="cp2">
-              <label class="form-label dejaEspacio" for="cp2">Código Postal</label>
+              <label class="form-label form-label--floating" for="cp2">Código Postal</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="provinciadni" id="provincia2" name="provincia2">
-              <label class="form-label dejaEspacio" for="provincia2">Provincia</label>
+              <label class="form-label form-label--floating" for="provincia2">Provincia</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="nommunicipiodni" id="municipio2" name="municipio2">
-              <label class="form-label dejaEspacio" for="municipio2">Municipio</label>
+              <label class="form-label form-label--floating" for="municipio2">Municipio</label>
             </div>
           </div>
 
           <!-- Sección de representante -->
           <div class="row" *ngIf="dniok">
-            <div class="col-2 mueveBottonD">
+            <div class="col-2 text-start">
               <!-- Espacio para título de representante -->
             </div>
-            <div class="col-1 form-check mueveBottonR">
+            <div class="col-1 form-check text-end">
               <!-- Checkbox para seleccionar representante -->
             </div>
             <div class="col-4">
               <!-- Espacio -->
             </div>
-            <div class="col-5 mueveBottonR">
-              <img (click)="cambiamosRepre()" src="../assets/new/ico_add.png" width="25" height="25" alt="Nuevo Representante" />
+            <div class="col-5 text-end">
+              <img (click)="cambiamosRepre()" src="assets/new/ico_add.png" width="25" height="25" alt="Nuevo Representante" />
             </div>
           </div>
 
@@ -316,17 +276,17 @@
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="nrepren" name="nrepren"
                 [(ngModel)]="creasolicitud.nombreRepre">
-              <label class="form-label dejaEspacio" for="nrepren">Nombre Representante *</label>
+              <label class="form-label form-label--floating" for="nrepren">Nombre Representante *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="ap1repren" name="ap1repren"
                 [(ngModel)]="creasolicitud.apellido1Repre">
-              <label class="form-label dejaEspacio" for="ap1repren">Primer Apellido *</label>
+              <label class="form-label form-label--floating" for="ap1repren">Primer Apellido *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="ap2repren" name="ap2repren"
                 [(ngModel)]="creasolicitud.apellido2Repre">
-              <label class="form-label dejaEspacio" for="ap2repren">Segundo Apellido *</label>
+              <label class="form-label form-label--floating" for="ap2repren">Segundo Apellido *</label>
             </div>
           </div>
 
@@ -335,12 +295,12 @@
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" id="direccionn" name="direccionn"
                 [(ngModel)]="creasolicitud.dirPostaRepre">
-              <label for="direccionn" class="form-label dejaEspacio">Dirección *</label>
+              <label for="direccionn" class="form-label form-label--floating">Dirección *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="cpn" name="cpn"
                 [(ngModel)]="creasolicitud.codPostaRepre">
-              <label class="form-label dejaEspacio" for="cpn">Código Postal *</label>
+              <label class="form-label form-label--floating" for="cpn">Código Postal *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <select class="form-select" id="ps-provn" (change)="gestimunicip(creasolicitud.codProviRepre)"
@@ -348,7 +308,7 @@
                 <option value="" disabled selected>Selecciona provincia</option>
                 <option name="usuario" *ngFor="let provincias of provin" [value]="provincias.id">{{provincias.nm}}</option>
               </select>
-              <label class="form-label dejaEspacio" for="ps-provn">Provincia *</label>
+              <label class="form-label form-label--floating" for="ps-provn">Provincia *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <select class="form-select" id="ps-munn" name="Municipiorn" title="Municipiorn"
@@ -357,7 +317,7 @@
                 <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
                   {{municipio.nm}}</option>
               </select>
-              <label class="form-label dejaEspacio" for="ps-munn">Municipio *</label>
+              <label class="form-label form-label--floating" for="ps-munn">Municipio *</label>
             </div>
           </div>
 
@@ -379,7 +339,7 @@
               <input type="text" class="form-control" id="numerorepre" name="numerorepre"
                 (change)="soliciUsuarioparaRepre(creasolicitud.numDocumRepre)"
                 [(ngModel)]="creasolicitud.numDocumRepre">
-              <label class="form-label dejaEspacio" for="numerorepre">Número documento Representante *</label>
+              <label class="form-label form-label--floating" for="numerorepre">Número documento Representante *</label>
             </div>
           </div>
 
@@ -388,17 +348,17 @@
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="nrepre" name="nrepre"
                 [(ngModel)]="creasolicitud.nombreRepre">
-              <label class="form-label dejaEspacio" for="nrepre">Nombre Representante *</label>
+              <label class="form-label form-label--floating" for="nrepre">Nombre Representante *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="ap1repre" name="ap1repre"
                 [(ngModel)]="creasolicitud.apellido1Repre">
-              <label class="form-label dejaEspacio" for="ap1repre">Primer Apellido *</label>
+              <label class="form-label form-label--floating" for="ap1repre">Primer Apellido *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="ap2repre" name="ap2repre"
                 [(ngModel)]="creasolicitud.apellido2Repre">
-              <label class="form-label dejaEspacio" for="ap2repre">Segundo Apellido *</label>
+              <label class="form-label form-label--floating" for="ap2repre">Segundo Apellido *</label>
             </div>
           </div>
 
@@ -407,11 +367,11 @@
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" id="direccion3" name="direccion3"
                 [(ngModel)]="creasolicitud.dirPostaRepre">
-              <label for="direccion3" class="form-label dejaEspacio">Dirección *</label>
+              <label for="direccion3" class="form-label form-label--floating">Dirección *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" id="cp3" name="cp3" [(ngModel)]="creasolicitud.codPostaRepre">
-              <label class="form-label dejaEspacio" for="cp3">Código Postal *</label>
+              <label class="form-label form-label--floating" for="cp3">Código Postal *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <select class="form-select" id="ps-prov3" (change)="gestimunicip(creasolicitud.codProviRepre)"
@@ -419,7 +379,7 @@
                 <option value="" disabled selected>Selecciona provincia</option>
                 <option name="usuario" *ngFor="let provincias of provin" [value]="provincias.id">{{provincias.nm}}</option>
               </select>
-              <label class="form-label dejaEspacio" for="ps-prov3">Provincia *</label>
+              <label class="form-label form-label--floating" for="ps-prov3">Provincia *</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <select class="form-select" id="ps-mun3" name="Municipior" title="Municipior"
@@ -428,7 +388,7 @@
                 <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
                   {{municipio.nm}}</option>
               </select>
-              <label class="form-label dejaEspacio" for="ps-mun3">Municipio *</label>
+              <label class="form-label form-label--floating" for="ps-mun3">Municipio *</label>
             </div>
           </div>
 
@@ -436,31 +396,31 @@
           <div class="row" *ngIf="representanteok">
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="nombredni" id="nombreRepre" name="nombreRepre">
-              <label class="form-label dejaEspacio" for="nombreRepre">Nombre del Representante</label>
+              <label class="form-label form-label--floating" for="nombreRepre">Nombre del Representante</label>
             </div>
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="direcciondni" id="direccionRepre" name="direccionRepre">
-              <label for="direccionRepre" class="form-label dejaEspacio">Dirección del Representante</label>
+              <label for="direccionRepre" class="form-label form-label--floating">Dirección del Representante</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="cpdni" id="cpRepre" name="cpRepre">
-              <label class="form-label dejaEspacio" for="cpRepre">Código Postal</label>
+              <label class="form-label form-label--floating" for="cpRepre">Código Postal</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="provinciadni" id="provinciaRepre" name="provinciaRepre">
-              <label class="form-label dejaEspacio" for="provinciaRepre">Provincia</label>
+              <label class="form-label form-label--floating" for="provinciaRepre">Provincia</label>
             </div>
             <div class="col-4 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="nommunicipiodni" id="municipioRepre" name="municipioRepre">
-              <label class="form-label dejaEspacio" for="municipioRepre">Municipio</label>
+              <label class="form-label form-label--floating" for="municipioRepre">Municipio</label>
             </div>
           </div>
         </form>
       </div>
       
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="limpiarErroresSolicitud(); cerrarModal('nsolicitudModal')">Cancelar</button>
-        <button type="submit" class="submit_footer" form="formNuevaSolicitud" role="button">Guardar</button>
+        <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresSolicitud(); cerrarModal('nsolicitudModal')">Cancelar</button>
+        <button type="submit" class="btn-iflow btn-iflow--primary" form="formNuevaSolicitud" role="button">Guardar</button>
       </div>
     </div>
   </div>
@@ -488,7 +448,7 @@
                 [(ngModel)]="editasolicitud.asunto"
                 required
                 [class.is-invalid]="isAsuntoModificarInvalid()">
-              <label class="form-label dejaEspacio" for="asunto">Asunto *</label>
+              <label class="form-label form-label--floating" for="asunto">Asunto *</label>
               <br>
             </div>
             <div class="col-3 form-floating">
@@ -503,7 +463,7 @@
                 [(ngModel)]="editasolicitud.fecInicio"
                 required
                 [class.is-invalid]="isFechaModificarInvalid()">
-              <label class="form-label dejaEspacio" for="fechaSolicitud">Fecha Solicitud *</label>
+              <label class="form-label form-label--floating" for="fechaSolicitud">Fecha Solicitud *</label>
               <br>
             </div>
             <div class="col-3 form-floating">
@@ -518,7 +478,7 @@
                 <option value="ACEPTADA">Aceptada</option>
                 <option value="RECHAZADA">Rechazada</option>
               </select>
-              <label class="form-label dejaEspacio" for="estado">Estado</label>
+              <label class="form-label form-label--floating" for="estado">Estado</label>
               <br>
             </div>
             <div class="col-3 form-floating">
@@ -533,7 +493,7 @@
                   {{procedipermisos.usuario}}
                 </option>
               </select>
-              <label class="form-label dejaEspacio" for="asignado">Asignado a</label>
+              <label class="form-label form-label--floating" for="asignado">Asignado a</label>
               <br>
             </div>
             <div class="col-6 form-floating">
@@ -544,7 +504,7 @@
                 id="departamento" 
                 [value]="depart"
                 name="departamento">
-              <label class="dejaEspacio" for="departamento">Departamento</label>
+              <label class="form-label form-label--floating" for="departamento">Departamento</label>
               <br>
             </div>
             <div class="col-4 form-floating">
@@ -557,7 +517,7 @@
                 id="interesado"
                 name="interesado"
                 [class.is-invalid]="isDniModificarInvalid()">
-              <label for="interesado" class="form-label dejaEspacio">Interesado DNI *</label>
+              <label for="interesado" class="form-label form-label--floating">Interesado DNI *</label>
               <br>
             </div>
             <div class="col-4 form-floating">
@@ -568,7 +528,7 @@
                 [value]="representanteSolicitud" 
                 id="representante"
                 name="representante">
-              <label class="form-label dejaEspacio" for="representante">Representante</label>
+              <label class="form-label form-label--floating" for="representante">Representante</label>
               <br>
             </div>
             <div *ngIf="editasolicitud.formaNotifi==1" class="col-12 form-floating">
@@ -578,7 +538,7 @@
                 id="email" 
                 name="email" 
                 [(ngModel)]="editasolicitud.email">
-              <label for="email" class="form-label dejaEspacio">Correo electrónico *</label>
+              <label for="email" class="form-label form-label--floating">Correo electrónico *</label>
               <br>
             </div>
             <div class="col-12 form-floating">
@@ -589,7 +549,7 @@
                 [value]="InteresadoSolicitud" 
                 id="nombre"
                 name="nombre">
-              <label class="form-label dejaEspacio" for="nombre">Interesado</label>
+              <label class="form-label form-label--floating" for="nombre">Interesado</label>
               <br>
             </div>
             <div class="col-12 form-floating">
@@ -600,7 +560,7 @@
                 [value]="dirPosta" 
                 id="direccion"
                 name="direccion">
-              <label for="direccion" class="form-label dejaEspacio">Dirección</label>
+              <label for="direccion" class="form-label form-label--floating">Dirección</label>
               <br>
             </div>
             <div class="col-4 form-floating">
@@ -611,7 +571,7 @@
                 [value]="codPosta" 
                 id="cp" 
                 name="cp">
-              <label class="form-label dejaEspacio" for="cp">Código Postal</label>
+              <label class="form-label form-label--floating" for="cp">Código Postal</label>
               <br>
             </div>
             <div class="col-4 form-floating">
@@ -622,7 +582,7 @@
                 [value]="provincia" 
                 id="provincia"
                 name="provincia">
-              <label class="form-label dejaEspacio" for="provincia">Provincia</label>
+              <label class="form-label form-label--floating" for="provincia">Provincia</label>
               <br>
             </div>
             <div class="col-4 form-floating">
@@ -633,7 +593,7 @@
                 [value]="Municipio" 
                 id="municipio"
                 name="municipio">
-              <label class="form-label dejaEspacio" for="municipio">Municipio</label>
+              <label class="form-label form-label--floating" for="municipio">Municipio</label>
               <br>
             </div>
             <div class="col-10 form-floating">
@@ -656,7 +616,7 @@
                 [value]="representanteexplistar.desPerEntid || representanteSolicitud" 
                 id="nombreRepresentante"
                 name="nombreRepresentante">
-              <label class="form-label dejaEspacio" for="nombreRepresentante">Representante</label>
+              <label class="form-label form-label--floating" for="nombreRepresentante">Representante</label>
               <br>
             </div>
             <div class="col-8 form-floating">
@@ -667,13 +627,13 @@
                 [value]="representanteexplistar.dirPosta || direccionRepresentante" 
                 id="direccionRepresentante"
                 name="direccionRepresentante">
-              <label class="form-label dejaEspacio" for="direccionRepresentante">Dirección</label>
+              <label class="form-label form-label--floating" for="direccionRepresentante">Dirección</label>
               <br>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="limpiaDatosEditarSolicitudes(); cerrarModal('edicionSolicitudModal')">Cancelar</button>
-            <button type="submit" class="submit_footer">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiaDatosEditarSolicitudes(); cerrarModal('edicionSolicitudModal')">Cancelar</button>
+            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -709,7 +669,7 @@
                 {{usupermiso.usuario}}
               </option>
             </select>
-            <label class="form-label dejaEspacio" for="asignado">Asignar Solicitud *</label>
+            <label class="form-label form-label--floating" for="asignado">Asignar Solicitud *</label>
             <div *ngIf="isUsuarioAsignadoInvalid()" class="invalid-feedback">
               Debe seleccionar un usuario
             </div>
@@ -717,12 +677,12 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="cerrarModal('asignarModal')">
+          <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('asignarModal')">
             <i class="fas fa-times me-1"></i>Cancelar
           </button>
           <button 
             type="submit" 
-            class="btn btn-primary">
+            class="btn-iflow btn-iflow--primary">
             <span *ngIf="isAsignando" class="spinner-border spinner-border-sm me-2" role="status"></span>
             <i *ngIf="!isAsignando" class="fas fa-save me-1"></i>
             {{isAsignando ? 'Guardando...' : 'Guardar'}}
@@ -760,8 +720,8 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" data-bs-dismiss="modal">Cancelar</button>
-            <button class="submit_footer" role="button">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button class="btn-iflow btn-iflow--primary" role="button">Guardar</button>
           </div>
         </form>
 
@@ -793,7 +753,7 @@
               <textarea type="text" class="form-control" required="" id="descripcion" name="descripcion"
                 [(ngModel)]="descripcionArchivo" placeholder="Descripción del documento"> </textarea>
 
-              <label for="departamento" class="col-form-label dejaEspacio">Descripción*</label>
+              <label for="departamento" class="col-form-label form-label--floating">Descripción*</label>
               <br>
 
 
@@ -802,7 +762,7 @@
 
               <input #fileInput class="form-control" (change)='upload($event,idsolicitud)' type="file"
                 id="formFile" accept=".pdf,.docx,.odt,.jpg,.jpeg,.png">
-              <label for="formFile" class="form-label dejaEspacio">Nuevo Documento * (PDF, DOCX, ODT, JPG, PNG)</label>
+              <label for="formFile" class="form-label form-label--floating">Nuevo Documento * (PDF, DOCX, ODT, JPG, PNG)</label>
             </div>
 
           </div>
@@ -814,8 +774,8 @@
             <div>Subiendo archivo...</div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" (click)="cancelarDocumento(); cerrarModal('documentoModal')">Cancelar</button>
-            <button type="button" class="submit_footer" (click)="guardarDocumento()">Guardar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cancelarDocumento(); cerrarModal('documentoModal')">Cancelar</button>
+            <button type="button" class="btn-iflow btn-iflow--primary" (click)="guardarDocumento()">Guardar</button>
           </div>
 
         </form>
@@ -853,39 +813,39 @@
           <div class="row">
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" disabled value="{{asuntoSolicitud}}" id="asuntoSol" name="asuntoSol">
-              <label for="asuntoSol" class="form-label dejaEspacio">Asunto</label>
+              <label for="asuntoSol" class="form-label form-label--floating">Asunto</label>
             </div>
             <div class="col-md-3 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="ejerNumeroSolicitud" id="ejercicioNum" name="ejercicioNum">
-              <label for="ejercicioNum" class="form-label dejaEspacio">Ejercicio/Número</label>
+              <label for="ejercicioNum" class="form-label form-label--floating">Ejercicio/Número</label>
             </div>
             <div class="col-md-3 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="FIniSolicitud" id="fechaInicioSol" name="fechaInicioSol">
-              <label for="fechaInicioSol" class="form-label dejaEspacio">Fecha Inicio Solicitud</label>
+              <label for="fechaInicioSol" class="form-label form-label--floating">Fecha Inicio Solicitud</label>
             </div>
             <div class="col-md-3 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="NumeroRegistroSolicitud" id="numRegistro" name="numRegistro">
-              <label for="numRegistro" class="form-label dejaEspacio">Número de Registro</label>
+              <label for="numRegistro" class="form-label form-label--floating">Número de Registro</label>
             </div>
             <div class="col-md-3 form-floating mb-3">
               <input type="text" class="form-control" disabled value="ENTRADA" id="tipoRegistro" name="tipoRegistro">
-              <label for="tipoRegistro" class="form-label dejaEspacio">Tipo de Registro</label>
+              <label for="tipoRegistro" class="form-label form-label--floating">Tipo de Registro</label>
             </div>
             <div class="col-md-6 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="usuarioSolicitud" id="usuarioAsignado" name="usuarioAsignado">
-              <label for="usuarioAsignado" class="form-label dejaEspacio">Usuario Asignado</label>
+              <label for="usuarioAsignado" class="form-label form-label--floating">Usuario Asignado</label>
             </div>
             <div class="col-md-6 form-floating mb-3">
               <input type="text" class="form-control" disabled [value]="InteresadoSolicitud" id="interesadoSol" name="interesadoSol">
-              <label for="interesadoSol" class="form-label dejaEspacio">Interesado</label>
+              <label for="interesadoSol" class="form-label form-label--floating">Interesado</label>
             </div>
             <div class="col-md-6 form-floating mb-3">
               <input type="text" class="form-control" disabled value="{{representanteSolicitud}}" id="representanteSol" name="representanteSol">
-              <label for="representanteSol" class="form-label dejaEspacio">Representante</label>
+              <label for="representanteSol" class="form-label form-label--floating">Representante</label>
             </div>
             <div class="col-md-6 form-floating mb-3">
               <input type="text" class="form-control" disabled value="{{depart}}" id="departamentoSol" name="departamentoSol">
-              <label for="departamentoSol" class="form-label dejaEspacio">Departamento</label>
+              <label for="departamentoSol" class="form-label form-label--floating">Departamento</label>
             </div>
           </div>
 
@@ -910,7 +870,7 @@
                 [(ngModel)]="nuevoexpediente.titulo"
                 [class.is-invalid]="isTituloExpedienteInvalid()"
                 #tituloInput="ngModel">
-              <label for="titulo" class="form-label dejaEspacio">Título Expediente *</label>
+              <label for="titulo" class="form-label form-label--floating">Título Expediente *</label>
               <div *ngIf="isTituloExpedienteInvalid()" class="invalid-feedback">
                 El título del expediente es obligatorio
               </div>
@@ -923,7 +883,7 @@
                 name="fecha"
                 value="{{FechaSistema}}" 
                 disabled>
-              <label class="form-label dejaEspacio" for="fecha">Fecha Inicio Expediente</label>
+              <label class="form-label form-label--floating" for="fecha">Fecha Inicio Expediente</label>
             </div>
             <div class="col-md-4 form-floating mb-3">
               <select 
@@ -939,7 +899,7 @@
                   {{procedimientos.descripcion}}
                 </option>
               </select>
-              <label class="form-label dejaEspacio" for="procedimiento">Procedimiento *</label>
+              <label class="form-label form-label--floating" for="procedimiento">Procedimiento *</label>
               <div *ngIf="isProcedimientoInvalid()" class="invalid-feedback">
                 Debe seleccionar un procedimiento
               </div>
@@ -954,7 +914,7 @@
                 <option value="0">Correo postal</option>
                 <option value="1">Telemática</option>
               </select>
-              <label class="form-label dejaEspacio" for="fnotifi">Forma Notificación *</label>
+              <label class="form-label form-label--floating" for="fnotifi">Forma Notificación *</label>
             </div>
           </div>
           
@@ -967,7 +927,7 @@
               name="emailExp" 
               [(ngModel)]="nuevoexpediente.email"
               placeholder="correo@ejemplo.com">
-            <label for="emailExp" class="form-label dejaEspacio">Correo electrónico</label>
+            <label for="emailExp" class="form-label form-label--floating">Correo electrónico</label>
           </div>
 
           <!-- Información del Interesado -->
@@ -982,39 +942,39 @@
           <div *ngIf="dniok" class="row">
             <div class="col-md-6 form-floating mb-3">
               <input type="text" class="form-control" [value]="consultadni.nombre" id="nombreInt" name="nombreInt" readonly>
-              <label class="form-label dejaEspacio" for="nombreInt">Nombre</label>
+              <label class="form-label form-label--floating" for="nombreInt">Nombre</label>
             </div>
             <div class="col-md-6 form-floating mb-3">
               <input type="text" class="form-control" [value]="consultadni.apellido1 + ' ' + consultadni.apellido2"
                 id="apellidosInt" name="apellidosInt" readonly>
-              <label class="form-label dejaEspacio" for="apellidosInt">Apellidos</label>
+              <label class="form-label form-label--floating" for="apellidosInt">Apellidos</label>
             </div>
             <div class="col-12 form-floating mb-3">
               <input type="text" class="form-control" [value]="consultadni.dirPosta" id="direccionInt"
                 name="direccionInt" readonly>
-              <label for="direccionInt" class="form-label dejaEspacio">Dirección</label>
+              <label for="direccionInt" class="form-label form-label--floating">Dirección</label>
             </div>
             <div class="col-md-4 form-floating mb-3">
               <input type="text" class="form-control" [value]="consultadni.codPosta" id="cpInt" name="cpInt" readonly>
-              <label class="form-label dejaEspacio" for="cpInt">Código Postal</label>
+              <label class="form-label form-label--floating" for="cpInt">Código Postal</label>
             </div>
             <div class="col-md-4 form-floating mb-3">
               <input type="text" class="form-control" [value]="consultadni.provincia" id="provinciaInt"
                 name="provinciaInt" readonly>
-              <label class="form-label dejaEspacio" for="provinciaInt">Provincia</label>
+              <label class="form-label form-label--floating" for="provinciaInt">Provincia</label>
             </div>
             <div class="col-md-4 form-floating mb-3">
               <input type="text" class="form-control" [value]="consultadni.municipio" id="municipioInt"
                 name="municipioInt" readonly>
-              <label class="form-label dejaEspacio" for="municipioInt">Municipio</label>
+              <label class="form-label form-label--floating" for="municipioInt">Municipio</label>
             </div>
           </div>
         </form>
       </div>
       
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="limpiadatosnuevoexpediente(); cerrarModal('iniciarExpedieModal')">Cancelar</button>
-        <button type="submit" class="submit_footer" form="iniciarExpedienteForm">Iniciar Expediente</button>
+        <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiadatosnuevoexpediente(); cerrarModal('iniciarExpedieModal')">Cancelar</button>
+        <button type="submit" class="btn-iflow btn-iflow--primary" form="iniciarExpedienteForm">Iniciar Expediente</button>
       </div>
     </div>
   </div>
@@ -1044,8 +1004,8 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="submit_footer" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="submit_footer">Enviar</button>
+            <button type="button" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn-iflow btn-iflow--primary">Enviar</button>
           </div>
         </form>
       </div>
@@ -1066,14 +1026,19 @@
       </div>
       <div class="modal-body">
 
-        <div class="espacios">
-          <a href="#" id="linkView">vista del documento</a>
-          <div class="showPDF"></div>
+        <div class="px-section">
+          <iframe *ngIf="pdfSafeUrl"
+                  [src]="pdfSafeUrl"
+                  width="100%"
+                  height="700"
+                  style="border: none;"
+                  title="Vista del documento PDF">
+          </iframe>
         </div>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="cerrarModal('VerPdfModal')">Cerrar</button>
+        <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('VerPdfModal')">Cerrar</button>
       </div>
     </div>
   </div>
@@ -1103,7 +1068,7 @@
               required
               [class.is-invalid]="isMotivoRechazoInvalid()"
               #motivoRechazoInput="ngModel">
-            <label class="form-label dejaEspacio" for="rechazo">Motivo Rechazo *</label>
+            <label class="form-label form-label--floating" for="rechazo">Motivo Rechazo *</label>
             <div *ngIf="isMotivoRechazoInvalid()" class="invalid-feedback">
               Debe indicar un motivo para rechazar la solicitud
             </div>
@@ -1111,7 +1076,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="cerrarModal('rechazaSoliModal')">
+          <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('rechazaSoliModal')">
             <i class="fas fa-times me-1"></i>Cancelar
           </button>
           <button 
@@ -1139,7 +1104,7 @@
       </div>
       <div class="modal-body">
 
-        <div class="espacios">
+        <div class="px-section">
           <jqxGrid hidden class="mat-elevation-z5" [width]="'100%'" [autoheight]="true" [columnsautoresize]="true"
             [source]="sourceSoliciPendientes" (onRowclick)="selecsolicitudNueva($event)" [pagesize]="10"
             [autoheight]="true" [pageable]="true" [altrows]="true" [filterable]="true" [sortable]="true"
@@ -1161,7 +1126,7 @@
 
 
                   </select>
-                  <label class="form-label dejaEspacio" for="estado">Estado</label>
+                  <label class="form-label form-label--floating" for="estado">Estado</label>
                   <br>
 
                 </div>
@@ -1236,11 +1201,13 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="submit_footer" (click)="generaPdfSolicitudes()">PDF <i
+        <button type="button" class="btn-iflow btn-iflow--primary" (click)="generaPdfSolicitudes()">PDF <i
             class="bi bi-file-earmark-pdf icons_botton_left"></i> </button>
-        <button class="submit_footer" hidden role="button">Excel <i
+        <button class="btn-iflow btn-iflow--secondary" hidden role="button">Excel <i
             class="bi bi-file-earmark-excel icons_button_left"></i></button>
       </div>
     </div>
   </div>
 </div>
+</ng-container>
+</app-shell>

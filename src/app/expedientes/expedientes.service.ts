@@ -45,6 +45,8 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from '@angul
 import Swal from 'sweetalert2';
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from 'src/environments/environment';
+import {ModalManagerService} from '../core/service/modal-manager.service';
+import {UserSessionService} from '../core/service/user-session.service';
 import {TareaProcedimientoDTO} from "../core/models/tarea-procedimiento.dto";
 import {PersonaEntidad} from "../core/models/personaentidad.model";
 import {TareaTramiteExpedienteVer} from "../core/models/tareaTramite/tarea-tramite-expediente-ver.dto";
@@ -57,9 +59,6 @@ import {InteresadoListarDto} from "../core/dto/interesado.dto";
   providedIn: 'root'
 })
 export class ExpedientesService {
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
-  public idOrgUsuar = sessionStorage.getItem('idOrgUsuar');
-  public usuContrl = sessionStorage.getItem('user');
   public fecha = new Date();
   public idTarea!: number;
   public urlexpedientelistar: string = `${environment.apiUrl}expediente/listarExpediente`;
@@ -69,7 +68,6 @@ export class ExpedientesService {
   public urlexpedientecrear: string = `${environment.apiUrl}expediente/crear`;
   public urlexpeditramitecrear: string = `${environment.apiUrl}tramite/crear`;
   public urlexpeditramitelistar: string = `${environment.apiUrl}tramite/listar`;
-  public urlEndPoint: string = `${environment.apiUrl}procedimiento/listar/${this.idOrgElemen}`;
   public urltramitadorcrear: string = `${environment.apiUrl}tramitador/crear`;
   public urltramitadorlistar: string = `${environment.apiUrl}tramitador/listar`;
   public urltramitelistar: string = `${environment.apiUrl}tramite/listar`;
@@ -111,7 +109,6 @@ export class ExpedientesService {
 
   public response = new Response();
   public httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-  public instructor = sessionStorage.getItem("user");
   public urleditaexpedientemail!: string;
 
   private baseUrlExpediente = `${environment.apiUrl}expediente`;
@@ -120,8 +117,30 @@ export class ExpedientesService {
   constructor(
     public http: HttpClient,
     public router: Router,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    private modalManager: ModalManagerService,
+    private session: UserSessionService
   ) {
+  }
+
+  get idOrgElemen(): string | null {
+    return this.session.idOrgEleme;
+  }
+
+  get idOrgUsuar(): string | null {
+    return this.session.idOrgUsuar;
+  }
+
+  get usuContrl(): string | null {
+    return this.session.user;
+  }
+
+  get instructor(): string | null {
+    return this.session.user;
+  }
+
+  get urlEndPoint(): string {
+    return `${environment.apiUrl}procedimiento/listar/${this.idOrgElemen}`;
   }
 
   getCertificadoDeuda(numDocum: string, idExpediente: number, usuario: string): Observable<Blob> {
@@ -361,9 +380,7 @@ export class ExpedientesService {
 
 
   CierraModal() {
-    $("#CrearNotificacionModal").modal('hide');//ocultamos el modal
-    $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
-    $('.modal-backdrop').remove();//eliminamos el backdrop del modal
+    this.modalManager.closeModal('CrearNotificacionModal');
   }
 
 

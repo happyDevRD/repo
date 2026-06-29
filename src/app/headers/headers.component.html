@@ -1,33 +1,14 @@
 <header class="app-topbar" role="banner">
   <div class="app-topbar__inner">
-    <div class="app-topbar__start">
-      <button type="button"
-              class="app-topbar__menu-btn"
-              (click)="toggleMobileMenu()"
-              [attr.aria-expanded]="mobileMenuOpen"
-              aria-controls="sidebar"
-              aria-label="Abrir o cerrar menú de navegación">
-        <i class="bi" [ngClass]="mobileMenuOpen ? 'bi-x-lg' : 'bi-list'" aria-hidden="true"></i>
-      </button>
+    <button type="button"
+            class="app-topbar__menu-btn"
+            (click)="toggleMobileMenu()"
+            [attr.aria-expanded]="mobileMenuOpen"
+            aria-controls="sidebar"
+            aria-label="Abrir o cerrar menú de navegación">
+      <i class="bi" [ngClass]="mobileMenuOpen ? 'bi-x-lg' : 'bi-list'" aria-hidden="true"></i>
+    </button>
 
-      <div class="app-topbar__brand">
-        <img src="assets/new/img_tit_sec.png" alt="" class="app-topbar__logo" loading="lazy">
-        <div class="app-topbar__titles">
-          <span class="app-topbar__eyebrow">{{ brand }}</span>
-          <h1 class="app-topbar__title">{{ title }}</h1>
-        </div>
-      </div>
-    </div>
-
-    <div class="app-topbar__user" *ngIf="user">
-      <div class="user-chip" [attr.title]="departmentName">
-        <i class="bi bi-building user-chip__icon" aria-hidden="true"></i>
-        <span class="user-chip__text">{{ departmentName }}</span>
-      </div>
-      <div class="user-chip user-chip--primary" [attr.title]="userName">
-        <i class="bi bi-person-circle user-chip__icon" aria-hidden="true"></i>
-        <span class="user-chip__text">{{ userName }}</span>
-      </div>
-    </div>
+    <h1 class="app-topbar__title">{{ pageTitle || title }}</h1>
   </div>
 </header>

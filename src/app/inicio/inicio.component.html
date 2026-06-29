@@ -1,334 +1,53 @@
-<div class="container-fluid">
-  <app-headers></app-headers>
-  <div class="row">
-    <app-nav></app-nav>
-    <div *ngIf="user"></div>
+<app-shell contentId="hanging-icons">
+      <section class="dashboard">
+        <header class="dashboard__header">
+          <div class="dashboard__header-text">
+            <p class="dashboard__eyebrow">Panel principal</p>
+            <h2 class="dashboard__title">Tus consultas pendientes</h2>
+          </div>
+          <div class="dashboard__total" [class.dashboard__total--loading]="isLoadingSummary">
+            <span class="dashboard__total-value" *ngIf="!isLoadingSummary">{{ totalPendientes }}</span>
+            <span class="dashboard__total-skeleton" *ngIf="isLoadingSummary" aria-hidden="true"></span>
+            <span class="dashboard__total-label">en total</span>
+          </div>
+        </header>
 
-    <div class="col-12 content_gen" id="hanging-icons">
-      <!-- Bienvenida -->
-      <div class="welcome-banner" *ngIf="user">
-        <div class="welcome-banner__content">
-          <h2 class="welcome-banner__greeting">Bienvenido, {{ user }}</h2>
-          <p class="welcome-banner__subtitle">Panel de gestión de expedientes — accede rápidamente a tus tareas y consultas</p>
-        </div>
-        <div class="welcome-banner__icon" aria-hidden="true">
-          <i class="bi bi-grid-3x3-gap-fill"></i>
-        </div>
-      </div>
-
-      <!-- Dashboard Principal -->
-      <div class="dashboard-container page-panel">
-        <!-- Título -->
-        <div class="dashboard-header">
-          <h2 class="dashboard-title">Inicio</h2>
-        </div>
-
-        <!-- Grid de Tarjetas -->
-        <div class="cards-grid">
-          <!-- Tarjeta: Solicitudes -->
-          <div class="card-item">
-            <div class="card-content">
-              <div class="card-icon">
-                <img src="assets/new/ico_solicitudes.png" alt="Solicitudes">
+        <div class="dashboard__grid">
+          <article *ngFor="let card of dashboardCards"
+                   class="dashboard-tile"
+                   [class.dashboard-tile--active]="(getCardCount(card.countKey) ?? 0) > 0">
+            <div class="dashboard-tile__content">
+              <div class="dashboard-tile__icon-wrap" aria-hidden="true">
+                <img [src]="card.icon" alt="" class="dashboard-tile__icon">
               </div>
-              <h3 class="card-title">Solicitudes</h3>
-              <p class="card-description">Consulta de las solicitudes pendientes o rechazadas del departamento</p>
-              <button type="button" 
-                      class="card-button" 
-                      (click)="consultarSolicitudes()" 
-                      [disabled]="isLoadingSolicitudes">
-                <span *ngIf="!isLoadingSolicitudes">Consultar</span>
-                <span *ngIf="isLoadingSolicitudes" class="loading-content">
-                  <span class="spinner"></span>
-                  Cargando...
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Tarjeta: Expedientes -->
-          <div class="card-item">
-            <div class="card-content">
-              <div class="card-icon">
-                <img src="assets/new/ico_user.png" alt="Expedientes">
+              <div class="dashboard-tile__body">
+                <div class="dashboard-tile__row">
+                  <h3 class="dashboard-tile__title">{{ card.title }}</h3>
+                  <span class="dashboard-tile__count"
+                        *ngIf="!isLoadingSummary && getCardCount(card.countKey) !== null"
+                        [class.dashboard-tile__count--pending]="getCardCount(card.countKey)! > 0">
+                    {{ getCardCount(card.countKey) }}
+                  </span>
+                  <span class="dashboard-tile__count dashboard-tile__count--loading"
+                        *ngIf="isLoadingSummary"
+                        aria-hidden="true"></span>
+                </div>
+                <p class="dashboard-tile__desc">{{ card.description }}</p>
               </div>
-              <h3 class="card-title">Expedientes</h3>
-              <p class="card-description">Consulta de tareas de expedientes de los que soy Instructor.</p>
-              <button type="button" 
-                      class="card-button" 
-                      (click)="consultarExpedientes()" 
-                      [disabled]="isLoadingExpedientes">
-                <span *ngIf="!isLoadingExpedientes">Consultar</span>
-                <span *ngIf="isLoadingExpedientes" class="loading-content">
-                  <span class="spinner"></span>
-                  Cargando...
-                </span>
-              </button>
             </div>
-          </div>
-
-          <!-- Tarjeta: Tareas -->
-          <div class="card-item">
-            <div class="card-content">
-              <div class="card-icon">
-                <img src="assets/new/ico_tareas.png" alt="Tareas">
-              </div>
-              <h3 class="card-title">Tareas</h3>
-              <p class="card-description">Listado de tareas pendientes de las que soy tramitador.</p>
-              <button type="button" 
-                      class="card-button" 
-                      (click)="consultarTareas()" 
-                      [disabled]="isLoadingTareas">
-                <span *ngIf="!isLoadingTareas">Consultar</span>
-                <span *ngIf="isLoadingTareas" class="loading-content">
-                  <span class="spinner"></span>
-                  Cargando...
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Tarjeta: Firmas Pendientes -->
-          <div class="card-item">
-            <div class="card-content">
-              <div class="card-icon">
-                <img src="assets/new/ico_firmas_pen.png" alt="Firmas Pendientes">
-              </div>
-              <h3 class="card-title">Firmas Pendientes</h3>
-              <p class="card-description">Listado de firmas pendientes.</p>
-              <button type="button" 
-                      class="card-button" 
-                      (click)="consultarFirmasPendientes()" 
-                      [disabled]="isLoadingFirmasPendientes">
-                <span *ngIf="!isLoadingFirmasPendientes">Consultar</span>
-                <span *ngIf="isLoadingFirmasPendientes" class="loading-content">
-                  <span class="spinner"></span>
-                  Cargando...
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Tarjeta: Firmas Solicitadas -->
-          <div class="card-item">
-            <div class="card-content">
-              <div class="card-icon">
-                <img src="assets/new/ico_firmas_sol.png" alt="Firmas Solicitadas">
-              </div>
-              <h3 class="card-title">Firmas Solicitadas</h3>
-              <p class="card-description">Listado de firmas pendientes solicitadas a terceros.</p>
-              <button type="button" 
-                      class="card-button" 
-                      (click)="consultarFirmasTerceros()" 
-                      [disabled]="isLoadingFirmasTerceros">
-                <span *ngIf="!isLoadingFirmasTerceros">Consultar</span>
-                <span *ngIf="isLoadingFirmasTerceros" class="loading-content">
-                  <span class="spinner"></span>
-                  Cargando...
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Tarjeta: Notificaciones -->
-          <div class="card-item">
-            <div class="card-content">
-              <div class="card-icon">
-                <img src="assets/new/ico_circulo_exc.png" alt="Notificaciones">
-              </div>
-              <h3 class="card-title">Notificaciones</h3>
-              <p class="card-description">Listado de Notificaciones pendientes de recepcionar</p>
-              <button type="button" 
-                      class="card-button" 
-                      (click)="consultarNotificaciones()" 
-                      [disabled]="isLoadingNotificaciones">
-                <span *ngIf="!isLoadingNotificaciones">Consultar</span>
-                <span *ngIf="isLoadingNotificaciones" class="loading-content">
-                  <span class="spinner"></span>
-                  Cargando...
-                </span>
-              </button>
-            </div>
-          </div>
+            <button type="button"
+                    class="btn-iflow btn-iflow--secondary btn-iflow--block"
+                    (click)="runCardAction(card.id)"
+                    [disabled]="isCardLoading(card.id)">
+              <span *ngIf="!isCardLoading(card.id)">Consultar</span>
+              <span *ngIf="isCardLoading(card.id)" class="dashboard-tile__loading">
+                <span class="btn-iflow__spinner dashboard-tile__spinner"></span>
+                Cargando...
+              </span>
+            </button>
+          </article>
         </div>
-      </div>
-      <!-- Fin Dashboard Principal -->
+      </section>
 
-      <!-- Sección de Modales -->
-      <!-- Modal: Solicitudes Pendientes -->
-      <div class="modal fade" id="modalSolicitudesPendientes" tabindex="-1" aria-labelledby="modalSolicitudesPendientesLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalSolicitudesPendientesLabel">Solicitudes Pendientes</h4>
-              <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('modalSolicitudesPendientes')"></button>
-            </div>
-            <div class="modal-body">
-              <jqxGrid #gridSolicitudes
-                [width]="'100%'" 
-                [height]="400"
-                [source]="sourceSolici"
-                [columns]="columnsSolici"
-                [filterable]="true"
-                [sortable]="true"
-                [pageable]="true"
-                [columnsautoresize]="true"
-                [localization]="localizationObject"
-                class="mat-elevation-z5">
-              </jqxGrid>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="submit_footer" (click)="cerrarModal('modalSolicitudesPendientes')">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal: Expedientes del Instructor -->
-      <div class="modal fade" id="modalExpedientesInstructor" tabindex="-1" aria-labelledby="modalExpedientesInstructorLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalExpedientesInstructorLabel">Expedientes del Instructor</h4>
-              <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('modalExpedientesInstructor')"></button>
-            </div>
-            <div class="modal-body">
-              <jqxGrid #gridExpedientes
-                [width]="'100%'" 
-                [height]="400"
-                [source]="sourceExpedientesInstructor"
-                [columns]="columnsExpedientesInstructor"
-                [filterable]="true"
-                [sortable]="true"
-                [pageable]="true"
-                [columnsautoresize]="true"
-                [localization]="localizationObject"
-                class="mat-elevation-z5">
-              </jqxGrid>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="submit_footer" (click)="cerrarModal('modalExpedientesInstructor')">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal: Tareas Pendientes -->
-      <div class="modal fade" id="modalTareasPendientes" tabindex="-1" aria-labelledby="modalTareasPendientesLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalTareasPendientesLabel">Listado de Tareas Pendientes</h4>
-              <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('modalTareasPendientes')"></button>
-            </div>
-            <div class="modal-body">
-              <jqxGrid #gridTareas
-                [width]="'100%'" 
-                [height]="400"
-                [source]="sourceTareasTramiteUsuarios"
-                [columns]="columnsTareasTramiteUsuarios"
-                [filterable]="true"
-                [sortable]="true"
-                [pageable]="true"
-                [columnsautoresize]="true"
-                [localization]="localizationObject"
-                class="mat-elevation-z5">
-              </jqxGrid>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="submit_footer" (click)="cerrarModal('modalTareasPendientes')">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal: Firmas Pendientes -->
-      <div class="modal fade" id="modalFirmasPendientes" tabindex="-1" aria-labelledby="modalFirmasPendientesLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalFirmasPendientesLabel">Listado de Firmas Pendientes</h4>
-              <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('modalFirmasPendientes')"></button>
-            </div>
-            <div class="modal-body">
-              <jqxGrid #gridFirmasPendientes
-                [width]="'100%'" 
-                [height]="400"
-                [source]="sourceFirmasPendientes"
-                [columns]="columnsFirmasPendientes"
-                [filterable]="true"
-                [sortable]="true"
-                [pageable]="true"
-                [columnsautoresize]="true"
-                [localization]="localizationObject"
-                class="mat-elevation-z5">
-              </jqxGrid>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="submit_footer" (click)="cerrarModal('modalFirmasPendientes')">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal: Firmas Terceros -->
-      <div class="modal fade" id="modalFirmasTerceros" tabindex="-1" aria-labelledby="modalFirmasTercerosLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalFirmasTercerosLabel">Listado de Firmas Solicitadas a Terceros</h4>
-              <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('modalFirmasTerceros')"></button>
-            </div>
-            <div class="modal-body">
-              <jqxGrid #gridFirmasTerceros
-                [width]="'100%'" 
-                [height]="400"
-                [source]="sourceFirmasTerceros"
-                [columns]="columnsFirmasTerceros"
-                [filterable]="true"
-                [sortable]="true"
-                [pageable]="true"
-                [columnsautoresize]="true"
-                [localization]="localizationObject"
-                class="mat-elevation-z5">
-              </jqxGrid>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="submit_footer" (click)="cerrarModal('modalFirmasTerceros')">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal: Notificaciones -->
-      <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalNotificacionesLabel">Listado de Notificaciones Pendientes</h4>
-              <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('modalNotificaciones')"></button>
-            </div>
-            <div class="modal-body">
-              <jqxGrid #gridNotificaciones
-                [width]="'100%'" 
-                [height]="400"
-                [source]="sourceNotificaciones"
-                [columns]="columnsNotificaciones"
-                [filterable]="true"
-                [sortable]="true"
-                [pageable]="true"
-                [columnsautoresize]="true"
-                [localization]="localizationObject"
-                class="mat-elevation-z5">
-              </jqxGrid>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="submit_footer" (click)="cerrarModal('modalNotificaciones')">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
+      <app-dashboard-modals-host></app-dashboard-modals-host>
+</app-shell>

@@ -17,6 +17,8 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from './core/interceptors/auth.interceptor';
 import {ExpedientesModule} from './expedientes/expedientes.module';
 import {InicioComponent} from './inicio/inicio.component';
+import { DashboardGridModalComponent } from './inicio/components/dashboard-grid-modal/dashboard-grid-modal.component';
+import { DashboardModalsHostComponent } from './inicio/components/dashboard-modals-host/dashboard-modals-host.component';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatButtonModule} from '@angular/material/button';
 import {MatStepperModule} from '@angular/material/stepper';
@@ -63,6 +65,8 @@ import {FiltroComponent} from './filtro/filtro.component';
 import {MatSelectModule} from '@angular/material/select';
 import {InteresadoComponent} from './expedientes/interesado/interesado.component';
 import {FooterComponent} from './footer/footer.component';
+import {AppShellComponent} from './layout/app-shell.component';
+import {AccessDeniedComponent} from './shared/access-denied/access-denied.component';
 import {SslComponent} from './login/ssl/ssl.component';
 import {RecibosPendientesComponent} from './procedimientos/recibos-pendientes/recibos-pendientes.component';
 import {LiquidacionFormComponent} from './features/liquidacion/components/liquidacion-form/liquidacion-form.component';
@@ -88,6 +92,8 @@ import {NgxCurrencyDirective} from "ngx-currency";
     Error404Component,
     ProcedimientosComponent,
     InicioComponent,
+    DashboardGridModalComponent,
+    DashboardModalsHostComponent,
     FormnuevoprocediComponent,
     HeadersComponent,
     TarCursoComponent,
@@ -128,6 +134,8 @@ import {NgxCurrencyDirective} from "ngx-currency";
     ModificarDatosPersonaComponent,
     BajaHabitanteComponent,
     CalculadoraIvaComponent,
+    AppShellComponent,
+    AccessDeniedComponent,
   ],
   imports: [
     BrowserModule,

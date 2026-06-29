@@ -9,6 +9,7 @@ import {
 } from "../expedientes";
 import {map, Observable, catchError} from "rxjs";
 import {HttpClient, HttpHeaders, HttpErrorResponse} from "@angular/common/http";
+import {UserSessionService} from "../../core/service/user-session.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,13 @@ export class NotificacionesService {
 
   public httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private session: UserSessionService
+  ) { }
 
   private getUsuContr(): string | null {
-    return sessionStorage.getItem('user') || localStorage.getItem('user');
+    return this.session.user;
   }
 
   public getReceptorNofitiListar(): Observable<any> {

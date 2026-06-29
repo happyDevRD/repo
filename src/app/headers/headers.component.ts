@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { NavUiService } from '../Nav/nav-ui.service';
-import { Subscription } from 'rxjs';
+import { resolvePageTitle } from '../layout/page-titles';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-headers',
@@ -11,35 +13,37 @@ import { Subscription } from 'rxjs';
 export class HeadersComponent implements OnInit, OnDestroy {
 
   readonly title = environment.titulo;
-  readonly brand = environment.entidad;
 
-  public user = sessionStorage.getItem('user');
-  public depart = sessionStorage.getItem('departamento');
-
+  pageTitle = '';
   mobileMenuOpen = false;
-  private navSub?: Subscription;
 
-  constructor(private navUi: NavUiService) { }
+  private navSub?: Subscription;
+  private routerSub?: Subscription;
+
+  constructor(
+    private navUi: NavUiService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.navSub = this.navUi.mobileOpen$.subscribe(open => {
       this.mobileMenuOpen = open;
     });
+
+    this.pageTitle = resolvePageTitle(this.router.url);
+    this.routerSub = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe(event => {
+        this.pageTitle = resolvePageTitle(event.urlAfterRedirects);
+      });
   }
 
   ngOnDestroy(): void {
     this.navSub?.unsubscribe();
+    this.routerSub?.unsubscribe();
   }
 
   toggleMobileMenu(): void {
     this.navUi.toggleMobileMenu();
-  }
-
-  get userName(): string {
-    return this.user || 'Usuario';
-  }
-
-  get departmentName(): string {
-    return this.depart || 'Departamento';
   }
 }

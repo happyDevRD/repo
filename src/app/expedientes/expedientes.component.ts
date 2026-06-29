@@ -29,7 +29,9 @@ import {GridRadioSelector} from "../core/helper/grid-radio-selector";
 import {TablaClickHandler} from "../core/helper/tabla-click-handler";
 import {NotificationService} from "../core/service/notification.service";
 import {ModalManagerService} from "../core/service/modal-manager.service";
+import {UserSessionService} from "../core/service/user-session.service";
 import * as bootstrap from 'bootstrap';
+import { INICIO_GRID_RENDERERS as R } from '../inicio/shared/inicio-grid-renderers';
 
 
 interface Food {
@@ -45,12 +47,13 @@ interface Food {
 
 export class ExpedientesComponent {// pruebas de formularios
   public editExpedientes: boolean = false;
+
+  /** true cuando hay fila seleccionada y la acción concreta aplica al estado del expediente */
+  accionExpediente(requiere = true): boolean {
+    return this.editExpedientes && requiere;
+  }
   public verExpedientes: boolean = false;
-  public idOrgElemen = sessionStorage.getItem('idOrgEleme');
   public title = 'Expedientes';
-  public user = sessionStorage.getItem('user');// lo usamos para filtrar contenidos sin login
-  public soluser = sessionStorage.getItem('solUsuar');// lo usamos para filtrar contenidos
-  public trauser = sessionStorage.getItem('traUsuar');// lo usamos para filtrar contenidos
   public crearmensaje: CrearMensaje = new CrearMensaje();
   public expedienteslistar!: ExpedienteListar[];
   public atributosleer!: Atributosleer[];
@@ -119,7 +122,7 @@ export class ExpedientesComponent {// pruebas de formularios
 
   verpagina() {
 
-    if (this.trauser == "1") {
+    if (this.session.canManageExpedientes) {
 
       console.log('Tiene permiso a Expedientes!!');
 
@@ -145,7 +148,7 @@ export class ExpedientesComponent {// pruebas de formularios
 
     } else {
       console.log(' NO tiene permiso a Expedientes!!');
-      swal.fire(`Lo sentimos. El usuario  ${this.user}  No tiene acceso a Expedientes.`);
+      swal.fire(`Lo sentimos. El usuario  ${this.session.user}  No tiene acceso a Expedientes.`);
 
     }
   }
@@ -223,7 +226,7 @@ export class ExpedientesComponent {// pruebas de formularios
               {name: 'forNotifTexto', type: 'any'},
               {name: 'idHisDocum', type: 'any'},
             ],
-            url: `${environment.apiUrl}expediente/listarExpediente/${this.user}`,
+            url: `${environment.apiUrl}expediente/listarExpediente/${this.session.user}`,
           });
           console.log("Expediente devuelto");
         });
@@ -369,7 +372,7 @@ export class ExpedientesComponent {// pruebas de formularios
 
 
             ],
-            url: `${environment.apiUrl}expediente/listarExpediente/${this.user}`,
+            url: `${environment.apiUrl}expediente/listarExpediente/${this.session.user}`,
 
             // id: 'OrderID',
             // sortname: 'id',
@@ -774,12 +777,13 @@ export class ExpedientesComponent {// pruebas de formularios
 
     this.expedienteSelecVisible = true;
     this.idProcedimiento = rowData.procedimiento.id
-    sessionStorage.setItem("idprocedimiento", rowData.procedimiento.id);
+    this.session.setIdProcedimiento(rowData.procedimiento.id);
     this.lanzaTareaProcedi();
     this.descripcionProcedimiento = rowData.procedimiento.descripcion;
     this.expeSelecDescrip = rowData.titulo;
     this.idexpediente = rowData.id;
     this.ejerexpe = rowData.ejercicio;
+    this.numExp = rowData.numero;
     this.editExpedientes = true;
     this.verExpedientes = true;
     console.log(`ID EXPEDIENTE NUEVO: ${rowData.id}`);
@@ -1210,7 +1214,7 @@ public abrirModalAtributos(): void {
                 {name: 'forNotifTexto', type: 'any'},
                 {name: 'idHisDocum', type: 'any'},
               ],
-              url: `${environment.apiUrl}expediente/listarExpediente/${this.user}`,
+              url: `${environment.apiUrl}expediente/listarExpediente/${this.session.user}`,
             });
             this.notificationService.success('El Expediente ha sido cancelado');
             this.cerrarModal('cancelarExpModal');
@@ -1267,7 +1271,7 @@ public abrirModalAtributos(): void {
                 {name: 'forNotifTexto', type: 'any'},
                 {name: 'idHisDocum', type: 'any'},
               ],
-              url: `${environment.apiUrl}expediente/listarExpediente/${this.user}`,
+              url: `${environment.apiUrl}expediente/listarExpediente/${this.session.user}`,
               sortcolumn: 'id',
               sortdirection: 'desc'
             });
@@ -1298,7 +1302,8 @@ public abrirModalAtributos(): void {
     public router: Router,
     public http: HttpClient,
     private notificationService: NotificationService,
-    private modalManagerService: ModalManagerService
+    private modalManagerService: ModalManagerService,
+    public session: UserSessionService
   ) {
   };
 
@@ -1515,38 +1520,33 @@ public abrirModalAtributos(): void {
 
 
   }
-  public cellsrendererInteresado = function (row, column, value) {
+  public cellsrendererEstado = (_row: unknown, _column: unknown, value: string): string => {
+    const estado = (value || '').toLowerCase();
+    const label = value || '-';
+    return `<div style="text-align:center;margin-top:5px;">
+      <span class="estado-badge estado-badge--${estado}">${label}</span>
+    </div>`;
+  };
 
+  public cellsrendererProcedimientoExpe = (_row: unknown, _column: unknown, value: { descripcion?: string }): string => {
+    const text = value?.descripcion ?? '';
+    return `<div style="text-align:left;margin-top:5px;padding-left:8px;line-height:1.3;white-space:normal;">${text}</div>`;
+  };
 
-    return `<div style="text-align: left; margin-top: 5px; padding-left: 8px; line-height: 1.2;">` + value.desPerEntid + '</div>';
+  public cellsrendererInteresado = (_row: unknown, _column: unknown, value: { desPerEntid?: string }): string => {
+    const text = value?.desPerEntid ?? '';
+    return `<div style="text-align:left;margin-top:5px;padding-left:8px;line-height:1.3;white-space:normal;">${text}</div>`;
+  };
 
-
-  }
-
-  public cellsrendererFecha = function (row, column, value) {
-    let recorteFecha: string = value.substr(0, 10);
-    let anio: string = value.substring(0, 4);
-    let mes: string = value.substring(5, 7);
-    let dia: string = value.substring(8, 10);
-    let fechaordenada: string = dia + "/" + mes + "/" + anio;
-
-    let recorteHora: string = value.substring(12, 14);
-    let reverse: string = (recorteFecha)
-
+  public cellsrendererFecha = (_row: unknown, _column: unknown, value: string): string => {
     if (!value) {
-      recorteFecha = "Sin fecha registrada"
-      return `<div style="font-size: 10px;text-align: center; color:red;margin-top: 5px;"  type="button"  >` + recorteFecha + '</div>';
-    } else {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button" >` + dia + "/" + mes + "/" + anio + '</div>';
-
+      return '<div style="font-size:10px;text-align:center;color:#94a3b8;margin-top:5px;">-</div>';
     }
-
-
-  }
-  public cellsrendererProcedimientoExpe = function (row, column, value) {
-
-    return '<div style="text-align: left; margin-top: 5px; padding-left: 8px; line-height: 1.2;">' + value.descripcion + '</div>';
-  }
+    const dia = value.substring(8, 10);
+    const mes = value.substring(5, 7);
+    const anio = value.substring(0, 4);
+    return `<div style="text-align:center;margin-top:5px;">${dia}/${mes}/${anio}</div>`;
+  };
   public columnseleccionTarea = function (event: any) {
 
 
@@ -1576,7 +1576,7 @@ public abrirModalAtributos(): void {
   public cellsrendererPermi = function (row, column, value) {
 
     const resultado: any = value.id;
-    sessionStorage.setItem('usuarioTarea', resultado);
+    this.session.setUsuarioTarea(resultado);
 
 
     if (value == 'ANOS') {
@@ -1605,17 +1605,17 @@ public abrirModalAtributos(): void {
 
     if (value == "VERDE") {
 
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
 
     }
     if (value == "AMARILLO") {
 
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_amarillo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_amarillo.png" width="20" height="20"/>' + '</div>';
 
     }
     if (value == "ROJO") {
 
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
 
     }
 
@@ -1642,11 +1642,11 @@ public abrirModalAtributos(): void {
 
     if (value) {
       // value = "Pulsa para descargar"
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
 
     } else {
 
-      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
     }
 
 
@@ -1677,11 +1677,11 @@ public abrirModalAtributos(): void {
 
     if (value == "1") {
       // value = "Pulsa para descargar"
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="../assets/boton_verde.png" width="20" height="20"/>' + '</div>';
+      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
 
     } else {
 
-      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="../assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
+      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
     }
 
 
@@ -1706,110 +1706,109 @@ public abrirModalAtributos(): void {
 
   columnsExpe = [
     {text: 'id', datafield: 'id', hidden: true},
-    //{text: 'Id', datafield: 'id'},
-    {text: '', datafield: '', width: '1%', cellsrenderer: this.columnseleccionExpedientes, renderer: this.columnrenderer},
+    {text: '', datafield: '', width: '1%', cellsrenderer: this.columnseleccionExpedientes, renderer: R.columnrenderer},
     {
       text: 'Ejercicio',
       width: '5%',
       datafield: 'ejercicio',
-      cellsrenderer: this.cellsrenderer,
-      renderer: this.columnrenderer
+      cellsrenderer: R.cellsrendererExpInstructor,
+      renderer: R.columnrenderer,
+      align: 'center',
+      cellsalign: 'center',
     },
     {
       text: 'Número',
       width: '5%',
       sortby: 'desc',
       datafield: 'numero',
-      cellsrenderer: this.cellsrenderer,
-      renderer: this.columnrenderer
+      cellsrenderer: R.cellsrendererExpInstructor,
+      renderer: R.columnrenderer,
+      align: 'center',
+      cellsalign: 'center',
     },
-    {text: 'Título', width: '18%', datafield: 'titulo', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer},
+    {
+      text: 'Título',
+      width: '16%',
+      datafield: 'titulo',
+      cellsrenderer: R.cellsrendererDashboardTextLeft,
+      renderer: R.columnrenderer,
+      align: 'left',
+      cellsalign: 'left',
+    },
     {
       text: 'Forma apertura',
-      width: '9%',
+      width: '8%',
       datafield: 'formaApertura',
-      cellsrenderer: this.cellsrenderer,
-      renderer: this.columnrenderer
+      cellsrenderer: R.cellsrendererExpInstructor,
+      renderer: R.columnrenderer,
+      align: 'center',
+      cellsalign: 'center',
     },
     {
       text: 'Estado',
       width: '7%',
       datafield: 'estado',
-      cellsrenderer: this.cellsrenderer,
-      renderer: this.columnrenderer
+      cellsrenderer: this.cellsrendererEstado,
+      renderer: R.columnrenderer,
+      align: 'center',
+      cellsalign: 'center',
     },
     {
       text: 'Fecha Expediente',
-      width: '9%',
+      width: '8%',
       datafield: 'fecInicio',
       cellsrenderer: this.cellsrendererFecha,
-      renderer: this.columnrenderer
+      renderer: R.columnrenderer,
+      align: 'center',
+      cellsalign: 'center',
     },
     {
       text: 'Fecha cierre',
-      width: '9%',
+      width: '8%',
       datafield: 'fecFin',
       cellsrenderer: this.cellsrendererFecha,
-      renderer: this.columnrenderer,
-      hidden: true
+      renderer: R.columnrenderer,
+      hidden: true,
     },
     {
       text: 'Fecha cancela',
-      width: '9%',
+      width: '8%',
       datafield: 'fecCancelacion',
       cellsrenderer: this.cellsrendererFecha,
-      renderer: this.columnrenderer,
-      hidden: true
+      renderer: R.columnrenderer,
+      hidden: true,
     },
     {
       text: 'Procedimiento',
       datafield: 'procedimiento',
-      width: '25%',
+      width: '22%',
       cellsrenderer: this.cellsrendererProcedimientoExpe,
-      renderer: this.columnrenderer
+      renderer: R.columnrenderer,
+      align: 'left',
+      cellsalign: 'left',
     },
     {
       text: 'Instructor',
       width: '8%',
       datafield: 'instructor',
-      cellsrenderer: this.cellsrenderer,
-      renderer: this.columnrenderer
+      cellsrenderer: R.cellsrendererExpInstructor,
+      renderer: R.columnrenderer,
+      align: 'center',
+      cellsalign: 'center',
     },
     {
       text: 'Interesado',
-      width: '21%',
+      width: '20%',
       datafield: 'personaEntidad',
       cellsrenderer: this.cellsrendererInteresado,
-      renderer: this.columnrenderer
+      renderer: R.columnrenderer,
+      align: 'left',
+      cellsalign: 'left',
     },
-    {
-      text: 'Email',
-      datafield: 'email',
-      cellsrenderer: this.cellsrendererInteresado,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'ForNotif',
-      datafield: 'forNotif',
-      cellsrenderer: this.cellsrendererInteresado,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'forNotifTexto',
-      datafield: 'forNotifTexto',
-      cellsrenderer: this.cellsrendererInteresado,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
-    {
-      text: 'idHisDocum',
-      datafield: 'idHisDocum',
-      cellsrenderer: this.cellsrendererInteresado,
-      renderer: this.columnrenderer,
-      hidden: true
-    },
+    {text: 'Email', datafield: 'email', hidden: true},
+    {text: 'ForNotif', datafield: 'forNotif', hidden: true},
+    {text: 'forNotifTexto', datafield: 'forNotifTexto', hidden: true},
+    {text: 'idHisDocum', datafield: 'idHisDocum', hidden: true},
   ];
   public localizationObject: any = jqxGrid_ES;
 
@@ -1836,7 +1835,7 @@ public abrirModalAtributos(): void {
 
 
     ],
-    url: `${environment.apiUrl}expediente/listarExpediente/${this.user}`,
+    url: `${environment.apiUrl}expediente/listarExpediente/${this.session.user}`,
 
     // id: 'OrderID',
     // sortname: 'id',

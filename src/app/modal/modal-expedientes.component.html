@@ -321,7 +321,7 @@
             <div class="col-12">
               <div class="form-floating">
                 <input type="text" class="form-control" id="tituloVer" [value]="verexpediente.titulo" readonly>
-                <label class="form-label dejaEspacio" for="tituloVer">Título</label>
+                <label class="form-label form-label--floating" for="tituloVer">Título</label>
               </div>
             </div>
           </div>
@@ -330,25 +330,25 @@
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="text" class="form-control" id="estadoVer" [value]="verexpediente.estado" readonly>
-                <label class="form-label dejaEspacio" for="estadoVer">Estado</label>
+                <label class="form-label form-label--floating" for="estadoVer">Estado</label>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="text" class="form-control" id="faseVer" [value]="verexpediente.fase" readonly>
-                <label class="form-label dejaEspacio" for="faseVer">Fase</label>
+                <label class="form-label form-label--floating" for="faseVer">Fase</label>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="text" class="form-control" id="formaNotificacionVer" [value]="verexpediente.formaNotificacion || verexpediente.forNotifTexto" readonly>
-                <label class="form-label dejaEspacio" for="formaNotificacionVer">Forma Notificación</label>
+                <label class="form-label form-label--floating" for="formaNotificacionVer">Forma Notificación</label>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="email" class="form-control" id="correoVer" [value]="verexpediente.email" readonly>
-                <label class="form-label dejaEspacio" for="correoVer">Correo electrónico</label>
+                <label class="form-label form-label--floating" for="correoVer">Correo electrónico</label>
               </div>
             </div>
           </div>
@@ -357,25 +357,25 @@
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="text" class="form-control" id="dniVer" [value]="verexpediente.personaEntidad?.numDocum || ''" readonly>
-                <label class="form-label dejaEspacio" for="dniVer">Interesado DNI</label>
+                <label class="form-label form-label--floating" for="dniVer">Interesado DNI</label>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="text" class="form-control" id="fechaCancelacionVer" [value]="verexpediente.fecCancelacion | date:'yyyy-MM-dd'" readonly>
-                <label class="form-label dejaEspacio" for="fechaCancelacionVer">Fecha cancelación</label>
+                <label class="form-label form-label--floating" for="fechaCancelacionVer">Fecha cancelación</label>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="text" class="form-control" id="fechaExpedienteVer" [value]="verexpediente.fecInicio | date:'yyyy-MM-dd'" readonly>
-                <label class="form-label dejaEspacio" for="fechaExpedienteVer">Fecha Expediente</label>
+                <label class="form-label form-label--floating" for="fechaExpedienteVer">Fecha Expediente</label>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-floating">
                 <input type="text" class="form-control" id="representanteVer" [value]="verexpediente.nomRepre || ''" readonly>
-                <label class="form-label dejaEspacio" for="representanteVer">Representante</label>
+                <label class="form-label form-label--floating" for="representanteVer">Representante</label>
               </div>
             </div>
           </div>
@@ -384,13 +384,13 @@
             <div class="col-md-6">
               <div class="form-floating">
                 <input type="text" class="form-control" id="procedimientoVer" [value]="verexpediente.procedimiento?.descripcion || ''" readonly>
-                <label class="form-label dejaEspacio" for="procedimientoVer">Procedimiento</label>
+                <label class="form-label form-label--floating" for="procedimientoVer">Procedimiento</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating">
                 <input type="text" class="form-control" id="formaAperturaVer" [value]="verexpediente.formaApertura" readonly>
-                <label class="form-label dejaEspacio" for="formaAperturaVer">Forma Apertura</label>
+                <label class="form-label form-label--floating" for="formaAperturaVer">Forma Apertura</label>
               </div>
             </div>
           </div>
@@ -399,13 +399,13 @@
             <div class="col-md-6">
               <div class="form-floating">
                 <input type="text" class="form-control" id="nombreVer" [value]="verexpediente.personaEntidad?.nombre || ''" readonly>
-                <label class="form-label dejaEspacio" for="nombreVer">Nombre</label>
+                <label class="form-label form-label--floating" for="nombreVer">Nombre</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating">
                 <input type="text" class="form-control" id="apellidosVer" [value]="(verexpediente.personaEntidad?.apellido1 || '') + ' ' + (verexpediente.personaEntidad?.apellido2 || '')" readonly>
-                <label class="form-label dejaEspacio" for="apellidosVer">Apellidos</label>
+                <label class="form-label form-label--floating" for="apellidosVer">Apellidos</label>
               </div>
             </div>
           </div>
@@ -414,7 +414,7 @@
             <div class="col-12">
               <div class="form-floating">
                 <input type="text" class="form-control" id="direccionVer" [value]="verexpediente.personaEntidad?.dirPosta || ''" readonly>
-                <label class="form-label dejaEspacio" for="direccionVer">Dirección</label>
+                <label class="form-label form-label--floating" for="direccionVer">Dirección</label>
               </div>
             </div>
           </div>
@@ -423,25 +423,25 @@
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="codigoPostalVer" [value]="verexpediente.personaEntidad?.codPosta || ''" readonly>
-                <label class="form-label dejaEspacio" for="codigoPostalVer">Código Postal</label>
+                <label class="form-label form-label--floating" for="codigoPostalVer">Código Postal</label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="provinciaVer" [value]="verexpediente.personaEntidad?.provincia || ''" readonly>
-                <label class="form-label dejaEspacio" for="provinciaVer">Provincia</label>
+                <label class="form-label form-label--floating" for="provinciaVer">Provincia</label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="municipioVer" [value]="verexpediente.personaEntidad?.municipio || ''" readonly>
-                <label class="form-label dejaEspacio" for="municipioVer">Municipio</label>
+                <label class="form-label form-label--floating" for="municipioVer">Municipio</label>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn-iflow btn-iflow--primary" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
