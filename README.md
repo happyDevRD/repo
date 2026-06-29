@@ -38,7 +38,7 @@ npm run build
 Build de producción con base href:
 
 ```bash
-ng build --configuration production --base-href /iFlow/
+npm run build:prod
 ```
 
 Salida en `dist/`.

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "formulario-test": {
+    "iflow": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -81,17 +81,17 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "formulario-test:build",
+            "browserTarget": "iflow:build",
             "ssl": false,
             "sslKey": "certs/ssl.key",
             "sslCert": "certs/ssl.crt"
           },
           "configurations": {
             "production": {
-              "browserTarget": "formulario-test:build:production"
+              "browserTarget": "iflow:build:production"
             },
             "development": {
-              "browserTarget": "formulario-test:build:development"
+              "browserTarget": "iflow:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -99,7 +99,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "formulario-test:build"
+            "browserTarget": "iflow:build"
           }
         },
         "test": {

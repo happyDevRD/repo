@@ -1,11 +1,11 @@
 {
-  "name": "formulario-test",
+  "name": "iflow",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "buildXamp": "ng build --output-path \"C:\\xampp\\htdocs\\iFlow\" --base-href \"/iFlow/\"",
+    "build:prod": "ng build --configuration production --base-href /iFlow/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
