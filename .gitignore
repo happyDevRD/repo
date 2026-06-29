@@ -53,6 +53,9 @@ green.key
 .env.*
 !.env.example
 
+# Local one-off migration scripts (not part of the app)
+/scripts/
+
 # Archives and backups
 *.zip
 *.7z
