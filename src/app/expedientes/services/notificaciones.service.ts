@@ -7,7 +7,7 @@ import {
   MotivoNotificacionesListar,
   NotificadorListar
 } from "../expedientes";
-import {map, Observable, catchError} from "rxjs";
+import {map, Observable, catchError, of, throwError} from "rxjs";
 import {HttpClient, HttpHeaders, HttpErrorResponse} from "@angular/common/http";
 import {UserSessionService} from "../../core/service/user-session.service";
 
@@ -61,8 +61,18 @@ export class NotificacionesService {
   //   return this.http.get(url);
   // }
   public getNotificacionListar(ejer: number, nume: number): Observable<LeerNotificacion[]> {
+    if (!ejer || !nume) {
+      return of([]);
+    }
+
     return this.http.get(`${environment.apiUrl}notificacion/listar/${ejer}/${nume}`).pipe(
-      map(response => response as LeerNotificacion[])
+      map(response => response as LeerNotificacion[]),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          return of([]);
+        }
+        return throwError(() => error);
+      }),
     );
   }
 

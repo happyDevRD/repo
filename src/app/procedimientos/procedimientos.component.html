@@ -1,761 +1,729 @@
 ﻿<app-shell contentId="hanging-icons">
-  <app-access-denied
-    *ngIf="!session.canManageProcedimientos"
-    title="Sin acceso a procedimientos"
+  <app-access-denied *ngIf="!session.canManageProcedimientos" title="Sin acceso a procedimientos"
     message="Este usuario no tiene permisos para gestionar procedimientos.">
   </app-access-denied>
 
   <ng-container *ngIf="session.canManageProcedimientos">
-      <app-menuprocedimiento></app-menuprocedimiento>
-      <div class="page-panel">
-        <!-- Título y botones de procedimientos -->
-        <div class="listado-titulo-container titulo-separador">
-          <h2 class="listado-titulo-principal">
-            Listado de Procedimientos del Departamento : <span class="departamento-nombre">{{ departamento }}</span>
-          </h2>
-          <div *ngIf="verListProcedi" class="titulo-botones-container">
-                    <button class="btn-iflow btn-iflow--icon"
-                title="Nuevo Procedimiento" type="button" (click)="abrirModal('NprocediModal')">
-              <img src="assets/new/ico_add.png" alt="Nuevo" width="25" height="25">
-            </button>
-            <button *ngIf="veoeliminaProcedimiento" (click)="deleteProcedimiento(idprocedi)"
-                    class="btn-iflow btn-iflow--icon" title="Eliminar Procedimiento" type="button">
-              <img src="assets/new/ico_elim.png" alt="Eliminar" width="25" height="25">
-            </button>
-          </div>
-        </div>
+    <app-menuprocedimiento></app-menuprocedimiento>
 
-        <!-- Grid de Procedimientos -->
-        <div class="grid-container">
-        <jqxGrid #gridProcedimientos
-                 id="gridProcedimientos"
-                 (onRowclick)="enviamos($event)"
-                 (onRowdoubleclick)="onProcedimientoDoubleClick($event)"
-                 [altrows]="true"
-                 [autoheight]="true"
-                 [columns]="columnsPro"
-                 [columnsautoresize]="true"
-                 [columnsresize]="true"
-                 [filterable]="true"
-                 [localization]="localizationObject"
-                 [pageable]="true"
-                 [pagesize]="5"
-                 [pagesizeoptions]="['5', '10', '20']"
-                 [sortable]="true"
-                 [source]="sourcePro"
-                 [width]="'100%'"
-                 class="mat-elevation-z5">
-        </jqxGrid>
+    <!-- ========== LISTADO ========== -->
+    <ng-container *ngIf="!isWorkspaceMode">
+      <div class="page-panel procedimientos-page">
+        <header class="procedimientos-header">
+          <div class="procedimientos-header__text">
+            <p class="procedimientos-header__eyebrow">Configuración del departamento</p>
+            <h2 class="procedimientos-header__title">Procedimientos</h2>
+            <p class="procedimientos-header__dept">
+              <i class="bi bi-building" aria-hidden="true"></i>
+              {{ departamento }}
+            </p>
+          </div>
+          <button class="btn-iflow btn-iflow--primary" type="button" (click)="abrirNuevoProcedimientoModal()">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            Nuevo procedimiento
+          </button>
+        </header>
+
+        <div class="grid-container proc-list-grid">
+          <jqxGrid #gridProcedimientos id="gridProcedimientos" (onRowclick)="enviamos($event)"
+            (onRowdoubleclick)="onProcedimientoDoubleClick($event)" [altrows]="true" [autoheight]="true"
+            [columns]="columnsPro" [columnsautoresize]="true" [columnsresize]="true" [filterable]="true"
+            [localization]="localizationObject" [pageable]="true" [pagesize]="10" [pagesizeoptions]="['5', '10', '20']"
+            [sortable]="true" [source]="sourcePro" [width]="'100%'">
+          </jqxGrid>
         </div>
       </div>
 
-      <!-- Sección Tareas y Permisos -->
-      <div *ngIf="veoTarea || veoPermiso" class="page-panel seccion-tareas-permisos">
-        <div class="row">
-          <!-- Tareas del Procedimiento -->
-          <div *ngIf="veoTarea" class="col-6">
-            <div class="listado-titulo-container">
-              <h2 class="listado-titulo-secundario">Listado de Tareas del Procedimiento</h2>
-              <div class="titulo-botones-container">
-                <button class="btn-iflow btn-iflow--icon" data-bs-target="#tareasModal" data-bs-toggle="modal"
-                        title="Nueva Tarea del Procedimiento" type="button"
-                        (click)="borravaloresNuevaTarea()">
-                  <img src="assets/new/ico_add.png" alt="Nueva Tarea" width="25" height="25">
-                </button>
-                <button *ngIf="verEliminaTarea" class="btn-iflow btn-iflow--icon" type="button"
-                        (click)="deleteTareaProcedimiento()">
-                  <img src="assets/new/ico_elim.png" alt="Eliminar Tarea" width="25" height="25">
-                </button>
-              </div>
+      <!-- Modal: Nuevo Procedimiento (solo en listado) -->
+      <div class="modal fade" id="NprocediModal" tabindex="-1" aria-labelledby="NprocediModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="NprocediModalLabel">Nuevo Procedimiento</h4>
+              <button type="button" class="btn-close" aria-label="Cerrar"
+                (click)="cerrarModal('NprocediModal')"></button>
             </div>
-            <jqxGrid #gridTareas
-                     id="gridTareas"
-                     (onRowclick)="envioTareaProcedi($event)"
-                     (onRowdoubleclick)="onRowDoubleClick($event)"
-                     [altrows]="true"
-                     [autoheight]="true"
-                     [columns]="columnsTarea"
-                     [columnsautoresize]="true"
-                     [columnsresize]="true"
-                     [filterable]="true"
-                     [height]="280"
-                     [localization]="localizationObject"
-                     [pageable]="true"
-                     [pagesize]="5"
-                     [sortable]="true"
-                     [source]="sourceTarea"
-                     [theme]="'material'"
-                     [width]="'100%'"
-                     class="mat-elevation-z5 grid-compacto">
+            <div class="modal-body">
+              <form id="formNuevoProcedimiento" (ngSubmit)="validateAndCreateProcedimiento($event)">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="descripcionNueva" name="descripcion" type="text"
+                        [(ngModel)]="crearprocedi.descripcion" required placeholder=" ">
+                      <label for="descripcionNueva">Descripción *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="codigoSIANuevo" name="codigoSIA" type="text"
+                        [(ngModel)]="crearprocedi.codigoSia" required placeholder=" ">
+                      <label for="codigoSIANuevo">Código SIA *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <select class="form-select" id="modalidadNueva" name="modalidad"
+                        [(ngModel)]="crearprocedi.modalidad" required>
+                        <option [ngValue]="null" disabled selected hidden></option>
+                        <option [ngValue]="1">Presencial</option>
+                        <option [ngValue]="2">Web con certificado</option>
+                        <option [ngValue]="3">Web sin certificado</option>
+                        <option [ngValue]="4">Presencial y Web con certificado</option>
+                        <option [ngValue]="5">Presencial y Web sin certificado</option>
+                      </select>
+                      <label for="modalidadNueva">Modalidad *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <select class="form-select" id="MateriaNueva" name="Materia" [(ngModel)]="crearprocedi.materia"
+                        required>
+                        <option [ngValue]="null" disabled selected hidden></option>
+                        <option *ngFor="let materiaprocedi of materiaprocedimiento"
+                          [ngValue]="materiaprocedi.idMatProce">
+                          {{ materiaprocedi.descripcion }}
+                        </option>
+                      </select>
+                      <label for="MateriaNueva">Materia *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <input class="form-control" id="siglasNueva" name="siglas" type="text" maxlength="5"
+                        [(ngModel)]="crearprocedi.siglas" required placeholder=" ">
+                      <label for="siglasNueva">Siglas *</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer px-0 pb-0">
+                  <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    (click)="limpiarErrores(); cerrarModal('NprocediModal')">Cancelar</button>
+                  <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ========== WORKSPACE ========== -->
+    <ng-container *ngIf="isWorkspaceMode">
+      <div class="page-panel procedimientos-page">
+        <header class="procedimientos-header">
+          <div class="procedimientos-header__text">
+            <p class="procedimientos-header__eyebrow">Detalle del procedimiento</p>
+            <h2 class="procedimientos-header__title">{{ descripProcedimiento }}</h2>
+            <p class="procedimientos-header__dept" *ngIf="siglas">
+              <span class="proc-badge">{{ siglas }}</span>
+              <span class="proc-header-meta">SIA {{ siaProcedimiento }}</span>
+            </p>
+          </div>
+          <div class="proc-workspace-header__actions">
+            <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm" (click)="volverAlListado()">
+              <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al listado
+            </button>
+            <button type="button" class="btn-iflow btn-iflow--danger btn-iflow--sm"
+              (click)="deleteProcedimiento(idprocedi)">
+              <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+            </button>
+          </div>
+        </header>
+
+        <section class="proc-workspace" aria-label="Secciones del procedimiento">
+          <div class="proc-context proc-context--activo">
+            <span class="proc-context__label">Departamento</span>
+            <span class="proc-context__value">{{ departProcedimiento }}</span>
+            <span class="proc-context__sep" aria-hidden="true"></span>
+            <span class="proc-context__label">Modalidad</span>
+            <span class="proc-context__value">{{ getModalidadLabel() }}</span>
+            <span class="proc-context__sep" aria-hidden="true"></span>
+            <span class="proc-context__label">Materia</span>
+            <span class="proc-context__value">{{ getMateriaLabel() }}</span>
+          </div>
+
+          <div class="proc-tarea-context" *ngIf="idverTarea" role="status">
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <span>Tarea seleccionada: <strong>{{ descripcionT }}</strong></span>
+            <button type="button" class="btn-iflow btn-iflow--sm btn-iflow--secondary"
+              *ngIf="activeWorkspaceTab !== 'permisos'" (click)="setWorkspaceTab('permisos')">
+              Gestionar permisos
+            </button>
+          </div>
+
+          <nav class="proc-tabs" role="tablist" aria-label="Secciones del procedimiento">
+            <button type="button" class="proc-tabs__btn" role="tab"
+              [class.active]="activeWorkspaceTab === 'datos'" [attr.aria-selected]="activeWorkspaceTab === 'datos'"
+              (click)="setWorkspaceTab('datos')">
+              <i class="bi bi-card-text" aria-hidden="true"></i> Datos
+            </button>
+            <button type="button" class="proc-tabs__btn" role="tab"
+              [class.active]="activeWorkspaceTab === 'tareas'" [attr.aria-selected]="activeWorkspaceTab === 'tareas'"
+              (click)="setWorkspaceTab('tareas')">
+              <i class="bi bi-list-task" aria-hidden="true"></i> Tareas
+            </button>
+            <button type="button" class="proc-tabs__btn" role="tab"
+              [class.active]="activeWorkspaceTab === 'permisos'" [attr.aria-selected]="activeWorkspaceTab === 'permisos'"
+              (click)="setWorkspaceTab('permisos')">
+              <i class="bi bi-shield-check" aria-hidden="true"></i> Permisos
+              <span class="proc-tabs__badge" *ngIf="idverTarea">1</span>
+            </button>
+            <button type="button" class="proc-tabs__btn" role="tab"
+              [class.active]="activeWorkspaceTab === 'atributos'" [attr.aria-selected]="activeWorkspaceTab === 'atributos'"
+              (click)="setWorkspaceTab('atributos')">
+              <i class="bi bi-tags" aria-hidden="true"></i> Atributos
+            </button>
+          </nav>
+
+        <!-- Tab: Datos -->
+        <section *ngIf="activeWorkspaceTab === 'datos'" class="proc-panel" role="tabpanel">
+          <header class="proc-panel__head">
+            <div>
+              <h3 class="proc-panel__title">Datos generales</h3>
+              <p class="proc-panel__desc">Edita la información principal del procedimiento.</p>
+            </div>
+          </header>
+          <div class="proc-panel__body">
+            <form id="formEditarProcedimiento" class="form-section" (ngSubmit)="validateAndEditProcedimiento($event)">
+              <div class="row g-3">
+                <div class="col-12"><div class="form-floating">
+                  <textarea class="form-control" id="descripcionEdit" name="descripcion"
+                    [(ngModel)]="editarprocedi.descripcion" required placeholder=" " style="min-height: 5rem"></textarea>
+                  <label for="descripcionEdit">Descripción *</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <input class="form-control" id="departamentoEdit" name="departamento" type="text"
+                    [value]="departProcedimiento" readonly placeholder=" ">
+                  <label for="departamentoEdit">Departamento</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <input class="form-control" id="codigoSIAEdit" name="codigoSIA" type="text"
+                    [(ngModel)]="editarprocedi.codigoSia" required placeholder=" ">
+                  <label for="codigoSIAEdit">Código SIA *</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="modalidadEdit" name="modalidad"
+                    [(ngModel)]="editarprocedi.modalidad" required>
+                    <option [ngValue]="null" disabled hidden></option>
+                    <option [ngValue]="1">Presencial</option>
+                    <option [ngValue]="2">Web con certificado</option>
+                    <option [ngValue]="3">Web sin certificado</option>
+                    <option [ngValue]="4">Presencial y Web con certificado</option>
+                    <option [ngValue]="5">Presencial y Web sin certificado</option>
+                  </select>
+                  <label for="modalidadEdit">Modalidad *</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="MateriaEdit" name="Materia"
+                    [(ngModel)]="editarprocedi.materia" required>
+                    <option [ngValue]="null" disabled hidden></option>
+                    <option *ngFor="let materiaprocedi of materiaprocedimiento" [ngValue]="materiaprocedi.idMatProce">
+                      {{ materiaprocedi.descripcion }}
+                    </option>
+                  </select>
+                  <label for="MateriaEdit">Materia *</label>
+                </div></div>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="volverAlListado()">Cancelar</button>
+                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar cambios</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Tab: Tareas -->
+        <section *ngIf="activeWorkspaceTab === 'tareas'" class="proc-panel" role="tabpanel">
+          <header class="proc-panel__head">
+            <div>
+              <h3 class="proc-panel__title">Tareas</h3>
+              <p class="proc-panel__desc">Selecciona una fila para asignar permisos en la pestaña Permisos.</p>
+            </div>
+            <div class="proc-panel__actions">
+              <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+                (click)="borravaloresNuevaTarea(); abrirOffcanvas('tareasOffcanvas')">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i> Nueva tarea
+              </button>
+              <button *ngIf="verEliminaTarea" class="btn-iflow btn-iflow--danger btn-iflow--sm" type="button"
+                (click)="deleteTareaProcedimiento()">
+                <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+              </button>
+            </div>
+          </header>
+          <div class="proc-panel__body proc-panel__body--grid">
+            <jqxGrid #gridTareas id="gridTareas" (onRowclick)="envioTareaProcedi($event)"
+              (onRowdoubleclick)="onRowDoubleClick($event)" [altrows]="true" [autoheight]="true"
+              [columns]="columnsTarea" [columnsautoresize]="true" [columnsresize]="true" [filterable]="true"
+              [height]="440" [localization]="localizationObject" [pageable]="true" [pagesize]="10"
+              [sortable]="true" [source]="sourceTarea" [theme]="'material'" [width]="'100%'">
             </jqxGrid>
           </div>
+        </section>
 
-          <!-- Permisos del Procedimiento -->
-          <div *ngIf="veoPermiso" class="col-6">
-            <div class="listado-titulo-container">
-              <h2 class="listado-titulo-secundario">Listado de Permisos de la Tarea</h2>
-              <div class="titulo-botones-container">
-                <button class="btn-iflow btn-iflow--icon"
-                        title="Nuevo permiso de la Tarea" type="button"
-                        (click)="activaFormNuevoPermiso(); abrirModal('nuevoPermisoModal')">
-                  <img src="assets/new/ico_add.png" alt="Nuevo Permiso" width="25" height="25">
+        <!-- Tab: Permisos -->
+        <section *ngIf="activeWorkspaceTab === 'permisos'" class="proc-panel" role="tabpanel">
+          <div *ngIf="!idverTarea" class="proc-empty-state">
+            <i class="bi bi-shield-exclamation proc-empty-state__icon" aria-hidden="true"></i>
+            <h3 class="proc-empty-state__title">Ninguna tarea seleccionada</h3>
+            <p class="proc-empty-state__text">
+              Los permisos se asignan por tarea. Ve a <strong>Tareas</strong>, selecciona una fila y vuelve aquí.
+            </p>
+            <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
+              (click)="setWorkspaceTab('tareas')">
+              <i class="bi bi-list-task" aria-hidden="true"></i> Ir a Tareas
+            </button>
+          </div>
+          <ng-container *ngIf="idverTarea">
+            <header class="proc-panel__head">
+              <div>
+                <h3 class="proc-panel__title">Permisos</h3>
+                <p class="proc-panel__desc">Tarea: <strong>{{ descripcionT }}</strong></p>
+              </div>
+              <div class="proc-panel__actions">
+                <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+                  (click)="activaFormNuevoPermiso(); abrirModal('nuevoPermisoModal')">
+                  <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo permiso
                 </button>
-                <button *ngIf="veoBorrarTarea" class="btn-iflow btn-iflow--icon" type="button"
-                        (click)="deletePermisoProcedimiento()"
-                        title="Eliminar Permiso de la Tarea">
-                  <img src="assets/new/ico_elim.png" alt="Eliminar Permiso" width="25" height="25">
+                <button *ngIf="veoBorrarTarea" class="btn-iflow btn-iflow--danger btn-iflow--sm" type="button"
+                  (click)="deletePermisoProcedimiento()">
+                  <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
                 </button>
               </div>
+            </header>
+            <div class="proc-panel__body proc-panel__body--grid">
+              <jqxGrid #gridPermisos id="gridPermisos" (onRowclick)="idpermisosPermi($event)"
+                [altrows]="true" [autoheight]="true" [columns]="columnsPermi" [columnsautoresize]="true"
+                [columnsresize]="true" [filterable]="true" [height]="440" [localization]="localizationObject"
+                [pageable]="true" [pagesize]="10" [sortable]="true" [source]="sourcePermi"
+                [theme]="'material'" [width]="'100%'">
+              </jqxGrid>
             </div>
-            <jqxGrid #gridPermisos
-                     id="gridPermisos"
-                     (onRowclick)="idpermisosPermi($event)"
-                     [altrows]="true"
-                     [autoheight]="true"
-                     [columns]="columnsPermi"
-                     [columnsautoresize]="true"
-                     [columnsresize]="true"
-                     [filterable]="true"
-                     [height]="280"
-                     [localization]="localizationObject"
-                     [pageable]="true"
-                     [pagesize]="5"
-                     [sortable]="true"
-                     [source]="sourcePermi"
-                     [theme]="'material'"
-                     [width]="'100%'"
-                     class="mat-elevation-z5 grid-compacto">
+          </ng-container>
+        </section>
+
+        <!-- Tab: Atributos -->
+        <section *ngIf="activeWorkspaceTab === 'atributos'" class="proc-panel" role="tabpanel">
+          <header class="proc-panel__head">
+            <div>
+              <h3 class="proc-panel__title">Atributos</h3>
+              <p class="proc-panel__desc">Metadatos y campos personalizados del trámite.</p>
+            </div>
+            <div class="proc-panel__actions">
+              <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+                (click)="abrirModal('NAtributosModal')">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo atributo
+              </button>
+              <button *ngIf="veoborraratributo" class="btn-iflow btn-iflow--danger btn-iflow--sm" type="button"
+                (click)="deleteatributo()">
+                <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+              </button>
+            </div>
+          </header>
+          <div class="proc-panel__body proc-panel__body--grid">
+            <jqxGrid #gridAtributos id="gridAtributos" (onRowclick)="marcoAtributos($event)"
+              (onRowdoubleclick)="onAtributoDoubleClick($event)" [altrows]="true" [autoheight]="true"
+              [columns]="columnsAtributos" [columnsautoresize]="true" [columnsresize]="true" [filterable]="true"
+              [height]="440" [localization]="localizationObject" [pageable]="true" [pagesize]="10"
+              [sortable]="true" [source]="sourceAtributos" [theme]="'material'" [width]="'100%'">
             </jqxGrid>
           </div>
-        </div>
+        </section>
+        </section>
       </div>
 
-      <!-- Sección Atributos -->
-      <div *ngIf="veoAtributos" class="page-panel seccion-atributos">
-        <div class="listado-titulo-container titulo-separador">
-          <h2 class="listado-titulo-secundario">Listado de Atributos del procedimiento</h2>
-          <div class="titulo-botones-container">
-            <button *ngIf="edicion" class="btn-iflow btn-iflow--icon"
-                    title="Nuevo Atributo" type="button" (click)="abrirModal('NAtributosModal')" (blur)="actualizaSourceAtributo(idProcedi)">
-              <img src="assets/new/ico_add.png" alt="Nuevo Atributo" width="25" height="25">
-            </button>
-            <button *ngIf="veoborraratributo" class="btn-iflow btn-iflow--icon" title="Eliminar Atributo"
-                    type="button" (click)="deleteatributo()">
-              <img src="assets/new/ico_elim.png" alt="Eliminar Atributo" width="25" height="25">
-            </button>
-          </div>
-        </div>
-        <jqxGrid #gridAtributos
-                 id="gridAtributos"
-                 (onRowclick)="marcoAtributos($event)"
-                 (onRowdoubleclick)="onAtributoDoubleClick($event)"
-                 [altrows]="true"
-                 [autoheight]="true"
-                 [columns]="columnsAtributos"
-                 [columnsautoresize]="true"
-                 [columnsresize]="true"
-                 [filterable]="true"
-                 [height]="200"
-                 [localization]="localizationObject"
-                 [pageable]="true"
-                 [pagesize]="5"
-                 [sortable]="true"
-                 [source]="sourceAtributos"
-                 [theme]="'material'"
-                 [width]="'100%'"
-                 class="mat-elevation-z5 grid-compacto">
-        </jqxGrid>
-      </div>
-
-
-<!-- *********************** MODALES *********************** -->
-
-<!-- Modal: Nuevo Permiso -->
-<div class="modal fade" id="nuevoPermisoModal" tabindex="-1" aria-labelledby="nuevoPermisoModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <!-- Encabezado -->
-      <div class="modal-header">
-        <h4 class="modal-title" id="nuevoPermisoModalLabel">Nuevo Permiso</h4>
-        <button type="button" class="btn-close" aria-label="Close"
+      <!-- Modal: Nuevo Permiso -->
+      <div class="modal fade" id="nuevoPermisoModal" tabindex="-1" aria-labelledby="nuevoPermisoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="nuevoPermisoModalLabel">Nuevo Permiso</h4>
+              <button type="button" class="btn-close" aria-label="Cerrar"
                 (click)="atrasCrearPermisoProcedi(); cerrarModal('nuevoPermisoModal')"></button>
-      </div>
-      <!-- Cuerpo -->
-      <div class="modal-body">
-        <form id="formNuevoPermiso" (ngSubmit)="validateAndCreatePermiso($event)">
-          <div class="form-floating mb-3">
-            <select class="form-select" id="departamento" name="plantilladefecto"
+            </div>
+            <div class="modal-body">
+              <form id="formNuevoPermiso" (ngSubmit)="validateAndCreatePermiso($event)">
+                <div class="form-floating">
+                  <select class="form-select" id="usuarioPermiso" name="plantilladefecto"
                     [(ngModel)]="creapermisoprocedi.usuario" required>
-              <option value="" disabled selected></option>
-              <option *ngFor="let procedipermisos of procedipermiso" [value]="procedipermisos.usuario">
-                {{ procedipermisos.usuario }}
-              </option>
-            </select>
-            <label for="departamento">Usuario: *</label>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let procedipermisos of procedipermiso" [value]="procedipermisos.usuario">
+                      {{ procedipermisos.usuario }}
+                    </option>
+                  </select>
+                  <label for="usuarioPermiso">Usuario *</label>
+                </div>
+                <div class="modal-footer px-0 pb-0">
+                  <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    (click)="atrasCrearPermisoProcedi(); cerrarModal('nuevoPermisoModal')">Cancelar</button>
+                  <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+                </div>
+              </form>
+            </div>
           </div>
-          <!-- Pie -->
-          <div class="modal-footer">
-            <button type="button" class="btn-iflow btn-iflow--secondary"
-                    (click)="atrasCrearPermisoProcedi(); cerrarModal('nuevoPermisoModal')">Cancelar
-            </button>
-            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-          </div>
-        </form>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
-
-<!-- Modal: Editar Atributos -->
-<div class="modal fade" id="EditoAtributosModal" tabindex="-1" aria-labelledby="EditoAtributosLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-
-      <!-- Header -->
-      <div class="modal-header">
-        <h4 class="modal-title" id="EditoAtributosLabel">Edición de atributos</h4>
-        <button type="button" class="btn-close" aria-label="Close"
+      <!-- Modal: Editar Atributos -->
+      <div class="modal fade" id="EditoAtributosModal" tabindex="-1" aria-labelledby="EditoAtributosLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="EditoAtributosLabel">Edición de atributos</h4>
+              <button type="button" class="btn-close" aria-label="Cerrar"
                 (click)="limpioAtributosformulario(); cerrarModal('EditoAtributosModal')"></button>
+            </div>
+            <form id="formEditarAtributos" (ngSubmit)="validateAndEditAtributo($event)">
+              <div class="modal-body">
+                <div class="mb-4">
+                  <div class="form-floating">
+                    <select class="form-select" id="etipoatributo" name="etipoatributo"
+                      [(ngModel)]="atributoscrear.idAtrib" required
+                      (change)="asociaEtiquetaAtributosEditar(atributoscrear.idAtrib)">
+                      <option value="" disabled selected></option>
+                      <option *ngFor="let tipoAtributos of tipoAtributo" [value]="tipoAtributos.valor">
+                        {{ tipoAtributos.descripcion }}
+                      </option>
+                    </select>
+                    <label for="etipoatributo">Tipo de atributo *</label>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="eetiqueta" name="eetiqueta" type="text" [value]="etiGruAtrib"
+                        disabled placeholder=" ">
+                      <label for="eetiqueta">Etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="edetiqueta" name="edetiqueta" type="text"
+                        [(ngModel)]="atributoscrear.desGruAtrib" required placeholder=" ">
+                      <label for="edetiqueta">Descripción etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-floating">
+                      <input class="form-control" id="evinicial" name="evinicial" type="{{tipocaracteresAtributos}}"
+                        [(ngModel)]="atributoscrear.valInici" [disabled]="disabledAtrib"
+                        maxlength="{{maximoCaracAtributos}}" placeholder=" ">
+                      <label for="evinicial">Valor Inicial</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-floating">
+                      <input class="form-control" id="evminimo" name="evminimo" type="{{tipocaracteresAtributos}}"
+                        [(ngModel)]="atributoscrear.valMinim" [disabled]="disabledAtrib"
+                        maxlength="{{maximoCaracAtributos}}" placeholder=" ">
+                      <label for="evminimo">Valor mínimo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-floating">
+                      <input class="form-control" id="evmaximo" name="evmaximo" type="{{tipocaracteresAtributos}}"
+                        [(ngModel)]="atributoscrear.valMaxim" [disabled]="disabledAtrib"
+                        maxlength="{{maximoCaracAtributos}}" placeholder=" ">
+                      <label for="evmaximo">Valor máximo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 d-flex align-items-center">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="erequerido" name="requerido"
+                        (click)="requerido(1)">
+                      <label class="form-check-label" for="erequerido">Requerido</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                  (click)="limpioAtributosformulario(); cerrarModal('EditoAtributosModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
-      <!-- Formulario -->
-      <form id="formEditarAtributos" (ngSubmit)="validateAndEditAtributo($event)">
-        <div class="modal-body">
-
-          <!-- Selección de tipo -->
-          <div class="form-floating mb-4">
-            <select class="form-select" id="etipoatributo" name="etipoatributo"
-                    [(ngModel)]="atributoscrear.idAtrib" required
-                    (change)="asociaEtiquetaAtributosEditar(atributoscrear.idAtrib)">
-              <option value="" disabled selected></option>
-              <option *ngFor="let tipoAtributos of tipoAtributo" [value]="tipoAtributos.valor">
-                {{ tipoAtributos.descripcion }}
-              </option>
-            </select>
-            <label for="etipoatributo">Tipo de atributo *</label>
+      <!-- Modal: Nuevos Atributos -->
+      <div class="modal fade" id="NAtributosModal" tabindex="-1" aria-labelledby="NAtributosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="NAtributosLabel">Nuevos atributos</h4>
+              <button type="button" class="btn-close" aria-label="Cerrar"
+                (click)="limpioAtributosformulario(); cerrarModal('NAtributosModal')"></button>
+            </div>
+            <form id="formNuevosAtributos" (ngSubmit)="validateAndCreateAtributo($event)">
+              <div class="modal-body">
+                <div class="mb-4">
+                  <div class="form-floating">
+                    <select class="form-select" id="tipoatributo" name="tipoatributo" required
+                      [(ngModel)]="atributoscrear.idAtrib" (ngModelChange)="asociaEtiquetaAtributos($event)">
+                      <option value="" disabled selected></option>
+                      <option *ngFor="let t of tipoAtributo" [value]="t.valor">{{ t.descripcion }}</option>
+                    </select>
+                    <label for="tipoatributo">Tipo de atributo *</label>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="etiqueta" name="etiqueta" type="text" required
+                        [(ngModel)]="atributoscrear.etiGruAtrib" placeholder=" ">
+                      <label for="etiqueta">Etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="detiqueta" name="detiqueta" type="text" required
+                        [(ngModel)]="atributoscrear.desGruAtrib" placeholder=" ">
+                      <label for="detiqueta">Descripción etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-floating">
+                      <input class="form-control" id="vinicial" name="vinicial" [type]="tipocaracteresAtributos"
+                        [attr.maxlength]="maximoCaracAtributos" [disabled]="disabledAtrib"
+                        [(ngModel)]="atributoscrear.valInici" placeholder=" ">
+                      <label for="vinicial">Valor inicial</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-floating">
+                      <input class="form-control" id="vminimo" name="vminimo" [type]="tipocaracteresAtributos"
+                        [attr.maxlength]="maximoCaracAtributos" [disabled]="disabledAtrib"
+                        [(ngModel)]="atributoscrear.valMinim" placeholder=" ">
+                      <label for="vminimo">Valor mínimo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-floating">
+                      <input class="form-control" id="vmaximo" name="vmaximo" [type]="tipocaracteresAtributos"
+                        [attr.maxlength]="maximoCaracAtributos" [disabled]="disabledAtrib"
+                        [(ngModel)]="atributoscrear.valMaxim" placeholder=" ">
+                      <label for="vmaximo">Valor máximo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2 d-flex align-items-center">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="requerido"
+                        (change)="requerido($any($event.target).checked ? 1 : 0)">
+                      <label class="form-check-label" for="requerido">Requerido</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                  (click)="limpioAtributosformulario(); cerrarModal('NAtributosModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+              </div>
+            </form>
           </div>
+        </div>
+      </div>
 
-          <!-- Grid de inputs -->
-          <div class="row g-3">
-            <!-- Etiqueta -->
-            <div class="col-md-6 form-floating">
-              <input class="form-control" id="eetiqueta" name="eetiqueta" type="text" [value]="etiGruAtrib" disabled>
-              <label for="eetiqueta">Etiqueta *</label>
-            </div>
-
-            <!-- Descripción etiqueta -->
-            <div class="col-md-6 form-floating">
-              <input class="form-control" id="edetiqueta" name="edetiqueta" type="text"
-                     [(ngModel)]="atributoscrear.desGruAtrib" required>
-              <label for="edetiqueta">Descripción etiqueta *</label>
-            </div>
-
-            <!-- Valor inicial -->
-            <div class="col-md-3 form-floating">
-              <input class="form-control" id="evinicial" name="evinicial" type="{{tipocaracteresAtributos}}"
-                     [(ngModel)]="atributoscrear.valInici" [disabled]="disabledAtrib"
-                     maxlength="{{maximoCaracAtributos}}">
-              <label for="evinicial">Valor Inicial</label>
-            </div>
-
-            <!-- Valor mínimo -->
-            <div class="col-md-3 form-floating">
-              <input class="form-control" id="evminimo" name="evminimo" type="{{tipocaracteresAtributos}}"
-                     [(ngModel)]="atributoscrear.valMinim" [disabled]="disabledAtrib"
-                     maxlength="{{maximoCaracAtributos}}">
-              <label for="evminimo">Valor mínimo</label>
-            </div>
-
-            <!-- Valor máximo -->
-            <div class="col-md-3 form-floating">
-              <input class="form-control" id="evmaximo" name="evmaximo" type="{{tipocaracteresAtributos}}"
-                     [(ngModel)]="atributoscrear.valMaxim" [disabled]="disabledAtrib"
-                     maxlength="{{maximoCaracAtributos}}">
-              <label for="evmaximo">Valor máximo</label>
-            </div>
-
-            <!-- Requerido -->
-            <div class="col-md-3 d-flex align-items-center">
-              <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="erequerido" name="requerido" (click)="requerido(1)">
-                <label class="form-check-label" for="erequerido">Requerido</label>
+      <!-- Offcanvas: Modificar Tarea -->
+      <div class="offcanvas offcanvas-end offcanvas-iflow" id="modificarTareaOffcanvas" tabindex="-1"
+        aria-labelledby="modificarTareaOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h4 class="offcanvas-title" id="modificarTareaOffcanvasLabel">Modificar Tarea</h4>
+          <button type="button" class="btn-close" aria-label="Cerrar"
+            (click)="limpiarErroresModificarTarea(); cerrarOffcanvas('modificarTareaOffcanvas')"></button>
+        </div>
+        <div class="offcanvas-body">
+          <form id="formModificarTarea" (ngSubmit)="validateAndEditTarea($event)">
+            <div class="mb-3">
+              <div class="form-floating">
+                <input class="form-control" id="descripcionModTarea" name="descripcion" type="text"
+                  [(ngModel)]="editatareaprocedi.descripcion" required placeholder=" ">
+                <label for="descripcionModTarea">Descripción *</label>
               </div>
             </div>
-
-          </div>
-
-        </div>
-
-        <!-- Footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn-iflow btn-iflow--secondary"
-                  (click)="limpioAtributosformulario(); cerrarModal('EditoAtributosModal')">Cancelar
-          </button>
-          <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
-<!-- Fin Modal: Editar Atributos -->
-
-<!-- Modal: Nuevos Atributos -->
-<div class="modal fade" id="NAtributosModal" tabindex="-1" aria-labelledby="NAtributosLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-
-      <!-- Header -->
-      <div class="modal-header">
-        <h4 class="modal-title" id="NAtributosLabel">Nuevos atributos</h4>
-        <button type="button"
-                class="btn-close"
-                aria-label="Close"
-                (click)="limpioAtributosformulario(); cerrarModal('NAtributosModal')">
-        </button>
-      </div>
-
-      <!-- Formulario -->
-      <form id="formNuevosAtributos" (ngSubmit)="validateAndCreateAtributo($event)">
-        <div class="modal-body">
-
-          <!-- Selección de tipo -->
-          <div class="form-floating mb-4">
-            <select class="form-select"
-                    id="tipoatributo"
-                    name="tipoatributo"
-                    required
-                    [(ngModel)]="atributoscrear.idAtrib"
-                    (ngModelChange)="asociaEtiquetaAtributos($event)">
-              <option value="" disabled selected></option>
-              <option *ngFor="let t of tipoAtributo" [value]="t.valor">
-                {{ t.descripcion }}
-              </option>
-            </select>
-            <label for="tipoatributo">Tipo de atributo *</label>
-          </div>
-
-          <!-- Grid de inputs -->
-          <div class="row g-3">
-            <!-- Etiqueta -->
-            <div class="col-md-6 form-floating">
-              <input class="form-control"
-                     id="etiqueta"
-                     name="etiqueta"
-                     type="text"
-                     required
-                     [(ngModel)]="atributoscrear.etiGruAtrib">
-              <label for="etiqueta">Etiqueta *</label>
-            </div>
-
-            <!-- Descripción etiqueta -->
-            <div class="col-md-6 form-floating">
-              <input class="form-control"
-                     id="detiqueta"
-                     name="detiqueta"
-                     type="text"
-                     required
-                     [(ngModel)]="atributoscrear.desGruAtrib">
-              <label for="detiqueta">Descripción etiqueta *</label>
-            </div>
-
-            <!-- Valor inicial -->
-            <div class="col-md-2 form-floating">
-              <input
-                class="form-control"
-                id="vinicial"
-                name="vinicial"
-                [type]="tipocaracteresAtributos"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                [attr.maxlength]="maximoCaracAtributos"
-                [disabled]="disabledAtrib"
-                [(ngModel)]="atributoscrear.valInici">
-              <label for="vinicial">Valor inicial</label>
-            </div>
-
-            <!-- Valor mínimo -->
-            <div class="col-md-2 form-floating">
-              <input
-                class="form-control"
-                id="vminimo"
-                name="vminimo"
-                [type]="tipocaracteresAtributos"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                [attr.maxlength]="maximoCaracAtributos"
-                [disabled]="disabledAtrib"
-                [(ngModel)]="atributoscrear.valMinim">
-              <label for="vminimo">Valor mínimo</label>
-            </div>
-
-            <!-- Valor máximo -->
-            <div class="col-md-2 form-floating">
-              <input
-                class="form-control"
-                id="vmaximo"
-                name="vmaximo"
-                [type]="tipocaracteresAtributos"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                [attr.maxlength]="maximoCaracAtributos"
-                [disabled]="disabledAtrib"
-                [(ngModel)]="atributoscrear.valMaxim">
-              <label for="vmaximo">Valor máximo</label>
-            </div>
-
-            <!-- Requerido -->
-            <div class="col-md-2 d-flex align-items-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="requerido"
-                  (change)="requerido($any($event.target).checked ? 1 : 0)">
-                <label class="form-check-label" for="requerido">Requerido</label>
+            <div class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="faseModificar" name="fase" [(ngModel)]="editatareaprocedi.faseTarea"
+                  required>
+                  <option value="" disabled selected></option>
+                  <option value="INICIO">Inicio</option>
+                  <option value="INSTRUCCION">Instrucción</option>
+                  <option value="RESOLUCION">Resolución</option>
+                </select>
+                <label for="faseModificar">Fase *</label>
               </div>
             </div>
-
-          </div>
-
+            <div class="row g-3 mb-3">
+              <div class="col-12">
+                <div class="form-floating">
+                  <select (change)="peparadatosfirma(editatareaprocedi.plantillaDefecto)"
+                    [(ngModel)]="editatareaprocedi.plantillaDefecto" class="form-select" id="plantillaModificar"
+                    name="plantilladefecto" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLANTILLA">Sin Plantilla</option>
+                    <option *ngFor="let plantillatareas of plantillatarea" [value]="plantillatareas.plantilla">
+                      {{ plantillatareas.desPlant }}
+                    </option>
+                  </select>
+                  <label for="plantillaModificar">Plantilla por defecto *</label>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating">
+                  <select class="form-select" id="accionesModificar" name="acciones"
+                    [(ngModel)]="editatareaprocedi.acciones" required>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let accion of acciones" [value]="accion.valor">{{ accion.descripcion }}</option>
+                  </select>
+                  <label for="accionesModificar">Acciones *</label>
+                </div>
+              </div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input class="form-control" id="plazoModificar" name="plazo" type="number"
+                    [(ngModel)]="editatareaprocedi.plazo" max="365" min="1" required placeholder=" ">
+                  <label for="plazoModificar">Plazo *</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <select class="form-select" id="tipoPlazoModificar" name="tipoplazo"
+                    [(ngModel)]="editatareaprocedi.tipoPlazo" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLAZO">Sin plazo</option>
+                    <option value="DIAS">Día</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                  <label for="tipoPlazoModificar">Tipo de plazo *</label>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="tpsinfirma" class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="firmaModificar" name="firmapordefecto1"
+                  [(ngModel)]="editatareaprocedi.firmapordefecto" required>
+                  <option value="" disabled selected></option>
+                  <option *ngFor="let firmaslistar of firmalistar" [value]="firmaslistar.procesoFirmadoDefecto">
+                    {{ firmaslistar.descripcionCircuito }}
+                  </option>
+                </select>
+                <label for="firmaModificar">Firma por defecto *</label>
+              </div>
+            </div>
+            <div class="offcanvas-iflow__actions">
+              <button type="button" class="btn-iflow btn-iflow--secondary"
+                (click)="limpiarErroresModificarTarea(); cerrarOffcanvas('modificarTareaOffcanvas')">Cancelar</button>
+              <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
+            </div>
+          </form>
         </div>
+      </div>
 
-        <!-- Footer -->
-        <div class="modal-footer">
-          <button type="button"
-                  class="btn-iflow btn-iflow--secondary"
-                  (click)="limpioAtributosformulario(); cerrarModal('NAtributosModal')">
-            Cancelar
-          </button>
-          <button type="submit"
-                  class="btn-iflow btn-iflow--secondary">
-            Guardar
-          </button>
+      <!-- Offcanvas: Nueva Tarea -->
+      <div class="offcanvas offcanvas-end offcanvas-iflow" id="tareasOffcanvas" tabindex="-1"
+        aria-labelledby="tareasOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h4 class="offcanvas-title" id="tareasOffcanvasLabel">Nueva Tarea</h4>
+          <button type="button" class="btn-close" aria-label="Cerrar"
+            (click)="borravaloresNuevaTarea(); cerrarOffcanvas('tareasOffcanvas')"></button>
         </div>
-      </form>
-
-    </div>
-  </div>
-</div>
-<!-- Fin Modal: Nuevos Atributos -->
-
-
-
-<!-- Modal: Modificar Tarea -->
-<div class="modal fade" id="modifitareasModalListado" tabindex="-1" aria-labelledby="modifitareasModalListadoLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="modifitareasModalListadoLabel">Modificar Tarea</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="limpiarErroresModificarTarea(); cerrarModal('modifitareasModalListado')"></button>
+        <div class="offcanvas-body">
+          <form id="formNuevaTarea" (ngSubmit)="validateAndCreateTarea($event)">
+            <div class="mb-3">
+              <div class="form-floating">
+                <textarea class="form-control" id="descripcionTarea" name="descripcion"
+                  [(ngModel)]="creatareaprocedi.descripcion" required placeholder=" "
+                  style="min-height: 5rem"></textarea>
+                <label for="descripcionTarea">Descripción *</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="faseTarea" name="fase" [(ngModel)]="creatareaprocedi.fasetarea"
+                  required>
+                  <option value="" disabled selected></option>
+                  <option value="INICIO">Inicio</option>
+                  <option value="INSTRUCCION">Instrucción</option>
+                  <option value="RESOLUCION">Resolución</option>
+                </select>
+                <label for="faseTarea">Fase *</label>
+              </div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-12">
+                <div class="form-floating">
+                  <select (change)="peparadatosfirma(creatareaprocedi.plantilladefecto)"
+                    [(ngModel)]="creatareaprocedi.plantilladefecto" class="form-select" id="plantillaTarea"
+                    name="plantilladefecto" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLANTILLA">Sin Plantilla</option>
+                    <option *ngFor="let plantillatareas of plantillatarea" [value]="plantillatareas.plantilla">
+                      {{ plantillatareas.desPlant }}
+                    </option>
+                  </select>
+                  <label for="plantillaTarea">Plantilla por defecto *</label>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating">
+                  <select (change)="preparoAccion($event)" [(ngModel)]="creatareaprocedi.acciones" class="form-select"
+                    id="accionesTarea" name="acciones" required>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let accion of acciones" [value]="accion.valor">{{ accion.descripcion }}</option>
+                  </select>
+                  <label for="accionesTarea">Acciones *</label>
+                </div>
+              </div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input class="form-control" id="plazoTarea" name="plazo" type="number"
+                    [(ngModel)]="creatareaprocedi.plazo" required min="1" max="365" placeholder=" ">
+                  <label for="plazoTarea">Plazo *</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <select class="form-select" id="tipoPlazoTarea" name="tipoplazo"
+                    [(ngModel)]="creatareaprocedi.tipoplazo" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLAZO">Sin plazo</option>
+                    <option value="DIAS">Día</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                  <label for="tipoPlazoTarea">Tipo plazo *</label>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="tpsinfirma" class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="firmaTarea" name="firmapordefecto1"
+                  [(ngModel)]="creatareaprocedi.firmapordefecto" required>
+                  <option value="" disabled selected></option>
+                  <option *ngFor="let firmaslistar of firmalistar" [value]="firmaslistar.procesoFirmadoDefecto">
+                    {{ firmaslistar.descripcionCircuito }}
+                  </option>
+                </select>
+                <label for="firmaTarea">Firma por defecto *</label>
+              </div>
+            </div>
+            <div class="offcanvas-iflow__actions">
+              <button type="button" class="btn-iflow btn-iflow--secondary"
+                (click)="borravaloresNuevaTarea(); cerrarOffcanvas('tareasOffcanvas')">Cancelar</button>
+              <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="modal-body">
-        <form id="formModificarTarea" (ngSubmit)="validateAndEditTarea($event)">
-          <div class="mb-3 form-floating">
-            <input class="form-control" id="descripcion" name="descripcion" type="text"
-                   [(ngModel)]="editatareaprocedi.descripcion" [value]="descripcionT" required>
-            <label class="form-label" for="descripcion">Descripción *</label>
-          </div>
-          <div class="mb-3 form-floating">
-            <select class="form-select" id="departamento" name="fase"
-                    [(ngModel)]="editatareaprocedi.faseTarea" [value]="faseT" required>
-              <option value="" disabled selected></option>
-              <option value="INICIO">Inicio</option>
-              <option value="INSTRUCCION">Instrucción</option>
-              <option value="RESOLUCION">Resolución</option>
-            </select>
-            <label class="form-label" for="departamento">Selecciona Fase *</label>
-          </div>
-          <div class="row">
-            <div class="col-7 mb-3 form-floating">
-              <select (change)="peparadatosfirma(editatareaprocedi.plantillaDefecto)"
-                      [(ngModel)]="editatareaprocedi.plantillaDefecto" [value]="plantillaT"
-                      class="form-select" id="departamento" name="plantilladefecto" required>
-                <option value="" disabled selected></option>
-                <option value="SINPLANTILLA">Sin Plantilla</option>
-                <option *ngFor="let plantillatareas of plantillatarea" [value]="plantillatareas.plantilla">
-                  {{ plantillatareas.desPlant }}
-                </option>
-              </select>
-              <label class="col-form-label" for="departamento">Plantilla por defecto *</label>
-            </div>
-            <div class="col-5 mb-3 form-floating">
-              <select class="form-select" id="acciones" name="acciones"
-                      [(ngModel)]="editatareaprocedi.acciones" [value]="accionTarea" required>
-                <option value="" disabled selected></option>
-                <option *ngFor="let accion of acciones" [value]="accion.valor">
-                  {{ accion.descripcion }}
-                </option>
-              </select>
-              <label class="form-label" for="acciones">Acciones *</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-8 col-sm-6 form-floating">
-              <input class="form-control" id="plantilla" name="plazo" type="number"
-                     [(ngModel)]="editatareaprocedi.plazo" max="365" min="1" [value]="plazot" required>
-              <label class="form-label" for="departamento">Plazo *</label>
-            </div>
-            <div class="col-8 col-sm-6 form-floating">
-              <select class="form-select" id="departamento" name="tipoplazo"
-                      [(ngModel)]="editatareaprocedi.tipoPlazo" [value]="tipoPlazoT" required>
-                <option value="" disabled selected></option>
-                <option value="SINPLAZO">Sin plazo</option>
-                <option value="DIAS">Día</option>
-                <option value="SEMANAS">Semana</option>
-                <option value="MESES">Mes</option>
-                <option value="ANOS">Año</option>
-              </select>
-              <label class="form-label" for="departamento">Seleccionar tipo plazo *</label>
-            </div>
-          </div>
-          <br>
-          <div *ngIf="tpsinfirma" class="mb-3 form-floating">
-            <select class="form-select" id="departamento1" name="firmapordefecto1"
-                    [(ngModel)]="editatareaprocedi.firmapordefecto" required>
-              <option value="" disabled selected></option>
-              <option *ngFor="let firmaslistar of firmalistar" [value]="firmaslistar.procesoFirmadoDefecto">
-                {{ firmaslistar.descripcionCircuito }}
-              </option>
-            </select>
-            <label class="col-form-label" for="departamento1">Firma por defecto *</label>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresModificarTarea(); cerrarModal('modifitareasModalListado')">Cancelar</button>
-            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Fin Modal: Modificar Tarea -->
-
-<!-- Modal: Nueva Tarea del Procedimiento -->
-<div class="modal fade" id="tareasModal" tabindex="-1" aria-labelledby="tareasModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="tareasModalLabel">Nueva Tarea</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="borravaloresNuevaTarea(); cerrarModal('tareasModal')"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formNuevaTarea" (ngSubmit)="validateAndCreateTarea($event)">
-          <div class="mb-3 form-floating">
-            <textarea class="form-control" id="descripcionTarea" name="descripcion"
-                      [(ngModel)]="creatareaprocedi.descripcion" required></textarea>
-            <label class="form-label" for="descripcionTarea">Descripción *</label>
-          </div>
-          
-          <div class="mb-3 form-floating">
-            <select class="form-select" id="faseTarea" name="fase"
-                    [(ngModel)]="creatareaprocedi.fasetarea" required>
-              <option value="" disabled selected></option>
-              <option value="INICIO">Inicio</option>
-              <option value="INSTRUCCION">Instrucción</option>
-              <option value="RESOLUCION">Resolución</option>
-            </select>
-            <label class="form-label" for="faseTarea">Seleccionar fase *</label>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-8 mb-3 form-floating">
-              <select (change)="peparadatosfirma(creatareaprocedi.plantilladefecto)"
-                      [(ngModel)]="creatareaprocedi.plantilladefecto" class="form-select"
-                      id="plantillaTarea" name="plantilladefecto" required>
-                <option value="" disabled selected></option>
-                <option value="SINPLANTILLA">Sin Plantilla</option>
-                <option *ngFor="let plantillatareas of plantillatarea" [value]="plantillatareas.plantilla">
-                  {{ plantillatareas.desPlant }}
-                </option>
-              </select>
-              <label class="form-label" for="plantillaTarea">Plantilla por defecto *</label>
-            </div>
-            <div class="col-md-4 mb-3 form-floating">
-              <select (change)="preparoAccion($event)" [(ngModel)]="creatareaprocedi.acciones"
-                      class="form-select" id="accionesTarea" name="acciones" required>
-                <option value="" disabled selected></option>
-                <option *ngFor="let accion of acciones" [value]="accion.valor">
-                  {{ accion.descripcion }}
-                </option>
-              </select>
-              <label class="form-label" for="accionesTarea">Acciones *</label>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-6 mb-3 form-floating">
-              <input class="form-control" id="plazoTarea" name="plazo" type="number"
-                     [(ngModel)]="creatareaprocedi.plazo" required min="1" max="365">
-              <label class="form-label" for="plazoTarea">Plazo *</label>
-            </div>
-            <div class="col-md-6 mb-3 form-floating">
-              <select class="form-select" id="tipoPlazoTarea" name="tipoplazo"
-                      [(ngModel)]="creatareaprocedi.tipoplazo" required>
-                <option value="" disabled selected></option>
-                <option value="SINPLAZO">Sin plazo</option>
-                <option value="DIAS">Día</option>
-                <option value="SEMANAS">Semana</option>
-                <option value="MESES">Mes</option>
-                <option value="ANOS">Año</option>
-              </select>
-              <label class="form-label" for="tipoPlazoTarea">Seleccionar tipo plazo *</label>
-            </div>
-          </div>
-          
-          <div *ngIf="tpsinfirma" class="mb-3 form-floating">
-            <select class="form-select" id="firmaTarea" name="firmapordefecto1"
-                    [(ngModel)]="creatareaprocedi.firmapordefecto" required>
-              <option value="" disabled selected></option>
-              <option *ngFor="let firmaslistar of firmalistar" [value]="firmaslistar.procesoFirmadoDefecto">
-                {{ firmaslistar.descripcionCircuito }}
-              </option>
-            </select>
-            <label class="form-label" for="firmaTarea">Firma por defecto *</label>
-          </div>
-          
-          <div class="modal-footer">
-            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="borravaloresNuevaTarea(); cerrarModal('tareasModal')">Cancelar</button>
-            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Fin Modal: Nueva Tarea del Procedimiento -->
-
-
-<!-- Fin Modal: Nuevo Permiso -->
-
-<div class="modal fade" id="editarProcedimientoModal" tabindex="-1" aria-labelledby="editarProcedimientoModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="editarProcedimientoModalLabel">Modificar Procedimiento</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('editarProcedimientoModal')"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formEditarProcedimiento" (ngSubmit)="validateAndEditProcedimiento($event)">
-          <div class="row">
-            <div class="col-12 form-floating">
-                  <textarea class="form-control" id="descripcion" name="descripcion"
-                            [(ngModel)]="editarprocedi.descripcion" [value]="descripProcedimiento" required></textarea>
-              <label class="form-label form-label--floating" for="descripcion">Descripción *</label>
-              <br>
-            </div>
-            <div class="col-6 form-floating">
-              <input class="form-control" id="departamento" name="departamento" type="text"
-                     [value]="departProcedimiento" disabled>
-              <label class="form-label form-label--floating" for="departamento">Departamento</label>
-              <br>
-            </div>
-            <div class="col-6 form-floating">
-              <input class="form-control" id="codigoSIA" name="codigoSIA" type="text"
-                     [(ngModel)]="editarprocedi.codigoSia" [value]="siaProcedimiento" required>
-              <label class="form-label form-label--floating" for="codigoSIA">Código SIA *</label>
-              <br>
-            </div>
-            <div class="col-6 form-floating">
-              <select class="form-select" id="modalidad" name="modalidad"
-                      [(ngModel)]="editarprocedi.modalidad" [value]="modalidad" required>
-                <option value="" disabled selected></option>
-                <option value="1">Presencial</option>
-                <option value="2">Web con certificado</option>
-                <option value="3">Web sin certificado</option>
-                <option value="4">Presencial y Web con certificado</option>
-                <option value="5">Presencial y Web sin certificado</option>
-              </select>
-              <label class="form-label form-label--floating" for="modalidad">Modalidad *</label>
-            </div>
-            <div class="col-6 form-floating">
-              <select class="form-select" id="Materia" name="Materia"
-                      [(ngModel)]="editarprocedi.materia" [value]="materia" required>
-                <option value="" disabled selected></option>
-                <option *ngFor="let materiaprocedi of materiaprocedimiento" [value]="materiaprocedi.idMatProce">
-                  {{ materiaprocedi.descripcion }}
-                </option>
-              </select>
-              <label class="form-label form-label--floating" for="Materia">Materia *</label>
-              <br>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErroresEditarProcedimiento(); cerrarModal('editarProcedimientoModal')">Cancelar</button>
-            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Nuevo Procedimiento -->
-<div class="modal fade" id="NprocediModal" tabindex="-1" aria-labelledby="NprocediModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="NprocediModalLabel">Nuevo Procedimiento</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal('NprocediModal')"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formNuevoProcedimiento"
-          (ngSubmit)="validateAndCreateProcedimiento($event)">
-          <div class="row">
-            <div class="mb-3 form-floating">
-              <input class="form-control" id="descripcion" name="descripcion" type="text"
-                     [(ngModel)]="crearprocedi.descripcion" required>
-              <label class="col-form-label form-label--floating" for="descripcion">Descripción *</label>
-            </div>
-            <div class="mb-3 form-floating">
-              <input class="form-control" id="codigoSIA" name="codigoSIA" type="text"
-                     [(ngModel)]="crearprocedi.codigoSia" required>
-              <label class="col-form-label form-label--floating" for="codigoSIA">Código SIA *</label>
-              <br>
-            </div>
-            <div class="col-4 form-floating">
-              <select class="form-select" id="modalidad" name="modalidad"
-                      [(ngModel)]="crearprocedi.modalidad" required>
-                <option value="" disabled selected></option>
-                <option value="1">Presencial</option>
-                <option value="2">Web con certificado</option>
-                <option value="3">Web sin certificado</option>
-                <option value="4">Presencial y Web con certificado</option>
-                <option value="5">Presencial y Web sin certificado</option>
-              </select>
-              <label class="form-label form-label--floating" for="modalidad">Modalidad*</label>
-            </div>
-            <div class="col-4 form-floating">
-              <select class="form-select" id="Materia" name="Materia"
-                      [(ngModel)]="crearprocedi.materia" required>
-                <option value="" disabled selected></option>
-                <option *ngFor="let materiaprocedi of materiaprocedimiento" [value]="materiaprocedi.idMatProce">
-                  {{ materiaprocedi.descripcion }}
-                </option>
-              </select>
-              <label class="form-label form-label--floating" for="Materia">Materia*</label>
-              <br>
-            </div>
-            <div class="col-4 form-floating">
-              <input class="form-control" id="siglas" name="siglas" type="text" maxlength="5"
-                     [(ngModel)]="crearprocedi.siglas" required>
-              <label class="col-form-label form-label--floating" for="siglas">Siglas *</label>
-              <br>
-            </div>
-          </div>
-          <br>
-          <div class="modal-footer">
-            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiarErrores(); cerrarModal('NprocediModal')">Cancelar</button>
-            <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-</ng-container>
+    </ng-container>
+  </ng-container>
 </app-shell>

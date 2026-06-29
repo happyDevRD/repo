@@ -17,7 +17,6 @@ export class TemaDocumentoService {
 
   getTemaDocumentoListar(): Observable<TemaDocumentoDTO[]> {
     const idOrgElemen = this.session.idOrgEleme;
-    console.log("LANZAMOS CONSULTA DE TEMA : " ,  idOrgElemen );
     return this.http.get(`${environment.apiUrl}temaDocumento/listar/${idOrgElemen}`).pipe(
       map(response => response as TemaDocumentoDTO[])
     );

@@ -8,6 +8,7 @@ import { Operacion } from '../../core/models/operacion.model';
 import { Subject, of, combineLatest } from 'rxjs';
 import { takeUntil, switchMap, catchError, startWith } from 'rxjs/operators';
 import { UserSessionService } from '../../core/service/user-session.service';
+import { reconcileModalDomState } from '../../core/service/modal-dom.util';
 
 @Component({
   selector: 'app-operacion-form',
@@ -153,6 +154,7 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    reconcileModalDomState();
   }
 
   cargarRotContaOptions() {
@@ -163,14 +165,8 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
         next: (contabilidades) => {
           this.rotContaOptions = contabilidades;
         },
-        error: (error) => {
-          console.error('Error al cargar las opciones de Contabilidad:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al cargar Contabilidades',
-            text:
-              'No se pudieron cargar las opciones de Contabilidad. Por favor, inténtalo de nuevo más tarde.',
-          }).then(r => r);
+        error: () => {
+          this.rotContaOptions = [];
         },
       });
   }
@@ -263,7 +259,6 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
 
   guardarOperacion() {
     if (this.operacionForm.invalid) {
-      console.log('Formulario inválido:', this.operacionForm.errors);
       this.logFormErrors(this.operacionForm);
       this.operacionForm.markAllAsTouched();
       return;
@@ -347,7 +342,6 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
       )
       .subscribe((result) => {
         if (result) {
-          console.log('Operación creada con éxito', result);
           Swal.fire({
             icon: 'success',
             title: 'Operación Creada',
@@ -361,6 +355,10 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
           this.operacionForm.get('tipoIva')?.setValue('');
         }
       });
+  }
+
+  handleCloseModal(): void {
+    this.closeModal.emit()
   }
 
   private logFormErrors(control: AbstractControl): void {

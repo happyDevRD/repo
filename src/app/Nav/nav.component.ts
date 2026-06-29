@@ -1,6 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ExpedientesService } from '../expedientes/expedientes.service';
 import { LeerMensajeRecibidos } from '../expedientes/expedientes';
@@ -38,16 +37,12 @@ export class NavComponent implements OnInit, OnDestroy {
   public nmensajestramitados = 0;
   public nmensajesrechazados = 0;
 
-  public errorMessage: string | null = null;
-  public errorStatus?: number;
-
   mobileMenuOpen = false;
   private mensajesInterval?: ReturnType<typeof setInterval>;
 
   constructor(
     public router: Router,
     public expedientesService: ExpedientesService,
-    public http: HttpClient,
     private navUi: NavUiService,
     private session: UserSessionService
   ) { }
@@ -114,28 +109,15 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   public verMensajesRecibido(): void {
-    const idOrgUsuar = this.session.idOrgUsuar;
-    if (!idOrgUsuar) { return; }
+    if (!this.session.idOrgUsuar) {
+      return;
+    }
 
     this.expedientesService.getMensajeListarRecibidos().subscribe({
       next: (data: LeerMensajeRecibidos[]) => {
         this.leermensajerecibido = data || [];
         this.numeroMensajespendientes();
       },
-      error: (err: unknown) => {
-        console.error('Error al cargar mensajes:', err);
-      }
-    });
-
-    this.http.get(`${environment.apiUrl}mensaje/listarRecibidos/${idOrgUsuar}`).subscribe({
-      next: () => { },
-      error: (error: HttpErrorResponse) => {
-        this.errorStatus = error.status;
-        this.errorMessage = error.status === 404
-          ? 'No hay Mensajes disponibles'
-          : `Error HTTP: ${error.status}`;
-        console.warn(`Mensaje de error: ${this.errorMessage}`);
-      }
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import {
   AtributosCrear,
   CreaPermisoProcedi,
@@ -31,7 +31,9 @@ import { GridRadioSelector } from "../core/helper/grid-radio-selector";
 import { NotificationService } from "../core/service/notification.service";
 import { FormValidatorHelper } from "../core/helper/form-validator.helper";
 import { ModalManagerService } from "../core/service/modal-manager.service";
+import { ProcedimientoUiService } from './procedimiento-ui.service';
 import { UserSessionService } from '../core/service/user-session.service';
+import { Subscription } from 'rxjs';
 
 class RespuestasHttp {
   error!: any;
@@ -80,12 +82,14 @@ class PermisoProcediCreado {
   usuctrl!: string;
 }
 
+export type ProcedimientoWorkspaceTab = 'datos' | 'tareas' | 'permisos' | 'atributos'
+
 @Component({
   selector: 'app-procedimientos',
   templateUrl: './procedimientos.component.html',
   styleUrls: ['./procedimientos.component.css']
 })
-export class ProcedimientosComponent {
+export class ProcedimientosComponent implements OnDestroy {
   // Referencias a los grids
   @ViewChild('gridProcedimientos') gridProcedimientos: any;
   @ViewChild('gridTareas') gridTareas: any;
@@ -123,7 +127,6 @@ export class ProcedimientosComponent {
     return this.session.user;
   }
 
-  // --------------------Eleazar garcia
   public editatareaprocedi: any = new EditaTareaProcedi();
   public documentoInput: string = "";
   public idExpediente: number = 0;
@@ -137,6 +140,11 @@ export class ProcedimientosComponent {
   acciondefecto = this.acciones[0].valor;
 
   public crearprocedi: CrearProcedi = new CrearProcedi();
+  private nuevoProcedimientoSub?: Subscription;
+  private routeParamsSub?: Subscription;
+  private routeQuerySub?: Subscription;
+  public isWorkspaceMode = false;
+  public activeWorkspaceTab: ProcedimientoWorkspaceTab = 'datos';
   materiaprocedimiento!: MateriaProcedimiento[];
   procedimientos!: Procedimiento[];
   permisprocedi!: PermisProcedi[];
@@ -375,6 +383,7 @@ export class ProcedimientosComponent {
     private modalService: ModalService,
     private notificationService: NotificationService,
     private modalManagerService: ModalManagerService,
+    private procedimientoUi: ProcedimientoUiService,
     public session: UserSessionService) { }
 
   public disabledAtrib: boolean = false;
@@ -395,6 +404,156 @@ export class ProcedimientosComponent {
       );
     }
     this.dataSource = new MatTableDataSource(this.procedimientos);
+
+    this.nuevoProcedimientoSub = this.procedimientoUi.onOpenNuevoProcedimiento.subscribe(() => {
+      setTimeout(() => this.abrirNuevoProcedimientoModal(), 0);
+    });
+
+    if (this.procedimientoUi.consumePendingOpen()) {
+      setTimeout(() => this.abrirNuevoProcedimientoModal(), 0);
+    }
+
+    this.routeParamsSub = this.activatedRoute.params.subscribe(params => {
+      const rawId = params['id'];
+      if (rawId) {
+        this.isWorkspaceMode = true;
+        this.loadWorkspace(+rawId);
+        return;
+      }
+      this.isWorkspaceMode = false;
+      this.resetWorkspaceState();
+    });
+
+    this.routeQuerySub = this.activatedRoute.queryParams.subscribe(query => {
+      const tab = query['tab'] as ProcedimientoWorkspaceTab | undefined;
+      if (tab && ['datos', 'tareas', 'permisos', 'atributos'].includes(tab)) {
+        this.activeWorkspaceTab = tab;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.nuevoProcedimientoSub?.unsubscribe();
+    this.routeParamsSub?.unsubscribe();
+    this.routeQuerySub?.unsubscribe();
+  }
+
+  public setWorkspaceTab(tab: ProcedimientoWorkspaceTab): void {
+    this.activeWorkspaceTab = tab;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { tab },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+  }
+
+  public volverAlListado(): void {
+    this.router.navigate(['/procedimientos']);
+  }
+
+  public getModalidadLabel(): string {
+    const labels: Record<number, string> = {
+      1: 'Presencial',
+      2: 'Web con certificado',
+      3: 'Web sin certificado',
+      4: 'Presencial y Web con certificado',
+      5: 'Presencial y Web sin certificado'
+    };
+    return labels[Number(this.modalidad)] ?? '—';
+  }
+
+  public getMateriaLabel(): string {
+    const id = Number(this.materia ?? this.editarprocedi.materia);
+    const found = this.materiaprocedimiento?.find(m => Number(m.idMatProce) === id);
+    return found?.descripcion ?? '—';
+  }
+
+  private resetWorkspaceState(): void {
+    this.veoTarea = false;
+    this.veoPermiso = false;
+    this.veoAtributos = false;
+    this.veoeliminaProcedimiento = false;
+    this.idverTarea = undefined as any;
+  }
+
+  private loadWorkspace(id: number): void {
+    if (!id) {
+      return;
+    }
+
+    this.idProcedi = id;
+    this.idprocedi = id;
+    this.idProcedimiento = id;
+    this.edicion = true;
+    this.veoTarea = true;
+    this.veoAtributos = true;
+    this.veoeliminaProcedimiento = true;
+    this.session.setIdProcedimiento(id);
+
+    this.procedimientoService.getProcedimiento(id).subscribe({
+      next: (procedimiento) => {
+        const proc = procedimiento as Procedimiento & { modalidad?: number; idMatProce?: number; siglas?: string };
+        this.descripProcedimiento = proc.descripcion;
+        this.siaProcedimiento = proc.codigoSia;
+        this.siglas = proc.siglas;
+        this.departProcedimiento = this.resolveDepartamentoLabel(proc.departamento);
+        this.materia = proc.idMatProce;
+        this.modalidad = proc.modalidad;
+        this.editarprocedi.id = id;
+        this.editarprocedi.descripcion = proc.descripcion;
+        this.editarprocedi.codigoSia = proc.codigoSia;
+        this.editarprocedi.modalidad = proc.modalidad as any;
+        this.editarprocedi.materia = proc.idMatProce as any;
+      },
+      error: () => {
+        this.notificationService.error('No se pudo cargar el procedimiento');
+        this.volverAlListado();
+      }
+    });
+
+    this.getListaTareas(id);
+    this.lanzaSourceTarea();
+    this.actualizaSourceAtributo(id);
+  }
+
+  private resolveDepartamentoLabel(departamento: unknown): string {
+    if (Array.isArray(departamento) && departamento.length) {
+      return (departamento[0] as { desEleme?: string })?.desEleme ?? this.departamento ?? '';
+    }
+    if (departamento && typeof departamento === 'object') {
+      return (departamento as { desEleme?: string }).desEleme ?? this.departamento ?? '';
+    }
+    return this.departamento ?? '';
+  }
+
+  public abrirOffcanvas(offcanvasId: string): void {
+    const element = document.getElementById(offcanvasId);
+    if (!element) {
+      return;
+    }
+    const instance = bootstrap.Offcanvas.getOrCreateInstance(element);
+    instance.show();
+  }
+
+  public cerrarOffcanvas(offcanvasId: string): void {
+    const element = document.getElementById(offcanvasId);
+    if (!element) {
+      return;
+    }
+    const instance = bootstrap.Offcanvas.getInstance(element);
+    instance?.hide();
+  }
+
+  public prepararFormularioNuevoProcedimiento(): void {
+    this.crearprocedi = new CrearProcedi();
+    this.crearprocedi.depart = this.session.idOrgEleme ?? '';
+  }
+
+  public abrirNuevoProcedimientoModal(): void {
+    this.prepararFormularioNuevoProcedimiento();
+    this.abrirModal('NprocediModal');
+    setTimeout(() => this.prepararFormularioNuevoProcedimiento(), 0);
   }
 
   // Función para observar cambios en el sidebar - DESHABILITADO
@@ -552,7 +711,7 @@ export class ProcedimientosComponent {
 
           // Actualizar el grid de atributos usando el método mejorado
           this.actualizaSourceAtributo(this.idprocedi);
-          
+
           Swal.fire('Atributo Eliminado!', '', 'success');
           this.veoborraratributo = false;
           this.disabledAtrib = false;
@@ -603,18 +762,18 @@ export class ProcedimientosComponent {
     this.procedimientoService.modificaAtributo(this.atributoscrear, this.idAtrib, this.idGrupo, this.etiGruAtrib).subscribe({
       next: (response) => {
         this.notificationService.saveSuccess('Atributo');
-        
+
         // Cerrar el modal usando el servicio
         this.modalManagerService.closeModal('EditoAtributosModal');
-        
+
         // Actualizar el grid de atributos usando el método mejorado
         this.actualizaSourceAtributo(this.idprocedi);
-        
+
         this.atributoscrear = new AtributosCrear();
-      }, 
+      },
       error: (err) => {
         this.notificationService.error('No se pudo modificar el Atributo: ' + err.error.message);
-        
+
         // Mantener el modal abierto en caso de error
         this.modalManagerService.keepModalOpen('EditoAtributosModal');
       }
@@ -626,7 +785,7 @@ export class ProcedimientosComponent {
     // Limpiar errores de ambos formularios de atributos
     const formEditar = document.getElementById('formEditarAtributos') as HTMLFormElement;
     const formNuevo = document.getElementById('formNuevosAtributos') as HTMLFormElement;
-    
+
     if (formEditar) {
       formEditar.classList.remove('was-validated');
     }
@@ -658,18 +817,18 @@ export class ProcedimientosComponent {
     this.procedimientoService.crearAtributo(this.atributoscrear, this.idProcedi).subscribe({
       next: (response) => {
         this.notificationService.saveSuccess('Atributo');
-        
+
         // Cerrar el modal usando el servicio
         this.modalManagerService.closeModal('NAtributosModal');
-        
+
         // Actualizar el grid de atributos
         this.actualizaSourceAtributo(this.idProcedi);
-        
+
         this.atributoscrear = new AtributosCrear();
       },
       error: (err) => {
         this.notificationService.error('Error en el alta del Atributo: ' + err.error.message);
-        
+
         // Mantener el modal abierto en caso de error
         this.modalManagerService.keepModalOpen('NAtributosModal');
       }
@@ -677,12 +836,16 @@ export class ProcedimientosComponent {
   }
 
   public refrescaProcedimientos() {
+    if (this.isWorkspaceMode) {
+      return;
+    }
+
     // Limpiar selección actual
     this.veoeliminaProcedimiento = false;
     this.veoTarea = false;
     this.veoPermiso = false;
     this.veoAtributos = false;
-    
+
     // Recrear completamente el dataAdapter
     this.sourcePro = new jqx.dataAdapter({
       dataType: 'json',
@@ -700,7 +863,7 @@ export class ProcedimientosComponent {
       sortcolumn: 'id',
       sortdirection: 'desc'
     });
-    
+
     // Forzar actualización del grid
     setTimeout(() => {
       if (this.gridProcedimientos) {
@@ -708,7 +871,7 @@ export class ProcedimientosComponent {
         this.gridProcedimientos.updatebounddata();
       }
     }, 200);
-    
+
     // Segundo intento para asegurar la actualización
     setTimeout(() => {
       if (this.gridProcedimientos) {
@@ -737,23 +900,19 @@ export class ProcedimientosComponent {
   public editaProcedi(): void {
     this.procedimientoService.editaProcedi(this.editarprocedi, this.idprocedi)
       .subscribe({
-        next: (response) => {
+        next: () => {
           this.notificationService.saveSuccess('Procedimiento');
+          if (this.isWorkspaceMode) {
+            this.loadWorkspace(this.idprocedi);
+            return;
+          }
           this.refrescaProcedimientos();
-          
-          // Cerrar el modal usando el servicio
-          this.modalManagerService.closeModal('editarProcedimientoModal');
-          
-          // Forzar recarga de la página después de 1 segundo
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
         },
         error: (err: HttpErrorResponse) => {
           this.notificationService.error(err.error.message || 'No se pudo editar el procedimiento.');
-          
-          // Mantener el modal abierto en caso de error
-          this.modalManagerService.keepModalOpen('editarProcedimientoModal');
+          if (!this.isWorkspaceMode) {
+            this.modalManagerService.keepModalOpen('editarProcedimientoModal');
+          }
         }
       });
   }
@@ -855,7 +1014,7 @@ export class ProcedimientosComponent {
             url: `${environment.apiUrl}permiso/listar/${this.idverTarea}`,
             id: 'id',
           });
-          
+
           // Solo limpiar el formulario si fue exitoso
           this.atrasCrearPermisoProcedi();
         },
@@ -873,58 +1032,9 @@ export class ProcedimientosComponent {
   public accionTarea: any;
   public verEliminaTarea: boolean = false;
 
-
-  //-------------------------Eleazar
   enviamos(event: any) {
     GridRadioSelector.handleRowClick(event, 'Procedimientos', (rowData) => {
-      // Lógica específica del procedimiento principal
-      this.veoeliminaProcedimiento = true;
-      this.idProcedi = rowData.id;
-      this.siglas = rowData.siglas;
-      this.materia = rowData.idMatProce;
-      this.modalidad = rowData.modalidad;
-      this.idprocedi = rowData.id;
-      this.edicion = true;
-      this.veoTarea = true;
-      this.veoPermiso = false;
-      this.veoAtributos = false; // Ocultar atributos hasta que se seleccione una tarea
-      this.descripProcedimiento = rowData.descripcion;
-      this.departProcedimiento = rowData.desEleme;
-      this.siaProcedimiento = rowData.codigoSia;
-
-      // Limpiar el grid de atributos cuando se selecciona un nuevo procedimiento
-      this.sourceAtributos = new jqx.dataAdapter({
-        dataType: 'json',
-        dataFields: [
-          { name: 'etiGruAtrib' },
-          { name: 'desGruAtrib' },
-          { name: 'requerido' },
-          { name: 'valInici' },
-          { name: 'valMinim' },
-          { name: 'valMaxim' },
-          { name: 'tipo' },
-          { name: 'longitud' },
-          { name: 'idAtrib' },
-          { name: 'idGrupo' }
-        ],
-        data: [], // Grid vacío hasta que se seleccione una tarea
-        id: 'idAtrib',
-        sortcolumn: 'idAtrib',
-        sortdirection: 'desc'
-      });
-      
-      // Limpiar selección de atributos, tareas y permisos
-      GridRadioSelector.clearGridSelection('Atributos');
-      GridRadioSelector.clearGridSelection('Tareas');
-      GridRadioSelector.clearGridSelection('Permisos');
-      
-      this.getListaTareas(rowData.id);
-
-      let idprocedimiento = rowData.id;
-      this.session.setIdProcedimiento(idprocedimiento);
-
-      console.log("Valor del ID :" + rowData.id);
-      this.lanzaSourceTarea();
+      this.router.navigate(['/procedimientos', rowData.id]);
     });
   }
 
@@ -945,8 +1055,8 @@ export class ProcedimientosComponent {
       this.verEliminaTarea = true;
       this.veoPermiso = true;
       this.veoAccionesPermiso = true;
-      this.veoAtributos = true; // Mostrar atributos cuando se selecciona una tarea
-      this.usuarioTarea = "";
+      this.veoAtributos = true;
+      this.usuarioTarea = '';
       this.vermenu = true;
       this.veoBorrarTarea = false;
       this.idPermisoProcedimiento = rowData.id;
@@ -959,8 +1069,6 @@ export class ProcedimientosComponent {
       this.firmaT = rowData.procesoFirmadoDefecto;
       this.session.setIdPermiso(rowData.id);
       this.peparadatosfirma(rowData.plantillaDefecto);
-      
-      // Cargar los atributos de la tarea seleccionada
       this.actualizaSourceAtributo(this.idProcedi);
     });
   }
@@ -1053,8 +1161,8 @@ export class ProcedimientosComponent {
     const form = document.getElementById('formNuevoProcedimiento') as HTMLFormElement;
     if (form) {
       form.classList.remove('was-validated');
-      form.reset();
     }
+    this.prepararFormularioNuevoProcedimiento();
   }
 
 
@@ -1085,25 +1193,23 @@ export class ProcedimientosComponent {
         if (response.id) {
           this.notificationService.saveSuccess('Procedimiento');
           this.limpiarErrores();
-          this.refrescaProcedimientos();
-          
-          // Cerrar el modal usando el servicio
           this.modalManagerService.closeModal('NprocediModal');
-          
-          // Forzar recarga de la página después de 1 segundo
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          this.router.navigate(['/procedimientos', response.id], { queryParams: { tab: 'datos' } });
         }
       },
       error: (err) => {
+        const serverMessage = typeof err.error === 'string'
+          ? err.error
+          : err.error?.message;
+
         if (err.status == 403) {
-          this.notificationService.error(err.error.message);
+          this.notificationService.error(
+            serverMessage || 'No se pudo crear: revise descripción, código SIA, siglas y materia (pueden estar duplicados)'
+          );
         } else {
-          this.notificationService.error('Error al crear el procedimiento');
+          this.notificationService.error(serverMessage || 'Error al crear el procedimiento');
         }
-        
-        // Mantener el modal abierto en caso de error
+
         this.modalManagerService.keepModalOpen('NprocediModal');
       },
     });
@@ -1122,18 +1228,19 @@ export class ProcedimientosComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.procedimientoService.deleteProcedimiento(dato).subscribe({
-          next: (response) => {
+          next: () => {
             this.notificationService.deleteSuccess('Procedimiento');
+            if (this.isWorkspaceMode) {
+              this.volverAlListado();
+              return;
+            }
             this.refrescaProcedimientos();
-            
-            // Forzar recarga de la página después de 1 segundo si el grid no se actualiza
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
           },
           error: (err: HttpErrorResponse) => {
             this.notificationService.error(err.error.message);
-            this.refrescaProcedimientos();
+            if (!this.isWorkspaceMode) {
+              this.refrescaProcedimientos();
+            }
           }
         });
       }
@@ -1147,7 +1254,7 @@ export class ProcedimientosComponent {
       return;
     }
     this.envioTareaProcedi(event);
-    this.modalService.openModal('modifitareasModalListado');
+    this.abrirOffcanvas('modificarTareaOffcanvas');
   }
 
 
@@ -1166,16 +1273,16 @@ export class ProcedimientosComponent {
     if (value === null || value === undefined || value === '' || value === -1) {
       return '<div style="text-align: center; margin-top: 5px;">-</div>';
     }
-    
+
     // Convertir a número para la comparación
     const valorNumerico = Number(value);
-    
+
     // Buscar la acción en el array ACCIONES por su valor
     const accionEncontrada = ACCIONES.find(accion => accion.valor === valorNumerico);
-    
+
     // Si se encuentra, se usa su descripción; de lo contrario, mostrar el valor original
     const label = accionEncontrada ? accionEncontrada.descripcion : value;
-    
+
     return `<div style="text-align: center; margin-top: 5px; padding-left: 5px; padding-right: 5px;">${label}</div>`;
   };
 
@@ -1386,12 +1493,12 @@ export class ProcedimientosComponent {
   columnsPermi = [
     { text: 'id', datafield: 'id', width: '1%', hidden: true },
     { text: '', datafield: '', width: '3%', cellsrenderer: this.columnseleccionPermiso, renderer: this.columnrenderer },
-    { 
-      text: 'Usuario', 
-      datafield: 'usuario', 
+    {
+      text: 'Usuario',
+      datafield: 'usuario',
       width: '15%',
-      cellsrenderer: this.cellsrendererPermi, 
-      renderer: this.columnrenderer 
+      cellsrenderer: this.cellsrendererPermi,
+      renderer: this.columnrenderer
     },
     {
       text: 'Procedimiento',
@@ -1400,12 +1507,12 @@ export class ProcedimientosComponent {
       cellsrenderer: this.cellsrendererPermi,
       renderer: this.columnrenderer
     },
-    { 
-      text: 'Tarea', 
-      datafield: 'desTareaProce', 
+    {
+      text: 'Tarea',
+      datafield: 'desTareaProce',
       width: '45%',
-      cellsrenderer: this.cellsrendererPermi, 
-      renderer: this.columnrenderer 
+      cellsrenderer: this.cellsrendererPermi,
+      renderer: this.columnrenderer
     },
     { text: 'Descripción', datafield: "descripcion", renderer: this.columnrenderer, hidden: true },
   ];
@@ -1695,18 +1802,18 @@ export class ProcedimientosComponent {
       .subscribe({
         next: () => {
           this.notificationService.saveSuccess('Tarea');
-          
+
           // Cerrar el modal usando el servicio
-          this.modalManagerService.closeModal('modifitareasModalListado');
-          
+          this.cerrarOffcanvas('modificarTareaOffcanvas');
+
           this.lanzaSourceTarea();
           this.editatareaprocedi = new EditaTareaProcedi();
         },
         error: (err: HttpErrorResponse) => {
           this.notificationService.error(err.error.message || 'No se pudo editar la tarea.');
-          
-          // Mantener el modal abierto en caso de error
-          this.modalManagerService.keepModalOpen('modifitareasModalListado');
+
+          // Mantener el panel abierto en caso de error
+          this.abrirOffcanvas('modificarTareaOffcanvas');
         }
       });
   }
@@ -1761,7 +1868,13 @@ export class ProcedimientosComponent {
   }
 
   public abrirModal(modalId: string): void {
+    if (modalId === 'NprocediModal') {
+      this.prepararFormularioNuevoProcedimiento();
+    }
     this.modalManagerService.openModal(modalId);
+    if (modalId === 'NprocediModal') {
+      setTimeout(() => this.prepararFormularioNuevoProcedimiento(), 0);
+    }
   }
 
   public cerrarModal(modalId: string): void {
@@ -1781,7 +1894,7 @@ export class ProcedimientosComponent {
       'formModificarTarea',
       'formNuevaTarea'
     ];
-    
+
     formIds.forEach(formId => {
       const form = document.getElementById(formId) as HTMLFormElement;
       if (form) {
@@ -1821,38 +1934,14 @@ export class ProcedimientosComponent {
         this.peparadatosfirma(rowData.plantillaDefecto);
       }
 
-      // Abrir modal de edición
-      const modalEl = document.getElementById('modifitareasModalListado');
-      if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-      } else {
-        console.error('No encontré el elemento #modifitareasModalListado');
-      }
+      // Abrir panel lateral de edición
+      this.abrirOffcanvas('modificarTareaOffcanvas');
     });
   }
 
-  /**
-   * Maneja el doble click en la tabla de procedimientos
-   * Abre el modal de edición del procedimiento
-   */
   public onProcedimientoDoubleClick(event: any): void {
     TablaClickHandler.onRowDoubleClick(event, (rowData) => {
-      // Cargar datos del procedimiento para edición
-      this.editarprocedi.id = rowData.id;
-      this.editarprocedi.descripcion = rowData.descripcion;
-      this.editarprocedi.codigoSia = rowData.codigoSia;
-      this.editarprocedi.modalidad = rowData.modalidad;
-      this.editarprocedi.materia = rowData.idMatProce;
-
-      // Abrir modal de edición
-      const modalEl = document.getElementById('editarProcedimientoModal');
-      if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-      } else {
-        console.error('No se encontró el modal de edición de procedimiento');
-      }
+      this.router.navigate(['/procedimientos', rowData.id], { queryParams: { tab: 'datos' } });
     });
   }
 
@@ -1879,8 +1968,7 @@ export class ProcedimientosComponent {
       // Abrir modal de edición
       const modalEl = document.getElementById('EditoAtributosModal');
       if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
+        this.modalManagerService.openModal('EditoAtributosModal');
       } else {
         console.error('No se encontró el modal de edición de atributos');
       }
@@ -1916,20 +2004,20 @@ export class ProcedimientosComponent {
         next: response => {
           this.tareaprocedicreada = response;
           this.notificationService.saveSuccess('Tarea');
-          
+
           // Cerrar el modal usando el servicio
-          this.modalManagerService.closeModal('tareasModal');
-          
+          this.cerrarOffcanvas('tareasOffcanvas');
+
           this.lanzaSourceTarea();
-          
+
           // Limpiar el formulario después de cerrar
           this.borravaloresNuevaTarea();
         },
         error: (err: HttpErrorResponse) => {
           this.notificationService.error(err.error.message || 'No se pudo crear la tarea.');
-          
+
           // Mantener el modal abierto en caso de error
-          this.modalManagerService.keepModalOpen('tareasModal');
+          this.abrirOffcanvas('tareasOffcanvas');
         }
       });
   }

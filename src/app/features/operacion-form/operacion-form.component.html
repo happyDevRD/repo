@@ -1,16 +1,16 @@
-<div class="modal fade show" id="operacionModal" tabindex="-1" aria-labelledby="operacionModalLabel" aria-hidden="true" style="display: block;">
+<div class="modal fade iflow-modal" id="operacionModal" tabindex="-1" aria-labelledby="operacionModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="operacionModalLabel">Generar Operación</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="handleCloseModal()"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="operacionForm" (ngSubmit)="guardarOperacion()">
           <fieldset class="border p-3 mb-3">
             <legend class="fs-6">Código de Operación</legend>
-            <div class="row mb-3">
-              <div class="col-md-12 form-floating">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12"><div class="form-floating">
                 <select id="idConta" class="form-select" formControlName="idConta" required>
                   <option value="" disabled selected>Selecciona Contabilidad</option>
                   <option *ngFor="let option of rotContaOptions" [value]="option.idConta">
@@ -18,10 +18,10 @@
                   </option>
                 </select>
                 <label for="idConta">Contabilidad</label>
-              </div>
+              </div></div>
             </div>
-            <div class="row">
-              <div class="col-md-3 form-floating">
+            <div class="row g-3">
+              <div class="col-md-3"><div class="form-floating">
                 <select id="indArea" class="form-select" formControlName="indArea" required>
                   <option value="" disabled selected>Selecciona Área</option>
                   <option *ngFor="let option of areaOptions" [value]="option.valor">
@@ -29,8 +29,8 @@
                   </option>
                 </select>
                 <label for="indArea">Área</label>
-              </div>
-              <div class="col-md-3 form-floating">
+              </div></div>
+              <div class="col-md-3"><div class="form-floating">
                 <select id="indAgrup" class="form-select" formControlName="indAgrup" required>
                   <option value="" disabled selected>Selecciona Agrupación</option>
                   <option *ngFor="let option of opcionesAgrupacionAreaSeleccionada" [value]="option.valor">
@@ -38,13 +38,13 @@
                   </option>
                 </select>
                 <label for="indAgrup">Agrupación</label>
-              </div>
-              <div class="col-md-3 form-floating">
+              </div></div>
+              <div class="col-md-3"><div class="form-floating">
                 <input type="text" id="claOpera" class="form-control" formControlName="claOpera"
-                       placeholder="Clave Operación" required>
+                       placeholder=" " required>
                 <label for="claOpera">Clave Operación</label>
-              </div>
-              <div class="col-md-3 form-floating">
+              </div></div>
+              <div class="col-md-3"><div class="form-floating">
                 <select id="signo" class="form-select" formControlName="signo" required>
                   <option value="" disabled selected>Selecciona Signo</option>
                   <option *ngFor="let option of signoOptions" [value]="option.valor">
@@ -52,75 +52,75 @@
                   </option>
                 </select>
                 <label for="signo">Signo</label>
-              </div>
+              </div></div>
             </div>
           </fieldset>
 
-          <div class="row mb-3">
-            <div class="col-md-4 form-floating">
+          <div class="row g-3 mb-3">
+            <div class="col-md-4"><div class="form-floating">
               <input type="date" id="fecOpera" class="form-control" formControlName="fecOpera"
-                     placeholder="Fecha Operación" required>
+                     placeholder=" " required>
               <label for="fecOpera">Fecha Operación</label>
-            </div>
-            <div class="col-md-8 form-floating">
+            </div></div>
+            <div class="col-md-8"><div class="form-floating">
               <input type="text" id="txtOpera" class="form-control" formControlName="txtOpera"
-                     placeholder="Descripción Operación" required>
+                     placeholder=" " required>
               <label for="txtOpera">Descripción Operación</label>
-            </div>
+            </div></div>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-md-3 form-floating">
+          <div class="row g-3 mb-3">
+            <div class="col-md-3"><div class="form-floating">
               <select id="tipoIva" class="form-select" formControlName="tipoIva" required>
                 <option *ngFor="let option of tipoIvaOptions" [value]="option">
                   {{ option === '' ? 'Sin IVA' : option + '%' }}
                 </option>
               </select>
               <label for="tipoIva">Tipo IVA</label>
-            </div>
+            </div></div>
             <!-- Campo Importe Total con formato de moneda -->
-            <div class="col-md-4 form-floating">
+            <div class="col-md-4"><div class="form-floating">
               <input type="text" id="impTotal" class="form-control"
                      formControlName="impTotal"
-                     placeholder="Importe Total" required
+                     placeholder=" " required
                      currencyMask [options]="currencyOptions">
               <label for="impTotal">Importe Total (€)</label>
-            </div>
+            </div></div>
             <!-- Campo Importe Descuentos con formato de moneda -->
-            <div class="col-md-4 form-floating">
+            <div class="col-md-4"><div class="form-floating">
               <input type="text" id="impDto" class="form-control"
                      formControlName="impDto"
-                     placeholder="Importe Descuentos"
+                     placeholder=" "
                      currencyMask [options]="currencyOptions">
               <label for="impDto">Importe Descuentos (€)</label>
-            </div>
+            </div></div>
           </div>
 
-          <div class="row mb-3">
+          <div class="row g-3 mb-3">
             <!-- Mostrar Importe IVA calculado con formato de moneda -->
-            <div class="col-md-6 form-floating">
+            <div class="col-md-6"><div class="form-floating">
               <input type="text" id="impIva" class="form-control readonly-field"
-                     [value]="operacionForm.get('impIva')?.value | currency:'EUR':'symbol':'1.2-2'" readonly placeholder="Importe IVA">
+                     [value]="operacionForm.get('impIva')?.value | currency:'EUR':'symbol':'1.2-2'" readonly placeholder=" ">
               <label for="impIva">Importe IVA (€)</label>
-            </div>
+            </div></div>
             <!-- Mostrar Importe Líquido calculado con formato de moneda -->
-            <div class="col-md-6 form-floating">
+            <div class="col-md-6"><div class="form-floating">
               <input type="text" id="impLiqui" class="form-control readonly-field"
-                     [value]="operacionForm.get('impLiqui')?.value | currency:'EUR':'symbol':'1.2-2'" readonly placeholder="Importe Líquido">
+                     [value]="operacionForm.get('impLiqui')?.value | currency:'EUR':'symbol':'1.2-2'" readonly placeholder=" ">
               <label for="impLiqui">Importe Líquido (€)</label>
-            </div>
+            </div></div>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-md-12 form-floating">
+          <div class="row g-3 mb-3">
+            <div class="col-md-12"><div class="form-floating">
               <textarea id="observaciones" class="form-control" formControlName="observaciones"
-                        placeholder="Observaciones"></textarea>
+                        placeholder=" " rows="3"></textarea>
               <label for="observaciones">Observaciones</label>
-            </div>
+            </div></div>
           </div>
 
           <div class="modal-footer">
-            <button type="submit" class="btn-iflow btn-iflow--primary" [disabled]="operacionForm.invalid">
+            <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary" [disabled]="operacionForm.invalid">
               Guardar Operación
             </button>
           </div>

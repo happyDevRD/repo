@@ -1,0 +1,429 @@
+﻿    <!-- ======================================== -->
+    <!-- MODALES DE NOTIFICACIONES -->
+    <!-- ======================================== -->
+
+    <!-- Modal Envío TEU (movido desde línea 95) -->
+    <div class="modal fade iflow-modal" id="EnvioTeu" tabindex="-1" aria-labelledby="EnvioTeuLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <!-- Header del modal -->
+          <div class="modal-header">
+            <h4 class="modal-title" id="EnvioTeuLabel">Envio T.E.U.</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <!-- Body del modal -->
+          <div class="modal-body">
+            <form #teuForm="ngForm" (ngSubmit)="edita.crearModeloTeuFichero()">
+
+              <div class="row g-3 mb-3">
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="edita.modeloteucrear.fecSolic" class="form-control" id="fecSolic" name="fecSolic"
+                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="edita.isFechaSolicInvalid()" placeholder=" ">
+                  <label class="form-label" for="fecSolic">Fecha de Solicitud *</label>
+                  </div><div *ngIf="edita.isFechaSolicInvalid()" class="invalid-feedback">
+                    La fecha de solicitud es obligatoria
+                  </div></div>
+
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="edita.modeloteucrear.fecGener" class="form-control" id="fecGener" name="fecGener"
+                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="edita.isFechaGenerInvalid()" placeholder=" ">
+                  <label class="form-label" for="fecGener">Fecha de Generación *</label>
+                  </div><div *ngIf="edita.isFechaGenerInvalid()" class="invalid-feedback">
+                    La fecha de generación es obligatoria
+                  </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="edita.modeloteucrear.fecFirma" class="form-control" id="fecFirma" name="fecFirma"
+                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="edita.isFechaFirmaInvalid()" placeholder=" ">
+                  <label class="form-label" for="fecFirma">Fecha de Firma *</label>
+                  </div><div *ngIf="edita.isFechaFirmaInvalid()" class="invalid-feedback">
+                    La fecha de firma es obligatoria
+                  </div></div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-sm-6"><div class="form-floating">
+                  <select id="materia" class="form-select" [(ngModel)]="edita.modeloteucrear.idMater" name="materia" required>
+                    <option value="">Seleccione una materia</option>
+                    <option value="1">Agricultura y Ganadería</option>
+                    <option value="2">Aguas</option>
+                    <option value="3">Catastro</option>
+                    <option value="4">Caza y Pesca</option>
+                    <option value="5">Consumo</option>
+                    <option value="6">Crédito, Banca y Seguros</option>
+                    <option value="7">Cultura y Espectáculos</option>
+                    <option value="8">Deportes</option>
+                    <option value="9">Economía y Comercio</option>
+                    <option value="10">Empleados Públicos</option>
+                    <option value="11">Empleo</option>
+                    <option value="12">Energía</option>
+                    <option value="13">Educación</option>
+                    <option value="14">Enseñanza Universitaria</option>
+                    <option value="15">Estadísticas</option>
+                    <option value="16">Expropiaciones</option>
+                    <option value="17">Extranjería</option>
+                    <option value="18">Fuerzas Armadas</option>
+                    <option value="19">Hacienda</option>
+                    <option value="20">Industria y Artesanía</option>
+                    <option value="21">Inspección de Trabajo</option>
+                    <option value="22">Juego</option>
+                    <option value="23">Medio Ambiente y Sostenibilidad</option>
+                    <option value="24">Metrología</option>
+                    <option value="25">Navegación Aérea</option>
+                    <option value="26">Navegación Marítima, Puertos y Marina Mercante</option>
+                    <option value="27">Notarías</option>
+                    <option value="28">Urbanismo y Vivienda</option>
+                    <option value="29">Padrón Municipal de Habitantes</option>
+                    <option value="30">Parimonio y Propiedades Públicas</option>
+                    <option value="31">Propiedad Intelectual</option>
+                    <option value="32">Propiedad Industrial</option>
+                    <option value="33">Protección de Datos de Carácter</option>
+                    <option value="34">Registros de la Propiedad</option>
+                    <option value="35">Responsabilidad Patrimonial</option>
+                    <option value="36">Sanidad y Farmacia</option>
+                    <option value="37">Seguridad Ciudadana y Protección Civil</option>
+                    <option value="38">Prestaciones de Seguridad Social y de Acción Social Marítima</option>
+                    <option value="39">Servicios Funerarios</option>
+                    <option value="40">Servicios Sociales</option>
+                    <option value="41">Subvenciones, Becas y otras Ayudas</option>
+                    <option value="42">Telecomunicaciones y Nuevas Tecnologías</option>
+                    <option value="43">Tráfico, Circulación y Seguridad Vial</option>
+                    <option value="44">Transportes Terretres</option>
+                    <option value="45">Turismo</option>
+                    <option value="46">Otras</option>
+                    <option value="47">Inscripción, Afiliación y Recaudación de la Seguridad Social</option>
+                  </select>
+                  <label class="form-label" for="materia">Materia *</label>
+                </div></div>
+
+                <div class="col-sm-6">
+                  <label for="idModel" class="form-label">Modelo *</label>
+                  <select id="idModel" class="form-select" [(ngModel)]="edita.modeloteucrear.idModel" name="idModel" required>
+                    <option *ngFor="let listado of edita.modeloteulistar" [value]="listado.idModel">
+                      {{ listado.desModel }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6"><div class="form-floating">
+                  <input [(ngModel)]="edita.modeloteucrear.procedimiento" class="form-control" id="procedimiento"
+                    name="procedimiento" type="text" placeholder=" ">
+                  <label for="procedimiento">Procedimiento </label>
+                </div></div>
+                <div class="col-sm-6"><div class="form-floating">
+                  <select [(ngModel)]="edita.modeloteucrear.forPubli" class="form-select " id="forPublic" name="forPublic">
+                    <option value=1>En Extracto</option>
+                    <option value=2>Íntegra</option>
+                  </select>
+                  <label for="forPublic">Forma Publicación </label>
+                  <br>
+                </div></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12"><div class="form-floating">
+
+                  <input [(ngModel)]="edita.modeloteucrear.email" class="form-control form-floating" id="email" name="email"
+                    type="text" placeholder=" ">
+                  <label for="email">Correo Electrónico </label>
+                  <br>
+                </div></div>
+                <div class="col-sm-12"><div class="form-floating">
+                  <input [(ngModel)]="edita.modeloteucrear.url" class="form-control " id="url" name="url" type="text" placeholder=" ">
+                  <label for="url">Url </label>
+                  <br>
+                </div></div>
+                <div class="col-3 "></div>
+                <div class="col-3 "></div>
+                <div class="col-3 text-start">
+                  <input [(ngModel)]="edita.modeloteucrear.datPerso" id="datoperso" name="datoperso" type="checkbox">Incluir
+                  datos personales eee
+                  <input [(ngModel)]="edita.modeloteucrear.texPlura" id="incltex" name="incltex" type="checkbox">
+                  Incluir Textos
+                  <input [(ngModel)]="edita.modeloteucrear.incLgt" id="leygene" name="leygene" type="checkbox">Ley
+                  general tributaria
+                </div>
+              </div>
+              <div class="col-1 "></div>
+              <div class="modal-footer">
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Devolver Notificación (antiguo) (movido desde línea 201) -->
+    <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade iflow-modal" data-bs-backdrop="static"
+      data-bs-keyboard="false" id="DevolverNotifiOLD" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="DevolverNotifiLabel">Devolver Notificación</h4>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+          </div>
+          <div class="modal-body">
+
+            <form (ngSubmit)="edita.devolverNotificacion()">
+
+              <div class="row g-3">
+
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="edita.creanotificacion.fecRecNotif" class="form-control" data-mdb-inline="true"
+                    id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{ edita.selected }}" placeholder=" ">
+                  <label for="documento">Fecha de Devolución</label>
+
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <select [(ngModel)]="edita.creanotificacion.motNotif" [value]="edita.notificacionver.motNotif"
+                    class="form-select" id="desMotNotif" name="desMotNotif" required>
+
+                    <option *ngFor="let motivosnotificacioneslistar of edita.motivonotificacioneslistar"
+                      name="descripcionMotivo" value={{ motivosnotificacioneslistar.motNotif }}> {{ motivosnotificacioneslistar.descripcion }}
+                    </option>
+
+                  </select>
+                  <label for="desMotNotif">Motivo Notificación* </label>
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <select [(ngModel)]="edita.creanotificacion.notificador" class="form-select" id="notificador"
+                    name="notificador" required>
+
+                    <option *ngFor="let notificalistar of edita.notificadorlistar" name="notificadorNotifi"
+                      value={{ notificalistar.notificador }}> {{ notificalistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="receptor">Notificador* </label>
+                </div></div>
+              </div>
+
+              <div class="modal-footer">
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Ver/Editar Notificación (antiguo) (movido desde línea 251) -->
+    <div aria-hidden="true" aria-labelledby="verNotifiModalLabel" class="modal fade iflow-modal" data-bs-backdrop="static"
+      id="verNotifiModalOLD" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{ edita.modoVerNotificacion ? 'Ver edita.Notificación' : 'Editar
+              edita.Notificación' }}</h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+          </div>
+          <div class="modal-body">
+            <h3>Notificacion : {{ edita.ejerNotifi }}/{{ edita.numeroNotifi }} </h3>
+            <h3>Observaciones : {{ edita.observacionNotifi }}</h3>
+
+            <form (ngSubmit)="edita.editaNotifi()">
+              <div class="row g-3">
+                <div class="col-sm-2"><div class="form-floating">
+
+                  <input [value]="edita.notificacionver.ejeNotif" class="form-control" id="ejeNotif" name="ejeNotif" readonly
+                    type="text" placeholder=" ">
+                  <label for="ejeNotif">Ejercicio </label>
+
+
+                </div></div>
+                <div class="col-sm-2"><div class="form-floating">
+
+                  <input [value]="edita.notificacionver.numNotif" class="form-control" id="numNotif" name="numNotif" readonly
+                    type="text" placeholder=" ">
+                  <label for="numNotif">Número Notificación </label>
+
+
+                </div></div>
+
+
+                <div class="col-sm-2"><div class="form-floating">
+
+                  <select [(ngModel)]="edita.creanotificacion.forNotif" [value]="edita.notificacionver.forNotif"
+                    class="form-select " id="fnotifi" name="fnotifi" [disabled]="edita.modoVerNotificacion">
+
+                    <option name="correoP" value=0>Correo postal</option>
+                    <option name="telematico" value=1>Telemática</option>
+
+                  </select>
+                  <label for="fnotifi">Forma Notificaciòn </label>
+
+
+                  <br>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+
+                  <input [value]="edita.fechNotifi" class="form-control" disabled id="numNotif" name="FechNotif" type="text" placeholder=" ">
+                  <label for="numNotif">Fecha Notificación </label>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+                  <input (change)="edita.solicitadni(edita.creanotificacion.dni)" [(ngModel)]="edita.creanotificacion.dni"
+                    [value]="edita.notificacionver?.personaEntidad?.numDocum || ''" class="form-control" id="interesado"
+                    name="interesado" type="text" [disabled]="edita.modoVerNotificacion" placeholder=" ">
+
+                  <label for="interesado"> Interesado DNI*</label>
+
+                  <br>
+                </div></div>
+
+
+              </div>
+              <div class="row">
+                <div class="col-sm-12"><div class="form-floating">
+
+                  <input [(ngModel)]="edita.creanotificacion.observacion" [value]="edita.notificacionver.observacion"
+                    class="form-control" id="observacion" name="observacion" type="text"
+                    [disabled]="edita.modoVerNotificacion" placeholder=" ">
+                  <label for="observacion">Observaciones* </label>
+                  <br>
+
+
+                </div></div>
+
+
+                <div class="row">
+                  <br>
+
+
+                </div>
+
+              </div>
+              <div class="row">
+
+
+                <div class="col-sm-3"><div class="form-floating">
+                  <select [(ngModel)]="edita.creanotificacion.motNotif" [value]="edita.notificacionver.motNotif"
+                    class="form-select " id="desMotNotif" name="desMotNotif" required [disabled]="edita.modoVerNotificacion">
+
+                    <option *ngFor="let motivosnotificacioneslistar of edita.motivonotificacioneslistar"
+                      name="descripcionMotivo" value={{ motivosnotificacioneslistar.motNotif }}> {{ motivosnotificacioneslistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="desMotNotif">Motivo Notificación* </label>
+
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+                  <select [(ngModel)]="edita.creanotificacion.receptor" class="form-select " id="receptor" name="receptor"
+                    required [disabled]="edita.modoVerNotificacion">
+
+                    <option *ngFor="let receptornotifislistar of edita.receptornotifilistar" name="receptorNotifi"
+                      value={{ receptornotifislistar.receptor }}> {{ receptornotifislistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="receptor">Recepción* </label>
+
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+                  <select [(ngModel)]="edita.creanotificacion.notificador" class="form-select " id="notificador"
+                    name="notificador" required [disabled]="edita.modoVerNotificacion">
+
+                    <option *ngFor="let notificalistar of edita.notificadorlistar" name="notificadorNotifi"
+                      value={{ notificalistar.notificador }}> {{ notificalistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="receptor">Notificador* </label>
+
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+
+                  <select [(ngModel)]="edita.creanotificacion.situacion" class="form-select " id="situacion" name="situacion"
+                    required [disabled]="edita.modoVerNotificacion">
+                    <option name="0" value=1>GENERADA</option>
+                    <option name="1" value=2>ENVIADA</option>
+                    <option name="2" value=3>RECEPCIONADA</option>
+                    <option name="3" value=4>DEVUELTA</option>
+                    <option name="4" value=5>COBRADA</option>
+                    <option name="5" value=6>ANULADA</option>
+
+
+                  </select>
+                  <label for="situacion">Situación* </label>
+                  <br>
+
+
+                </div></div>
+
+              </div>
+
+              <div class="row">
+
+
+              </div>
+              <br>
+
+              <div class="row">
+                <div *ngIf="edita.dniok" class="col-8 col-sm-6"><div class="form-floating">
+
+                  <input class="form-control" id="nombre" name="nombre" type="text" value={{ edita.consultadni.nombre }} placeholder=" ">
+                  <label for="representante">Nombre</label>
+                </div></div>
+                <div *ngIf="edita.dniok" class="col-8 col-sm-6"><div class="form-floating">
+
+                  <input class="form-control" id="Apellidos" name="Apellidos" type="text"
+                    value="{{ edita.consultadni.apellido1 }} {{ edita.consultadni.apellido2 }}" placeholder=" ">
+                  <label for="asignado">Apellidos </label>
+                </div></div>
+
+
+              </div>
+              <br>
+              <div *ngIf="edita.dniok" class="mb-3"><div class="form-floating">
+
+                <input class="form-control" id="direccion" name="direccion" type="text"
+                  value="{{ edita.consultadni.dirPosta }}" placeholder=" ">
+                <label for="direccion">Dirección</label>
+              </div></div>
+
+              <div class="row g-3">
+                <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="cp" name="cp" type="text" value="{{ edita.consultadni.codPosta }}" placeholder=" ">
+                  <label for="cp">Código Postal</label>
+                </div></div>
+                <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="provincia" name="provincia" type="text"
+                    value="{{ edita.consultadni.provincia }}" placeholder=" ">
+                  <label for="provincia">Provincia </label>
+                </div></div>
+                <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="Municipio" name="municipio" type="text"
+                    value="{{ edita.consultadni.municipio }}" placeholder=" ">
+                  <label for="municipio">Municipio </label>
+                </div></div>
+
+              </div>
+              <div class="modal-footer">
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button *ngIf="!edita.modoVerNotificacion" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                  role="button">Guardar</button>
+                <button *ngIf="edita.modoVerNotificacion" class="btn-iflow modal-footer__btn btn-iflow--secondary" type="button"
+                  (click)="edita.modoVerNotificacion = false">Editar Notificación</button>
+              </div>
+            </form>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- FIN MODALES DE NOTIFICACIONES -->
+    <!-- ======================================== -->

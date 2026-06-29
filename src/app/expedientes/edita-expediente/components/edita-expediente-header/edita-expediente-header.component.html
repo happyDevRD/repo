@@ -1,0 +1,42 @@
+﻿        <!-- Información del Expediente y Botones de Navegación -->
+        <div class="expediente-header-container">
+          <!-- Información del Expediente (alineada a la izquierda) -->
+          <div class="expediente-titulo-info">
+            <h3 class="expediente-titulo">Expediente: <span class="expediente-numero">{{ edita.verExpediente.ejercicio }}/{{ edita.verExpediente.numero }}</span></h3>
+          </div>
+          
+          <!-- Botones de navegación (alineados a la derecha) -->
+          <div class="expediente-botones-navegacion">
+            <!-- Botones de navegación desde trámites -->
+            <div *ngIf="edita.botonVerNotifi && edita.vertramite">
+              <button (click)="edita.verNotificaciones()" class="btn-iflow btn-iflow--primary"
+                title="Ver Notificaciones" type="button">
+                Ver Notificaciones <i class="bi bi-bell"></i>
+              </button>
+              <button (click)="edita.veotramitadores()" class="btn-iflow btn-iflow--primary" 
+                title="Ver tramitadores" type="button">
+                Ver Tramitadores <i class="bi bi-people"></i>
+              </button>
+              <button (click)="edita.volverListadoExpedientes()" class="btn-iflow btn-iflow--secondary" 
+                title="Volver al Listado de Expedientes" type="button">
+                <i class="bi bi-arrow-left"></i> Volver al Listado
+              </button>
+            </div>
+            
+            <!-- Botón de retorno desde notificaciones -->
+            <div *ngIf="edita.veonotificaciones">
+              <button (click)="edita.noverNotificaciones()" class="btn-iflow btn-iflow--secondary"
+                title="Volver a Trámites" type="button">
+                <i class="bi bi-arrow-left"></i> Volver a Trámites
+              </button>
+            </div>
+            
+            <!-- Botón de retorno desde tramitadores -->
+            <div *ngIf="edita.veoTramitadores">
+              <button (click)="edita.noverNotificaciones()" class="btn-iflow btn-iflow--secondary" 
+                title="Volver a Trámites" type="button">
+                <i class="bi bi-arrow-left"></i> Volver a Trámites
+              </button>
+            </div>
+          </div>
+        </div>

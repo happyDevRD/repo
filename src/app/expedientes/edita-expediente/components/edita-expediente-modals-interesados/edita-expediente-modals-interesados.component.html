@@ -1,0 +1,167 @@
+﻿    <!-- ======================================== -->
+    <!-- MODALES DE INTERESADOS -->
+    <!-- ======================================== -->
+
+    <!-- Modal Nuevo Interesado (movido desde línea 170) -->
+    <div aria-hidden="true" aria-labelledby="ninteresadoModalLabel" class="modal fade iflow-modal" data-bs-backdrop="static"
+      data-bs-target="#staticBackdrop" id="ninteresadoModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ninteresadoModalLabel">Nuevo interesado</h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="edita.crearInteresado()">
+
+
+              <div class="row g-3">
+
+
+                <div class="col-8 col-sm-6"><div class="form-floating">
+
+
+                </div></div>
+
+              </div>
+              <div class="mb-3"><div class="form-floating">
+
+
+              </div></div>
+
+
+              <div class="row">
+
+                <div class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input [(ngModel)]="edita.crearinteresado.fechaInicio" class="form-control" data-mdb-inline="true"
+                    id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{ edita.selected }}" placeholder=" ">
+                  <label for="documento">Fecha Inicio*</label>
+                </div></div>
+                <div class="col-8 col-sm-4"><div class="form-floating">
+                  <input (change)="edita.solicitadni(edita.crearinteresado.usuario)" [(ngModel)]="edita.crearinteresado.usuario"
+                    class="form-control" id="interesado" name="interesado" type="text" placeholder=" ">
+
+                  <label for="interesado"> Interesado DNI*</label>
+
+                  <br>
+                </div></div>
+                <div class="col-8 col-sm-4"><div class="form-floating">
+
+                  <select [(ngModel)]="edita.crearinteresado.tipForNotif" class="form-select " id="fnotifi" name="fnotifi">
+
+                    <option name="correoP" value=0>Correo postal</option>
+                    <option name="telematico" value=1>Telemática</option>
+
+                  </select>
+                  <label for="asignado">Forma Notificacion </label>
+
+
+                  <br>
+                </div></div>
+              </div>
+              <div *ngIf="edita.crearinteresado.tipForNotif==1" class="mb-3"><div class="form-floating">
+
+                <input [(ngModel)]="edita.crearinteresado.email" class="form-control" id="email" name="email" type="text" placeholder=" ">
+                <label for="titulo">Correo electrónico</label>
+
+
+              </div></div>
+
+
+              <div class="mb-3"><div class="form-floating">
+
+
+              </div></div>
+
+              <div class="row">
+                <div class="col-8 col-sm-6"><div class="form-floating">
+
+
+                </div></div>
+                <div class="col-8 col-sm-6"><div class="form-floating">
+
+                </div></div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-8 col-sm-6"><div class="form-floating">
+
+                </div></div>
+                <div class="row">
+                  <div class="col-8 col-sm-6"><div class="form-floating">
+
+                  </div></div>
+                  <div class="col-8 col-sm-6"><div class="form-floating">
+
+                  </div></div>
+
+
+                </div>
+
+              </div>
+              <br>
+
+
+              <div class="row">
+                <div *ngIf="edita.dniok" class="col-8 col-sm-6"><div class="form-floating">
+
+                  <input class="form-control" id="nombre" name="nombre" type="text" value={{ edita.consultadni.nombre }} placeholder=" ">
+                  <label for="representante">Nombre*</label>
+                </div></div>
+                <div *ngIf="edita.dniok" class="col-8 col-sm-6"><div class="form-floating">
+
+                  <input class="form-control" id="Apellidos" name="Apellidos" type="text"
+                    value="{{ edita.consultadni.apellido1 }} {{ edita.consultadni.apellido2 }}" placeholder=" ">
+                  <label for="asignado">Apellidos* </label>
+                </div></div>
+
+
+              </div>
+              <br>
+              <div *ngIf="edita.dniok" class="mb-3"><div class="form-floating">
+
+                <input class="form-control" id="direccion" name="direccion" type="text"
+                  value="{{ edita.consultadni.dirPosta }}" placeholder=" ">
+                <label for="direccion">Direccion* </label>
+
+
+              </div></div>
+
+              <div class="row">
+                <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="cp" name="cp" type="text" value="{{ edita.consultadni.codPosta }}" placeholder=" ">
+                  <label for="cp">Código Postal*</label>
+                </div></div>
+                <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="provincia" name="provincia" type="text"
+                    value="{{ edita.consultadni.provincia }}" placeholder=" ">
+                  <label for="provincia">Provincia* </label>
+                </div></div>
+                <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="Municipio" name="municipio" type="text"
+                    value="{{ edita.consultadni.municipio }}" placeholder=" ">
+                  <label for="municipio">Municipio* </label>
+                </div></div>
+
+              </div>
+              <br>
+              <div class="modal-footer">
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
+              </div>
+            </form>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- FIN MODALES DE INTERESADOS -->
+    <!-- ======================================== -->

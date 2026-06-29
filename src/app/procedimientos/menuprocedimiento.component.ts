@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { ProcedimientoService } from './procedimiento.service';
+import { Component } from '@angular/core'
+import { Router } from '@angular/router'
+import { ProcedimientoUiService } from './procedimiento-ui.service'
 
 @Component({
   selector: 'app-menuprocedimiento',
@@ -7,19 +8,15 @@ import { ProcedimientoService } from './procedimiento.service';
   styleUrls: ['./menuprocedimiento.component.css']
 })
 export class MenuprocedimientoComponent {
+  constructor(
+    private router: Router,
+    private procedimientoUi: ProcedimientoUiService
+  ) {}
 
-
-  
-  
-
-
-
-
-  constructor(){
-
-
-
-
+  handleOpenNuevoProcedimiento = (): void => {
+    this.procedimientoUi.requestOpenNuevoProcedimiento()
+    if (!this.router.url.includes('/procedimientos')) {
+      this.router.navigate(['/procedimientos'])
+    }
   }
-
 }

@@ -13,21 +13,21 @@
 
         <form (ngSubmit)="create()" class="form-grid">
           <div class="row g-3">
-            <div class="col-md-8 form-floating">
+            <div class="col-md-8"><div class="form-floating">
               <input type="text" class="form-control" id="descripcion"
-                     [(ngModel)]="procedimiento.descripcion" name="descripcion" placeholder="Descripción">
+                     [(ngModel)]="procedimiento.descripcion" name="descripcion" placeholder=" ">
               <label for="descripcion">Descripción</label>
-            </div>
-            <div class="col-md-4 form-floating">
+            </div></div>
+            <div class="col-md-4"><div class="form-floating">
               <input type="text" class="form-control" id="codigoSIA"
-                     [(ngModel)]="procedimiento.codigoSia" name="codigoSIA" placeholder="Código SIA">
+                     [(ngModel)]="procedimiento.codigoSia" name="codigoSIA" placeholder=" ">
               <label for="codigoSIA">Código SIA</label>
-            </div>
-            <div class="col-md-6 form-floating">
+            </div></div>
+            <div class="col-md-6"><div class="form-floating">
               <input type="text" class="form-control" id="departamento"
-                     [(ngModel)]="procedimiento.departamento.desEleme" name="departamento" placeholder="Departamento" readonly>
+                     [(ngModel)]="procedimiento.departamento.desEleme" name="departamento" placeholder=" " readonly>
               <label for="departamento">Departamento</label>
-            </div>
+            </div></div>
           </div>
           <div class="form-actions">
             <button type="submit" class="btn-iflow btn-iflow--primary">Guardar cambios</button>

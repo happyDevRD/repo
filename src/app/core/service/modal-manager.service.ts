@@ -1,100 +1,287 @@
-import { Injectable } from '@angular/core';
-import * as bootstrap from 'bootstrap';
+import { Injectable } from '@angular/core'
+import { NavigationStart, Router } from '@angular/router'
+import * as bootstrap from 'bootstrap'
+import { filter } from 'rxjs/operators'
+import {
+  forceCleanupModalDom,
+  forceHideModalElement,
+  getVisibleModals,
+  reconcileModalDomState,
+  removeBootstrapBackdrops,
+  setBackdropClickHandler,
+  syncManagedBackdrop,
+} from './modal-dom.util'
+
+export interface OpenModalOptions {
+  stack?: boolean
+}
+
+export interface CloseModalOptions {
+  onHidden?: () => void
+}
+
+const MODAL_CONFIG: bootstrap.Modal.Options = {
+  backdrop: false,
+  keyboard: false,
+  focus: true,
+}
+
+const CLOSE_SAFETY_MS = 450
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModalManagerService {
 
-  private activeModals: Map<string, bootstrap.Modal> = new Map();
+  private static globalListenersAttached = false
+  private static instance: ModalManagerService | null = null
+  private activeModals = new Map<string, bootstrap.Modal>()
 
-  /**
-   * Abre un modal de manera segura
-   */
-  public openModal(modalId: string): void {
-    // Cerrar cualquier modal activo antes de abrir uno nuevo
-    this.closeAllModals();
-    
-    const modalElement = document.getElementById(modalId);
-    if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement, {
-        backdrop: 'static',
-        keyboard: false
-      });
-      
-      this.activeModals.set(modalId, modal);
-      modal.show();
-      
-      // Limpiar errores del formulario
-      this.clearFormErrors(modalId);
-    }
+  constructor(private readonly router: Router) {
+    ModalManagerService.instance = this
+    setBackdropClickHandler(() => this.closeTopModal())
+    this.attachGlobalListeners()
+    this.attachRouterCleanup()
   }
 
-  /**
-   * Cierra un modal específico
-   */
-  public closeModal(modalId: string): void {
-    const modal = this.activeModals.get(modalId);
-    if (modal) {
-      modal.hide();
-      this.activeModals.delete(modalId);
+  static getInstance(): ModalManagerService | null {
+    return ModalManagerService.instance
+  }
+
+  public openModal(modalId: string, options?: OpenModalOptions): void {
+    const modalElement = document.getElementById(modalId)
+    if (!modalElement) {
+      console.warn(`[ModalManager] Modal no encontrado: ${modalId}`)
+      return
     }
-    
-    // También intentar cerrar usando el elemento DOM
-    const modalElement = document.getElementById(modalId);
-    if (modalElement) {
-      const bootstrapModal = bootstrap.Modal.getInstance(modalElement);
-      if (bootstrapModal) {
-        bootstrapModal.hide();
+
+    removeBootstrapBackdrops()
+
+    if (!options?.stack) {
+      this.hideOtherModals(modalId)
+    }
+
+    modalElement.style.display = ''
+    const modal = this.getManagedInstance(modalElement)
+    this.activeModals.set(modalId, modal)
+    this.clearFormErrors(modalId)
+
+    const onShown = () => {
+      modalElement.removeEventListener('shown.bs.modal', onShown)
+      removeBootstrapBackdrops()
+      syncManagedBackdrop()
+    }
+    modalElement.addEventListener('shown.bs.modal', onShown)
+
+    modal.show()
+  }
+
+  public closeModal(modalId: string, options?: CloseModalOptions): void {
+    const modalElement = document.getElementById(modalId)
+    if (!modalElement) {
+      this.activeModals.delete(modalId)
+      reconcileModalDomState()
+      options?.onHidden?.()
+      return
+    }
+
+    let settled = false
+    const finalizeClose = () => {
+      if (settled) {
+        return
       }
+      settled = true
+      this.activeModals.delete(modalId)
+      forceHideModalElement(modalElement)
+      removeBootstrapBackdrops()
+      reconcileModalDomState()
+      options?.onHidden?.()
     }
-    
-    // Limpiar clases de Bootstrap que puedan quedar
-    this.cleanupModalClasses(modalId);
+
+    modalElement.addEventListener('hidden.bs.modal', finalizeClose, { once: true })
+    window.setTimeout(finalizeClose, CLOSE_SAFETY_MS)
+
+    const instance = bootstrap.Modal.getInstance(modalElement) ?? this.activeModals.get(modalId)
+    if (instance) {
+      instance.hide()
+      return
+    }
+
+    finalizeClose()
   }
 
-  /**
-   * Cierra todos los modales activos
-   */
   public closeAllModals(): void {
-    this.activeModals.forEach((modal, modalId) => {
-      modal.hide();
-      this.cleanupModalClasses(modalId);
-    });
-    this.activeModals.clear();
-    
-    // Limpiar todas las clases de modal que puedan quedar
-    document.body.classList.remove('modal-open');
-    const backdropElements = document.querySelectorAll('.modal-backdrop');
-    backdropElements.forEach(element => element.remove());
+    getVisibleModals().forEach((element) => {
+      const instance = bootstrap.Modal.getInstance(element)
+      if (instance) {
+        instance.hide()
+      } else {
+        forceHideModalElement(element)
+      }
+    })
+    this.activeModals.clear()
+    window.setTimeout(() => this.forceCleanupAll(), CLOSE_SAFETY_MS)
   }
 
-  /**
-   * Mantiene un modal abierto (para casos de error)
-   */
+  public forceCleanupAll(): void {
+    this.activeModals.forEach((instance) => {
+      try {
+        instance.dispose()
+      } catch {
+        /* instancia ya destruida */
+      }
+    })
+    this.activeModals.clear()
+    forceCleanupModalDom()
+  }
+
   public keepModalOpen(modalId: string): void {
-    const modalElement = document.getElementById(modalId);
-    if (modalElement) {
-      // Asegurar que el modal permanezca visible
-      modalElement.classList.add('show');
-      modalElement.style.display = 'block';
-      document.body.classList.add('modal-open');
-      
-      // Asegurar que el backdrop esté presente
-      let backdrop = document.querySelector('.modal-backdrop');
-      if (!backdrop) {
-        backdrop = document.createElement('div');
-        backdrop.className = 'modal-backdrop fade show';
-        document.body.appendChild(backdrop);
+    const modalElement = document.getElementById(modalId)
+    if (!modalElement) {
+      return
+    }
+
+    const modal = this.getManagedInstance(modalElement)
+
+    if (!modalElement.classList.contains('show')) {
+      modal.show()
+    }
+
+    this.activeModals.set(modalId, modal)
+    syncManagedBackdrop()
+  }
+
+  public isModalOpen(modalId: string): boolean {
+    const modalElement = document.getElementById(modalId)
+    return !!modalElement?.classList.contains('show')
+  }
+
+  public getActiveModalCount(): number {
+    return getVisibleModals().length
+  }
+
+  public reconcileModalDomState(): void {
+    reconcileModalDomState()
+  }
+
+  private attachRouterCleanup(): void {
+    this.router.events.pipe(
+      filter((event): event is NavigationStart => event instanceof NavigationStart),
+    ).subscribe(() => {
+      this.forceCleanupAll()
+    })
+  }
+
+  private closeTopModal(): void {
+    const visible = getVisibleModals()
+    const top = visible[visible.length - 1]
+    if (!top?.id) {
+      return
+    }
+
+    if (top.getAttribute('data-bs-backdrop') === 'static') {
+      return
+    }
+
+    this.closeModal(top.id)
+  }
+
+  private getManagedInstance(modalElement: HTMLElement): bootstrap.Modal {
+    const existing = bootstrap.Modal.getInstance(modalElement)
+    if (existing) {
+      return existing
+    }
+    return new bootstrap.Modal(modalElement, MODAL_CONFIG)
+  }
+
+  private attachGlobalListeners(): void {
+    if (typeof document === 'undefined' || ModalManagerService.globalListenersAttached) {
+      return
+    }
+
+    ModalManagerService.globalListenersAttached = true
+
+    document.addEventListener('click', (event) => this.handleModalClick(event), true)
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') {
+        return
+      }
+      if (getVisibleModals().length === 0) {
+        return
+      }
+      event.preventDefault()
+      this.closeTopModal()
+    })
+
+    document.addEventListener('hidden.bs.modal', (event) => {
+      const target = event.target
+      if (target instanceof HTMLElement && target.id) {
+        this.activeModals.delete(target.id)
+      }
+      window.setTimeout(() => {
+        removeBootstrapBackdrops()
+        reconcileModalDomState()
+      }, 0)
+    })
+
+    document.addEventListener('shown.bs.modal', () => {
+      window.setTimeout(() => {
+        removeBootstrapBackdrops()
+        reconcileModalDomState()
+      }, 0)
+    })
+  }
+
+  private handleModalClick(event: Event): void {
+    if (!(event.target instanceof Element)) {
+      return
+    }
+
+    const dismissTrigger = event.target.closest('[data-bs-dismiss="modal"], [iflowModalDismiss]')
+    if (dismissTrigger) {
+      const modalElement = dismissTrigger.closest('.modal')
+      const modalId = dismissTrigger.getAttribute('iflowModalDismiss')
+        ?? dismissTrigger.getAttribute('data-modal-id')
+        ?? modalElement?.id
+      if (modalId) {
+        event.preventDefault()
+        event.stopPropagation()
+        this.closeModal(modalId)
+        return
       }
     }
+
+    const toggleTrigger = event.target.closest('[data-bs-toggle="modal"], [iflowModalOpen]')
+    if (!toggleTrigger) {
+      return
+    }
+
+    const explicitId = toggleTrigger.getAttribute('iflowModalOpen')
+    const target = toggleTrigger.getAttribute('data-bs-target') ?? toggleTrigger.getAttribute('href')
+    const modalId = explicitId ?? (target?.startsWith('#') ? target.slice(1) : target)
+    if (!modalId) {
+      return
+    }
+
+    const stack = toggleTrigger.getAttribute('iflowModalStack') === 'true'
+
+    event.preventDefault()
+    event.stopPropagation()
+    this.openModal(modalId, { stack })
   }
 
-  /**
-   * Limpia errores de validación de un formulario específico
-   */
+  private hideOtherModals(exceptModalId: string): void {
+    getVisibleModals().forEach((element) => {
+      if (element.id === exceptModalId) {
+        return
+      }
+      bootstrap.Modal.getInstance(element)?.hide()
+    })
+  }
+
   private clearFormErrors(modalId: string): void {
-    const formMap: { [key: string]: string } = {
+    const formMap: Record<string, string> = {
       'NprocediModal': 'formNuevoProcedimiento',
       'editarProcedimientoModal': 'formEditarProcedimiento',
       'nuevoPermisoModal': 'formNuevoPermiso',
@@ -102,47 +289,21 @@ export class ModalManagerService {
       'NAtributosModal': 'formNuevosAtributos',
       'modifitareasModalListado': 'formModificarTarea',
       'tareasModal': 'formNuevaTarea'
-    };
+    }
 
-    const formId = formMap[modalId];
-    if (formId) {
-      const form = document.getElementById(formId) as HTMLFormElement;
-      if (form) {
-        form.classList.remove('was-validated');
-        form.reset();
-      }
+    const formId = formMap[modalId]
+    if (!formId) {
+      return
+    }
+
+    const form = document.getElementById(formId) as HTMLFormElement | null
+    if (!form) {
+      return
+    }
+
+    form.classList.remove('was-validated')
+    if (modalId !== 'NprocediModal') {
+      form.reset()
     }
   }
-
-  /**
-   * Limpia todas las clases de Bootstrap que puedan quedar
-   */
-  private cleanupModalClasses(modalId: string): void {
-    const modalElement = document.getElementById(modalId);
-    if (modalElement) {
-      modalElement.classList.remove('show');
-      modalElement.style.display = 'none';
-    }
-    
-    // Limpiar backdrop
-    const backdropElements = document.querySelectorAll('.modal-backdrop');
-    backdropElements.forEach(element => element.remove());
-    
-    // Limpiar clase del body
-    document.body.classList.remove('modal-open');
-  }
-
-  /**
-   * Verifica si un modal está abierto
-   */
-  public isModalOpen(modalId: string): boolean {
-    return this.activeModals.has(modalId);
-  }
-
-  /**
-   * Obtiene el número de modales activos
-   */
-  public getActiveModalCount(): number {
-    return this.activeModals.size;
-  }
-} 
+}

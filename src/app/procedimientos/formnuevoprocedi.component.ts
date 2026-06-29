@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CrearProcedi, Procedimiento, CreaTareaProcedi,PlantillaTarea} from './procedimiento';
+import { CrearProcedi, Procedimiento, CreaTareaProcedi, PlantillaTarea, EditaTareaProcedi } from './procedimiento';
 import { ProcedimientoService } from './procedimiento.service';
 import {Router, ActivatedRoute} from '@angular/router'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -11,6 +11,8 @@ import { UserSessionService } from '../core/service/user-session.service';
 import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { NotificationService } from '../core/service/notification.service';
+import { ProcedimientoUiService } from './procedimiento-ui.service';
+import { ModalManagerService } from '../core/service/modal-manager.service';
 import { FormValidatorHelper } from '../core/helper/form-validator.helper';
 
 
@@ -114,6 +116,7 @@ export class FormnuevoprocediComponent {
   public vermenudesdemodifi = true;
   public crearprocedi: CrearProcedi = new CrearProcedi();
   public creatareaprocedi:CreaTareaProcedi = new CreaTareaProcedi();
+  public editatareaprocedi: EditaTareaProcedi = new EditaTareaProcedi();
   public idProcedimiento!:number;
   public titulo:string = 'Nuevo procedimiento';
   public nivAcces: string | null = null;
@@ -141,6 +144,7 @@ export class FormnuevoprocediComponent {
     public router:Router,
     public activatedRoute: ActivatedRoute,
     private notificationService: NotificationService,
+    private procedimientoUi: ProcedimientoUiService,
     private session: UserSessionService
     ){
       this.nivAcces = this.session.nivAcces;
@@ -149,28 +153,26 @@ export class FormnuevoprocediComponent {
 
 
     envioid(id:number,descrip:string,fase:string,plazo:number,tipoplaz:string,planti:string){
-
-
       this.descripcionT = descrip;
       this.faseT = fase;
       this.plazot = plazo;
       this.tipoPlazoT = tipoplaz;
-      this.idverTarea=id;
+      this.idverTarea = id;
       this.plantillaT = planti;
-      //this.firmaT = firma;
-      console.log(`DATOS DEL ID DE TAREAS : ${this.idverTarea}`)
 
-      if (this.idverTarea !=null){
-        this.edicion= true;
-        this.vermenu = true;
-      }else{
-        this.edicion = false;
-        this.vermenu = false;
-        //Swal.fire('Procedimiento  ',`Procedimiento creado con éxito`, 'success')
+      this.editatareaprocedi.descripcion = descrip || '';
+      this.editatareaprocedi.faseTarea = fase || '';
+      this.editatareaprocedi.plazo = plazo ?? 0;
+      this.editatareaprocedi.tipoPlazo = tipoplaz || '';
+      this.editatareaprocedi.plantillaDefecto = planti || '';
+      this.editatareaprocedi.firmaPorDefecto = null;
+      this.editatareaprocedi.acciones = '';
+
+      if (planti) {
+        this.peparadatosfirma(planti);
       }
 
-
-
+      this.edicion = this.idverTarea != null;
     }
 
 
@@ -205,17 +207,33 @@ export class FormnuevoprocediComponent {
 
 
   ngOnInit(){
-    this.cargarProcedimiento();
-
     this.procedimientoService.getPlantillaTareas().subscribe(
       plantillatarea => this.plantillatarea = plantillatarea
     );
 
+    this.activatedRoute.params.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        this.idProcedimiento = +id;
+        this.procedimientocreado.id = this.idProcedimiento;
+        this.vermenu = true;
+        this.cargarProcedimiento();
+        this.refreshListaTareas();
+        return;
+      }
+
+      this.procedimientoUi.requestOpenNuevoProcedimiento();
+      this.router.navigate(['/procedimientos'], { replaceUrl: true });
+    });
+  }
+
+  refreshListaTareas(): void {
+    if (!this.idProcedimiento) {
+      return;
+    }
     this.getListaTareas().subscribe(
       listatareaprocedi => this.listatareaprocedi = listatareaprocedi
     );
-
-
   }
 
 
@@ -332,21 +350,51 @@ export class FormnuevoprocediComponent {
 
 
 
- public  createTareaProcedi(Id:number):void {
-  let plantillaDefecto:string = this.creatareaprocedi.plantilladefecto;
- // console.log(`PLANTILLA DEFECTO : ${plantillaDefecto}`);
+ public createTareaProcedi(id?: number): void {
+  const procedimientoId = id ?? this.idProcedimiento ?? this.procedimientocreado?.id;
+  if (!procedimientoId) {
+    this.notificationService.error('No se ha identificado el procedimiento');
+    return;
+  }
 
-  let id = Id;
-  console.log(`ID : ${id}`);
+  this.procedimientoService.createTareaProcedi(this.creatareaprocedi, procedimientoId)
+    .subscribe({
+      next: () => {
+        this.notificationService.saveSuccess('Tarea');
+        this.creatareaprocedi = new CreaTareaProcedi();
+        this.refreshListaTareas();
+        const modal = document.getElementById('tareasModal');
+        if (modal) {
+          ModalManagerService.getInstance()?.closeModal('tareasModal');
+        }
+      },
+      error: () => this.notificationService.error('Error al crear la tarea')
+    });
+  }
 
-  this.procedimientoService.createTareaProcedi(this.creatareaprocedi,Id)
-  .subscribe(response =>{this.tareaprocedicreada = response; // guardamos la respuesta http en la clase TareaProcediCreada
+  public editaTareaProcedim(): void {
+    if (!this.idverTarea) {
+      this.notificationService.error('Seleccione una tarea para editar');
+      return;
+    }
 
-   } );
+    if (this.editatareaprocedi.plazo == null || (this.editatareaprocedi.plazo as unknown) === '') {
+      this.editatareaprocedi.plazo = 0;
+      this.editatareaprocedi.tipoPlazo = 'SINPLAZO';
+    }
 
-   this.router.navigate(['/procedimientos']) ;
-
-   setTimeout(this.recargarpagina, 1000);// para que le de tiempo a ejecutarl todo
+    this.procedimientoService.editaTareaProcedimiento(this.editatareaprocedi, this.idverTarea)
+      .subscribe({
+        next: () => {
+          this.notificationService.saveSuccess('Tarea');
+          this.refreshListaTareas();
+          const modal = document.getElementById('modifitareasModal');
+          if (modal) {
+            ModalManagerService.getInstance()?.closeModal('modifitareasModal');
+          }
+        },
+        error: () => this.notificationService.error('Error al modificar la tarea')
+      });
   }
 
 

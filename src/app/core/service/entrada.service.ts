@@ -12,15 +12,11 @@ export class EntradaService {
 
   crearEntrada(entradaData: any, params: { idPerso: number, idHisPerso: number, codArchi: number, idTarea: number }): Observable<any> {
     const url = `${environment.apiUrl}rdDocumento/crearEntrada/${params.idPerso}/${params.idHisPerso}/${params.codArchi}/${params.idTarea}`;
-    console.log(url);
-    console.log(entradaData);
     return this.http.post(url, entradaData, { responseType: 'text' });
   }
 
   crearJustificanteGasto(facturaData: any, idExped: number): Observable<any> {
     const url = `${environment.apiUrl}jusGasto/crear/${idExped}`;
-    console.log(url);
-    console.log(facturaData);
 
     const facturaDataModificada = {
       ...facturaData,

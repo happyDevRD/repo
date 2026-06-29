@@ -71,23 +71,22 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
     }
 
     if (changes['idExped'] && changes['idExped'].currentValue) {
-      console.log('[LiquidacionFormComponent] idExped cambiado:', changes['idExped'].currentValue);
       this.liquidacion.idExped = changes['idExped'].currentValue;
       this.fetchInteresado();
     }
   }
 
   ngOnInit(): void {
-    console.log("[LiquidacionFormComponent] ID Expediente Recibido:", this.idExped);
-    this.liquidacion.idExped = this.idExped;
+    if (this.idExped) {
+      this.liquidacion.idExped = this.idExped;
+    }
     this.calculaTotal();
-    this.fetchInteresado();
+    if (this.liquidacion.idExped) {
+      this.fetchInteresado();
+    }
   }
 
   fetchInteresado(): void {
-    console.log('[fetchInteresado] Llamando getInteresadoExp con idExped:', this.liquidacion.idExped);
-    
-    // Verificar que idExped existe antes de hacer la llamada
     if (!this.liquidacion.idExped) {
       console.warn('[fetchInteresado] idExped es undefined, no se puede obtener el interesado');
       this.nombreInteresado = 'ID de expediente no disponible';
@@ -96,10 +95,8 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
     
     this.liquidacionService.getInteresadoExp(this.liquidacion.idExped).subscribe({
       next: (data: any) => {
-        console.log('[fetchInteresado] Respuesta recibida:', data);
         if (data && data.perEntid && data.perEntid.nombre) {
           this.nombreInteresado = data.perEntid.nombre;
-          console.log('[fetchInteresado] Nombre interesado asignado:', this.nombreInteresado);
         } else {
           console.warn("[fetchInteresado] No se encontró 'perEntid.nombre'. Data:", data);
           this.nombreInteresado = 'Nombre no disponible';
@@ -132,7 +129,6 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
     const total = cuota - (cuota * porBonif / 100) + demora + sancion + recargo;
     // Redondeo a 2 decimales
     this.liquidacion.totLiqui = Math.round(total * 100) / 100;
-    console.log(`[LiquidacionFormComponent] Calcula Total: cuota=${cuota}, porBonif=${porBonif}, demora=${demora}, sancion=${sancion}, recargo=${recargo} => total=${this.liquidacion.totLiqui}`);
   }
 
   currencyRenderer(row: number, column: string, value: any): string {

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {catchError, Observable, throwError} from "rxjs";
-import {environment} from "../../../../environments/environment";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {ContabilidadDTO} from "../../models/contabilidad/contabilidad.dto";
+import { catchError, Observable, of, throwError } from 'rxjs';
+import {environment} from '../../../../environments/environment';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {ContabilidadDTO} from '../../models/contabilidad/contabilidad.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +15,15 @@ export class ContabilidadService {
 
   getContabilidades(): Observable<ContabilidadDTO[]> {
     const url = `${this.apiUrl}contabilidad/listaContOperativa`;
-    return this.http.get<ContabilidadDTO[]>(url)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.get<ContabilidadDTO[]>(url).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404 || error.status === 500) {
+          console.warn('[ContabilidadService] Sin datos de contabilidad:', error.status);
+          return of([]);
+        }
+        return this.handleError(error);
+      }),
+    );
   }
 
   private handleError(error: HttpErrorResponse) {

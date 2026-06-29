@@ -7,11 +7,11 @@
 
   <button *ngIf="veoEnviarNotifica" class="btn-iflow btn-iflow--primary" (click)="enviar.emit()"
     title="Enviar a Notifica" type="button">
-    Enviar a Notifica <img src="assets/envioNotifi.svg" alt="Enviar a Notifica" width="20" height="20" />
+    Enviar a Notifica <i class="bi bi-envelope-arrow-up" aria-hidden="true"></i>
   </button>
 
   <button *ngIf="veoSincronizarNotifica" class="btn-iflow btn-iflow--primary" (click)="sincronizar.emit()"
     title="Sincronizar con Notifica" type="button">
-    Sincronizar Notifica <img src="assets/notificaciones.svg" alt="Sincronizar" width="20" height="20" />
+    Sincronizar Notifica <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
   </button>
 </div>

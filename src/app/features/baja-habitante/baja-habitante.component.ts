@@ -49,7 +49,6 @@ export class BajaHabitanteComponent implements OnInit {
         this.expedientesService.getPaises().subscribe({
           next: (paises) => {
             this.pais = paises;
-            console.log("[ngOnInit] Países recibidos:", paises);
           },
           error: (err) => {
             console.error("Error al obtener países:", err);
@@ -64,7 +63,6 @@ export class BajaHabitanteComponent implements OnInit {
 
   // Filtra la lista de municipios según la provincia seleccionada en bajaHabitantes.proProDesti
   public gestimunicip(provId: any): void {
-    console.log("CODIGO MUNICIPIO --> : " + provId);
     if (!this.municio || !Array.isArray(this.municio)) {
       console.error("La lista de municipios no está definida o no es un arreglo");
       this.municiflitro = [];
@@ -73,12 +71,10 @@ export class BajaHabitanteComponent implements OnInit {
     this.municiflitro = this.municio.filter(municipio =>
       String(municipio.id).substring(0, 2) === String(provId)
     );
-    console.log("Municipios filtrados:", this.municiflitro);
   }
 
   // Ajusta la interfaz según el tipo de baja seleccionado
   public AccionTipoBaja(): void {
-    console.log("TIPO DE BAJA VALOR => " + this.bajaHabitantes.tipBaja);
     switch (this.bajaHabitantes.tipBaja) {
       case "1": // Documentación Física Requerida (ej: fallecimiento)
         this.disablePais = false;
@@ -139,7 +135,6 @@ export class BajaHabitanteComponent implements OnInit {
       console.error(error);
     }
 
-    console.table(this.bajaHabitantes);
     Swal.fire({
       title: '¿Está seguro?',
       text: "Dar de baja a: " + this.persona.desPerEntid,
@@ -152,7 +147,6 @@ export class BajaHabitanteComponent implements OnInit {
         this.expedientesService.envioBajaHabitantes(this.bajaHabitantes, this.persona.numDocum)
           .subscribe(
             respuesta => {
-              console.table(respuesta);
               Swal.fire('Baja realizada', '', 'success');
             },
             err => {

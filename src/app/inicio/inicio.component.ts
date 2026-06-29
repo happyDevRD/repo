@@ -18,6 +18,7 @@ import {jqxGridComponent} from 'jqwidgets-ng/jqxgrid';
 import { GridRadioSelector } from '../core/helper/grid-radio-selector';
 import { TablaClickHandler } from '../core/helper/tabla-click-handler';
 import { UserSessionService } from '../core/service/user-session.service';
+import { ModalManagerService } from '../core/service/modal-manager.service';
 import { finalize } from 'rxjs/operators';
 import {
   DashboardCountKey,
@@ -398,8 +399,6 @@ export class InicioComponent implements OnInit {
       data => this.solicitudlistar = data,
       error => console.error("Error en getSolicitudesfiltro: ", error)
     );
-    console.log("valor estado solicitud: ", JSON.stringify(value));
-    console.log("cadena estado solicitud: ", this.cadenaEstadoSolicitudes);
   }
 
 
@@ -410,7 +409,8 @@ export class InicioComponent implements OnInit {
     public http: HttpClient,
     private notificationService: NotificationService,
     private dashboardService: InicioDashboardService,
-    public session: UserSessionService
+    public session: UserSessionService,
+    private modalManagerService: ModalManagerService
   ) {
 
   }
@@ -418,8 +418,6 @@ export class InicioComponent implements OnInit {
 // ordena tabla expedientes
 
   public ordenarTabla() {
-
-    console.log(`URL DE EXPEDIENTES : ${environment.apiUrl}expediente/listarPorInstructor/${this.session.user!}`)
     var table, rows, switching, i, x, y, shouldSwitch;
     table = document.getElementById("tablaExpedi");
     switching = true;
@@ -467,7 +465,6 @@ export class InicioComponent implements OnInit {
     this.expedientesService.getTareaTramiteExpeporExpe(id).subscribe(
       data => {
         this.tareatamiteexpporexpedi = data;
-        console.log(`DIRECCION: ${environment.apiUrl}tareaTramiteExpediente/listarPorExpediente/${id}`);
       },
       error => console.error("Error en getTareaTramiteExpeporExpe: ", error)
     );
@@ -486,8 +483,6 @@ export class InicioComponent implements OnInit {
     this.tituloExpe = rowData.titulo;
     // Se asigna el id del expediente para otras operaciones
     this.idexpedi = rowData.id;
-    console.log("Numero EXPEDIENTE:", this.numeroExpe);
-    console.log("ID EXPEDIENTE:", rowData.id);
 
     this.sourceTareasExpediente = new jqx.dataAdapter({
       dataType: 'json',
@@ -534,9 +529,6 @@ export class InicioComponent implements OnInit {
 
   public cargoExpedientes(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log(`URL CARGA EXPEDIENTES: ${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.session.user}`);
-      
-      // Usar HTTP client para obtener los datos
       this.http.get<any[]>(`${environment.apiUrl}tareaTramiteExpediente/porInstructor/${this.session.user}`).subscribe(
         data => {
           this.sourceTareasExpediente = new jqx.dataAdapter({
@@ -585,7 +577,6 @@ export class InicioComponent implements OnInit {
 
   public clicktareExpediente(event: any): void {
     this.numeroArchivo = event.args.row.bounddata.archivo;
-    console.log("tiene documento?", this.numeroArchivo);
   }
 
   // Método para abrir modal de edición de tarea trámite con doble click
@@ -598,8 +589,7 @@ export class InicioComponent implements OnInit {
     // Abrir el modal de edición
     const modal = document.getElementById('EditarTareaTramiteModal');
     if (modal) {
-      const modalInstance = new (window as any).bootstrap.Modal(modal);
-      modalInstance.show();
+      this.modalManagerService.openModal('EditarTareaTramiteModal');
     }
   }
 
@@ -732,9 +722,6 @@ export class InicioComponent implements OnInit {
 
 
   public cellsrendererPlazo = function (row, column, value) {
-
-    console.log("Fecha inicio: " + this.FecIniTarea);
-    console.log("Fecha Fin: " + this.FecIniTarea)
     var dato1: string = this.FecIniTarea;
     return `<div style="text-align: center; margin-top: 5px;"  type="button"  data-bs-toggle="modal" data-bs-target="#editarTramiteModal" data-bs-whatever="@mdo" >` + value + '</div>';
   }

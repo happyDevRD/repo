@@ -9,28 +9,28 @@
       <div class="row g-3">
         <div class="col-md-3">
           <div class="form-floating">
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre"
+            <input type="text" class="form-control" id="nombre" name="nombre" placeholder=" "
                    [(ngModel)]="persona.nombre">
             <label for="nombre">Nombre</label>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-floating">
-            <input type="text" class="form-control" id="ape1" name="ape1" placeholder="Primer apellido"
+            <input type="text" class="form-control" id="ape1" name="ape1" placeholder=" "
                    [(ngModel)]="persona.apellido1">
             <label for="ape1">Primer apellido</label>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-floating">
-            <input type="text" class="form-control" id="ape2" name="ape2" placeholder="Segundo apellido"
+            <input type="text" class="form-control" id="ape2" name="ape2" placeholder=" "
                    [(ngModel)]="persona.apellido2">
             <label for="ape2">Segundo apellido</label>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-floating">
-            <input type="text" class="form-control" id="numdocu" name="numdocu" placeholder="Número de Documento"
+            <input type="text" class="form-control" id="numdocu" name="numdocu" placeholder=" "
                    [value]="persona.numDocum" disabled>
             <label for="numdocu">Número de Documento</label>
           </div>
@@ -41,14 +41,14 @@
       <div class="row g-3 mt-3">
         <div class="col-md-6">
           <div class="form-floating">
-            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección"
+            <input type="text" class="form-control" id="direccion" name="direccion" placeholder=" "
                    [(ngModel)]="persona.dirPosta">
             <label for="direccion">Dirección</label>
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-floating">
-            <input type="text" class="form-control" id="cp" name="cp" placeholder="Código Postal"
+            <input type="text" class="form-control" id="cp" name="cp" placeholder=" "
                    [(ngModel)]="persona.codPosta">
             <label for="cp">Código Postal</label>
           </div>
@@ -86,27 +86,27 @@
       <div class="row g-3 mt-3">
         <div class="col-md-6">
           <div class="form-floating">
-            <input type="email" class="form-control" id="email" name="email" placeholder="Correo Electrónico"
+            <input type="email" class="form-control" id="email" name="email" placeholder=" "
                    [(ngModel)]="persona.email">
             <label for="email">Correo Electrónico</label>
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-floating">
-            <input type="tel" class="form-control" id="telm" name="telm" placeholder="Teléfono móvil"
+            <input type="tel" class="form-control" id="telm" name="telm" placeholder=" "
                    [(ngModel)]="persona.telMovil">
             <label for="telm">Teléfono móvil</label>
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-floating">
-            <input type="tel" class="form-control" id="telF" name="telF" placeholder="Teléfono Fijo"
+            <input type="tel" class="form-control" id="telF" name="telF" placeholder=" "
                    [(ngModel)]="persona.telFijo">
             <label for="telF">Teléfono Fijo</label>
           </div>
         </div>
         <div class="col-md-2 d-flex align-items-end">
-          <button (click)="onActualizarDatos()" type="button" class="btn btn-primary w-100">
+          <button (click)="onActualizarDatos()" type="button" class="btn-iflow btn-iflow--primary w-100">
             Actualizar Datos
           </button>
         </div>

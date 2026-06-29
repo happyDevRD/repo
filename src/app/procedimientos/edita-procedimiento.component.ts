@@ -21,7 +21,7 @@ import {environment} from 'src/environments/environment';
 import {Location} from '@angular/common';
 import {jqxGrid_ES} from 'src/translations/jqxGrid_translate';
 import {UserSessionService} from '../core/service/user-session.service';
-declare var bootstrap: any;
+import { ModalManagerService } from '../core/service/modal-manager.service';
 
 
 class FirmaListar {
@@ -824,10 +824,7 @@ export class EditaProcedimientoComponent {
           // Cerrar el modal (si está abierto)
           const modal = document.getElementById('modifitareasModal');
           if (modal) {
-            const modalInstance = bootstrap.Modal.getInstance(modal);
-            if (modalInstance) {
-              modalInstance.hide();
-            }
+            ModalManagerService.getInstance()?.closeModal('modifitareasModal');
           }
         },
         error: (error) => {

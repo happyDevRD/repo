@@ -14,77 +14,49 @@
 </ul>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="datosProcedi" role="tabpanel" aria-labelledby="datosProcedi-tab">
-
-
-<div class="form-section">
-
-  <form (ngSubmit)="create(crearprocedi.descripcion, crearprocedi.codigoSia, crearprocedi.depart)">
-
-<div class="col-12">
-<div class="form-group row">
-  <div class="col-sm-3"></div>
-  <label for="descripcion" class="col-form-label col-sm-2">Descripción*</label>
-  <div class="col-sm-4">
-      <input type="text" class="form-control" [(ngModel)]="crearprocedi.descripcion" name="descripcion" id="descripcion" (blur)="validateField('descripcion', crearprocedi.descripcion)" required>
+    <div *ngIf="!idProcedimiento" class="p-4 text-muted" role="status" aria-live="polite">
+      Redirigiendo al listado de procedimientos…
+    </div>
+    <div *ngIf="idProcedimiento" class="form-section">
+      <div class="row g-3">
+        <div class="col-md-8"><div class="form-floating">
+          <input type="text" class="form-control" [ngModel]="procedimiento.descripcion" name="descripcionVer"
+            id="descripcionVer" readonly placeholder=" ">
+          <label for="descripcionVer">Descripción</label>
+        </div></div>
+        <div class="col-md-4"><div class="form-floating">
+          <input type="text" class="form-control" [ngModel]="procedimiento.codigoSia" name="codigoSiaVer"
+            id="codigoSiaVer" readonly placeholder=" ">
+          <label for="codigoSiaVer">Código SIA</label>
+        </div></div>
+      </div>
+      <div class="form-actions mt-3">
+        <button class="btn-iflow btn-iflow--secondary" type="button" [routerLink]="['/procedimientos']">Volver al listado</button>
+        <button class="btn-iflow btn-iflow--primary" type="button" [routerLink]="['/procedimientos', idProcedimiento]">Editar procedimiento</button>
+      </div>
+    </div>
   </div>
-</div>
-
-<br>
-
-
-
-<div class="form-group row">
-  <div class="col-sm-3"></div>
-  <label for="codigoSIA" class="col-form-label col-sm-2">Código SIA*</label>
-  <div class="col-sm-4">
-      <input type="text" class="form-control" [(ngModel)]="crearprocedi.codigoSia" name="codigoSIA" id="codigoSIA" (blur)="validateField('codigoSIA', crearprocedi.codigoSia)" required>
-  </div>
-</div>
-
-
-<div class="form-group row">
-
-  <div class="form-actions">
-      <button class="btn-iflow btn-iflow--secondary" type="button" name="buttom" (click)="limpiarErrores()" [routerLink]="['/procedimientos']">Cancelar</button>
-      <button class="btn-iflow btn-iflow--primary" type="submit">Guardar</button>
-  </div>
-</div>
-
-</div>
-</form>
-
-</div>
-</div>
      <div class="tab-pane fade" id="tareaProcedi" role="tabpanel" aria-labelledby="tareaProcedi-tab">
-
-
-      <div class="col"></div>
-      <div class="col-1 text-center"></div>
-      <div   class="col-3 text-center">
-
-
-
-
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+      <h5 class="section-subtitle mb-0">Tareas del procedimiento</h5>
+      <div class="acciones-botones-container">
+        <button class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#tareasModal"
+          aria-label="Nueva tarea" title="Nueva tarea">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        </button>
+        <button *ngIf="edicion==true" class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal"
+          data-bs-target="#modifitareasModal" aria-label="Editar tarea" title="Editar tarea">
+          <i class="bi bi-pencil" aria-hidden="true"></i>
+        </button>
+        <button *ngIf="edicion==true" (click)="vacio()" class="btn-iflow btn-iflow--icon" type="button"
+          aria-label="Eliminar tarea" title="Eliminar tarea">
+          <i class="bi bi-trash" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
 
-    <div class="row">
-
-      <div class="col"></div>
-      <div class="col-1 text-center"></div>
-      <div   class="col-3 text-center">
-
-        <!-- botonera de opciones -->
-
-        <button  class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#tareasModal" data-bs-whatever="@mdo"  ><img  src="assets/nuevo.svg" width="25" height="25"/></button>
-        <button  *ngIf="edicion==true" class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="assets/editar3.svg"/></button>
-          <button *ngIf="edicion==true"  (click)="vacio()" class="btn-iflow btn-iflow--icon" type="button"  ><img width="25" height="25"  src="assets/papelera2.svg"/></button>
-        </div>
-
-
-    </div>
-    <br>
-
-    <table class="table table-iflow table-bordered table-striped table-responsive rounded-3">
+    <div class="table-responsive">
+    <table class="table table-iflow table-hover">
     <thead>
         <tr>
             <th></th>
@@ -97,17 +69,15 @@
 
     </thead>
     <tbody>
-        <tr *ngFor="let listatareasprocedi of listatareaprocedi " >
-          <td >
-
-              <div class=" form-check  ">
-                <input class="form-check-input" (click)="envioid(listatareasprocedi.id,listatareasprocedi.descripcion,listatareasprocedi.faseTarea,listatareasprocedi.plazo,listatareasprocedi.tipoPlazo,listatareasprocedi.plantillaDefecto)" type="radio"  value="" name="RadioId" id="RadioId">
-
-
-
-              </div>
-
-            </td>
+        <tr *ngFor="let listatareasprocedi of listatareaprocedi">
+          <td>
+            <div class="form-check">
+              <input class="form-check-input"
+                (change)="envioid(listatareasprocedi.id, listatareasprocedi.descripcion, listatareasprocedi.faseTarea, listatareasprocedi.plazo, listatareasprocedi.tipoPlazo, listatareasprocedi.plantillaDefecto)"
+                type="radio" [value]="listatareasprocedi.id" name="tareaSeleccionada"
+                [id]="'tarea-' + listatareasprocedi.id">
+            </div>
+          </td>
             <td>{{listatareasprocedi.descripcion }}</td>
             <td>{{listatareasprocedi.faseTarea }}</td>
             <td>{{listatareasprocedi.plazo }}</td>
@@ -115,8 +85,8 @@
 
 
     </tbody>
-
     </table>
+    </div>
    <!-- <pagination-controls (pageChange)='page = $event' previousLabel='Anterior' nextLabel='Siguiente'></pagination-controls>  -->
 
    <!--   TAREAS PROCEDIMIENTOS  MODAL-->
@@ -128,66 +98,54 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
           </div>
           <div class="modal-body">
-            <form (ngSubmit)="createTareaProcedi(procedimientocreado.id)">
-              <div class="mb-3">
-
-                <input type="text" class="form-control" id="descripcion" placeholder="Descripción"  name="descripcion" [(ngModel)]="creatareaprocedi.descripcion">
-              </div>
-              <div class="mb-3">
-                <label for="departamento" class="col-form-label" >Seleccionar fase:</label>
-                <select class="form-select " id="departamento" name="fase" [(ngModel)]="creatareaprocedi.fasetarea">
-
-                  <option value="INICIO">Inicio</option>
-                  <option value="INSTRUCCION">Instrucción</option>
-                  <option value="RESOLUCION">Resolución</option>
-                </select>
-
-
-              </div>
-              <div class="mb-3">
-                <label for="departamento" class="col-form-label" >Plantilla por defecto:</label>
-                <select  class="form-select " id="departamento" name="plantilladefecto"  [(ngModel)]="creatareaprocedi.plantilladefecto">
-
-                  <option  *ngFor="let plantillatareas of plantillatarea"  value={{plantillatareas.plantilla}} >{{plantillatareas.desPlant}}</option>
-
-                </select>
-
-              </div>
-
-
-              <div class="row">
-
-                <div class="col-8 col-sm-6">
-                  <label for="departamento" class="col-form-label" >Plazo:</label>
-
-                  <input type="number"  class="form-control" id="plantilla" name="plazo" min="1" max="365" (change)="peparadatosfirma(creatareaprocedi.plantilladefecto)"  required="required"  [(ngModel)]="creatareaprocedi.plazo">
-                </div>
-                <div class="col-8 col-sm-6">
-                  <label for="departamento" class="col-form-label" >Seleccionar tipo plazo:</label>
-                  <select class="form-select " id="departamento"   name="tipoplazo" [(ngModel)]="creatareaprocedi.tipoplazo">
-
-                    <option value="DIAS">Dia</option>
+            <form (ngSubmit)="createTareaProcedi()">
+              <div class="row g-3">
+                <div class="col-12"><div class="form-floating">
+                  <input type="text" class="form-control" id="descripcionTareaNueva" name="descripcion"
+                    [(ngModel)]="creatareaprocedi.descripcion" placeholder=" ">
+                  <label for="descripcionTareaNueva">Descripción</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="faseTareaNueva" name="fase" [(ngModel)]="creatareaprocedi.fasetarea">
+                    <option value="INICIO">Inicio</option>
+                    <option value="INSTRUCCION">Instrucción</option>
+                    <option value="RESOLUCION">Resolución</option>
+                  </select>
+                  <label for="faseTareaNueva">Fase</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="plantillaTareaNueva" name="plantilladefecto"
+                    [(ngModel)]="creatareaprocedi.plantilladefecto">
+                    <option *ngFor="let plantillatareas of plantillatarea" value={{plantillatareas.plantilla}}>{{plantillatareas.desPlant}}</option>
+                  </select>
+                  <label for="plantillaTareaNueva">Plantilla por defecto</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <input type="number" class="form-control" id="plazoTareaNueva" name="plazo" min="1" max="365"
+                    (change)="peparadatosfirma(creatareaprocedi.plantilladefecto)" required
+                    [(ngModel)]="creatareaprocedi.plazo" placeholder=" ">
+                  <label for="plazoTareaNueva">Plazo</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="tipoPlazoTareaNueva" name="tipoplazo" [(ngModel)]="creatareaprocedi.tipoplazo">
+                    <option value="DIAS">Día</option>
                     <option value="SEMANAS">Semana</option>
                     <option value="MESES">Mes</option>
                     <option value="ANOS">Año</option>
                   </select>
-                  </div>
-                </div>
-                  <div class="mb-3"  >
-                    <label for="departamento" class="col-form-label" >firma por defecto:</label>
-                    <select  class="form-select " id="departamento" name="firmapordefecto" [(ngModel)]="creatareaprocedi.firmapordefecto">
-
-                      <option  *ngFor="let firmaslistar of firmalistar"  value={{firmaslistar.idProFirma}} >{{firmaslistar.descripcionCircuito}}</option>
-
-                    </select>
-
-
-                    </div>
-                <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Atras</button>
-            <button class="btn btn-outline-primary "  role="button">Crear</button>
-          </div>
-
+                  <label for="tipoPlazoTareaNueva">Tipo de plazo</label>
+                </div></div>
+                <div class="col-12"><div class="form-floating">
+                  <select class="form-select" id="firmaTareaNueva" name="firmapordefecto" [(ngModel)]="creatareaprocedi.firmapordefecto">
+                    <option *ngFor="let firmaslistar of firmalistar" value={{firmaslistar.idProFirma}}>{{firmaslistar.descripcionCircuito}}</option>
+                  </select>
+                  <label for="firmaTareaNueva">Firma por defecto</label>
+                </div></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn-iflow btn-iflow--secondary modal-footer__btn" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn-iflow btn-iflow--primary modal-footer__btn" type="submit">Crear</button>
+              </div>
             </form>
           </div>
 
@@ -195,7 +153,71 @@
       </div>
     </div>
 
-
+    <!-- MODAL MODIFICAR TAREA -->
+    <div class="modal fade" id="modifitareasModal" tabindex="-1" aria-labelledby="modifitareasModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modifitareasModalLabel">Modificar tarea</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="editaTareaProcedim()">
+              <div class="row g-3">
+                <div class="col-12"><div class="form-floating">
+                  <input type="text" class="form-control" id="descripcionTareaEditar" name="descripcionEditar"
+                    [(ngModel)]="editatareaprocedi.descripcion" placeholder=" ">
+                  <label for="descripcionTareaEditar">Descripción</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="faseTareaEditar" name="faseEditar" [(ngModel)]="editatareaprocedi.faseTarea">
+                    <option value="INICIO">Inicio</option>
+                    <option value="INSTRUCCION">Instrucción</option>
+                    <option value="RESOLUCION">Resolución</option>
+                  </select>
+                  <label for="faseTareaEditar">Fase</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="plantillaTareaEditar" name="plantillaEditar"
+                    [(ngModel)]="editatareaprocedi.plantillaDefecto"
+                    (change)="peparadatosfirma(editatareaprocedi.plantillaDefecto)">
+                    <option value="">Sin plantilla</option>
+                    <option *ngFor="let plantillatareas of plantillatarea" [value]="plantillatareas.plantilla">{{ plantillatareas.desPlant }}</option>
+                  </select>
+                  <label for="plantillaTareaEditar">Plantilla por defecto</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <input type="number" class="form-control" id="plazoTareaEditar" name="plazoEditar" min="1" max="365"
+                    [(ngModel)]="editatareaprocedi.plazo" placeholder=" ">
+                  <label for="plazoTareaEditar">Plazo</label>
+                </div></div>
+                <div class="col-md-6"><div class="form-floating">
+                  <select class="form-select" id="tipoPlazoTareaEditar" name="tipoPlazoEditar" [(ngModel)]="editatareaprocedi.tipoPlazo">
+                    <option value="SINPLAZO">Sin plazo</option>
+                    <option value="DIAS">Día</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                  <label for="tipoPlazoTareaEditar">Tipo de plazo</label>
+                </div></div>
+                <div class="col-12"><div class="form-floating">
+                  <select class="form-select" id="firmaTareaEditar" name="firmaEditar" [(ngModel)]="editatareaprocedi.firmaPorDefecto">
+                    <option [ngValue]="null">Sin firma</option>
+                    <option *ngFor="let firmaslistar of firmalistar" [ngValue]="firmaslistar.idProFirma">{{ firmaslistar.descripcionCircuito }}</option>
+                  </select>
+                  <label for="firmaTareaEditar">Firma por defecto</label>
+                </div></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn-iflow btn-iflow--secondary modal-footer__btn" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn-iflow btn-iflow--primary modal-footer__btn">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
   <!--
@@ -204,96 +226,12 @@
 
 <!--  PERMISO PROCEDIMIENTOS -->
 <div class="tab-pane fade" id="permiProcedi" role="tabpanel" aria-labelledby="permiProcedi-tab">
-  <br>
-
-  <div class="row">
-
-    <div class="col"></div>
-    <div class="col-1 text-center"></div>
-    <div   class="col-3 text-center">
-
-      <!-- botonera de opciones -->
-      <button  class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" ><img  src="assets/nuevo.svg" width="25" height="25"/></button>
-      <button   class="btn-iflow btn-iflow--icon" type="button" data-bs-toggle="modal" data-bs-target="#modifitareasModal" data-bs-whatever="@mdo" ><img width="25" height="25" src="assets/editar3.svg"/></button>
-        <button   class="btn-iflow btn-iflow--icon" type="button"  ><img width="25" height="25"  src="assets/papelera2.svg"/></button>
-      </div>
-
-
-  </div>
-
-
- <br>
-  <table class=" container table table-bordered table-striped table-responsive rounded-3">
-
-    <thead>
-      <tr>
-          <th></th>
-          <th>Usuario</th>
-          <th>Descripción Usuario</th>
-          <th>Acciones</th>
-
-
-      </tr>
-
-  </thead>
-  <tbody>
-    <tr  >
-      <td >
-
-          <div class=" form-check  ">
-            <input class="form-check-input"  type="radio"  value="" name="RadioId" id="RadioId">
-
-
-
-          </div>
-
-        </td>
-        <td></td>
-        <td></td>
-        <td>...</td>
-
-
-
-</tbody>
-<!-- MODAL PARA CREAR  NUEVO PERMISO PROCEDIMIENTO -->
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Recipient:</label>
-            <input type="text" class="form-control" id="recipient-name">
-          </div>
-          <div class="mb-3">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn-iflow btn-iflow--secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn-iflow btn-iflow--primary">Send message</button>
-          </div>
-        </form>
-      </div>
-
-    </div>
+  <div class="empty-state mt-3">
+    <i class="bi bi-shield-lock empty-state__icon" aria-hidden="true"></i>
+    <p><strong>Permisos del procedimiento</strong></p>
+    <p>Una vez guardado el procedimiento, gestione los permisos desde <strong>Editar procedimiento</strong> en el listado.</p>
   </div>
 </div>
-
-<!-- FIN MODAL PARA CREAR  NUEVO PERMISO PROCEDIMIENTO -->
-
-
-  </table>
-
-
-
-
-</div> <!--  PERMISO PROCEDIMIENTOS  HASTA AQUI-->
 
       </div>
     </div>

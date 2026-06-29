@@ -40,7 +40,7 @@ import {
   VerMetadatos,
   VerTareaTramiteExpporUsuario
 } from './expedientes';
-import {catchError, map, Observable, throwError, tap} from 'rxjs';
+import {catchError, map, Observable, of, throwError, tap} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from '@angular/common/http';
 import Swal from 'sweetalert2';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -268,7 +268,7 @@ export class ExpedientesService {
   getAtributosListar(idExpediente: any): Observable<Atributosleer[]> {
     console.log("CONSULTA ATRIBUTOS : -->" + `${environment.apiUrl}atributoExpediente/listar/${idExpediente}`);
     return this.http.get(`${environment.apiUrl}atributoExpediente/listar/${idExpediente}`).pipe(
-      map(response => response as Atributosleer[])
+      map(response => (response as Atributosleer[]) ?? []),
     );
 
   }
@@ -461,7 +461,13 @@ export class ExpedientesService {
 
   getMensajeListarRecibidos(): Observable<LeerMensajeRecibidos[]> {
     return this.http.get(`${this.urlMensajeListarRecibidos}/${this.idOrgUsuar}`).pipe(
-      map(response => response as LeerMensajeRecibidos[])
+      map(response => response as LeerMensajeRecibidos[]),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          return of([]);
+        }
+        return throwError(() => error);
+      }),
     );
   }
 
@@ -705,7 +711,13 @@ export class ExpedientesService {
   getTareaTramiteExpedienteListar(idTramite: number): Observable<TareaTramiteExpedienteListar[]> {
     console.log(`URL DE CONSULTA DE TAREA : ${this.urlTareaTramiteExpedienteListar}/${idTramite}`)
     return this.http.get(`${this.urlTareaTramiteExpedienteListar}/${idTramite}`).pipe(
-      map(response => response as TareaTramiteExpedienteListar[])
+      map(response => response as TareaTramiteExpedienteListar[]),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          return of([]);
+        }
+        return throwError(() => error);
+      }),
     );
   }
 

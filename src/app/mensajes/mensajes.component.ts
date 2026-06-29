@@ -686,8 +686,7 @@ export class MensajesComponent {
     // Abrir el modal de visualización
     const modal = document.getElementById('VerMensajeModal');
     if (modal) {
-      const modalInstance = new (window as any).bootstrap.Modal(modal);
-      modalInstance.show();
+      this.modalManagerService.openModal('VerMensajeModal');
     }
   }
 

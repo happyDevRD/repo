@@ -54,7 +54,6 @@ export class ModificarDatosPersonaComponent implements OnInit {
       this.persona.municipio = '';
     }
 
-    console.log("Municipios filtrados para la provincia", provId, ":", this.municipioFiltro);
   }
 
 
@@ -88,7 +87,6 @@ export class ModificarDatosPersonaComponent implements OnInit {
 
     this.expedientesService.modificaPersonaEntidad(payload as any).subscribe({
       next: (respuesta) => {
-        console.table(respuesta);
         Swal.fire('Datos Modificados', '', 'success').then(r => r);
         this.persona = { ...respuesta };
         this.filterMunicipios();

@@ -1,29 +1,9 @@
-.td { font-weight: normal; }
-
-.click {
-  color: var(--iflow-primary-light);
-}
-
-.mueveBottonR { text-align: right; }
-.mueveBottonD { text-align: left; }
-
-.reservadiv { height: 30px; }
-
-.fuenteazul { color: var(--iflow-primary); }
-
-.dejaEspacio {
-  margin: auto;
-  text-align: left;
-  padding: 20px;
-}
-
-.btn-space { margin-right: 5px; }
+/* Estilos específicos del componente Solicitudes */
 
 .seccion-documentos-solicitud {
   margin-top: 2rem;
 }
 
-/* Alineación centrada para columnas específicas del grid */
 .jqx-grid-cell[data-field="usuario"],
 .jqx-grid-cell[data-field="ejeNumRegis"],
 .jqx-grid-cell[data-field="estado"] {
@@ -36,7 +16,6 @@
   text-align: center !important;
 }
 
-/* Checkbox integrado */
 .checkbox-input-field {
   min-height: 58px;
   background-color: transparent;
@@ -62,9 +41,10 @@
   user-select: none;
 }
 
-/* Validación modal nueva solicitud */
 #formNuevaSolicitud .was-validated .form-control:invalid,
 #formNuevaSolicitud .was-validated .form-select:invalid {
   border-color: #dc3545;
-  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  outline: 2px solid rgba(220, 53, 69, 0.22);
+  outline-offset: 0;
+  box-shadow: none;
 }

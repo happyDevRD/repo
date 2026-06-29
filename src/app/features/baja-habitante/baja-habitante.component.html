@@ -14,7 +14,7 @@
               class="form-control"
               id="nombre"
               name="nombre"
-              placeholder="Nombre"
+              placeholder=" "
               [(ngModel)]="persona.nombre"
               disabled>
             <label for="nombre">Nombre</label>
@@ -27,7 +27,7 @@
               class="form-control"
               id="ape1"
               name="ape1"
-              placeholder="Primer apellido"
+              placeholder=" "
               [(ngModel)]="persona.apellido1"
               disabled>
             <label for="ape1">Primer apellido</label>
@@ -40,7 +40,7 @@
               class="form-control"
               id="ape2"
               name="ape2"
-              placeholder="Segundo apellido"
+              placeholder=" "
               [(ngModel)]="persona.apellido2"
               disabled>
             <label for="ape2">Segundo apellido</label>
@@ -53,7 +53,7 @@
               class="form-control"
               id="numdocu"
               name="numdocu"
-              placeholder="Número de Documento"
+              placeholder=" "
               [value]="persona.numDocum"
               disabled>
             <label for="numdocu">Número de Documento</label>
@@ -70,7 +70,7 @@
               class="form-control"
               id="dir"
               name="dir"
-              placeholder="Dirección"
+              placeholder=" "
               [value]="persona.dirPosta"
               disabled>
             <label for="dir">Dirección</label>
@@ -83,7 +83,7 @@
               class="form-control"
               id="cp"
               name="cp"
-              placeholder="Código Postal"
+              placeholder=" "
               [value]="persona.codPosta"
               disabled>
             <label for="cp">Código Postal</label>
@@ -96,7 +96,7 @@
               class="form-control"
               id="provi"
               name="provi"
-              placeholder="Provincia"
+              placeholder=" "
               [value]="persona.provincia"
               disabled>
             <label for="provi">Provincia</label>
@@ -109,7 +109,7 @@
               class="form-control"
               id="muni"
               name="muni"
-              placeholder="Municipio"
+              placeholder=" "
               [value]="persona.municipio"
               disabled>
             <label for="muni">Municipio</label>
@@ -150,7 +150,7 @@
               class="form-control"
               id="startmovi"
               name="trip-startmovi"
-              placeholder="Fecha Movimiento"
+              placeholder=" "
               [(ngModel)]="bajaHabitantes.fecMovim">
             <label for="startmovi">Fecha Movimiento</label>
           </div>
@@ -162,7 +162,7 @@
               class="form-control"
               id="startreal"
               name="trip-startreal"
-              placeholder="Fecha Real"
+              placeholder=" "
               [(ngModel)]="bajaHabitantes.fecReal">
             <label for="startreal">Fecha Real</label>
           </div>
@@ -221,7 +221,7 @@
           </div>
         </div>
         <div class="col-md-3 d-flex align-items-end">
-          <button (click)="bajaHabitante()" type="button" class="btn btn-primary w-100">
+          <button (click)="bajaHabitante()" type="button" class="btn-iflow btn-iflow--primary w-100">
             Baja Habitante
           </button>
         </div>

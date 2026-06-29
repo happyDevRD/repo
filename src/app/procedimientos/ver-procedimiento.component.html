@@ -11,14 +11,14 @@
 
         <form (ngSubmit)="create()" class="form-readonly">
           <div class="row g-3">
-            <div class="col-md-6 form-floating">
-              <input [(ngModel)]="procedimiento.descripcion" class="form-control" name="descripcion" readonly type="text" id="descripcion">
+            <div class="col-md-6"><div class="form-floating">
+              <input [(ngModel)]="procedimiento.descripcion" class="form-control" name="descripcion" readonly type="text" id="descripcion" placeholder=" ">
               <label for="descripcion">Descripción</label>
-            </div>
-            <div class="col-md-6 form-floating">
-              <input [(ngModel)]="procedimiento.codigoSia" class="form-control" name="codigoSIA" readonly type="text" id="codigoSIA">
+            </div></div>
+            <div class="col-md-6"><div class="form-floating">
+              <input [(ngModel)]="procedimiento.codigoSia" class="form-control" name="codigoSIA" readonly type="text" id="codigoSIA" placeholder=" ">
               <label for="codigoSIA">Código SIA</label>
-            </div>
+            </div></div>
           </div>
         </form>
       </div>

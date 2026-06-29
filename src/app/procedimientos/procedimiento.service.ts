@@ -129,23 +129,49 @@ export class ProcedimientoService {
   }
 
   create(crearprocedi: CrearProcedi): Observable<CrearProcedi> {
-    JSON.stringify(crearprocedi);
-    let varios = {
-      "descripcion": crearprocedi.descripcion,
-      "depart": crearprocedi.depart,
-      "departamento": this.idOrgElemen,
-      "idOrgan": crearprocedi.departamento.idOrgan,
-      "siglas": crearprocedi.siglas,
-      "idOrgEleme": crearprocedi.departamento.idOrgEleme,
-      "codigoSia": crearprocedi.codigoSia,
-      "usuContr": this.user,
-      "modalidad": crearprocedi.modalidad,
-      "idMatProce": crearprocedi.materia
+    const idOrgEleme = this.resolveIdOrgEleme(crearprocedi)
+    const idOrgElemeNum = Number(idOrgEleme)
 
+    const body = {
+      descripcion: crearprocedi.descripcion?.trim(),
+      departamento: Number.isFinite(idOrgElemeNum) ? { idOrgEleme: idOrgElemeNum } : undefined,
+      siglas: crearprocedi.siglas?.trim(),
+      codigoSia: crearprocedi.codigoSia?.trim(),
+      usuContr: this.user,
+      modalidad: crearprocedi.modalidad != null
+        ? Number(crearprocedi.modalidad)
+        : undefined,
+      idMatProce: crearprocedi.materia != null
+        ? Number(crearprocedi.materia)
+        : undefined
     }
-    let keys = JSON.stringify(varios);
+
+    const keys = JSON.stringify(body)
     console.log(`DATOS KEY!!! : ${keys}`)
-    return this.http.post<CrearProcedi>(this.urlCrear, keys, {headers: this.httpHeaders});
+    return this.http.post<CrearProcedi>(this.urlCrear, keys, { headers: this.httpHeaders })
+  }
+
+  private resolveIdOrgEleme(crearprocedi: CrearProcedi): string {
+    const dept = this.resolveDepartamento(crearprocedi)
+    if (dept.idOrgEleme) {
+      return dept.idOrgEleme
+    }
+    if (this.idOrgElemen) {
+      return this.idOrgElemen
+    }
+    return crearprocedi.depart ?? ''
+  }
+
+  private resolveDepartamento(crearprocedi: CrearProcedi): { idOrgan: string; idOrgEleme: string } {
+    const raw = crearprocedi.departamento as unknown
+    const fromObject = raw && !Array.isArray(raw) ? raw as { idOrgan?: string; idOrgEleme?: string } : null
+    const fromArray = Array.isArray(raw) && raw.length ? raw[0] as { idOrgan?: string; idOrgEleme?: string } : null
+    const dept = fromObject ?? fromArray ?? {}
+
+    return {
+      idOrgan: dept.idOrgan ?? this.idOrgElemen ?? '',
+      idOrgEleme: dept.idOrgEleme ?? this.idOrgElemen ?? ''
+    }
   }
 
 

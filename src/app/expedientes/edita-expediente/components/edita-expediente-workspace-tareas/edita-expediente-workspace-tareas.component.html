@@ -1,0 +1,94 @@
+﻿        <div *ngIf="edita.verTareasdelTramite" class="seccion-tareas-tramite">
+          <!-- Título y botones de tareas del trámite -->
+          <div class="listado-titulo-container titulo-separador">
+            <h2 class="listado-titulo-principal">Listado de Tareas del Trámite</h2>
+            <div class="titulo-botones-container">
+              <button *ngIf="edita.botonNuevaTareaTramite" (click)="edita.abrirModalNuevaTarea()"
+                class="btn-iflow btn-iflow--icon" type="button" aria-label="Nueva tarea" title="Nueva tarea">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+              </button>
+              <button *ngIf="edita.verAccionesdeTarea && edita.veoBorrar && edita.borrarconfirma" (click)="edita.borrarTareaTramiteExp()"
+                class="btn-iflow btn-iflow--icon" type="button" aria-label="Borrar tarea del trámite" title="Borrar tarea del trámite">
+                <i class="bi bi-trash" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Botones de acciones de tareas -->
+          <div *ngIf="edita.verAccionesdeTarea" class="acciones-botones-container">
+            <!-- Contenedor para botones dependientes del archivo -->
+            <ng-container *ngIf="edita.verAbreArchivo">
+              <button *ngIf="edita.verxml && edita.veoXml" (click)="edita.descargaXml()" class="btn-iflow btn-iflow--primary"
+                title="Descargar Modelo TEU" type="button">
+                Modelo TEU <i class="bi bi-cloud-arrow-down"></i>
+              </button>
+              <button (click)="edita.conviertePDF()" [disabled]="edita.veoconviertePDF" class="btn-iflow btn-iflow--primary"
+                title="Convertir a PDF" type="button">
+                Convertir a PDF <i class="bi bi-file-earmark-pdf"></i>
+                <div [hidden]="edita.spinnervisible" class="spinner-border text-info" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </button>
+              <button *ngIf="edita.veoMetadatos" (click)="edita.fechaMetadata(edita.vermetadatos.fecCaptura); edita.abrirModal('metadatosModal')"
+                class="btn-iflow btn-iflow--primary" title="Datos ENI" type="button">
+                Datos ENI <i class="bi bi-chat-left-quote"></i>
+              </button>
+              <button *ngIf="!edita.tareayafirmada && !edita.firmaDesatendida" (click)="edita.abreArchiFirmado()"
+                class="btn-iflow btn-iflow--primary" title="Documento Firmado" type="button">
+                Doc. Firmado <i class="bi bi-cloud-arrow-down"></i>
+              </button>
+              <button *ngIf="edita.firmaDesatendida" (click)="edita.abreArchivo()" class="btn-iflow btn-iflow--primary"
+                title="Descargar Documento Firmado" type="button">
+                Descargar Documento <i class="bi bi-cloud-arrow-down"></i>
+              </button>
+              <button *ngIf="!edita.firmaDesatendida && edita.veoDocOriginal" (click)="edita.abreArchivo()"
+                class="btn-iflow btn-iflow--primary" title="Descargar Documento Original" type="button">
+                Doc. Original <i class="bi bi-cloud-arrow-down"></i>
+              </button>
+            </ng-container>
+
+            <!-- Botones que NO dependen del archivo -->
+            <button *ngIf="edita.verAccionesdeTarea && edita.tareayafirmada && edita.firmaAtendida && !edita.veoFirmaAtendida"
+              class="btn-iflow btn-iflow--primary" (click)="edita.abrirModal('archifirmaef')"
+              id="docufirmado" title="Firmar Digitalmente" type="button">
+              Firma Atendida <i class="bi bi-pen"></i>
+              <div [hidden]="edita.spinnervisiblefirma" class="spinner-border text-info" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </button>
+            <button *ngIf="edita.verAccionesdeTarea && edita.tareayafirmada && edita.firmaDesatendida && !edita.veoFirmaDEsatendida"
+              (click)="edita.descargaArchivoFirmado()" class="btn-iflow btn-iflow--primary" id="docufirmado"
+              title="Firmar Digitalmente" type="button">
+              Firma Desatendida <i class="bi bi-pen"></i>
+            </button>
+            <button *ngIf="edita.verAccionesdeTarea && edita.veoPropuestaResolucion" class="btn-iflow btn-iflow--primary"
+              (click)="edita.abrirModal('GenerarPropuestaResolucionModal')" title="Generar Propuesta Resolución" type="button">
+              Prop. Resolución <i class="bi bi-award"></i>
+            </button>
+            <button *ngIf="edita.verAccionesdeTarea && edita.veoNotificacion" (click)="edita.clickNuevaNotificacion(); edita.abrirModal('CrearNotificacionModal')"
+              class="btn-iflow btn-iflow--primary" title="Crear Notificación" type="button">
+              Crear Notificación <i class="bi bi-bell"></i>
+            </button>
+            <button *ngIf="edita.verAccionesdeTarea && edita.veoGenerarSalida" (click)="edita.clickGenerarSalida(); edita.abrirModal('GenerarSalidaModal')"
+              class="btn-iflow btn-iflow--primary" title="Generar Salida" type="button">
+              Generar Salida <i class="bi bi-send"></i>
+            </button>
+            <button *ngIf="edita.verAccionesdeTarea && edita.veoGenerarSalida" (click)="edita.crearTablonAnuncio(); edita.abrirModal('crearTablonAnunciosModal')"
+              class="btn-iflow btn-iflow--primary" title="Tablón de Anuncios" type="button">
+              Tablón de Anuncios <i class="bi bi-megaphone"></i>
+            </button>
+            <button *ngIf="edita.verAccionesdeTarea && edita.veoFinalizar" (click)="edita.finalizartarea()"
+              class="btn-iflow btn-iflow--primary" title="Finalizar Tarea" type="button">
+              Finalizar Tarea <i class="bi bi-check-circle"></i>
+            </button>
+          </div>
+
+          <!-- Grid de Tareas del Trámite -->
+          <div class="grid-container">
+            <jqxGrid #gridTareas (onRowclick)="edita.clicktareaNueva($event)" (onRowdoubleclick)="edita.onTareaDoubleClick($event)"
+              [altrows]="true" [autoheight]="true" [columns]="edita.columnsTareasTramite" [columnsautoresize]="true"
+              [filterable]="true" [localization]="edita.localizationObject" [pageable]="true" [pagesize]="10"
+              [sortable]="true" [source]="edita.sourceTareasTramite" [width]="'100%'" class="">
+            </jqxGrid>
+          </div>
+        </div>

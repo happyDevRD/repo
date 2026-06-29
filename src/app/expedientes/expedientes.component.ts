@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {
   AtributosModificar,
   Atributosleer,
@@ -11,6 +11,7 @@ import {
   Procedimiento,
   RegistroDocumento,
   RepresentanteExpLIstar,
+  TareaTramiteExpporExpedi,
   VerExpediente
 } from './expedientes';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -31,6 +32,7 @@ import {NotificationService} from "../core/service/notification.service";
 import {ModalManagerService} from "../core/service/modal-manager.service";
 import {UserSessionService} from "../core/service/user-session.service";
 import * as bootstrap from 'bootstrap';
+import {jqxGridComponent} from 'jqwidgets-ng/jqxgrid';
 import { INICIO_GRID_RENDERERS as R } from '../inicio/shared/inicio-grid-renderers';
 
 
@@ -46,6 +48,9 @@ interface Food {
 })
 
 export class ExpedientesComponent {// pruebas de formularios
+  @ViewChild('gridAtributosExp', { static: false }) gridAtributosExp?: jqxGridComponent;
+  @ViewChild('gridTareasExpediente', { static: false }) gridTareasExpediente?: jqxGridComponent;
+
   public editExpedientes: boolean = false;
 
   /** true cuando hay fila seleccionada y la acción concreta aplica al estado del expediente */
@@ -464,6 +469,9 @@ export class ExpedientesComponent {// pruebas de formularios
   //pinta ejercicio y número
   public expEjerNum: string;
   public cargotareasexpedi: boolean = false;
+  public cargandoTareasExpediente: boolean = false;
+  public tareasExpedienteVacio: boolean = false;
+  public tareasExpedienteList: TareaTramiteExpporExpedi[] = [];
   public tituloExp!: string;
   public pruebas: boolean = false;
   public veoAtributos: boolean = false;
@@ -487,24 +495,10 @@ export class ExpedientesComponent {// pruebas de formularios
     this.notificationService.confirmDelete('Eliminar Atributo').then((result) => {
       if (result.isConfirmed) {
         this.expedientesService.deleteAtributo(this.idGrupo, this.etiGruAtrib, this.idExpediente).subscribe({
-          next: (response) => {
-            this.sourceAtributo = new jqx.dataAdapter({
-              dataType: 'json',
-              dataFields: [
-                {name: 'etiGruAtrib'},
-                {name: 'desGruAtrib'},
-                {name: "valor"},
-                {name: 'desProce'},
-                {name: "desTareaProce"},
-                {name: 'idGrupo'},
-                {name: 'idAtrib'},
-                {name: 'usuContr'},
-              ],
-              url: `${environment.apiUrl}atributoExpediente/listar/${this.idExpediente!}`,
-              id: 'id',
-            });
+          next: () => {
+            this.listarAtributos();
             this.notificationService.success('Atributo eliminado');
-            this.atributosleer.length = 0;
+            this.veoBorrarAtributo = false;
           },
           error: (err: HttpErrorResponse) => {
             console.log('paso por error borrado atributo: ' + err.error.text);
@@ -518,19 +512,80 @@ export class ExpedientesComponent {// pruebas de formularios
 
 
   public listarAtributos() {
+    if (!this.idExpediente) {
+      return;
+    }
 
+    this.expedientesService.getAtributosListar(this.idExpediente).subscribe({
+      next: (atributosleer) => {
+        this.atributosleer = atributosleer ?? [];
+        this.refrescarSourceAtributo(this.atributosleer);
+        this.cdr.detectChanges();
+        this.refreshAtributosModalContent();
+      },
+      error: () => {
+        this.atributosleer = [];
+        this.refrescarSourceAtributo([]);
+        this.cdr.detectChanges();
+        this.refreshAtributosModalContent();
+      },
+    });
+  }
 
-    this.expedientesService.getAtributosListar(this.idExpediente).subscribe(
-      atributosleer => this.atributosleer = atributosleer
-    )
+  private refreshAtributosModalContent(): void {
+    if (this.modalManagerService.isModalOpen('NAtributosModal2')) {
+      window.setTimeout(() => {
+        this.generaInputdinamicos();
+        this.refreshGridAtributosExp();
+      }, 100);
+      return;
+    }
 
+    this.scheduleAtributosModalRefresh();
+  }
 
+  private refrescarSourceAtributo(localData?: Atributosleer[]): void {
+    if (!this.idExpediente) {
+      return;
+    }
+
+    const adapterConfig: {
+      dataType: string
+      dataFields: { name: string }[]
+      id: string
+      localdata?: Atributosleer[]
+      url?: string
+    } = {
+      dataType: 'json',
+      dataFields: [
+        {name: 'etiGruAtrib'},
+        {name: 'desGruAtrib'},
+        {name: 'valor'},
+        {name: 'desProce'},
+        {name: 'desTareaProce'},
+        {name: 'idGrupo'},
+        {name: 'idAtrib'},
+        {name: 'usuContr'},
+      ],
+      id: 'idAtrib',
+    };
+
+    if (localData) {
+      adapterConfig.localdata = localData;
+    } else {
+      adapterConfig.url = `${environment.apiUrl}atributoExpediente/listar/${this.idExpediente}`;
+    }
+
+    this.sourceAtributo = new jqx.dataAdapter(adapterConfig);
   }
 
 
   public borraArrayAtributos() {
-    location.reload();
-    console.log("borrado realizado");
+    const contenedor = document.getElementById('divform');
+    if (contenedor) {
+      contenedor.innerHTML = '';
+    }
+    this.veoBorrarAtributo = false;
   }
   public envioAtributos() {
     //capturamos el valor de los input
@@ -564,10 +619,14 @@ export class ExpedientesComponent {// pruebas de formularios
   public valornuevoInput: string;
 
   public generaInputdinamicos() {
-    const contenedor = document.getElementById('divform')!;
-    contenedor.innerHTML = ''; // limpiamos cualquier inyección previa
+    const contenedor = document.getElementById('divform');
+    if (!contenedor) {
+      return;
+    }
 
-    this.atributosleer.forEach((attr, idx) => {
+    contenedor.innerHTML = '';
+
+    (this.atributosleer ?? []).forEach((attr, idx) => {
       // Creamos label + input
       const label = document.createElement('label');
       label.htmlFor = `nuevoinput${idx}`;
@@ -599,7 +658,46 @@ export class ExpedientesComponent {// pruebas de formularios
       // Insertamos en DOM
       contenedor.appendChild(label);
       contenedor.appendChild(input);
+
+      if (attr.valor != null && attr.valor !== '') {
+        if (attr.tipo === 'FECHACORTA' && attr.valor.toString().includes('/')) {
+          const partes = attr.valor.toString().split('/');
+          if (partes.length === 3) {
+            input.value = `${partes[2]}-${partes[1]}-${partes[0]}`;
+          }
+        } else {
+          input.value = attr.valor.toString();
+        }
+      }
     });
+  }
+
+  private scheduleAtributosModalRefresh(): void {
+    const modalEl = document.getElementById('NAtributosModal2');
+    const refresh = (): void => {
+      this.generaInputdinamicos();
+      window.setTimeout(() => this.refreshGridAtributosExp(), 60);
+      window.setTimeout(() => this.refreshGridAtributosExp(), 250);
+      window.setTimeout(() => this.refreshGridAtributosExp(), 500);
+    };
+
+    if (!modalEl) {
+      refresh();
+      return;
+    }
+
+    modalEl.addEventListener('shown.bs.modal', refresh, { once: true });
+  }
+
+  private refreshGridAtributosExp(): void {
+    if (!this.gridAtributosExp || !this.sourceAtributo) {
+      return;
+    }
+
+    this.gridAtributosExp.source(this.sourceAtributo);
+    this.gridAtributosExp.updatebounddata();
+    this.gridAtributosExp.width('100%');
+    this.gridAtributosExp.refresh();
   }
 
 
@@ -675,26 +773,31 @@ export class ExpedientesComponent {// pruebas de formularios
    * Abre el modal de ver expediente
    */
   public abrirModalVerExpediente(): void {
-    // Verificar que hay un expediente seleccionado
-    if (!this.idExpedienteString) {
+    const idExp = this.getExpedienteIdSeleccionado();
+    if (!idExp) {
       this.notificationService.warning('Debe seleccionar un expediente primero');
       return;
     }
 
-    // Cargar datos completos del expediente antes de abrir el modal
-    this.idexpediente = parseInt(this.idExpedienteString);
-    
+    this.idexpediente = parseInt(idExp, 10);
+
     this.expedientesService.getExpediente(this.idexpediente).subscribe({
       next: (verexpediente) => {
         this.verexpediente = verexpediente;
-        // Abrir modal después de cargar los datos
         this.abrirModal('verexpedienteModal');
       },
-      error: (error) => {
-        console.error('Error al cargar el expediente:', error);
+      error: () => {
         this.notificationService.error('No se pudo cargar el expediente');
       }
     });
+  }
+
+  private getExpedienteIdSeleccionado(): string {
+    const id = this.idExpediente ?? this.idexpediente ?? this.idExpedienteString;
+    if (id == null || id === '') {
+      return '';
+    }
+    return String(id);
   }
 
   public marcaExpedienteNuevo(event: any) {
@@ -702,6 +805,7 @@ export class ExpedientesComponent {// pruebas de formularios
     
     this.idExpediente = rowData.id;
     this.idExpedienteString = rowData.id;
+    this.refrescarSourceAtributo();
 
     if (rowData.idHisDocum) {
       this.expedientesService.getRegistroDocVer(rowData.idHisDocum).subscribe(
@@ -1068,13 +1172,57 @@ private limpiarDatosAsignarTramitador(): void {
 
 // Funciones específicas para modales con lógica previa
 public abrirModalTareasExpediente(): void {
-  this.actualizoSourceTareasExpediente(this.idExpedienteString);
+  const idExp = this.getExpedienteIdSeleccionado();
+  if (!idExp) {
+    this.notificationService.warning('Seleccione un expediente');
+    return;
+  }
+
+  this.expEjerNum = `${this.ejerexpe ?? ''}/${this.numExp ?? ''}`;
+  this.cargotareasexpedi = true;
+  this.cargandoTareasExpediente = true;
+  this.tareasExpedienteVacio = false;
+  this.tareasExpedienteList = [];
+  this.refrescarSourceTareasExpedientePorUrl(idExp);
+  this.cdr.detectChanges();
   this.abrirModal('TareaExpedienteModal');
+  this.scheduleTareasExpedienteModalRefresh();
+}
+
+public onTareasExpedienteBindingComplete(): void {
+  this.cargandoTareasExpediente = false;
+  const rows = (this.gridTareasExpediente?.getrows() ?? []) as TareaTramiteExpporExpedi[];
+  this.tareasExpedienteList = rows;
+  this.tareasExpedienteVacio = rows.length === 0;
+  this.cdr.detectChanges();
 }
 
 public abrirModalAtributos(): void {
-  this.generaInputdinamicos();
-  this.abrirModal('NAtributosModal2');
+  if (!this.idExpediente) {
+    this.notificationService.warning('Seleccione un expediente');
+    return;
+  }
+
+  this.expedientesService.getAtributosListar(this.idExpediente).subscribe({
+    next: (atributosleer) => {
+      this.atributosleer = atributosleer ?? [];
+      this.veoAtributos = true;
+      this.veoBorrarAtributo = false;
+      this.refrescarSourceAtributo(this.atributosleer);
+      this.cdr.detectChanges();
+      this.abrirModal('NAtributosModal2');
+      this.scheduleAtributosModalRefresh();
+    },
+    error: (err: HttpErrorResponse) => {
+      this.atributosleer = [];
+      this.veoAtributos = true;
+      this.refrescarSourceAtributo([]);
+      this.cdr.detectChanges();
+      this.abrirModal('NAtributosModal2');
+      this.scheduleAtributosModalRefresh();
+      this.notificationService.warning(err.error?.message ?? 'No se pudieron cargar los atributos');
+    },
+  });
 }
   // Funciones de validación para Nuevo Expediente
   public isFechaExpedienteInvalid(): boolean {
@@ -1303,6 +1451,7 @@ public abrirModalAtributos(): void {
     public http: HttpClient,
     private notificationService: NotificationService,
     private modalManagerService: ModalManagerService,
+    private cdr: ChangeDetectorRef,
     public session: UserSessionService
   ) {
   };
@@ -1337,43 +1486,7 @@ public abrirModalAtributos(): void {
     }
 
 
-    this.sourceTareasExpediente = new jqx.dataAdapter({
-      dataType: 'json',
-      dataFields: [
-        {name: 'numero', type: 'number'},
-        {name: 'descripcion', type: 'string'},
-        {name: 'fecInicio', type: 'string'},
-        {name: "fecFin", type: 'string'},
-        {name: "propuestaResolucion", type: 'string'},
-        {name: "usuario", type: 'string'},
-        {name: "firmado", type: 'string'},
-        {name: "fecPlazo", type: 'string'},
-        {name: "color", type: 'string'},
-        {name: "archivo", type: 'string'},
-        {name: 'tareaProcedimiento', type: 'any'},
-        {name: 'id', type: 'any'},
-        {name: 'tipAnexo', type: 'any'},
-        {name: 'docAport', type: 'any'},
-        {name: 'tipDocEni', type: 'any'},
-        {name: 'documentacion', type: 'any'},
-        {name: 'visible', type: 'any'},
-        {name: 'visible', type: 'any'},
-        {name: 'numRegis', type: 'any'},
-        {name: 'idHisDocum', type: 'any'},
-        {name: 'ejeNumNotif', type: 'any'},
-        {name: 'nombreArchivo', type: 'any'},
-        {name: 'idAnunc', type: 'any'},
-        {name: 'desTramite', type: 'any'},
-
-
-      ],
-      //url:` `,
-      url: `${environment.apiUrl}tareaTramiteExpediente/listarPorExpediente/0`,
-      id: 'id',
-      //sortcolumn: 'fecFin',
-      //sortdirection: 'asc'
-
-    });
+    this.refrescarSourceTareasExpediente([]);
 
 
     this.verpagina();
@@ -1507,18 +1620,12 @@ public abrirModalAtributos(): void {
 
 
   }
-  public cellsrendererTareaExpedi = function (row, column, value) {
-
-    if (this.valorEstado == "CERRADO" || this.valorEstado == "CANCELADO") {
-      return `<div style="text-align: center;color:red; margin-top: 5px;"  type="button"  >` + value + '</div>';
-
-
-    } else {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  >` + value + '</div>';
-
+  public cellsrendererTareaExpedi = (_row: unknown, _column: unknown, value: unknown): string => {
+    const display = value == null ? '' : String(value)
+    if (this.valorEstado === 'CERRADO' || this.valorEstado === 'CANCELADO') {
+      return `<div style="text-align: center;color:red; margin-top: 5px;">${display}</div>`
     }
-
-
+    return `<div style="text-align: center; margin-top: 5px;">${display}</div>`
   }
   public cellsrendererEstado = (_row: unknown, _column: unknown, value: string): string => {
     const estado = (value || '').toLowerCase();
@@ -1585,6 +1692,18 @@ public abrirModalAtributos(): void {
 
 
     return '<div style="text-align: center;font-family: Verdana; margin-top: 5px;"  >' + value + '</div>';
+  }
+
+  public cellsrendererAtributo = (_row: unknown, _column: unknown, value: unknown): string => {
+    let display = value == null || value === '' ? '' : String(value)
+    if (display === 'ANOS') {
+      display = 'AÑOS'
+    }
+    return `<div style="text-align: center; font-family: Verdana; margin-top: 5px;">${display}</div>`
+  }
+
+  public columnrendererAtributo = (value?: string): string => {
+    return `<div style="text-align: center; font-weight: bold; font-family: Verdana; margin-top: 5px;">${value ?? ''}</div>`
   }
   public columnrendererPermi = function (value) {
 
@@ -2089,7 +2208,7 @@ public abrirModalAtributos(): void {
       text: 'Descripción Tarea',
       width: '20%',
       datafield: 'descripcion',
-      cellsrendererTareaExpedi: this.cellsrenderer,
+      cellsrenderer: this.cellsrendererTareaExpedi,
       renderer: this.columnrenderer
     },
     {
@@ -2276,118 +2395,86 @@ public abrirModalAtributos(): void {
   });
 
 
-  actualizoSourceTareasExpediente(idExpedi: any) {
-
-    // swal.showLoading();
-    this.source = this.sourceTareasExpediente;
-
-    this.columna = this.columnsTareasExpediente;
-    // swal.close();
-//  this.limpioSourceTareasExpediente();
-
-    this.pruebas = true;
-    console.log("id que envio para listar tareas : " + idExpedi)
-
-
-    setTimeout(() => {
-      this.actualizoTareaExpedienteBis();
-      console.log("se lanza el segundo SOURCE!!!!!")
-
-    }, 200);
-
-
-    this.sourceTareasExpediente = ({
-      dataType: 'json',
-      dataFields: [
-        {name: 'numero', type: 'number'},
-        {name: 'descripcion', type: 'string'},
-        {name: 'fecInicio', type: 'string'},
-        {name: "fecFin", type: 'string'},
-        {name: "propuestaResolucion", type: 'string'},
-        {name: "usuario", type: 'string'},
-        {name: "firmado", type: 'string'},
-        {name: "fecPlazo", type: 'string'},
-        {name: "color", type: 'string'},
-        {name: "archivo", type: 'string'},
-        {name: 'tareaProcedimiento', type: 'any'},
-        {name: 'id', type: 'any'},
-        {name: 'tipAnexo', type: 'any'},
-        {name: 'docAport', type: 'any'},
-        {name: 'tipDocEni', type: 'any'},
-        {name: 'documentacion', type: 'any'},
-        {name: 'visible', type: 'any'},
-        {name: 'visible', type: 'any'},
-        {name: 'numRegis', type: 'any'},
-        {name: 'idHisDocum', type: 'any'},
-        {name: 'ejeNumNotif', type: 'any'},
-        {name: 'nombreArchivo', type: 'any'},
-        {name: 'idAnunc', type: 'any'},
-        {name: 'desTramite', type: 'any'},
-
-
-      ],
-
-      url: `${environment.apiUrl}tareaTramiteExpediente/listarPorExpediente/${idExpedi}`,
-      id: 'id',
-      // sortcolumn: 'fecFin',
-      // sortdirection: 'asc'
-
-    });
-
-
-    console.log("url de JQX: " + `${environment.apiUrl}tareaTramiteExpediente/listarPorExpediente/${this.idExpedienteString}`)
-
-
+  private getTareasExpedienteDataFields() {
+    return [
+      {name: 'numero', type: 'number'},
+      {name: 'descripcion', type: 'string'},
+      {name: 'fecInicio', type: 'string'},
+      {name: 'fecFin', type: 'string'},
+      {name: 'propuestaResolucion', type: 'string'},
+      {name: 'usuario', type: 'string'},
+      {name: 'firmado', type: 'string'},
+      {name: 'fecPlazo', type: 'string'},
+      {name: 'color', type: 'string'},
+      {name: 'archivo', type: 'string'},
+      {name: 'tareaProcedimiento', type: 'any'},
+      {name: 'id', type: 'any'},
+      {name: 'tipAnexo', type: 'any'},
+      {name: 'docAport', type: 'any'},
+      {name: 'tipDocEni', type: 'any'},
+      {name: 'documentacion', type: 'any'},
+      {name: 'visible', type: 'any'},
+      {name: 'numRegis', type: 'any'},
+      {name: 'idHisDocum', type: 'any'},
+      {name: 'ejeNumNotif', type: 'any'},
+      {name: 'nombreArchivo', type: 'any'},
+      {name: 'idAnunc', type: 'any'},
+      {name: 'desTramite', type: 'any'},
+    ]
   }
 
-  public actualizoTareaExpedienteBis() {
-
-
+  private refrescarSourceTareasExpedientePorUrl(idExp: string): void {
     this.sourceTareasExpediente = new jqx.dataAdapter({
       dataType: 'json',
-      dataFields: [
-        {name: 'numero', type: 'number'},
-        {name: 'descripcion', type: 'string'},
-        {name: 'fecInicio', type: 'string'},
-        {name: "fecFin", type: 'string'},
-        {name: "propuestaResolucion", type: 'string'},
-        {name: "usuario", type: 'string'},
-        {name: "firmado", type: 'string'},
-        {name: "fecPlazo", type: 'string'},
-        {name: "color", type: 'string'},
-        {name: "archivo", type: 'string'},
-        {name: 'tareaProcedimiento', type: 'any'},
-        {name: 'id', type: 'any'},
-        {name: 'tipAnexo', type: 'any'},
-        {name: 'docAport', type: 'any'},
-        {name: 'tipDocEni', type: 'any'},
-        {name: 'documentacion', type: 'any'},
-        {name: 'visible', type: 'any'},
-        {name: 'visible', type: 'any'},
-        {name: 'numRegis', type: 'any'},
-        {name: 'idHisDocum', type: 'any'},
-        {name: 'ejeNumNotif', type: 'any'},
-        {name: 'nombreArchivo', type: 'any'},
-        {name: 'idAnunc', type: 'any'},
-        {name: 'desTramite', type: 'any'},
-
-
-      ],
-
-      url: `${environment.apiUrl}tareaTramiteExpediente/listarPorExpediente/${this.idExpedienteString}`,
+      dataFields: this.getTareasExpedienteDataFields(),
+      url: `${environment.apiUrl}tareaTramiteExpediente/listarPorExpediente/${idExp}`,
       id: 'id',
-      // sortcolumn: 'fecFin',
-      // sortdirection: 'asc'
+    })
+  }
 
-    });
+  private refrescarSourceTareasExpediente(localData: TareaTramiteExpporExpedi[]): void {
+    this.sourceTareasExpediente = new jqx.dataAdapter({
+      dataType: 'json',
+      dataFields: this.getTareasExpedienteDataFields(),
+      localdata: localData,
+      id: 'id',
+    })
+  }
 
+  private scheduleTareasExpedienteModalRefresh(): void {
+    const modalEl = document.getElementById('TareaExpedienteModal')
+    const refresh = (): void => {
+      window.setTimeout(() => this.refreshGridTareasExpediente(), 60)
+      window.setTimeout(() => this.refreshGridTareasExpediente(), 250)
+      window.setTimeout(() => this.refreshGridTareasExpediente(), 500)
+    }
 
+    if (!modalEl) {
+      refresh()
+      return
+    }
+
+    modalEl.addEventListener('shown.bs.modal', refresh, { once: true })
+  }
+
+  private refreshGridTareasExpediente(): void {
+    if (!this.gridTareasExpediente || !this.sourceTareasExpediente) {
+      return
+    }
+
+    this.gridTareasExpediente.source(this.sourceTareasExpediente)
+    this.gridTareasExpediente.updatebounddata('cells')
+    this.gridTareasExpediente.width('100%')
+    this.gridTareasExpediente.refresh()
+    window.setTimeout(() => this.onTareasExpedienteBindingComplete(), 150)
   }
 
   public limpioSourceTareasExpediente() {
-    console.log("LIMPIAMOS SOURCE ----->")
-    this.sourceTareasExpediente = ({})
-
+    this.tareasExpedienteList = []
+    this.cargotareasexpedi = false
+    this.cargandoTareasExpediente = false
+    this.tareasExpedienteVacio = false
+    this.refrescarSourceTareasExpediente([])
   }
 
 
@@ -2424,17 +2511,24 @@ public abrirModalAtributos(): void {
     {
       text: 'Etiqueta',
       datafield: 'etiGruAtrib',
-      cellsrenderer: this.cellsrendererPermi,
-      renderer: this.columnrendererPermi
+      width: '18%',
+      cellsrenderer: this.cellsrendererAtributo,
+      renderer: this.columnrendererAtributo
     },
     {
       text: 'Descripción',
       datafield: 'desGruAtrib',
-      cellsrenderer: this.cellsrendererPermi,
-      renderer: this.columnrendererPermi
+      width: '42%',
+      cellsrenderer: this.cellsrendererAtributo,
+      renderer: this.columnrendererAtributo
     },
-    {text: 'valor', datafield: 'valor', cellsrenderer: this.cellsrendererPermi, renderer: this.columnrenderer},
-
+    {
+      text: 'Valor',
+      datafield: 'valor',
+      width: '35%',
+      cellsrenderer: this.cellsrendererAtributo,
+      renderer: this.columnrendererAtributo
+    },
   ];
 
   sourceAtributo = new jqx.dataAdapter({
@@ -2442,24 +2536,15 @@ public abrirModalAtributos(): void {
     dataFields: [
       {name: 'etiGruAtrib'},
       {name: 'desGruAtrib'},
-      {name: "valor"},
+      {name: 'valor'},
       {name: 'desProce'},
-      {name: "desTareaProce"},
+      {name: 'desTareaProce'},
       {name: 'idGrupo'},
       {name: 'idAtrib'},
       {name: 'usuContr'},
-
-
     ],
-
-    url: `${environment.apiUrl}atributoExpediente/listar/${this.idExpediente!}`,
-
-
+    localdata: [],
     id: 'id',
-    // sortcolumn: 'id',
-    //   sortdirection: 'desc'
-
-
   });
 
 

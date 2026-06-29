@@ -11,8 +11,6 @@ export class GridRadioSelector {
    * @param rowIndex Índice de la fila seleccionada
    */
   static updateRadioButton(gridName: string, rowIndex: number): void {
-    console.log(`🔄 Actualizando radio button para ${gridName} - Fila: ${rowIndex}`);
-    
     try {
       // Desmarcar todos los radio buttons del grid
       const allRadioButtons = document.querySelectorAll(`input[name="RadioId${gridName}"]`);
@@ -25,7 +23,6 @@ export class GridRadioSelector {
       if (targetRadio) {
         targetRadio.checked = true;
         targetRadio.dispatchEvent(new Event('change', { bubbles: true }));
-        console.log(`✅ Radio button marcado correctamente para ${gridName} - Fila ${rowIndex}`);
         return;
       }
       
@@ -34,11 +31,8 @@ export class GridRadioSelector {
       if (fallbackRadio) {
         fallbackRadio.checked = true;
         fallbackRadio.dispatchEvent(new Event('change', { bubbles: true }));
-        console.log(`✅ Radio button marcado por fallback para ${gridName} - Fila ${rowIndex}`);
         return;
       }
-      
-      console.warn(`⚠️ No se encontró radio button para ${gridName} - Fila ${rowIndex}`);
     } catch (error) {
       console.error(`❌ Error al actualizar radio button de ${gridName}:`, error);
     }
@@ -75,10 +69,7 @@ export class GridRadioSelector {
 
     const rowIndex = event.args.rowindex;
     const rowData = event.args.row.bounddata;
-    
-    console.log(`🖱️ Click en ${gridName} - Fila: ${rowIndex}`, rowData);
-    
-    // Actualizar radio button
+
     this.updateRadioButton(gridName, rowIndex);
     
     // Ejecutar callback si se proporciona
@@ -109,7 +100,6 @@ export class GridRadioSelector {
       allRadioButtons.forEach((radio: Element) => {
         (radio as HTMLInputElement).checked = false;
       });
-      console.log(`🧹 Selección limpiada para ${gridName}`);
     } catch (error) {
       console.error(`❌ Error al limpiar selección de ${gridName}:`, error);
     }

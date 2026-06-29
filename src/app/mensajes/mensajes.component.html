@@ -1,4 +1,4 @@
-<app-shell *ngIf="session.user">
+﻿<app-shell *ngIf="session.user">
 <div class="page-panel">
           <div *ngIf="veorecibidos" class="col-12"> 
             <div class="listado-titulo-container titulo-separador">
@@ -7,19 +7,19 @@
               </div>
               <div class="titulo-botones-container">
                 <button (click)="verEnviados()" class="btn-iflow btn-iflow--primary" type="button" title="Ver Mensajes Enviados">
-                  Enviados <i class="bi bi-envelope-arrow-up icons_button_left"></i>
+                  Enviados <i class="bi bi-envelope-arrow-up ms-2"></i>
                 </button>
                 <button *ngIf="veoRecha" type="button" (click)="abrirModal('DevolverMensajeModal')" class="btn-iflow btn-iflow--primary">
-                  Rechazar <i class="bi bi-envelope-x icons_button_left"></i>
+                  Rechazar <i class="bi bi-envelope-x ms-2"></i>
                 </button>
                 <button *ngIf="veorechaTRami" type="button" (click)="TramitarMensaje()" class="btn-iflow btn-iflow--primary">
-                  Tramitar <i class="bi bi-arrow-left-right icons_button_left"></i>
+                  Tramitar <i class="bi bi-arrow-left-right ms-2"></i>
                 </button>
               </div>
             </div>
               
             <div class="grid-container">
-            <jqxGrid class="mat-elevation-z5"
+            <jqxGrid class=""
               [width]="'100%'"
               [autoheight]="true"
               [columnsautoresize]="true"
@@ -45,12 +45,12 @@
               </div>
               <div class="titulo-botones-container">
                 <button (click)="verRecibidos()" class="btn-iflow btn-iflow--primary" type="button" title="Ver Mensajes Recibidos">
-                  Recibidos <i class="bi bi-envelope-arrow-down icons_button_left"></i>
+                  Recibidos <i class="bi bi-envelope-arrow-down ms-2"></i>
                 </button>
               </div>
             </div>
             <div class="grid-container">
-            <jqxGrid class="mat-elevation-z5"
+            <jqxGrid class=""
               [width]="'100%'"
               [autoheight]="true"
               [columnsautoresize]="true"
@@ -83,47 +83,47 @@
           </div>
           <div class="modal-body">
             <form id="formEditarMensaje" (ngSubmit)="validateAndEditMensaje($event)">
-              <div class="row">
-                <div class="col-sm-6 form-floating">
-                  <input type="text" class="form-control" [value]="leemensaje.descripcion" name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="editarmensaje.descripcion" required>
-                  <label class="form-label form-label--floating" for="descripcionMensaje">Descripción *</label>
-                </div>
-                <div class="col-sm-3 form-floating">
+              <div class="row g-3">
+                <div class="col-sm-6"><div class="form-floating">
+                  <input type="text" class="form-control" [value]="leemensaje.descripcion" name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="editarmensaje.descripcion" required placeholder=" ">
+                  <label for="descripcionMensaje">Descripción *</label>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
                   <select class="form-select" id="destinatario" name="destinatario" [(ngModel)]="editarmensaje.destinatario" required>
                     <option value="" disabled selected></option>
                     <option *ngFor="let procedipermisos of procedipermiso" [value]="procedipermisos.idOrgUsuar">
                       {{procedipermisos.usuario}}
                     </option>
                   </select>
-                  <label for="destinatario" class="form-label form-label--floating">Destinatario *</label>
-                </div>
-                <div class="col-sm-3 form-floating">
+                  <label for="destinatario">Destinatario *</label>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
                   <select class="form-select" required id="informativo" name="informativo" [(ngModel)]="editarmensaje.informativo">
                     <option value="" disabled selected></option>
                     <option value="true">Si</option>
                     <option value="false">No</option>
                   </select>
-                  <label class="form-label form-label--floating" for="informativo">Informativo *</label>
-                </div>
+                  <label for="informativo">Informativo *</label>
+                </div></div>
               </div>
               <br>
               <div class="row">
-                <div class="col-sm-4 form-floating">
-                  <input type="text" class="form-control" readonly [value]="leemensaje.estado" name="estado" id="estado">
-                  <label class="form-label form-label--floating" for="estado">Estado</label>
-                </div>
-                <div class="col-sm-4 form-floating">
-                  <input type="text" class="form-control" readonly [value]="leemensaje.fecLectura" name="fecLectura" id="fecLectura">
-                  <label class="form-label form-label--floating" for="fecLectura">Fecha de lectura</label>
-                </div>
-                <div class="col-sm-4 form-floating">
-                  <input type="text" class="form-control" readonly [value]="leemensaje.fecTramitacion" name="fecTramitacion" id="fecTramitacion">
-                  <label class="form-label form-label--floating" for="fecTramitacion">Fecha de Tramitación</label>
-                </div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.estado" name="estado" id="estado" placeholder=" ">
+                  <label for="estado">Estado</label>
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecLectura" name="fecLectura" id="fecLectura" placeholder=" ">
+                  <label for="fecLectura">Fecha de lectura</label>
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecTramitacion" name="fecTramitacion" id="fecTramitacion" placeholder=" ">
+                  <label for="fecTramitacion">Fecha de Tramitación</label>
+                </div></div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('EditarMensajeModal')">Cancelar</button>
-                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
+                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="cerrarModal('EditarMensajeModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
               </div>
             </form>
           </div>
@@ -140,13 +140,13 @@
           </div>
           <div class="modal-body">
             <form id="formRechazarMensaje" (ngSubmit)="validateAndRechazarMensaje($event)">
-              <div class="mb-3 form-floating">
-                <textarea class="form-control" name="descripcionRechazoMensaje" id="descripcionRechazoMensaje" [(ngModel)]="rechazamensaje.descripcionRechazo" required></textarea>
-                <label class="form-label form-label--floating" for="descripcionRechazoMensaje">Descripción Rechazo *</label>
-              </div>
+              <div class="mb-3"><div class="form-floating">
+                <textarea class="form-control" name="descripcionRechazoMensaje" id="descripcionRechazoMensaje" [(ngModel)]="rechazamensaje.descripcionRechazo" required placeholder=" "></textarea>
+                <label for="descripcionRechazoMensaje">Descripción Rechazo *</label>
+              </div></div>
               <div class="modal-footer">
-                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="limpiaRechazarMensaje(); cerrarModal('DevolverMensajeModal')">Cancelar</button>
-                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
+                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="limpiaRechazarMensaje(); cerrarModal('DevolverMensajeModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
               </div>
             </form>
           </div>
@@ -165,54 +165,54 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="row">
-                <div class="col-12 form-floating mb-3">
-                  <textarea class="form-control" disabled [value]="mensajeDescrip" name="descripcionMensaje" id="descripcionMensaje"></textarea>
-                  <label class="form-label form-label--floating" for="descripcionMensaje">Descripción</label>
-                </div>
+              <div class="row g-3">
+                <div class="col-12 mb-3"><div class="form-floating">
+                  <textarea class="form-control" disabled [value]="mensajeDescrip" name="descripcionMensaje" id="descripcionMensaje" placeholder=" "></textarea>
+                  <label for="descripcionMensaje">Descripción</label>
+                </div></div>
               </div>
               <div class="row">
-                <div class="col-sm-3 form-floating mb-3">
-                  <input type="text" class="form-control" disabled [value]="mensajeFechaInicio" name="fechaInicio" id="fechaInicio">
-                  <label class="form-label form-label--floating" for="fechaInicio">Fecha de Emisión</label>
-                </div>
-                <div class="col-sm-3 form-floating mb-3">
-                  <input type="text" class="form-control" disabled [value]="mensajeRemitente" name="remitente" id="remitente">
-                  <label class="form-label form-label--floating" for="remitente">Remitente</label>
-                </div>
-                <div class="col-sm-3 form-floating mb-3">
-                  <input type="text" class="form-control" disabled [value]="mensajeDestinatario" name="destinatario" id="destinatario">
-                  <label class="form-label form-label--floating" for="destinatario">Destinatario</label>
-                </div>
-                <div class="col-sm-3 form-floating mb-3">
-                  <input type="text" class="form-control" disabled [value]="mensajeEstado" name="estado" id="estado">
-                  <label class="form-label form-label--floating" for="estado">Estado</label>
-                </div>
+                <div class="col-sm-3 mb-3"><div class="form-floating">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaInicio" name="fechaInicio" id="fechaInicio" placeholder=" ">
+                  <label for="fechaInicio">Fecha de Emisión</label>
+                </div></div>
+                <div class="col-sm-3 mb-3"><div class="form-floating">
+                  <input type="text" class="form-control" disabled [value]="mensajeRemitente" name="remitente" id="remitente" placeholder=" ">
+                  <label for="remitente">Remitente</label>
+                </div></div>
+                <div class="col-sm-3 mb-3"><div class="form-floating">
+                  <input type="text" class="form-control" disabled [value]="mensajeDestinatario" name="destinatario" id="destinatario" placeholder=" ">
+                  <label for="destinatario">Destinatario</label>
+                </div></div>
+                <div class="col-sm-3 mb-3"><div class="form-floating">
+                  <input type="text" class="form-control" disabled [value]="mensajeEstado" name="estado" id="estado" placeholder=" ">
+                  <label for="estado">Estado</label>
+                </div></div>
               </div>
               <div class="row">
-                <div class="col-sm-12 form-floating mb-3">
-                  <textarea class="form-control" disabled [value]="mensajeDescripcionRechazo" name="descripcionRechazo" id="descripcionRechazo"></textarea>
-                  <label class="form-label form-label--floating" for="descripcionRechazo">Descripción Rechazo</label>
-                </div>
+                <div class="col-sm-12 mb-3"><div class="form-floating">
+                  <textarea class="form-control" disabled [value]="mensajeDescripcionRechazo" name="descripcionRechazo" id="descripcionRechazo" placeholder=" "></textarea>
+                  <label for="descripcionRechazo">Descripción Rechazo</label>
+                </div></div>
               </div>
               <div class="row">
-                <div class="col-sm-4 form-floating mb-3">
-                  <input type="text" class="form-control" disabled [value]="mensajeFechaRechazo" name="fechaRechazo" id="fechaRechazo">
-                  <label class="form-label form-label--floating" for="fechaRechazo">Fecha de Rechazo</label>
-                </div>
-                <div class="col-sm-4 form-floating mb-3">
-                  <input type="text" class="form-control" disabled [value]="mensajeFechaLectura" name="fechaLectura" id="fechaLectura">
-                  <label class="form-label form-label--floating" for="fechaLectura">Fecha de lectura</label>
-                </div>
-                <div class="col-sm-4 form-floating mb-3">
-                  <input type="text" class="form-control" disabled [value]="mensajeFechaTramitacion" name="fechaTramitacion" id="fechaTramitacion">
-                  <label class="form-label form-label--floating" for="fechaTramitacion">Fecha de Tramitación</label>
-                </div>
+                <div class="col-sm-4 mb-3"><div class="form-floating">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaRechazo" name="fechaRechazo" id="fechaRechazo" placeholder=" ">
+                  <label for="fechaRechazo">Fecha de Rechazo</label>
+                </div></div>
+                <div class="col-sm-4 mb-3"><div class="form-floating">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaLectura" name="fechaLectura" id="fechaLectura" placeholder=" ">
+                  <label for="fechaLectura">Fecha de lectura</label>
+                </div></div>
+                <div class="col-sm-4 mb-3"><div class="form-floating">
+                  <input type="text" class="form-control" disabled [value]="mensajeFechaTramitacion" name="fechaTramitacion" id="fechaTramitacion" placeholder=" ">
+                  <label for="fechaTramitacion">Fecha de Tramitación</label>
+                </div></div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn-iflow btn-iflow--secondary" (click)="marcarLeido(); cerrarModal('VerMensajeModal')">Cerrar</button>
+            <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="marcarLeido(); cerrarModal('VerMensajeModal')">Cerrar</button>
           </div>
         </div>
       </div>
@@ -227,47 +227,47 @@
           </div>
           <div class="modal-body">
             <form id="formTramitarMensaje" (ngSubmit)="validateAndTramitarMensaje($event)">
-              <div class="row">
-                <div class="col-sm-6 form-floating">
-                  <input type="text" class="form-control" [value]="leemensaje.descripcion" name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="editarmensaje.descripcion" required>
-                  <label class="form-label form-label--floating" for="descripcionMensaje">Descripción *</label>
-                </div>
-                <div class="col-sm-3 form-floating">
+              <div class="row g-3">
+                <div class="col-sm-6"><div class="form-floating">
+                  <input type="text" class="form-control" [value]="leemensaje.descripcion" name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="editarmensaje.descripcion" required placeholder=" ">
+                  <label for="descripcionMensaje">Descripción *</label>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
                   <select class="form-select" id="destinatario" name="destinatario" [(ngModel)]="editarmensaje.destinatario" required>
                     <option value="" disabled selected></option>
                     <option *ngFor="let procedipermisos of procedipermiso" [value]="procedipermisos.idOrgUsuar">
                       {{procedipermisos.usuario}}
                     </option>
                   </select>
-                  <label for="destinatario" class="form-label form-label--floating">Destinatario *</label>
-                </div>
-                <div class="col-sm-3 form-floating">
+                  <label for="destinatario">Destinatario *</label>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
                   <select class="form-select" required id="informativo" name="informativo" [(ngModel)]="editarmensaje.informativo">
                     <option value="" disabled selected></option>
                     <option value="true">Si</option>
                     <option value="false">No</option>
                   </select>
-                  <label class="form-label form-label--floating" for="informativo">Informativo *</label>
-                </div>
+                  <label for="informativo">Informativo *</label>
+                </div></div>
               </div>
               <br>
               <div class="row">
-                <div class="col-sm-4 form-floating">
-                  <input type="text" class="form-control" readonly [value]="leemensaje.estado" name="estado" id="estado">
-                  <label class="form-label form-label--floating" for="estado">Estado</label>
-                </div>
-                <div class="col-sm-4 form-floating">
-                  <input type="text" class="form-control" readonly [value]="leemensaje.fecLectura" name="fecLectura" id="fecLectura">
-                  <label class="form-label form-label--floating" for="fecLectura">Fecha de lectura</label>
-                </div>
-                <div class="col-sm-4 form-floating">
-                  <input type="text" class="form-control" readonly [value]="leemensaje.fecTramitacion" name="fecTramitacion" id="fecTramitacion">
-                  <label class="form-label form-label--floating" for="fecTramitacion">Fecha de Tramitación</label>
-                </div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.estado" name="estado" id="estado" placeholder=" ">
+                  <label for="estado">Estado</label>
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecLectura" name="fecLectura" id="fecLectura" placeholder=" ">
+                  <label for="fecLectura">Fecha de lectura</label>
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input type="text" class="form-control" readonly [value]="leemensaje.fecTramitacion" name="fecTramitacion" id="fecTramitacion" placeholder=" ">
+                  <label for="fecTramitacion">Fecha de Tramitación</label>
+                </div></div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="cerrarModal('TramitarMensajeModal')">Cancelar</button>
-                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
+                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="cerrarModal('TramitarMensajeModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
               </div>
             </form>
           </div>

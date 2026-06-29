@@ -19,7 +19,6 @@ export class LiquidacionService {
     idHisTipObjTribu: number,
     desObjTribu: string
   ): Observable<any> {
-    console.log("Creating Liquidacion...", liquidacion, idTipObjTribu, idHisTipObjTribu, desObjTribu);
     const url = `${this.baseUrl}/crear/${idTipObjTribu}/${idHisTipObjTribu}/${encodeURIComponent(desObjTribu)}`;
     return this.http.post(url, liquidacion);
   }
