@@ -1,5 +1,5 @@
 import { CrearNotificacion } from '../../expedientes';
-import { InteresadoListarDto } from '../../../core/dto/interesado.dto';
+import { InteresadoListarDto } from '../../../core/models/interesado.dto';
 import { ModeloTeuCrear } from '../../expedientes';
 
 export function validarFormularioCreacionNotificacion(params: {

@@ -4,8 +4,8 @@ import { TemaDocumentoDTO } from '../../core/models/documento/tema-documento.dto
 import { EntradaService } from 'src/app/core/service/entrada.service';
 import { TemaDocumentoService } from '../../core/service/documento/tema-documento.service';
 import { ContabilidadService } from '../../core/service/contabilidad/contabilidad.service';
-import Swal from 'sweetalert2';
 import { UserSessionService } from '../../core/service/user-session.service';
+import { NotificationService } from '../../core/service/notification.service';
 
 interface Contabilidad {
   idConta: number;
@@ -56,7 +56,8 @@ export class GenerarEntradaComponent implements OnInit {
     private entradaService: EntradaService,
     private temaDocumentoService: TemaDocumentoService,
     private contabilidadService: ContabilidadService,
-    private session: UserSessionService
+    private session: UserSessionService,
+    private notificationService: NotificationService
   ) {
     this.resetFactura(); // Inicializa la factura
   }
@@ -114,11 +115,11 @@ export class GenerarEntradaComponent implements OnInit {
       return;
     }
 
-    Swal.fire({
+    this.notificationService.custom({
       title: 'Procesando...',
       text: 'Generando registro de entrada.',
       allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
+      didOpen: () => this.notificationService.showLoading(),
     });
 
     const entradaData = {
@@ -140,13 +141,13 @@ export class GenerarEntradaComponent implements OnInit {
         if (this.registrarFactura) {
           this.handleFactura(response);
         } else {
-          Swal.close();
+          this.notificationService.close();
           this.showSuccess(`Registro de entrada generado: ${response}`);
           this.closeModal();
         }
       },
       error: (err) => {
-        Swal.close();
+        this.notificationService.close();
         this.handleError(err, 'Error al crear la entrada.');
       },
     });
@@ -166,12 +167,12 @@ export class GenerarEntradaComponent implements OnInit {
 
     this.entradaService.crearJustificanteGasto(facturaData, this.idExped).subscribe({
       next: () => {
-        Swal.close();
+        this.notificationService.close();
         this.showSuccess(`¡Éxito! Entrada ${identificadorGenerarEntrada} y factura creadas.`);
         this.closeModal();
       },
       error: (err) => {
-        Swal.close();
+        this.notificationService.close();
         this.handleError(err, 'La entrada se creó, pero falló la creación de la factura.');
       },
     });
@@ -184,16 +185,14 @@ export class GenerarEntradaComponent implements OnInit {
   }
 
   private showErrorAlert(message: string): void {
-    Swal.fire({
-      icon: 'error',
+    this.notificationService.error({
       title: 'Error',
       text: message,
     });
   }
 
   private showSuccess(message: string): void {
-    Swal.fire({
-      icon: 'success',
+    this.notificationService.success({
       title: 'Operación Exitosa',
       text: message,
       confirmButtonText: 'Aceptar',
@@ -201,8 +200,7 @@ export class GenerarEntradaComponent implements OnInit {
   }
 
   private showWarning(message: string): void {
-    Swal.fire({
-      icon: 'warning',
+    this.notificationService.warning({
       title: 'Atención',
       text: message,
     });

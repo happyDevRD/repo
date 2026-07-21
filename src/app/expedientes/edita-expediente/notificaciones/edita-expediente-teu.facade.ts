@@ -1,12 +1,14 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { ChangeDetectorRef, DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from 'src/environments/environment';
 import { ModeloTeuCrear } from '../../expedientes';
 import { NotificacionesService } from '../../services/notificaciones.service';
+import { NotificationService } from '../../../core/service/notification.service';
 import {
   crearModeloTeuInicial,
   validarCamposObligatoriosTeu,
+  isFechaTeuInvalida,
 } from './notificaciones-form.validator';
 import {
   cerrarModalTeu,
@@ -38,10 +40,12 @@ export interface EditaExpedienteTeuHost {
 @Injectable()
 export class EditaExpedienteTeuFacade {
   private readonly httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private readonly notificacionesService: NotificacionesService,
     private readonly http: HttpClient,
+    private readonly notificationService: NotificationService,
   ) {}
 
   inicializarFormulario(): ModeloTeuCrear {
@@ -74,8 +78,7 @@ export class EditaExpedienteTeuFacade {
     }
 
     if (!validarCamposObligatoriosTeu(host.modeloteucrear)) {
-      Swal.fire({
-        icon: 'error',
+      this.notificationService.error({
         title: 'Campos obligatorios',
         text: 'Por favor, complete todos los campos obligatorios marcados con *',
       });
@@ -87,6 +90,7 @@ export class EditaExpedienteTeuFacade {
 
     this.notificacionesService
       .crearModeloTeuFichero(host.modeloteucrear, host.idNotificacion, host.TextoLegal)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => this.procesarRespuestaExitosa(host),
         error: (error: HttpErrorResponse) => this.procesarErrorTeu(host, error),
@@ -96,16 +100,14 @@ export class EditaExpedienteTeuFacade {
   descargarFichero(host: EditaExpedienteTeuHost): void {
     if (host.xmlDescargado) {
       downloadTeuXml(host.xmlDescargado);
-      Swal.fire({
-        icon: 'success',
+      this.notificationService.success({
         title: 'Descarga completada',
         text: 'El fichero TEU se ha descargado correctamente.',
       });
       return;
     }
 
-    Swal.fire({
-      icon: 'info',
+    this.notificationService.info({
       title: 'Regenerando fichero TEU',
       text: 'Se está regenerando el fichero TEU, por favor espere...',
     });
@@ -121,28 +123,25 @@ export class EditaExpedienteTeuFacade {
       leygene: true,
     };
 
-    this.http.post(`${environment.apiUrl}modeloteu/crear`, datosTEU, { headers: this.httpHeaders }).subscribe({
+    this.http.post(`${environment.apiUrl}modeloteu/crear`, datosTEU, { headers: this.httpHeaders }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (response: any) => {
         if (response?.xml) {
           host.xmlDescargado = response.xml;
           downloadTeuXml(host.xmlDescargado);
-          Swal.fire({
-            icon: 'success',
+          this.notificationService.success({
             title: 'Descarga completada',
             text: 'El fichero TEU se ha regenerado y descargado correctamente.',
           });
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
+          this.notificationService.error({
             text: 'No se pudo regenerar el fichero TEU.',
           });
         }
       },
       error: () => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
+        this.notificationService.error({
           text: 'No se pudo regenerar el fichero TEU. Inténtelo de nuevo.',
         });
       },
@@ -185,8 +184,7 @@ export class EditaExpedienteTeuFacade {
     }, 300);
 
     setTimeout(() => {
-      Swal.fire({
-        icon: 'success',
+      this.notificationService.success({
         title: 'Éxito',
         text: 'Se ha generado el Modelo T.E.U. correctamente.',
       });
@@ -198,6 +196,7 @@ export class EditaExpedienteTeuFacade {
 
     this.notificacionesService
       .editarNotificacion(datosActualizacion as any, host.idNotificacion)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           host.actualizarSourceNotificaciones();
@@ -219,10 +218,20 @@ export class EditaExpedienteTeuFacade {
     }
 
     host.verxml = false;
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
+    this.notificationService.error({
       text: 'No se ha generado el Modelo T.E.U.',
     });
+  }
+
+  isFechaSolicInvalid(host: EditaExpedienteTeuHost): boolean {
+    return isFechaTeuInvalida(host.mostrarValidacionesTEU, host.modeloteucrear.fecSolic);
+  }
+
+  isFechaGenerInvalid(host: EditaExpedienteTeuHost): boolean {
+    return isFechaTeuInvalida(host.mostrarValidacionesTEU, host.modeloteucrear.fecGener);
+  }
+
+  isFechaFirmaInvalid(host: EditaExpedienteTeuHost): boolean {
+    return isFechaTeuInvalida(host.mostrarValidacionesTEU, host.modeloteucrear.fecFirma);
   }
 }

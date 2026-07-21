@@ -1,9 +1,9 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {LiquidacionDto} from "../../models/liquidacion.dto";
 import {HttpErrorResponse} from "@angular/common/http";
-import Swal from "sweetalert2";
 import {LiquidacionService} from "../../services/liquidacion.service";
 import {UserSessionService} from "../../../../core/service/user-session.service";
+import {NotificationService} from "../../../../core/service/notification.service";
 
 @Component({
   selector: 'app-liquidacion-form',
@@ -52,7 +52,8 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
 
   constructor(
     private liquidacionService: LiquidacionService,
-    private session: UserSessionService
+    private session: UserSessionService,
+    private notificationService: NotificationService
   ) { }
 
   get user(): string | null {
@@ -118,11 +119,11 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
     const recargo = this.liquidacion.impVario || 0;
 
     if (porBonif < 0 || porBonif > 100) {
-      Swal.fire('Error', 'El porcentaje de bonificación debe estar entre 0 y 100.', 'error').then();
+      this.notificationService.error({ title: 'Error', text: 'El porcentaje de bonificación debe estar entre 0 y 100.' }).then();
       return;
     }
     if (cuota < 0 || demora < 0 || sancion < 0 || recargo < 0) {
-      Swal.fire('Error', 'Los valores numéricos no pueden ser negativos.', 'error').then();
+      this.notificationService.error({ title: 'Error', text: 'Los valores numéricos no pueden ser negativos.' }).then();
       return;
     }
 
@@ -139,23 +140,23 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
   onSubmit(): void {
     // Validaciones básicas para los campos obligatorios
     if (this.liquidacion.cuoLiqui == null || isNaN(this.liquidacion.cuoLiqui)) {
-      Swal.fire('Error', 'El campo "Cuota" no puede estar vacío.', 'error').then(r => r);
+      this.notificationService.error({ title: 'Error', text: 'El campo "Cuota" no puede estar vacío.' }).then(r => r);
       return;
     }
     if (this.liquidacion.porBonif == null || isNaN(this.liquidacion.porBonif)) {
-      Swal.fire('Error', 'El campo "Porcentaje de Bonificación" no puede estar vacío.', 'error').then(r => r);
+      this.notificationService.error({ title: 'Error', text: 'El campo "Porcentaje de Bonificación" no puede estar vacío.' }).then(r => r);
       return;
     }
     if (this.liquidacion.impSanci == null || isNaN(this.liquidacion.impSanci)) {
-      Swal.fire('Error', 'El campo "Sanción" no puede estar vacío.', 'error').then(r => r);
+      this.notificationService.error({ title: 'Error', text: 'El campo "Sanción" no puede estar vacío.' }).then(r => r);
       return;
     }
     if (this.liquidacion.intDemor == null || isNaN(this.liquidacion.intDemor)) {
-      Swal.fire('Error', 'El campo "Demora" no puede estar vacío.', 'error').then(r => r);
+      this.notificationService.error({ title: 'Error', text: 'El campo "Demora" no puede estar vacío.' }).then(r => r);
       return;
     }
     if (this.liquidacion.impVario == null || isNaN(this.liquidacion.impVario)) {
-      Swal.fire('Error', 'El campo "Recargo" no puede estar vacío.', 'error').then(r => r);
+      this.notificationService.error({ title: 'Error', text: 'El campo "Recargo" no puede estar vacío.' }).then(r => r);
       return;
     }
 
@@ -176,11 +177,10 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
           console.error("Liquidación ID no encontrado en la respuesta", response);
           return;
         }
-        Swal.fire({
+        this.notificationService.confirm({
           title: 'Liquidación creada con éxito',
           text: '¿Desea descargar el documento de liquidación?',
           icon: 'success',
-          showCancelButton: true,
           confirmButtonText: 'Sí, descargar',
           cancelButtonText: 'No'
         }).then((result) => {
@@ -201,7 +201,7 @@ export class LiquidacionFormComponent implements OnInit, OnChanges {
         });
       },
       error: (error: HttpErrorResponse) => {
-        Swal.fire('Error al crear liquidación', error.error.message, 'error').then(r => r);
+        this.notificationService.error({ title: 'Error al crear liquidación', text: error.error.message }).then(r => r);
         console.error("[LiquidacionFormComponent] Error en onSubmit:", error);
       }
     });

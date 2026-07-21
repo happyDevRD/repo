@@ -1,5 +1,5 @@
 import { ConsultaDni, CrearNotificacion } from '../../expedientes';
-import { InteresadoListarDto } from '../../../core/dto/interesado.dto';
+import { InteresadoListarDto } from '../../../core/models/interesado.dto';
 
 const CAMPOS_ENVIO_NULLABLE = [
   'notificador', 'notificador2', 'receptor', 'motNotif',

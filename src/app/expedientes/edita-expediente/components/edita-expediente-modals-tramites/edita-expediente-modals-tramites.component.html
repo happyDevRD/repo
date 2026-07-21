@@ -1,134 +1,118 @@
-Ôªø    <!-- Modal para Recibos Pendientes (movido desde l√≠nea 1133) -->
-    <div class="modal fade iflow-modal" id="recibosPendientesModal" tabindex="-1" aria-labelledby="recibosPendientesModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <!-- Cabecera del modal -->
-          <div class="modal-header">
-            <h4 class="modal-title" id="recibosPendientesModalLabel">Recibos Pendientes de Pago</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-          </div>
-          <!-- Cuerpo del modal -->
-          <div class="modal-body position-relative">
-            <!-- Spinner overlay -->
-            <div *ngIf="edita.cargando" class="spinner-overlay">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Cargando...</span>
-              </div>
-            </div>
-            <jqxGrid #gridRecibos [width]="'100%'" [source]="edita.dataAdapter" [columns]="edita.columnsRecibos" [pageable]="true"
-              [sortable]="true" [filterable]="true" [altrows]="true" [autoheight]="true"
-              [localization]="edita.localizationObject">
-            </jqxGrid>
-          </div>
-          <!-- Pie del modal -->
-          <div class="modal-footer">
-            <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal">Cerrar</button>
-          </div>
+    <!-- Modal para Recibos Pendientes (movido desde lÌnea 1133) -->
+    <app-modal-shell
+      modalId="recibosPendientesModal"
+      title="Recibos Pendientes de Pago"
+      titleId="recibosPendientesModalLabel"
+      dialogClass="modal-xl"
+      bodyClass="position-relative"
+    >
+      <div *ngIf="edita.cargando" class="spinner-overlay">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
         </div>
       </div>
-    </div>
-
-    <!-- Modal Nuevo Tr√°mite -->
-    <div class="modal fade iflow-modal" id="NuevoTramiteModal" tabindex="-1" aria-labelledby="NuevoTramiteModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" id="NuevoTramiteModalLabel">Nuevo Tr√°mite</h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="edita.cerrarModal('NuevoTramiteModal')"></button>
-          </div>
-          <div class="modal-body p-4">
-            <form id="formNuevoTramite" (ngSubmit)="edita.validateAndCreateTramite($event)">
-              <div class="row mb-4">
-                <div class="col-6"><div class="form-floating">
-                  <select class="form-select" id="fase" name="fase" [(ngModel)]="edita.creartramiteexp.fase" required>
-                    <option value="" disabled selected></option>
-                    <option value="INICIO">INICIO</option>
-                    <option value="INSTRUCCION">INSTRUCCION</option>
-                    <option value="RESOLUCION">RESOLUCION</option>
-                  </select>
-                  <label for="fase">Fase *</label>
-                </div></div>
-                <div class="col-6"><div class="form-floating">
-                  <input class="form-control" id="fecTramite" name="fecTramite" type="date"
-                         [(ngModel)]="edita.creartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31" placeholder=" ">
-                  <label for="fecTramite">Fecha Tr√°mite</label>
-                </div></div>
-              </div>
-              <div class="row">
-                <div class="col-12"><div class="form-floating">
-                  <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
-                            [(ngModel)]="edita.creartramiteexp.descripcion" required minlength="1" maxlength="500"
-                            placeholder=" "></textarea>
-                  <label for="descripcion">Descripci√≥n *</label>
-                </div></div>
-              </div>
-              <div class="row mt-2 mb-4">
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="edita.limpiarErroresTramite(); edita.cerrarModal('NuevoTramiteModal')">Cancelar</button>
-                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      <jqxGrid #gridRecibos [width]="'100%'" [source]="edita.dataAdapter" [columns]="edita.columnsRecibos" [pageable]="true"
+        [sortable]="true" [filterable]="true" [altrows]="true" [autoheight]="true"
+        [localization]="edita.localizationObject">
+      </jqxGrid>
+      <div modalFooter>
+        <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
-    </div>
+    </app-modal-shell>
 
-    <!-- Modal Editar Tr√°mite -->
-    <div class="modal fade iflow-modal" id="editarTramiteModal" tabindex="-1" aria-labelledby="editarTramiteModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" id="editarTramiteModalLabel">Editar Tr√°mite</h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="edita.cerrarModal('editarTramiteModal')"></button>
-          </div>
-          <div class="modal-body p-4">
-            <form id="formEditarTramite" (ngSubmit)="edita.validateAndEditTramite($event)">
-              <div class="row mb-4">
-                <div class="col-6"><div class="form-floating">
-                  <select class="form-select" id="faseEdit" name="faseEdit" [(ngModel)]="edita.editartramiteexp.fase" required>
-                    <option value="" disabled selected></option>
-                    <option value="INICIO">INICIO</option>
-                    <option value="INSTRUCCION">INSTRUCCION</option>
-                    <option value="RESOLUCION">RESOLUCION</option>
-                  </select>
-                  <label for="faseEdit">Fase *</label>
-                </div></div>
-                <div class="col-6"><div class="form-floating">
-                  <input class="form-control" id="fecTramiteEdit" name="fecTramiteEdit" type="date"
-                         [(ngModel)]="edita.editartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31" placeholder=" ">
-                  <label for="fecTramiteEdit">Fecha Tr√°mite</label>
-                </div></div>
-              </div>
-              <div class="row">
-                <div class="col-12"><div class="form-floating">
-                  <textarea class="form-control" id="descripcionEdit" name="descripcionEdit" rows="4"
-                            [(ngModel)]="edita.editartramiteexp.descripcion" required minlength="1" maxlength="500"
-                            placeholder=" "></textarea>
-                  <label for="descripcionEdit">Descripci√≥n *</label>
-                </div></div>
-              </div>
-              <div class="row mt-2 mb-4">
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="edita.limpiarErroresEditarTramite(); edita.cerrarModal('editarTramiteModal')">Cancelar</button>
-                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
-              </div>
-            </form>
-          </div>
+    <!-- Modal Nuevo Tr·mite -->
+    <app-modal-shell
+      modalId="NuevoTramiteModal"
+      title="Nuevo Tr·mite"
+      titleId="NuevoTramiteModalLabel"
+      dialogClass="modal-xl modal-dialog-centered"
+      bodyClass="p-4"
+      [showFooter]="false"
+      (closed)="edita.limpiarErroresTramite()"
+    >
+      <form modalBody id="formNuevoTramite" (ngSubmit)="edita.validateAndCreateTramite($event)">
+        <div class="row mb-4">
+          <div class="col-6"><div class="form-floating">
+            <select class="form-select" id="fase" name="fase" [(ngModel)]="edita.creartramiteexp.fase" required>
+              <option value="" disabled selected></option>
+              <option value="INICIO">INICIO</option>
+              <option value="INSTRUCCION">INSTRUCCION</option>
+              <option value="RESOLUCION">RESOLUCION</option>
+            </select>
+            <label for="fase">Fase *</label>
+          </div></div>
+          <div class="col-6"><div class="form-floating">
+            <input class="form-control" id="fecTramite" name="fecTramite" type="date"
+                   [(ngModel)]="edita.creartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31" placeholder=" ">
+            <label for="fecTramite">Fecha Tr·mite</label>
+          </div></div>
         </div>
-      </div>
-    </div>
+        <div class="row">
+          <div class="col-12"><div class="form-floating">
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
+                      [(ngModel)]="edita.creartramiteexp.descripcion" required minlength="1" maxlength="500"
+                      placeholder=" "></textarea>
+            <label for="descripcion">DescripciÛn *</label>
+          </div></div>
+        </div>
+        <div class="row mt-2 mb-4"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" (click)="edita.limpiarErroresTramite()">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+        </div>
+      </form>
+    </app-modal-shell>
 
-    <!-- Modal Editar Tarea del Tr√°mite (movido desde l√≠nea 1292) -->
+    <!-- Modal Editar Tr·mite -->
+    <app-modal-shell
+      modalId="editarTramiteModal"
+      title="Editar Tr·mite"
+      titleId="editarTramiteModalLabel"
+      dialogClass="modal-xl modal-dialog-centered"
+      bodyClass="p-4"
+      [showFooter]="false"
+      (closed)="edita.limpiarErroresEditarTramite()"
+    >
+      <form modalBody id="formEditarTramite" (ngSubmit)="edita.validateAndEditTramite($event)">
+        <div class="row mb-4">
+          <div class="col-6"><div class="form-floating">
+            <select class="form-select" id="faseEdit" name="faseEdit" [(ngModel)]="edita.editartramiteexp.fase" required>
+              <option value="" disabled selected></option>
+              <option value="INICIO">INICIO</option>
+              <option value="INSTRUCCION">INSTRUCCION</option>
+              <option value="RESOLUCION">RESOLUCION</option>
+            </select>
+            <label for="faseEdit">Fase *</label>
+          </div></div>
+          <div class="col-6"><div class="form-floating">
+            <input class="form-control" id="fecTramiteEdit" name="fecTramiteEdit" type="date"
+                   [(ngModel)]="edita.editartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31" placeholder=" ">
+            <label for="fecTramiteEdit">Fecha Tr·mite</label>
+          </div></div>
+        </div>
+        <div class="row">
+          <div class="col-12"><div class="form-floating">
+            <textarea class="form-control" id="descripcionEdit" name="descripcionEdit" rows="4"
+                      [(ngModel)]="edita.editartramiteexp.descripcion" required minlength="1" maxlength="500"
+                      placeholder=" "></textarea>
+            <label for="descripcionEdit">DescripciÛn *</label>
+          </div></div>
+        </div>
+        <div class="row mt-2 mb-4"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" (click)="edita.limpiarErroresEditarTramite()">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+        </div>
+      </form>
+    </app-modal-shell>
+
+    <!-- Modal Editar Tarea del Tr·mite (movido desde lÌnea 1292) -->
     <div aria-hidden="true" aria-labelledby="EditarTareaTramiteModalLabel" class="modal fade iflow-modal" data-bs-backdrop="static"
       id="EditarTareaTramiteModal" tabindex="-1">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" id="EditarTareaTramiteModalLabel">Editar Tarea del Tr√°mite</h4>
+            <h4 class="modal-title" id="EditarTareaTramiteModalLabel">Editar Tarea del Tr·mite</h4>
             <button (click)="edita.verListadoTareasModal()" aria-label="Close" class="btn-close" data-bs-dismiss="modal"
               type="button"></button>
           </div>
@@ -181,7 +165,7 @@
                   <input [(ngModel)]="edita.tareatramiteexpedienteeditar.descripcion"
                     [value]="edita.tareatramiteexpedienteeditar.descripcion" class="form-control" id="descripcion"
                     name="descripcion" required type="text" placeholder=" ">
-                  <label for="descripcion">Descripci√≥n* </label>
+                  <label for="descripcion">DescripciÛn* </label>
                   <br>
                 </div></div>
 
@@ -192,9 +176,9 @@
                   <select [(ngModel)]="edita.tareatramiteexpedienteeditar.anexo" [value]="edita.anexoTarea" class="form-select "
                     id="anexo" name="anexo" required>
                     <option value=0>Fichero Anexo</option>
-                    <option value=1>Documentaci√≥n F√≠sica Requerida</option>
+                    <option value=1>DocumentaciÛn FÌsica Requerida</option>
                     <option value=2>Fichero Enlace</option>
-                    <option value=3>Documentaci√≥n F√≠sica Complementaria</option>
+                    <option value=3>DocumentaciÛn FÌsica Complementaria</option>
 
                   </select>
                   <label for="anexo">Anexo *</label>
@@ -210,20 +194,20 @@
                     <option value=4>Original</option>
 
                   </select>
-                  <label for="docapor">Documentaci√≥n Aportada *</label>
+                  <label for="docapor">DocumentaciÛn Aportada *</label>
                   <br>
                 </div></div>
                 <div class="col-6"><div class="form-floating">
                   <select [(ngModel)]="edita.tareatramiteexpedienteeditar.tipoDocumEni" [value]="edita.docEniTarea"
                     class="form-select " id="tipoDocumEni" name="tipoDocumEni" required>
-                    <option selected value="TD01">Resoluci√≥n</option>
+                    <option selected value="TD01">ResoluciÛn</option>
                     <option value="TD02">Acuerdo</option>
                     <option value="TD03">Contrato</option>
                     <option value="TD04">Convenio</option>
-                    <option value="TD05">Declaraci√≥n</option>
-                    <option value="TD06">Comunicaci√≥n</option>
-                    <option value="TD07">Notificaci√≥n</option>
-                    <option value="TD08">Publicaci√≥n</option>
+                    <option value="TD05">DeclaraciÛn</option>
+                    <option value="TD06">ComunicaciÛn</option>
+                    <option value="TD07">NotificaciÛn</option>
+                    <option value="TD08">PublicaciÛn</option>
                     <option value="TD09">Acuse de recibo</option>
                     <option value="TD10">Acta</option>
                     <option value="TD11">Certificado</option>
@@ -231,9 +215,9 @@
                     <option value="TD13">Informe</option>
                     <option value="TD14">Solicitud</option>
                     <option value="TD15">Denuncia</option>
-                    <option value="TD16">Alegaci√≥n</option>
+                    <option value="TD16">AlegaciÛn</option>
                     <option value="TD17">Recursos</option>
-                    <option value="TD18">Comunicaci√≥n ciudadano</option>
+                    <option value="TD18">ComunicaciÛn ciudadano</option>
                     <option value="TD19">Factura</option>
                     <option value="TD20">Otros incautados</option>
                     <option value="TD21">Otros</option>
@@ -244,11 +228,11 @@
                 <div class="col-6"><div class="form-floating">
                   <select [(ngModel)]="edita.tareatramiteexpedienteeditar.documentacion" [value]="edita.DocumentacionTarea"
                     class="form-select " id="documentacion" name="documentacion" required>
-                    <option selected value=1>Documentaci√≥n Adjunta Digitalizada</option>
-                    <option value=2>Documentaci√≥n Adjunta en Soporte Papel</option>
-                    <option value=3>Documentaci√≥n Adjunta Digitalizada y en Papel</option>
+                    <option selected value=1>DocumentaciÛn Adjunta Digitalizada</option>
+                    <option value=2>DocumentaciÛn Adjunta en Soporte Papel</option>
+                    <option value=3>DocumentaciÛn Adjunta Digitalizada y en Papel</option>
                   </select>
-                  <label for="documentacion">Documentaci√≥n *</label>
+                  <label for="documentacion">DocumentaciÛn *</label>
                   <br>
                 </div></div>
               </div>
@@ -268,13 +252,13 @@
       </div>
     </div>
 
-    <!-- Modal Generar Propuesta de Resoluci√≥n (movido desde l√≠nea 1440) -->
+    <!-- Modal Generar Propuesta de ResoluciÛn (movido desde lÌnea 1440) -->
     <div aria-hidden="true" aria-labelledby="GenerarPropuestaResolucionModalLabel" class="modal fade iflow-modal"
       data-bs-backdrop="static" id="GenerarPropuestaResolucionModal" tabindex="-1">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" id="GenerarPropuestaResolucionModalLabel">Generar Propuesta de Resoluci√≥n</h4>
+            <h4 class="modal-title" id="GenerarPropuestaResolucionModalLabel">Generar Propuesta de ResoluciÛn</h4>
             <button (click)="edita.limpiaInsertatBolsa()" aria-label="Close" class="btn-close" data-bs-dismiss="modal"
               type="button"></button>
           </div>
@@ -299,7 +283,7 @@
                   <input [(ngModel)]="edita.insertabolsacrear.fecMaxResol" class="form-control" data-mdb-inline="true"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" required type="date"
                     value="{{ edita.selected }}" placeholder=" ">
-                  <label for="fecMaxResol">Fecha Max Resoluci√≥n* </label>
+                  <label for="fecMaxResol">Fecha Max ResoluciÛn* </label>
                   <br>
                 </div></div>
               </div>
@@ -332,7 +316,7 @@
                 <div class="col-sm-4"><div class="form-floating">
                   <input [(ngModel)]="edita.insertabolsacrear.expMotiv" class="form-control" id="mexpe" name="mexpe"
                     type="text" placeholder=" ">
-                  <label for="mexpe">Exposici√≥n Motivo </label>
+                  <label for="mexpe">ExposiciÛn Motivo </label>
                   <br>
                 </div></div>
               </div>
@@ -358,7 +342,7 @@
                     <option name="3" value=3>NO APARECE</option>
                     <option name="4" value=4>PLENO Y COMISION INFORMATIVA</option>
                   </select>
-                  <label for="tsesion">Tipo Sesi√≥n* </label>
+                  <label for="tsesion">Tipo SesiÛn* </label>
 
                 </div></div>
 
@@ -396,13 +380,13 @@
       </div>
     </div>
 
-    <!-- Modal Crear Notificaci√≥n (movido desde l√≠nea 1568) -->
+    <!-- Modal Crear NotificaciÛn (movido desde lÌnea 1568) -->
     <div aria-hidden="true" aria-labelledby="CrearNotificacionModalLabel" class="modal fade iflow-modal" data-bs-backdrop="static"
       id="CrearNotificacionModal" tabindex="-1" (hidden.bs.modal)="edita.onModalHidden()">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" id="CrearNotificacionModalLabel">Crear Notificaci√≥n</h4>
+            <h4 class="modal-title" id="CrearNotificacionModalLabel">Crear NotificaciÛn</h4>
             <button (click)="edita.borraDatosCrearNotifi()" aria-label="Close" class="btn-close" data-bs-dismiss="modal"
               type="button"></button>
           </div>
@@ -414,7 +398,7 @@
                   <input (change)="edita.cambioYearEjercicio()" [(ngModel)]="edita.creanotificacion.fecNotif" class="form-control"
                     id="fechaNotificacion" name="fechaNotificacion" required type="date" max="2099-12-31"
                     min="2020-01-01" placeholder=" ">
-                  <label for="fechaNotificacion">Fecha Notificaci√≥n*</label>
+                  <label for="fechaNotificacion">Fecha NotificaciÛn*</label>
                 </div></div>
                 <div class="col-sm-5"><div class="form-floating">
                   <select (change)="edita.cargarDatosInteresado(edita.creanotificacion.dni)" [(ngModel)]="edita.creanotificacion.dni"
@@ -481,7 +465,7 @@
                 <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
 
                   <input class="form-control" disabled id="cp" name="cp" type="text" value="{{ edita.consultadni.codPosta }}" placeholder=" ">
-                  <label for="cp">C√≥digo Postal</label>
+                  <label for="cp">CÛdigo Postal</label>
                 </div></div>
                 <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
 
@@ -511,7 +495,7 @@
                 <button class="btn-iflow modal-footer__btn btn-iflow--secondary" id="botonguardar" role="button" (click)="edita.crearnotificacion()"
                   [disabled]="!edita.formularioNotificacionValido" [class.btn-disabled]="!edita.formularioNotificacionValido">
                   <i class="fas fa-save me-2"></i>
-                  Guardar Notificaci√≥n
+                  Guardar NotificaciÛn
                 </button>
               </div>
             </form>
@@ -540,7 +524,7 @@
                 </div>
                 <div class="card-body">
 
-                  <!-- Informaci√≥n General -->
+                  <!-- InformaciÛn General -->
                   <div class="row g-3">
                     <div class="col-md-4"><div class="form-floating">
                       <input type="text" class="form-control" id="tipoObjetoBaja"
@@ -550,7 +534,7 @@
                     <div class="col-md-4"><div class="form-floating">
                       <input type="text" class="form-control" id="descripcionBaja"
                         [value]="edita.objetotributario.desObjTribu" disabled placeholder=" ">
-                      <label for="descripcionBaja">Descripci√≥n</label>
+                      <label for="descripcionBaja">DescripciÛn</label>
                     </div></div>
                     <div class="col-md-4"><div class="form-floating">
                       <input type="text" class="form-control" id="fecAltaBaja" [value]="edita.objetotributario.fecAlta"
@@ -563,7 +547,7 @@
                     <div class="col-md-4"><div class="form-floating">
                       <input type="text" class="form-control" id="numDocumBaja" [value]="edita.objetotributario.numDocum"
                         disabled placeholder=" ">
-                      <label for="numDocumBaja">N.¬∫ Documento</label>
+                      <label for="numDocumBaja">N.∫ Documento</label>
                     </div></div>
                     <div class="col-md-4"><div class="form-floating">
                       <input type="text" class="form-control" id="personaBaja"
@@ -581,14 +565,14 @@
                     <div class="col-md-4"><div class="form-floating">
                       <input type="text" class="form-control" id="codMovimBaja" [value]="edita.objetotributario.codMovim"
                         disabled placeholder=" ">
-                      <label for="codMovimBaja">C√≥digo Movimiento</label>
+                      <label for="codMovimBaja">CÛdigo Movimiento</label>
                     </div></div>
                     <div class="col-md-8 d-flex align-items-center" *ngIf="edita.objetotributario.codMovim === 'BAJA'">
-                      <span class="text-danger fw-bold">Este objeto tributario ya est√° dado de baja.</span>
+                      <span class="text-danger fw-bold">Este objeto tributario ya est· dado de baja.</span>
                     </div>
                   </div>
 
-                  <!-- Observaciones y Bot√≥n de Baja (solo si no est√° ya de baja) -->
+                  <!-- Observaciones y BotÛn de Baja (solo si no est· ya de baja) -->
                   <div class="row g-3 mt-4" *ngIf="edita.objetotributario.codMovim !== 'BAJA'">
                     <div class="col-md-10"><div class="form-floating">
                       <textarea maxlength="200" class="form-control" id="observacionesBaja" name="observacionesBaja"

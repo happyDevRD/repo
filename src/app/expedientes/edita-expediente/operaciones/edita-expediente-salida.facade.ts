@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CrearGenerarSalida, TemaDocumentoListar, VerExpediente } from '../../expedientes';
 import { NotificationService } from '../../../core/service/notification.service';
 import { ExpedientesService } from '../../expedientes.service';
@@ -17,16 +17,31 @@ export interface EditaExpedienteSalidaHost {
   nunRegisTarea: unknown;
   identificadorGenerarSalida: string;
   sourceTareasTramite: unknown;
-  limpiaGenerarSalida(): void;
+  verTareasdelTramite: boolean;
+  verGenerarSalida: boolean;
 }
 
 @Injectable()
 export class EditaExpedienteSalidaFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly notificationService: NotificationService,
     private readonly tareasFacade: EditaExpedienteTareasFacade,
   ) {}
+
+  limpiarFormularioGenerarSalida(host: EditaExpedienteSalidaHost): void {
+    host.creargenerarsalida = new CrearGenerarSalida();
+    host.temadocumentolistar = new TemaDocumentoListar[0];
+  }
+
+  clickAtrasGenerarSalida(host: EditaExpedienteSalidaHost): void {
+    host.verTareasdelTramite = true;
+    host.verGenerarSalida = false;
+    host.sourceTareasTramite = this.tareasFacade.createGridAdapter(host.idTramite);
+    this.limpiarFormularioGenerarSalida(host);
+  }
 
   prepararCrearGenerarSalida(host: EditaExpedienteSalidaHost): void {
     host.creargenerarsalida.ejeExped = host.verExpediente.ejercicio;
@@ -34,13 +49,9 @@ export class EditaExpedienteSalidaFacade {
     host.creargenerarsalida.usuContr = host.usuContrl!;
 
     if (host.nunRegisTarea) {
-      Swal.fire({
+      this.notificationService.confirm({
         title: `Esta tarea ya tiene generada un registro de salida número : ${host.nunRegisTarea}`,
         text: '¿Quiere Generar uno nuevo?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Cancelar',
       }).then(() => this.ejecutarCrearGenerarSalida(host));
@@ -64,6 +75,7 @@ export class EditaExpedienteSalidaFacade {
           host.numeroArchivo,
           host.idTarea,
         )
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {},
           error: (err: HttpErrorResponse) => {
@@ -78,10 +90,9 @@ export class EditaExpedienteSalidaFacade {
           },
         });
     } else {
-      Swal.fire('Debe rellenar todos los campos obligatorios.');
+      this.notificationService.warning('Debe rellenar todos los campos obligatorios.');
     }
 
-    host.creargenerarsalida = new CrearGenerarSalida();
-    host.temadocumentolistar = new TemaDocumentoListar[0];
+    this.limpiarFormularioGenerarSalida(host);
   }
 }

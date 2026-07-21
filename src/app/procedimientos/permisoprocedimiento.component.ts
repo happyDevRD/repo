@@ -2,7 +2,6 @@ import { Component,ElementRef } from '@angular/core';
 import { CrearProcedi, Procedimiento, EditarProcedi , CreaTareaProcedi,PlantillaTarea, EditaTareaProcedi,ProcediPermisos,CreaPermisoProcedi, ListarPermiso } from './procedimiento';
 import { ProcedimientoService } from './procedimiento.service';
 import {Router, ActivatedRoute} from '@angular/router'
-import Swal from 'sweetalert2';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { FormnuevoprocediComponent } from './formnuevoprocedi.component';
 import { Observable, Subject } from 'rxjs';

@@ -4,6 +4,7 @@ import { ModalManagerService } from '../../../core/service/modal-manager.service
 export interface BootstrapModalesHost {
   modalAnteriorId: string | null
   mostrarModalOperacion: boolean
+  showGenerarEntrada: boolean
 }
 
 @Injectable()
@@ -68,5 +69,17 @@ export class EditaExpedienteBootstrapModalesFacade {
 
   abrirModalObjetoTributario(): void {
     this.modalManager.openModal('bajaObjetoTributarioModal')
+  }
+
+  clickGenerarEntrada(host: BootstrapModalesHost): void {
+    this.abrirModalGenerarEntrada(() => {
+      host.showGenerarEntrada = true
+    })
+  }
+
+  closeGenerarEntradaModal(host: BootstrapModalesHost): void {
+    this.cerrarModalGenerarEntrada(() => {
+      host.showGenerarEntrada = false
+    })
   }
 }

@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EnvioNotificaInfo } from '../../notificaciones/notificaciones-notifica-panel.component';
 import {
+  LeerNotificacion,
   MotivoNotificacionesListar,
   NotificadorListar,
   ReceptorNotifiListar,
@@ -11,6 +13,7 @@ import {
   createNotificacionGridAdapter,
   NotificacionGridSourceOptions,
 } from './notificaciones-grid.config';
+import { calcularFechasNotificacion, FechasNotificacionOrdenadas } from './notificaciones-fechas.helper';
 
 export interface NotificacionCatalogos {
   receptornotifilistar: ReceptorNotifiListar[];
@@ -18,18 +21,31 @@ export interface NotificacionCatalogos {
   notificadorlistar: NotificadorListar[];
 }
 
+export interface NotificacionListadoHost {
+  verExpediente: { ejercicio: number; numero: number };
+  actualizarGridNotificaciones(leerNotificacion: LeerNotificacion[]): void;
+}
+
 @Injectable()
 export class EditaExpedienteNotificacionesFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(private readonly notificacionesService: NotificacionesService) {}
 
   loadCatalogos(target: Partial<NotificacionCatalogos>): void {
-    this.notificacionesService.getReceptorNofitiListar().subscribe(
+    this.notificacionesService.getReceptorNofitiListar().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(
       (data) => (target.receptornotifilistar = data),
     );
-    this.notificacionesService.getMotivoNofitiListar().subscribe(
+    this.notificacionesService.getMotivoNofitiListar().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(
       (data) => (target.motivonotificacioneslistar = data),
     );
-    this.notificacionesService.getNotificadorListar().subscribe(
+    this.notificacionesService.getNotificadorListar().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(
       (data) => (target.notificadorlistar = data),
     );
   }
@@ -67,7 +83,9 @@ export class EditaExpedienteNotificacionesFacade {
       return;
     }
 
-    this.notificacionesService.consultarEnvioNotifica(idNotificacion).subscribe({
+    this.notificacionesService.consultarEnvioNotifica(idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (envio) => {
         onResult(
           envio
@@ -82,5 +100,29 @@ export class EditaExpedienteNotificacionesFacade {
       },
       error: () => onResult(null),
     });
+  }
+
+  listarNotificacionesDelExpediente(host: NotificacionListadoHost): void {
+    const { ejercicio, numero } = host.verExpediente;
+    if (!ejercicio || !numero) {
+      return;
+    }
+
+    this.notificacionesService.getNotificacionListar(ejercicio, numero).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (leernotificacion) => host.actualizarGridNotificaciones(leernotificacion ?? []),
+      error: () => host.actualizarGridNotificaciones([]),
+    });
+  }
+
+  aplicarFechasNotificacion(
+    host: FechasNotificacionOrdenadas,
+    fenvio: unknown,
+    frecep: unknown,
+    fpubli: unknown,
+    femision: unknown,
+  ): void {
+    Object.assign(host, calcularFechasNotificacion(fenvio, frecep, fpubli, femision));
   }
 }

@@ -3,8 +3,8 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, Subject, throwError, timer } from 'rxjs';
 import { catchError, timeout, retry, finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import Swal from 'sweetalert2';
 import { UserSessionService } from './user-session.service';
+import { NotificationService } from './notification.service';
 
 export interface FileUploadConfig {
   maxFileSize?: number; // en MB
@@ -47,7 +47,8 @@ export class FileUploadService {
 
   constructor(
     private http: HttpClient,
-    private session: UserSessionService
+    private session: UserSessionService,
+    private notificationService: NotificationService
   ) {}
 
   /**
@@ -287,7 +288,7 @@ export class FileUploadService {
    * Muestra una notificación de progreso
    */
   showUploadProgress(fileName: string): void {
-    Swal.fire({
+    this.notificationService.custom({
       title: 'Subiendo archivo',
       html: `
         <div class="text-center">
@@ -314,10 +315,9 @@ export class FileUploadService {
         // Suscribirse al estado
         this.uploadStatus$.subscribe(status => {
           if (status === 'Completado') {
-            Swal.close();
+            this.notificationService.close();
           } else if (status.startsWith('Error:')) {
-            Swal.fire({
-              icon: 'error',
+            this.notificationService.error({
               title: 'Error al subir archivo',
               text: status.replace('Error: ', '')
             });
@@ -331,8 +331,7 @@ export class FileUploadService {
    * Muestra una notificación de éxito
    */
   showUploadSuccess(fileName: string): void {
-    Swal.fire({
-      icon: 'success',
+    this.notificationService.success({
       title: 'Archivo subido correctamente',
       text: `El archivo "${fileName}" se ha subido correctamente.`,
       timer: 3000,
@@ -344,8 +343,7 @@ export class FileUploadService {
    * Muestra una notificación de error
    */
   showUploadError(errorMessage: string): void {
-    Swal.fire({
-      icon: 'error',
+    this.notificationService.error({
       title: 'Error al subir archivo',
       text: errorMessage,
       confirmButtonText: 'Aceptar'

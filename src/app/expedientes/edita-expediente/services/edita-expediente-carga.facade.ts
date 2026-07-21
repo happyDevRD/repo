@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TramiteExpedienteDto } from '../../../core/models/tramite-expediente.dto';
 import { LeerNotificacion, VerExpediente } from '../../expedientes';
@@ -15,10 +16,13 @@ export interface EditaExpedienteCargaHost {
   actualizarGridNotificaciones(leerNotificacion: LeerNotificacion[]): void;
   getListarInteresado(idexp: number): void;
   getListarTramites(id: number): void;
+  cargarEstadoInside?(idExpediente: number): void;
 }
 
 @Injectable()
 export class EditaExpedienteCargaFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly tramitesService: TramitesService,
@@ -26,7 +30,9 @@ export class EditaExpedienteCargaFacade {
   ) {}
 
   cargarDesdeRuta(host: EditaExpedienteCargaHost, activatedRoute: ActivatedRoute): void {
-    activatedRoute.params.subscribe((params) => {
+    activatedRoute.params.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((params) => {
       const id = Number(params['id']);
       if (!id) {
         return;
@@ -35,8 +41,11 @@ export class EditaExpedienteCargaFacade {
       host.idExpediente = id;
       host.atrasruta = `editaexpediente/${id}`;
       host.getListarTramites(id);
+      host.cargarEstadoInside?.(id);
 
-      this.expedientesService.getExpediente(id).subscribe({
+      this.expedientesService.getExpediente(id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: (verExpediente: VerExpediente) => {
           host.verExpediente = verExpediente;
           host.inicializarSourceListarNotifi();
@@ -50,7 +59,9 @@ export class EditaExpedienteCargaFacade {
         },
       });
 
-      this.tramitesService.getTramiteExpediente(id).subscribe({
+      this.tramitesService.getTramiteExpediente(id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: (tramiteExpedientelista: TramiteExpedienteDto[]) => {
           host.tramiteExpedienteListar = tramiteExpedientelista;
         },
@@ -69,7 +80,9 @@ export class EditaExpedienteCargaFacade {
       return;
     }
 
-    this.notificacionesService.getNotificacionListar(ejercicio, numero).subscribe({
+    this.notificacionesService.getNotificacionListar(ejercicio, numero).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (leerNotificacion) => host.actualizarGridNotificaciones(leerNotificacion ?? []),
       error: () => host.actualizarGridNotificaciones([]),
     });

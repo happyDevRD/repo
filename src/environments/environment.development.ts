@@ -1,48 +1,37 @@
 export const environment = {
-    production: false,
-   //    pruebas  cambiar a esta confi  cuando compilemos
-  //apiUrl: 'http://10.234.253.35:8090/api/gos/',
-  //apiUrl: 'http://10.234.252.145:8090/api/gos/',
+  production: false,
   apiUrl: 'http://localhost:8090/api/gos/',
- // apiUrl: 'http://10.234.253.87:8090/api/gos/',
- //apiUrlhttps: 'https://10.234.253.87:8443/apiGos/rest/',
-  //apiUrl: 'https://10.234.253.87:9443/api/gos/', // sin certificado
+  apiUrlhttps: 'http://localhost:8090/api/gos/',
 
 
-// para la nuve
-  //apiUrl: 'http://localhost:8090/api/gos/',
-  //apiUrl: 'http://10.1.1.5:8090/api/gos/',
 
+  entidad: `Greenaall`,
 
-  //desarrollo
-//apiUrl: 'http://10.234.252.145:8090/api/gos/',
-//apiUrl: localStorage.getItem('api'),
-
-//https
-//apiUrlhttps: 'https://10.234.252.145:8443/api/gos/',
-apiUrlhttps: 'http://localhost:8090/api/gos/',
-//apiUrlhttps: 'https://10.234.253.77:8443/apiGos/rest/',
-
-//apiUrl: 'https://10.234.252.145:9443/api/gos/', // sin certificado
-
-
-    entidad:`Greenaall`,
-
-    // iconos
-  inicio:'inicio.svg',
-  editar:'editar3.svg',
-  asignar:'asignar.svg',
-  rechazar:'rechazar.svg',
+  // iconos
+  inicio: 'inicio.svg',
+  editar: 'editar3.svg',
+  asignar: 'asignar.svg',
+  rechazar: 'rechazar.svg',
   iniciar: 'iniciar2.svg',
-  papelera:'papelera2.svg',
+  papelera: 'papelera2.svg',
 
   //iconos NAV
   escudo: 'escudo.png',
   titulo: 'Gestor de Expedientes iFlow',
   mensajes: 'mensaje.svg',
- // mensajes: 'mensajeBis.svg',
-  solicitudes:'solicitudes.svg',
-  expedientes:'expedientes.svg',
+  // mensajes: 'mensajeBis.svg',
+  solicitudes: 'solicitudes.svg',
+  expedientes: 'expedientes.svg',
   procedimientos: 'procedimientos.svg',
   salir: 'Salida.svg',
+
+  inside: {
+    insideWsUrl: 'https://se-e-inside.redsara.es/inside/services/InsideWSService',
+    gInsideWsUrl: 'https://se-e-inside.redsara.es/inside/services/GInsideWSService',
+    puntoRemisionWsUrl: 'https://se-e-inside.redsara.es/inside/services/PuntoRemisionWebService',
+    useBackendProxy: true,
+    dryRun: true,
+    ofrecerEnvioTrasCierre: true,
+    autoEnvioOnClose: false,
+  },
 };

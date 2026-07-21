@@ -1,8 +1,8 @@
-Ôªø    <!-- ======================================== -->
+    <!-- ======================================== -->
     <!-- MODALES DE NOTIFICACIONES -->
     <!-- ======================================== -->
 
-    <!-- Modal Env√≠o TEU (movido desde l√≠nea 95) -->
+    <!-- Modal EnvÌo TEU (movido desde lÌnea 95) -->
     <div class="modal fade iflow-modal" id="EnvioTeu" tabindex="-1" aria-labelledby="EnvioTeuLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -27,9 +27,9 @@
                 <div class="col-sm-4"><div class="form-floating">
                   <input [(ngModel)]="edita.modeloteucrear.fecGener" class="form-control" id="fecGener" name="fecGener"
                     type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="edita.isFechaGenerInvalid()" placeholder=" ">
-                  <label class="form-label" for="fecGener">Fecha de Generaci√≥n *</label>
+                  <label class="form-label" for="fecGener">Fecha de GeneraciÛn *</label>
                   </div><div *ngIf="edita.isFechaGenerInvalid()" class="invalid-feedback">
-                    La fecha de generaci√≥n es obligatoria
+                    La fecha de generaciÛn es obligatoria
                   </div></div>
                 <div class="col-sm-4"><div class="form-floating">
                   <input [(ngModel)]="edita.modeloteucrear.fecFirma" class="form-control" id="fecFirma" name="fecFirma"
@@ -44,53 +44,53 @@
                 <div class="col-sm-6"><div class="form-floating">
                   <select id="materia" class="form-select" [(ngModel)]="edita.modeloteucrear.idMater" name="materia" required>
                     <option value="">Seleccione una materia</option>
-                    <option value="1">Agricultura y Ganader√≠a</option>
+                    <option value="1">Agricultura y GanaderÌa</option>
                     <option value="2">Aguas</option>
                     <option value="3">Catastro</option>
                     <option value="4">Caza y Pesca</option>
                     <option value="5">Consumo</option>
-                    <option value="6">Cr√©dito, Banca y Seguros</option>
-                    <option value="7">Cultura y Espect√°culos</option>
+                    <option value="6">CrÈdito, Banca y Seguros</option>
+                    <option value="7">Cultura y Espect·culos</option>
                     <option value="8">Deportes</option>
-                    <option value="9">Econom√≠a y Comercio</option>
-                    <option value="10">Empleados P√∫blicos</option>
+                    <option value="9">EconomÌa y Comercio</option>
+                    <option value="10">Empleados P˙blicos</option>
                     <option value="11">Empleo</option>
-                    <option value="12">Energ√≠a</option>
-                    <option value="13">Educaci√≥n</option>
-                    <option value="14">Ense√±anza Universitaria</option>
-                    <option value="15">Estad√≠sticas</option>
+                    <option value="12">EnergÌa</option>
+                    <option value="13">EducaciÛn</option>
+                    <option value="14">EnseÒanza Universitaria</option>
+                    <option value="15">EstadÌsticas</option>
                     <option value="16">Expropiaciones</option>
-                    <option value="17">Extranjer√≠a</option>
+                    <option value="17">ExtranjerÌa</option>
                     <option value="18">Fuerzas Armadas</option>
                     <option value="19">Hacienda</option>
-                    <option value="20">Industria y Artesan√≠a</option>
-                    <option value="21">Inspecci√≥n de Trabajo</option>
+                    <option value="20">Industria y ArtesanÌa</option>
+                    <option value="21">InspecciÛn de Trabajo</option>
                     <option value="22">Juego</option>
                     <option value="23">Medio Ambiente y Sostenibilidad</option>
-                    <option value="24">Metrolog√≠a</option>
-                    <option value="25">Navegaci√≥n A√©rea</option>
-                    <option value="26">Navegaci√≥n Mar√≠tima, Puertos y Marina Mercante</option>
-                    <option value="27">Notar√≠as</option>
+                    <option value="24">MetrologÌa</option>
+                    <option value="25">NavegaciÛn AÈrea</option>
+                    <option value="26">NavegaciÛn MarÌtima, Puertos y Marina Mercante</option>
+                    <option value="27">NotarÌas</option>
                     <option value="28">Urbanismo y Vivienda</option>
-                    <option value="29">Padr√≥n Municipal de Habitantes</option>
-                    <option value="30">Parimonio y Propiedades P√∫blicas</option>
+                    <option value="29">PadrÛn Municipal de Habitantes</option>
+                    <option value="30">Parimonio y Propiedades P˙blicas</option>
                     <option value="31">Propiedad Intelectual</option>
                     <option value="32">Propiedad Industrial</option>
-                    <option value="33">Protecci√≥n de Datos de Car√°cter</option>
+                    <option value="33">ProtecciÛn de Datos de Car·cter</option>
                     <option value="34">Registros de la Propiedad</option>
                     <option value="35">Responsabilidad Patrimonial</option>
                     <option value="36">Sanidad y Farmacia</option>
-                    <option value="37">Seguridad Ciudadana y Protecci√≥n Civil</option>
-                    <option value="38">Prestaciones de Seguridad Social y de Acci√≥n Social Mar√≠tima</option>
+                    <option value="37">Seguridad Ciudadana y ProtecciÛn Civil</option>
+                    <option value="38">Prestaciones de Seguridad Social y de AcciÛn Social MarÌtima</option>
                     <option value="39">Servicios Funerarios</option>
                     <option value="40">Servicios Sociales</option>
                     <option value="41">Subvenciones, Becas y otras Ayudas</option>
-                    <option value="42">Telecomunicaciones y Nuevas Tecnolog√≠as</option>
-                    <option value="43">Tr√°fico, Circulaci√≥n y Seguridad Vial</option>
+                    <option value="42">Telecomunicaciones y Nuevas TecnologÌas</option>
+                    <option value="43">Tr·fico, CirculaciÛn y Seguridad Vial</option>
                     <option value="44">Transportes Terretres</option>
                     <option value="45">Turismo</option>
                     <option value="46">Otras</option>
-                    <option value="47">Inscripci√≥n, Afiliaci√≥n y Recaudaci√≥n de la Seguridad Social</option>
+                    <option value="47">InscripciÛn, AfiliaciÛn y RecaudaciÛn de la Seguridad Social</option>
                   </select>
                   <label class="form-label" for="materia">Materia *</label>
                 </div></div>
@@ -114,9 +114,9 @@
                 <div class="col-sm-6"><div class="form-floating">
                   <select [(ngModel)]="edita.modeloteucrear.forPubli" class="form-select " id="forPublic" name="forPublic">
                     <option value=1>En Extracto</option>
-                    <option value=2>√çntegra</option>
+                    <option value=2>Õntegra</option>
                   </select>
-                  <label for="forPublic">Forma Publicaci√≥n </label>
+                  <label for="forPublic">Forma PublicaciÛn </label>
                   <br>
                 </div></div>
               </div>
@@ -125,7 +125,7 @@
 
                   <input [(ngModel)]="edita.modeloteucrear.email" class="form-control form-floating" id="email" name="email"
                     type="text" placeholder=" ">
-                  <label for="email">Correo Electr√≥nico </label>
+                  <label for="email">Correo ElectrÛnico </label>
                   <br>
                 </div></div>
                 <div class="col-sm-12"><div class="form-floating">
@@ -155,13 +155,13 @@
       </div>
     </div>
 
-    <!-- Modal Devolver Notificaci√≥n (antiguo) (movido desde l√≠nea 201) -->
+    <!-- Modal Devolver NotificaciÛn (antiguo) (movido desde lÌnea 201) -->
     <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade iflow-modal" data-bs-backdrop="static"
       data-bs-keyboard="false" id="DevolverNotifiOLD" tabindex="-1">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" id="DevolverNotifiLabel">Devolver Notificaci√≥n</h4>
+            <h4 class="modal-title" id="DevolverNotifiLabel">Devolver NotificaciÛn</h4>
             <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
           </div>
           <div class="modal-body">
@@ -173,7 +173,7 @@
                 <div class="col-sm-4"><div class="form-floating">
                   <input [(ngModel)]="edita.creanotificacion.fecRecNotif" class="form-control" data-mdb-inline="true"
                     id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{ edita.selected }}" placeholder=" ">
-                  <label for="documento">Fecha de Devoluci√≥n</label>
+                  <label for="documento">Fecha de DevoluciÛn</label>
 
                 </div></div>
                 <div class="col-sm-4"><div class="form-floating">
@@ -185,7 +185,7 @@
                     </option>
 
                   </select>
-                  <label for="desMotNotif">Motivo Notificaci√≥n* </label>
+                  <label for="desMotNotif">Motivo NotificaciÛn* </label>
                 </div></div>
                 <div class="col-sm-4"><div class="form-floating">
                   <select [(ngModel)]="edita.creanotificacion.notificador" class="form-select" id="notificador"
@@ -211,14 +211,14 @@
       </div>
     </div>
 
-    <!-- Modal Ver/Editar Notificaci√≥n (antiguo) (movido desde l√≠nea 251) -->
+    <!-- Modal Ver/Editar NotificaciÛn (antiguo) (movido desde lÌnea 251) -->
     <div aria-hidden="true" aria-labelledby="verNotifiModalLabel" class="modal fade iflow-modal" data-bs-backdrop="static"
       id="verNotifiModalOLD" tabindex="-1">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{ edita.modoVerNotificacion ? 'Ver edita.Notificaci√≥n' : 'Editar
-              edita.Notificaci√≥n' }}</h5>
+            <h5 class="modal-title" id="exampleModalLabel">{{ edita.modoVerNotificacion ? 'Ver edita.NotificaciÛn' : 'Editar
+              edita.NotificaciÛn' }}</h5>
             <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
           </div>
           <div class="modal-body">
@@ -239,7 +239,7 @@
 
                   <input [value]="edita.notificacionver.numNotif" class="form-control" id="numNotif" name="numNotif" readonly
                     type="text" placeholder=" ">
-                  <label for="numNotif">N√∫mero Notificaci√≥n </label>
+                  <label for="numNotif">N˙mero NotificaciÛn </label>
 
 
                 </div></div>
@@ -251,10 +251,10 @@
                     class="form-select " id="fnotifi" name="fnotifi" [disabled]="edita.modoVerNotificacion">
 
                     <option name="correoP" value=0>Correo postal</option>
-                    <option name="telematico" value=1>Telem√°tica</option>
+                    <option name="telematico" value=1>Telem·tica</option>
 
                   </select>
-                  <label for="fnotifi">Forma Notificaci√≤n </label>
+                  <label for="fnotifi">Forma NotificaciÚn </label>
 
 
                   <br>
@@ -262,7 +262,7 @@
                 <div class="col-sm-3"><div class="form-floating">
 
                   <input [value]="edita.fechNotifi" class="form-control" disabled id="numNotif" name="FechNotif" type="text" placeholder=" ">
-                  <label for="numNotif">Fecha Notificaci√≥n </label>
+                  <label for="numNotif">Fecha NotificaciÛn </label>
                 </div></div>
                 <div class="col-sm-3"><div class="form-floating">
                   <input (change)="edita.solicitadni(edita.creanotificacion.dni)" [(ngModel)]="edita.creanotificacion.dni"
@@ -309,7 +309,7 @@
 
 
                   </select>
-                  <label for="desMotNotif">Motivo Notificaci√≥n* </label>
+                  <label for="desMotNotif">Motivo NotificaciÛn* </label>
 
                 </div></div>
                 <div class="col-sm-3"><div class="form-floating">
@@ -322,7 +322,7 @@
 
 
                   </select>
-                  <label for="receptor">Recepci√≥n* </label>
+                  <label for="receptor">RecepciÛn* </label>
 
                 </div></div>
                 <div class="col-sm-3"><div class="form-floating">
@@ -351,7 +351,7 @@
 
 
                   </select>
-                  <label for="situacion">Situaci√≥n* </label>
+                  <label for="situacion">SituaciÛn* </label>
                   <br>
 
 
@@ -385,14 +385,14 @@
 
                 <input class="form-control" id="direccion" name="direccion" type="text"
                   value="{{ edita.consultadni.dirPosta }}" placeholder=" ">
-                <label for="direccion">Direcci√≥n</label>
+                <label for="direccion">DirecciÛn</label>
               </div></div>
 
               <div class="row g-3">
                 <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
 
                   <input class="form-control" id="cp" name="cp" type="text" value="{{ edita.consultadni.codPosta }}" placeholder=" ">
-                  <label for="cp">C√≥digo Postal</label>
+                  <label for="cp">CÛdigo Postal</label>
                 </div></div>
                 <div *ngIf="edita.dniok" class="col-8 col-sm-4"><div class="form-floating">
 
@@ -413,7 +413,7 @@
                 <button *ngIf="!edita.modoVerNotificacion" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
                   role="button">Guardar</button>
                 <button *ngIf="edita.modoVerNotificacion" class="btn-iflow modal-footer__btn btn-iflow--secondary" type="button"
-                  (click)="edita.modoVerNotificacion = false">Editar Notificaci√≥n</button>
+                  (click)="edita.modoVerNotificacion = false">Editar NotificaciÛn</button>
               </div>
             </form>
 

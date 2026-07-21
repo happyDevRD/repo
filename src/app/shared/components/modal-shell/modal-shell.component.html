@@ -1,0 +1,31 @@
+<div
+  class="modal fade iflow-modal"
+  [id]="modalId"
+  tabindex="-1"
+  [attr.aria-labelledby]="resolvedTitleId"
+  aria-hidden="true"
+  [attr.data-bs-backdrop]="staticBackdrop ? 'static' : null"
+>
+  <div class="modal-dialog" [ngClass]="dialogClass">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 *ngIf="headingLevel === 'h4'" class="modal-title" [id]="resolvedTitleId">{{ title }}</h4>
+        <h5 *ngIf="headingLevel === 'h5'" class="modal-title" [id]="resolvedTitleId">{{ title }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          [attr.aria-label]="closeAriaLabel"
+          [attr.data-bs-dismiss]="dismissOnClose ? 'modal' : null"
+          (click)="handleCloseClick()"
+        ></button>
+      </div>
+      <div class="modal-body" [ngClass]="bodyClass">
+        <ng-content select="[modalBody]"></ng-content>
+        <ng-content></ng-content>
+      </div>
+      <div class="modal-footer" *ngIf="showFooter">
+        <ng-content select="[modalFooter]"></ng-content>
+      </div>
+    </div>
+  </div>
+</div>

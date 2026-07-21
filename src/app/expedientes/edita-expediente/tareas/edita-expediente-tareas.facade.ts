@@ -1,6 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TareaProcedimientoDTO } from '../../../core/models/tarea-procedimiento.dto';
 import { CrearTablonAnuncio, TareaTramiteExpedienteCrear, TareaTramiteExpedienteEditar } from '../../expedientes';
 import { NotificationService } from '../../../core/service/notification.service';
@@ -22,10 +24,12 @@ import {
   aplicarGridTareaProcedimiento,
   esSeleccionTareaProcedimientoVacia,
   limpiarSeleccionTareaProcedimiento,
+  normalizarPlantillaDefectoSeleccion,
   TareaProcedimientoSeleccionHost,
 } from './tareas-procedimiento.helper';
 import { refrescarSourceHistorico } from './historico.helper';
 import { configurarAccionTarea, ConfigurarAccionTareaHost } from './tareas-accion.helper';
+import { ListaTareaProcedi } from '../edita-expediente.models';
 
 export interface EditaExpedienteTareasGridHost {
   sourceTareasTramite: unknown;
@@ -53,8 +57,16 @@ export interface CrearTareaTramiteHost extends EditaExpedienteTareasHost {
   usuContrl: string | null;
   base64code?: string;
   name?: string;
+  veoAcciones: boolean;
+  disabledArchivoTareaTramite: boolean;
   borraDatosNuevaTarea(): void;
   onTareaCreada?(): void;
+}
+
+export interface ClickTareaProcedimientoHost {
+  veoAcciones: boolean;
+  disabledArchivoTareaTramite: boolean;
+  plantillaDefecto: string | null;
 }
 
 export interface TareaProcedimientoHost extends TareaProcedimientoSeleccionHost, ConfigurarAccionTareaHost {
@@ -67,11 +79,19 @@ export interface HistoricoGridHost {
 
 @Injectable()
 export class EditaExpedienteTareasFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly notificationService: NotificationService,
     private readonly modalManagerService: ModalManagerService,
+    private readonly http: HttpClient,
   ) {}
+
+  getListaTareas(idprocedi: string | null, fasetramite: string): Observable<ListaTareaProcedi[]> {
+    const url = `${environment.apiUrl}tareaProcedimiento/listar/${idprocedi}/${fasetramite}`;
+    return this.http.get(url).pipe(map((response) => response as ListaTareaProcedi[]));
+  }
 
   buildGridSource(idTramite: number, options?: TareaGridSourceOptions): Record<string, unknown> {
     return buildTareaGridSource(idTramite, options);
@@ -90,7 +110,9 @@ export class EditaExpedienteTareasFacade {
       return;
     }
 
-    this.expedientesService.getTareaTramiteExpedienteListar(idTramite).subscribe({
+    this.expedientesService.getTareaTramiteExpedienteListar(idTramite).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (list) => {
         const rows = list ?? [];
         if (host.tareatramiteexpedientelistar) {
@@ -125,7 +147,9 @@ export class EditaExpedienteTareasFacade {
 
     aplicarGridTareaProcedimiento(host, selectedValue as number | string);
 
-    this.expedientesService.getTramiteTarea(selectedValue as number).subscribe({
+    this.expedientesService.getTramiteTarea(selectedValue as number).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (data: TareaProcedimientoDTO) => {
         host.tareatramiteprocedimiento = data;
         host.veoAcciones = true;
@@ -143,21 +167,16 @@ export class EditaExpedienteTareasFacade {
 
   borrarTarea(host: EditaExpedienteTareasHost): void {
     if (!host.idTarea) {
-      Swal.fire({
-        icon: 'error',
+      this.notificationService.error({
         title: 'Error de Selección',
         text: 'No se ha seleccionado ninguna tarea para borrar. Por favor, haz clic en una tarea de la lista primero.',
       });
       return;
     }
 
-    Swal.fire({
+    this.notificationService.confirm({
       title: `¿Confirma eliminar la tarea ${host.numeroTareaTramite}?`,
       text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
@@ -165,7 +184,9 @@ export class EditaExpedienteTareasFacade {
         return;
       }
 
-      this.expedientesService.deleteTareaTramiteExpediente(host.idTarea).subscribe({
+      this.expedientesService.deleteTareaTramiteExpediente(host.idTarea).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: () => {
           this.notificationService.deleteSuccess('Tarea');
           this.refrescarGrid(host, host.idTramite);
@@ -180,12 +201,8 @@ export class EditaExpedienteTareasFacade {
   }
 
   finalizarTarea(host: EditaExpedienteTareasHost): void {
-    Swal.fire({
+    this.notificationService.confirm({
       title: `¿Confirma Finalizar la tarea ${host.numeroTareaTramite},   ${host.descripTareaTramite} ?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
@@ -193,17 +210,18 @@ export class EditaExpedienteTareasFacade {
         return;
       }
 
-      this.expedientesService.finalizarTarea(host.idTarea).subscribe({
+      this.expedientesService.finalizarTarea(host.idTarea).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: () => {
-          Swal.fire(
-            'Finalizada',
-            `La tarea ${host.numeroTareaTramite} fue finalizada.`,
-            'success',
-          );
+          this.notificationService.success({
+            title: 'Finalizada',
+            text: `La tarea ${host.numeroTareaTramite} fue finalizada.`,
+          });
           this.refrescarGridAdapter(host);
         },
         error: (err: HttpErrorResponse) => {
-          Swal.fire('No Finalizada', err.error?.message || '', 'warning');
+          this.notificationService.warning({ title: 'No Finalizada', text: err.error?.message || '' });
           this.refrescarGrid(host, host.idTramite);
         },
       });
@@ -213,6 +231,7 @@ export class EditaExpedienteTareasFacade {
   editarTarea(host: EditaExpedienteTareasHost): void {
     this.expedientesService
       .EditarTareaTramiteExpedientes(host.tareatramiteexpedienteeditar, host.idTarea)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.refrescarGrid(host, host.idTramite);
@@ -245,6 +264,7 @@ export class EditaExpedienteTareasFacade {
 
     this.expedientesService
       .crearTareaTramiteExpedientes(host.tareatramiteexpedientecrear, plantillaDefecto)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.notificationService.saveSuccess('Tarea');
@@ -269,41 +289,54 @@ export class EditaExpedienteTareasFacade {
   crearTablonAnuncio(host: EditaExpedienteTareasHost): void {
     const form = host.creartablonanuncio;
     if (!form.tipAnunc || !form.desAnunc || !form.fecDesde || !form.fecHasta) {
-      Swal.fire('Debe rellenar todos los campos obligatorios.');
+      this.notificationService.warning('Debe rellenar todos los campos obligatorios.');
       return;
     }
 
-    this.expedientesService.creaTablonAnuncio(form, host.idTarea).subscribe({
+    this.expedientesService.creaTablonAnuncio(form, host.idTarea).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         host.sourceTareasTramite = createTareaGridAdapter(host.idTramite);
-        Swal.fire('Enviado Tablón de anuncio', '', 'success');
+        this.notificationService.success({ title: 'Enviado Tablón de anuncio' });
         host.creartablonanuncio = new CrearTablonAnuncio();
       },
       error: () => {
-        Swal.fire('No se pudo crear el Tablón de anuncios', '', 'warning');
+        this.notificationService.warning({ title: 'No se pudo crear el Tablón de anuncios' });
       },
     });
   }
 
   conviertePDF(host: EditaExpedienteTareasHost): void {
     host.spinnervisible = false;
-    this.expedientesService.conviertopdf(host.idTarea).subscribe({
+    this.expedientesService.conviertopdf(host.idTarea).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (data) => {
         if (data != null) {
-          Swal.fire('Se ha realizado la conversión', '', 'success');
+          this.notificationService.success({ title: 'Se ha realizado la conversión' });
         } else {
-          Swal.fire('la conversión a pdf no fue posible', '', 'warning');
+          this.notificationService.warning({ title: 'la conversión a pdf no fue posible' });
         }
       },
       error: (error: HttpErrorResponse) => {
         if (error.error?.text === 'OK') {
           host.spinnervisible = true;
-          Swal.fire('Conversión realizada', '', 'success');
+          this.notificationService.success({ title: 'Conversión realizada' });
           this.refrescarGridAdapter(host);
         } else {
-          Swal.fire(error.error?.message, '', 'warning');
+          this.notificationService.warning({ title: error.error?.message });
         }
       },
     });
+  }
+
+  clickTareaProcedimiento(
+    host: ClickTareaProcedimientoHost,
+    event: { args: { row: { bounddata: { plantillaDefecto: unknown } } } },
+  ): void {
+    host.veoAcciones = true;
+    host.disabledArchivoTareaTramite = true;
+    host.plantillaDefecto = normalizarPlantillaDefectoSeleccion(event.args.row.bounddata.plantillaDefecto);
   }
 }

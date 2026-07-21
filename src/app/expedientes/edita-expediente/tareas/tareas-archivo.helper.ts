@@ -1,5 +1,5 @@
-import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
+import { NotificationService } from '../../../core/service/notification.service';
 
 export interface ArchivoTareaHost {
   numeroArchivo: unknown;
@@ -9,11 +9,11 @@ export interface ArchivoTareaHost {
   idTarea: number;
 }
 
-export function abrirArchivoTarea(host: ArchivoTareaHost): void {
+export function abrirArchivoTarea(host: ArchivoTareaHost, notificationService: NotificationService): void {
   host.spinnervisiblefirma = false;
 
   if (!host.numeroArchivo) {
-    Swal.fire('Esta tarea No tiene ningún documento asociado');
+    notificationService.warning('Esta tarea No tiene ningún documento asociado');
     host.spinnervisiblefirma = true;
     return;
   }
@@ -22,12 +22,12 @@ export function abrirArchivoTarea(host: ArchivoTareaHost): void {
   host.spinnervisiblefirma = true;
 }
 
-export function abrirInformeFirma(host: ArchivoTareaHost): string {
+export function abrirInformeFirma(host: ArchivoTareaHost, notificationService: NotificationService): string {
   const url = `${environment.apiUrl}archivo/obtenerInformeFirma/${host.usuContrl}/${host.idTarea}`;
   if (url) {
     window.open(url, '_blank');
   } else {
-    Swal.fire('No se pudo descargar el fichero firmado.');
+    notificationService.warning('No se pudo descargar el fichero firmado.');
   }
   return url;
 }

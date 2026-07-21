@@ -7,7 +7,6 @@ import { PenFirmaComponent } from './pen-firma.component';
 import { MenuInicioComponent } from './menu-inicio.component';
 import { DashboardGridModalComponent } from './components/dashboard-grid-modal/dashboard-grid-modal.component';
 import { DashboardModalsHostComponent } from './components/dashboard-modals-host/dashboard-modals-host.component';
-import { FiltramitadorPipe } from './pipe/filtramitador.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,6 @@ import { FiltramitadorPipe } from './pipe/filtramitador.pipe';
     MenuInicioComponent,
     DashboardGridModalComponent,
     DashboardModalsHostComponent,
-    FiltramitadorPipe,
   ],
   imports: [
     SharedModule,

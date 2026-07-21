@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CrearTramiteExp, EditarTramiteExp, ListarTramites } from '../../expedientes';
 import { NotificationService } from '../../../core/service/notification.service';
 import { ModalManagerService } from '../../../core/service/modal-manager.service';
@@ -26,6 +26,8 @@ export interface EditaExpedienteTramitesHost extends EditaExpedienteTramitesGrid
 
 @Injectable()
 export class EditaExpedienteTramitesFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly notificationService: NotificationService,
@@ -36,12 +38,13 @@ export class EditaExpedienteTramitesFacade {
     idExpediente: number,
     onListar: (tramites: ListarTramites[]) => void,
   ): Record<string, unknown> {
-    this.expedientesService.getTramitesListar(idExpediente).subscribe({
+    this.expedientesService.getTramitesListar(idExpediente).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (listartramites) => onListar(listartramites),
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
-          Swal.fire({
-            icon: 'error',
+          this.notificationService.error({
             title: 'Oops...',
             text: 'Parece que no hay conexión con la Base de Datos',
             footer: 'Inténtalo mas tarde ',
@@ -79,7 +82,9 @@ export class EditaExpedienteTramitesFacade {
 
     host.enviandoTramite = true;
 
-    this.expedientesService.crearTramiteExp(host.creartramiteexp).subscribe({
+    this.expedientesService.crearTramiteExp(host.creartramiteexp).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         host.enviandoTramite = false;
         this.notificationService.saveSuccess('Trámite');
@@ -106,7 +111,9 @@ export class EditaExpedienteTramitesFacade {
   }
 
   editarTramite(host: EditaExpedienteTramitesHost): void {
-    this.expedientesService.EditarTramiteExpedientes(host.editartramiteexp, host.idTramite).subscribe({
+    this.expedientesService.EditarTramiteExpedientes(host.editartramiteexp, host.idTramite).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         this.notificationService.saveSuccess('Trámite');
         this.modalManagerService.closeModal('editarTramiteModal');
@@ -127,28 +134,26 @@ export class EditaExpedienteTramitesFacade {
   }
 
   borrarTramite(host: EditaExpedienteTramitesHost): void {
-    Swal.fire({
+    this.notificationService.confirm({
       title: '¿ Esta seguro ?',
       text: 'Eliminar Trámite',
-      icon: 'warning',
-      showCancelButton: true,
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Aceptar',
     }).then((result) => {
       if (!result.isConfirmed) {
         return;
       }
 
-      this.expedientesService.deleteTramite(host.idTramite).subscribe({
+      this.expedientesService.deleteTramite(host.idTramite).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: () => {
           this.refrescarGrid(host);
           this.notificationService.deleteSuccess('Trámite');
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 403) {
-            Swal.fire({
+            this.notificationService.custom({
               title: error.error?.message,
               showClass: { popup: 'animate__animated animate__fadeInDown' },
               hideClass: { popup: 'animate__animated animate__fadeOutUp' },

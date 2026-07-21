@@ -40,19 +40,19 @@ import {
   VerMetadatos,
   VerTareaTramiteExpporUsuario
 } from './expedientes';
-import {catchError, map, Observable, of, throwError, tap} from 'rxjs';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from '@angular/common/http';
-import Swal from 'sweetalert2';
+import {catchError, map, Observable, of, throwError} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from 'src/environments/environment';
 import {ModalManagerService} from '../core/service/modal-manager.service';
 import {UserSessionService} from '../core/service/user-session.service';
+import {NotificationService} from '../core/service/notification.service';
 import {TareaProcedimientoDTO} from "../core/models/tarea-procedimiento.dto";
 import {PersonaEntidad} from "../core/models/personaentidad.model";
 import {TareaTramiteExpedienteVer} from "../core/models/tareaTramite/tarea-tramite-expediente-ver.dto";
 import {TipoObjetoTributarioDto} from "../core/models/tipo-objeto-tributario.dto";
 import {ObjetoTributarioDto} from "../core/models/objeto-tributario.dto";
-import {InteresadoListarDto} from "../core/dto/interesado.dto";
+import {InteresadoListarDto} from "../core/models/interesado.dto";
 
 
 @Injectable({
@@ -119,7 +119,8 @@ export class ExpedientesService {
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private modalManager: ModalManagerService,
-    private session: UserSessionService
+    private session: UserSessionService,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -574,16 +575,8 @@ export class ExpedientesService {
   }
 
   crearTareaTramiteExpedientes(tareatramiteexpedientecrear: TareaTramiteExpedienteCrear, plantillaDefecto: string | null): Observable<any> {
+    const plantillaParam = plantillaDefecto || 'null'
 
-    console.log('=== CREAR TAREA TRAMITE EXPEDIENTES ===');
-    const plantillaParam = plantillaDefecto || 'null';
-    console.log('URL:', this.urlTareaTramiteExpedienteCrear + '/' + plantillaParam);
-    console.log('Plantilla defecto:', plantillaDefecto);
-    console.log('Usuario control:', this.usuContrl);
-    console.log('Objeto original recibido:', tareatramiteexpedientecrear);
-    console.log(`ARCHIVO original: ${tareatramiteexpedientecrear.archivo}`);
-    
-    // Crear un objeto con los datos necesarios, asegurando que no haya campos undefined
     const datosTarea = {
       descripcion: tareatramiteexpedientecrear.descripcion || '',
       fecFin: tareatramiteexpedientecrear.fecFin || null,
@@ -603,42 +596,16 @@ export class ExpedientesService {
       docAport: tareatramiteexpedientecrear.documAportada || null,
       tipDocEni: tareatramiteexpedientecrear.tipoDocumEni || null,
       documentacion: tareatramiteexpedientecrear.documentacion || null
-    };
+    }
 
-    console.log('DATOS TAREA PROCESADOS:', datosTarea);
-    console.log('Headers:', this.httpHeaders);
-    console.log('=== FIN CREAR TAREA ===');
-
-    return this.http.post<TareaTramiteExpedienteCrear>(this.urlTareaTramiteExpedienteCrear + '/' + plantillaParam, datosTarea, {headers: this.httpHeaders})
-      .pipe(
-        tap(response => {
-          console.log('=== RESPUESTA CREAR TAREA ===');
-          console.log('Respuesta exitosa:', response);
-          console.log('Tipo de respuesta:', typeof response);
-          console.log('=== FIN RESPUESTA ===');
-        }),
-        catchError(error => {
-          console.log('=== ERROR CREAR TAREA ===');
-          console.log('Error completo:', error);
-          console.log('Status:', error.status);
-          console.log('Status text:', error.statusText);
-          console.log('Error message:', error.message);
-          console.log('Error body:', error.error);
-          console.log('=== FIN ERROR ===');
-          throw error;
-        })
-      );
+    return this.http.post<TareaTramiteExpedienteCrear>(
+      this.urlTareaTramiteExpedienteCrear + '/' + plantillaParam,
+      datosTarea,
+      {headers: this.httpHeaders}
+    )
   }
 
   EditarTareaTramiteExpedientes(tareatramiteexpedienteeditar: TareaTramiteExpedienteEditar, id: number): Observable<any> {
-
-    console.log('=== EDITAR TAREA TRAMITE EXPEDIENTES ===');
-    console.log('URL:', `${this.urlTareaTramiteExpedienteEditar}/${id}`);
-    console.log('ID de la tarea:', id);
-    console.log('Usuario control:', this.usuContrl);
-    console.log('Objeto original recibido:', tareatramiteexpedienteeditar);
-
-    // Crear un objeto con los datos necesarios, asegurando que no haya campos undefined
     const datosTarea = {
       descripcion: tareatramiteexpedienteeditar.descripcion || '',
       fecFin: tareatramiteexpedienteeditar.fecFin || null,
@@ -655,31 +622,13 @@ export class ExpedientesService {
       tipDocEni: tareatramiteexpedienteeditar.tipoDocumEni || null,
       documentacion: tareatramiteexpedienteeditar.documentacion || null,
       fecInicio: tareatramiteexpedienteeditar.fecInicio || new Date()
-    };
+    }
 
-    console.log('DATOS TAREA PROCESADOS:', datosTarea);
-    console.log('Headers:', this.httpHeaders);
-    console.log('=== FIN EDITAR TAREA ===');
-
-    return this.http.put<TareaTramiteExpedienteEditar>(`${this.urlTareaTramiteExpedienteEditar}/${id}`, datosTarea, {headers: this.httpHeaders})
-      .pipe(
-        tap(response => {
-          console.log('=== RESPUESTA EDITAR TAREA ===');
-          console.log('Respuesta exitosa:', response);
-          console.log('Tipo de respuesta:', typeof response);
-          console.log('=== FIN RESPUESTA ===');
-        }),
-        catchError(error => {
-          console.log('=== ERROR EDITAR TAREA ===');
-          console.log('Error completo:', error);
-          console.log('Status:', error.status);
-          console.log('Status text:', error.statusText);
-          console.log('Error message:', error.message);
-          console.log('Error body:', error.error);
-          console.log('=== FIN ERROR ===');
-          throw error;
-        })
-      );
+    return this.http.put<TareaTramiteExpedienteEditar>(
+      `${this.urlTareaTramiteExpedienteEditar}/${id}`,
+      datosTarea,
+      {headers: this.httpHeaders}
+    )
   }
 
   EditarTramiteExpedientes(tramiteexpedienteeditar: EditarTramiteExp, id: number): Observable<any> {
@@ -799,34 +748,24 @@ export class ExpedientesService {
   }
 
   cancelarExpediente(id: number, fcancela: Date): Observable<EditExpediente> {
-    let varios = {
+    const varios = {
       "estado": "CANCELADO",
       "fecCancelacion": fcancela
     }
-    let keys = JSON.stringify(varios);
-    let respuestaHttp = HttpStatusCode.AlreadyReported;
-    let basura = HttpErrorResponse.name;
-    let urlEdita: string = `${environment.apiUrl}expediente/editar/${id}`;
-    let urlvacio: string = `${environment.apiUrl}solic/`
-    console.log(`DATOS KEY cancelando Expediente!!! : ${keys}`)
-    return this.http.put<EditExpediente>(urlEdita, keys, {headers: this.httpHeaders});
+    const keys = JSON.stringify(varios)
+    const urlEdita: string = `${environment.apiUrl}expediente/editar/${id}`
+    return this.http.put<EditExpediente>(urlEdita, keys, {headers: this.httpHeaders})
   }
 
   cerrarExpediente(id: number, fechacierre: any, serieDocu): Observable<EditExpediente> {
-    let varios = {
+    const varios = {
       "estado": "CERRADO",
       "fecFin": fechacierre,
       "serieDocumental": serieDocu
     }
-    let keys = JSON.stringify(varios);
-    let respuestaHttp = HttpStatusCode.AlreadyReported;
-    let basura = HttpErrorResponse.name;
-    let urlEdita: string = `${environment.apiUrl}expediente/cerrar/${id}`;
-    let urlvacio: string = `${environment.apiUrl}solic/`
-    console.log(`DATOS KEY!!! : ${keys}`)
-
-    return this.http.put<EditExpediente>(urlEdita, keys, {headers: this.httpHeaders});
-
+    const keys = JSON.stringify(varios)
+    const urlEdita: string = `${environment.apiUrl}expediente/cerrar/${id}`
+    return this.http.put<EditExpediente>(urlEdita, keys, {headers: this.httpHeaders})
   }
 
   getTramiteExpListar(idexpe: number): Observable<TramiteExpListar[]> {
@@ -851,7 +790,7 @@ export class ExpedientesService {
     }
     let keys = JSON.stringify(varios);
     console.log(`DATOS RECIBIDOS DESDE SERVICE: ${keys}`);
-    Swal.fire('Nuevo Trámite de Expediente  ', ` creado con éxito`, 'success')
+    this.notificationService.success({ title: 'Nuevo Trámite de Expediente  ', text: ` creado con éxito` })
     return this.http.post<CrearTramiteExp>(this.urlexpeditramitecrear, keys, {headers: this.httpHeaders});
 
   }

@@ -12,6 +12,7 @@ import {
   Procedimiento,
   ProcediPermisos,
   ProcediPermisosListar,
+  ProcesoFirmadoListar,
   UsuariosListar
 } from './procedimiento';
 import {map, Observable, of, tap, catchError, throwError} from 'rxjs';
@@ -126,6 +127,11 @@ export class ProcedimientoService {
     return this.http.get(urlListatareas).pipe(
       map(response => response as ListaTareaProcedi[])
     );
+  }
+
+  getFirma(plantilla: string): Observable<ProcesoFirmadoListar[]> {
+    const url = `${environment.apiUrl}procesoFirmado/listar/${plantilla}`;
+    return this.http.get(url).pipe(map(response => response as ProcesoFirmadoListar[]));
   }
 
   create(crearprocedi: CrearProcedi): Observable<CrearProcedi> {

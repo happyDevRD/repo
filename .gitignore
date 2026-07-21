@@ -52,6 +52,7 @@ green.key
 .env
 .env.*
 !.env.example
+src/environments/environment.*.local.ts
 
 # Local one-off migration scripts (not part of the app)
 /scripts/

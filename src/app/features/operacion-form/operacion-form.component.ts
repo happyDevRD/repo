@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import Swal from 'sweetalert2';
 import { ContabilidadService } from '../../core/service/contabilidad/contabilidad.service';
-import { OperacionService } from '../../core/service/Operacion/operacion.service';
+import { OperacionService } from '../../core/service/operacion/operacion.service';
 import { ContabilidadDTO } from '../../core/models/contabilidad/contabilidad.dto';
 import { Operacion } from '../../core/models/operacion.model';
 import { Subject, of, combineLatest } from 'rxjs';
 import { takeUntil, switchMap, catchError, startWith } from 'rxjs/operators';
 import { UserSessionService } from '../../core/service/user-session.service';
 import { reconcileModalDomState } from '../../core/service/modal-dom.util';
+import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
   selector: 'app-operacion-form',
@@ -89,7 +89,8 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private contabilidadService: ContabilidadService,
     private operacionService: OperacionService,
-    private session: UserSessionService
+    private session: UserSessionService,
+    private notificationService: NotificationService
   ) {
     this.operacionForm = this.fb.group({
       idConta: ['', Validators.required],
@@ -230,8 +231,7 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
             } else if (error.status === 400) {
               errorMessage = 'Error en la solicitud. Por favor, revise los datos.';
             }
-            Swal.fire({
-              icon: 'error',
+            this.notificationService.error({
               title: 'Error al calcular Código Operación',
               text: errorMessage,
             }).then(r => r);
@@ -241,16 +241,14 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
         .subscribe((idCodOpera) => {
           this.idCodOpera = idCodOpera;
           if (idCodOpera) {
-            Swal.fire({
-              icon: 'success',
+            this.notificationService.success({
               title: 'Código de Operación Obtenido',
               text: `El código de operación es: ${idCodOpera}`,
             });
           }
         });
     } else {
-      Swal.fire({
-        icon: 'warning',
+      this.notificationService.warning({
         title: 'Datos incompletos',
         text: 'Por favor, rellena todos los campos del código de operación para validarlo.',
       }).then(r => r);
@@ -271,8 +269,7 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
     const signo = this.operacionForm.get('signo')?.value;
 
     if (!idConta || !indArea || !indAgrup || !claOpera || !signo) {
-      Swal.fire({
-        icon: 'warning',
+      this.notificationService.warning({
         title: 'Datos incompletos',
         text:
           'Por favor, rellena todos los campos necesarios para calcular el Código de Operación.',
@@ -288,8 +285,7 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((idCodOpera) => {
           if (!idCodOpera) {
-            Swal.fire({
-              icon: 'error',
+            this.notificationService.error({
               title: 'Error',
               text: 'No se pudo calcular el Código de Operación. Verifica los datos.',
             }).then(r => r);
@@ -331,8 +327,7 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
         }),
         catchError((error) => {
           console.error('Error al calcular ID Código Operación o crear la operación:', error);
-          Swal.fire({
-            icon: 'error',
+          this.notificationService.error({
             title: 'Error',
             text:
               'Ha ocurrido un error al procesar la operación. Por favor, inténtalo de nuevo.',
@@ -342,8 +337,7 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
       )
       .subscribe((result) => {
         if (result) {
-          Swal.fire({
-            icon: 'success',
+          this.notificationService.success({
             title: 'Operación Creada',
             text: 'La operación se ha creado correctamente.',
           }).then(r => r);

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from '@angular/common/http';
-import Swal from 'sweetalert2';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {map, Observable} from 'rxjs';
 import {
@@ -18,6 +17,7 @@ import {
 } from './solicitudes';
 import {environment} from 'src/environments/environment';
 import {UserSessionService} from '../core/service/user-session.service';
+import {NotificationService} from '../core/service/notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +52,8 @@ export class SolicitudesService {
     public http: HttpClient,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    private session: UserSessionService
+    private session: UserSessionService,
+    private notificationService: NotificationService
   ) {}
 
   get urlAsignarA(): string {
@@ -103,16 +104,9 @@ export class SolicitudesService {
       "idExpediente": id,
       "instructor": instructor
     }
-    let keys = JSON.stringify(varios);
-    let respuestaHttp = HttpStatusCode.AlreadyReported;
-    let basura = HttpErrorResponse.name;
-    let urlEdita: string = `${environment.apiUrl}expediente/editar/${id}`;
-    let urlvacio: string = `${environment.apiUrl}solic/`
-
-    console.log(`DATOS del id SOLICITUD!!! : ${id}`);
-    console.log(`DATOS INSTRUCTOR!!! : ${instructor}`)
-    console.log(`DATOS KEY!!! : ${keys}`)
-    return this.http.put<EditExpediente>(urlEdita, keys, {headers: this.httpHeaders});
+    const keys = JSON.stringify(varios)
+    const urlEdita: string = `${environment.apiUrl}expediente/editar/${id}`
+    return this.http.put<EditExpediente>(urlEdita, keys, {headers: this.httpHeaders})
   }
 
   getDocumentosListar(): Observable<DocumentosListar[]> {
@@ -213,7 +207,7 @@ export class SolicitudesService {
     }
     let keys = JSON.stringify(varios);
     console.log(`DATOS ENVIADOS NUEVO EXPEDIENTE : ${keys}`);
-    Swal.fire('Nuevo Expediente  ', `Expediente ${id} creado con éxito`, 'success');
+    this.notificationService.success({ title: 'Nuevo Expediente  ', text: `Expediente ${id} creado con éxito` });
     return this.http.post(this.urlexpedientecrear, keys, {headers: this.httpHeaders});
 
   }
@@ -260,32 +254,25 @@ export class SolicitudesService {
 
 
     }
-    let keys = JSON.stringify(varios);
-    let respuestaHttp = HttpStatusCode.AlreadyReported;
-    let basura = HttpErrorResponse.name;
-    let urlEdita: string = `${environment.apiUrl}solicitud/editar/${id}`;
-    console.log(`DATOS de URL !!! : ${urlEdita}`);
-    console.log(`DATOS KEY!!! : ${keys}`)
+    const keys = JSON.stringify(varios)
+    const urlEdita: string = `${environment.apiUrl}solicitud/editar/${id}`
 
-    return this.http.put<EditarSolicitud>(urlEdita, keys, {headers: this.httpHeaders});
+    return this.http.put<EditarSolicitud>(urlEdita, keys, {headers: this.httpHeaders})
 
   }
 
   AsignarA(editasolicitud: EditarSolicitud, id: number): Observable<EditarSolicitud> {
-    let idprocedi: number = id;
-    let result = JSON.stringify(editasolicitud);
+    let idprocedi: number = id
+    let result = JSON.stringify(editasolicitud)
 
 
     let varios = {
       "usuario": editasolicitud.usuario,
     }
-    let keys = JSON.stringify(varios);
-    let respuestaHttp = HttpStatusCode.AlreadyReported;
-    let basura = HttpErrorResponse.name;
-    let urlEdita: string = `${environment.apiUrl}solicitud/editar/${id}`;
+    const keysAsignar = JSON.stringify(varios)
+    const urlEditaAsignar: string = `${environment.apiUrl}solicitud/editar/${id}`
 
-    console.log(`DATOS KEY!!! : ${keys}`)
-    return this.http.put<EditarSolicitud>(urlEdita, keys, {headers: this.httpHeaders});
+    return this.http.put<EditarSolicitud>(urlEditaAsignar, keysAsignar, {headers: this.httpHeaders})
   }
 
 

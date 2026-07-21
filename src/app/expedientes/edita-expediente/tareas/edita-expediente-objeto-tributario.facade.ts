@@ -1,10 +1,10 @@
-import { ChangeDetectorRef } from '@angular/core';
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import Swal from 'sweetalert2';
 import { ObjetoTributarioDto } from '../../../core/models/objeto-tributario.dto';
 import { ExpedientesService } from '../../expedientes.service';
+import { NotificationService } from '../../../core/service/notification.service';
 
 export interface ObjetoTributarioBajaHost {
   objetotributario: ObjetoTributarioDto;
@@ -13,19 +13,22 @@ export interface ObjetoTributarioBajaHost {
 
 @Injectable()
 export class EditaExpedienteObjetoTributarioFacade {
-  constructor(private readonly expedientesService: ExpedientesService) {}
+  private readonly destroyRef = inject(DestroyRef);
+
+  constructor(
+    private readonly expedientesService: ExpedientesService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   darDeBajaObjeto(host: ObjetoTributarioBajaHost): void {
     if (!host.objetotributario) {
-      Swal.fire('Error', 'No hay objeto tributario seleccionado', 'error');
+      this.notificationService.error({ title: 'Error', text: 'No hay objeto tributario seleccionado' });
       return;
     }
 
-    Swal.fire({
+    this.notificationService.confirm({
       title: 'Confirmar Baja',
       text: '¿Estás seguro de dar de baja este objeto tributario?',
-      icon: 'warning',
-      showCancelButton: true,
       confirmButtonText: 'Sí, dar de baja',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
@@ -44,15 +47,18 @@ export class EditaExpedienteObjetoTributarioFacade {
 
       this.expedientesService
         .putBajaObjetoTributario(dto)
-        .pipe(switchMap(() => this.recargarObjetoTributario(host)))
+        .pipe(
+          switchMap(() => this.recargarObjetoTributario(host)),
+          takeUntilDestroyed(this.destroyRef),
+        )
         .subscribe({
           next: (updated) => {
             host.objetotributario = updated;
             host.cdr.detectChanges();
-            Swal.fire('Éxito', 'Objeto dado de baja y recargado', 'success');
+            this.notificationService.success({ title: 'Éxito', text: 'Objeto dado de baja y recargado' });
           },
           error: (err) => {
-            Swal.fire('Error', err.error?.message || 'Error al procesar baja', 'error');
+            this.notificationService.error({ title: 'Error', text: err.error?.message || 'Error al procesar baja' });
             console.error(err);
           },
         });

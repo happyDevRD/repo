@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PersonaEntidad } from '../../core/models/personaentidad.model';
 import { MUNICIO, PROVIN } from '../../core/constants/datos';
-import Swal from 'sweetalert2';
 import { ExpedientesService } from '../../expedientes/expedientes.service';
+import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
   selector: 'app-modificar-datos-persona',
@@ -17,7 +17,10 @@ export class ModificarDatosPersonaComponent implements OnInit {
 
   public municipioFiltro: any[] = [];  // Lista filtrada de municipios para la provincia seleccionada.
 
-  constructor(private expedientesService: ExpedientesService) {}
+  constructor(
+    private expedientesService: ExpedientesService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
     if (this.persona && this.persona.codProvi) {
@@ -70,7 +73,7 @@ export class ModificarDatosPersonaComponent implements OnInit {
 
   onActualizarDatos(): void {
     if (!this.persona.nombre || !this.persona.apellido1) {
-      Swal.fire('Debe completar los campos obligatorios.').then(r => r);
+      this.notificationService.warning('Debe completar los campos obligatorios.').then(r => r);
       return;
     }
 
@@ -87,12 +90,12 @@ export class ModificarDatosPersonaComponent implements OnInit {
 
     this.expedientesService.modificaPersonaEntidad(payload as any).subscribe({
       next: (respuesta) => {
-        Swal.fire('Datos Modificados', '', 'success').then(r => r);
+        this.notificationService.success({ title: 'Datos Modificados' }).then(r => r);
         this.persona = { ...respuesta };
         this.filterMunicipios();
       },
       error: (err) => {
-        Swal.fire(err.error.message || 'Error al modificar datos.', '', 'warning').then(r => r);
+        this.notificationService.warning({ title: err.error.message || 'Error al modificar datos.' }).then(r => r);
       }
     });
   }

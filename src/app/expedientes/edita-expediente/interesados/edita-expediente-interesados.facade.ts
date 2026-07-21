@@ -1,21 +1,26 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { CrearInteresado, ConsultaDni } from '../../expedientes';
+import { InteresadoListarDto } from '../../../core/models/interesado.dto';
 import { NotificationService } from '../../../core/service/notification.service';
 import { ExpedientesService } from '../../expedientes.service';
 
 export interface EditaExpedienteInteresadosHost {
   idExpediente: number;
   idInteresado: number;
+  verborrarinteresado: boolean;
   crearinteresado: CrearInteresado;
   consultadni: ConsultaDni;
+  listarinteresadosdto: InteresadoListarDto[];
   recargarpagina(): void;
 }
 
 @Injectable()
 export class EditaExpedienteInteresadosFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly notificationService: NotificationService,
@@ -27,21 +32,21 @@ export class EditaExpedienteInteresadosFacade {
     host.crearinteresado.idPerso = host.consultadni.idPerso;
     host.crearinteresado.idexpediente = host.idExpediente;
 
-    this.expedientesService.crearInteresado(host.crearinteresado).subscribe({
+    this.expedientesService.crearInteresado(host.crearinteresado).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => this.router.navigate([`/editaexpediente/${host.idExpediente}`]),
       error: (error: HttpErrorResponse) => {
         if (error.status !== 500) {
-          Swal.fire({
+          this.notificationService.success({
             position: 'center',
-            icon: 'success',
             title: 'Se a creado el interesado con exito!!!',
             showConfirmButton: false,
             timer: 1500,
           });
         } else {
-          Swal.fire({
+          this.notificationService.warning({
             position: 'center',
-            icon: 'warning',
             title: 'No se pudo crear el nuevo interesado',
             showConfirmButton: false,
             timer: 2500,
@@ -54,13 +59,9 @@ export class EditaExpedienteInteresadosFacade {
   }
 
   borrarInteresado(host: EditaExpedienteInteresadosHost): void {
-    Swal.fire({
+    this.notificationService.confirm({
       title: '¿ Esta seguro ?',
       text: 'Eliminar interesado',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
@@ -68,14 +69,16 @@ export class EditaExpedienteInteresadosFacade {
         return;
       }
 
-      this.expedientesService.deleteInteresado(host.idInteresado).subscribe({
+      this.expedientesService.deleteInteresado(host.idInteresado).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: () => {
           this.notificationService.deleteSuccess('Interesado');
           setTimeout(host.recargarpagina, 1500);
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 403) {
-            Swal.fire({
+            this.notificationService.custom({
               title: 'No se ha podido borrar el elemento. Existen elementos dependientes asociados ',
               showClass: { popup: 'animate__animated animate__fadeInDown' },
               hideClass: { popup: 'animate__animated animate__fadeOutUp' },
@@ -86,5 +89,24 @@ export class EditaExpedienteInteresadosFacade {
         },
       });
     });
+  }
+
+  listarInteresados(host: EditaExpedienteInteresadosHost, idexp: number): void {
+    this.expedientesService.getInteresadoListarDto(idexp).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (listarInteresados) => {
+        host.listarinteresadosdto = listarInteresados;
+      },
+      error: (error) => {
+        console.error('Error al obtener interesados:', error);
+        host.listarinteresadosdto = [];
+      },
+    });
+  }
+
+  seleccionarInteresado(host: EditaExpedienteInteresadosHost, idInteresado: number): void {
+    host.verborrarinteresado = true;
+    host.idInteresado = idInteresado;
   }
 }

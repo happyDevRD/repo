@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { NavComponent } from '../Nav/nav.component';
+import { NavComponent } from '../nav/nav.component';
 import { HeadersComponent } from '../headers/headers.component';
 import { FooterComponent } from '../footer/footer.component';
 import { AppShellComponent } from '../layout/app-shell.component';

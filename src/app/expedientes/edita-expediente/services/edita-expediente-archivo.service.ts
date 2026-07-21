@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
-import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
+import { NotificationService } from '../../../core/service/notification.service';
 
 export interface SubirArchivoParams {
   base64code: string;
@@ -34,8 +35,12 @@ export interface ArchivoUploadHost extends SubirArchivoHost {
 @Injectable()
 export class EditaExpedienteArchivoService {
   private readonly httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   uploadFile(params: SubirArchivoParams): Observable<number> {
     const url = `${environment.apiUrl}archivo/carga`;
@@ -64,15 +69,16 @@ export class EditaExpedienteArchivoService {
         user: host.user,
         ejercicioExpediente: host.verExpediente?.ejercicio,
         numeroExpediente: host.verExpediente?.numero,
-      }).subscribe({
+      }).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: (response) => {
           host.identificadorFicheroSubido = response;
           host.tareatramiteexpedienteeditar.archivo = response;
           host.tareatramiteexpedientecrear.archivo = response;
           host.archivoSubidaEnProgreso = false;
 
-          Swal.fire({
-            icon: 'success',
+          this.notificationService.success({
             title: 'Archivo subido',
             text: `El archivo "${host.name}" se ha subido correctamente.`,
           });
@@ -90,14 +96,13 @@ export class EditaExpedienteArchivoService {
           } else if (error.status === 400) {
             errorMessage = 'Formato de archivo no válido';
           }
-          Swal.fire({ icon: 'error', title: 'Error al subir archivo', text: errorMessage });
+          this.notificationService.error({ title: 'Error al subir archivo', text: errorMessage });
           callback?.();
         },
       });
     } catch {
       host.archivoSubidaEnProgreso = false;
-      Swal.fire({
-        icon: 'error',
+      this.notificationService.error({
         title: 'Error inesperado',
         text: 'Ocurrió un error inesperado al procesar el archivo',
       });
@@ -113,7 +118,9 @@ export class EditaExpedienteArchivoService {
     }
 
     const name = file.name;
-    this.leerArchivoComoBase64(file).subscribe({
+    this.leerArchivoComoBase64(file).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (dataUrl) => {
         host.name = name;
         host.id = id;

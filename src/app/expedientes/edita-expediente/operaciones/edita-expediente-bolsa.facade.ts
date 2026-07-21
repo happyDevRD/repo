@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { InsertaBolsaCrear, VerExpediente } from '../../expedientes';
 import { NotificationService } from '../../../core/service/notification.service';
 import { ExpedientesService } from '../../expedientes.service';
@@ -15,16 +16,51 @@ export interface EditaExpedienteBolsaHost {
   verTareasdelTramite: boolean;
   verInsertarBolsa: boolean;
   idTramite: number;
-  limpiaInsertatBolsa(): void;
+  sourceTareasTramite: unknown;
   refrescoSourceTareasTramite(id: number): void;
+}
+
+export interface VerBolsaCrearHost {
+  verTareasdelTramite: boolean;
+  verformnuevatarea: boolean;
+  verlistadotramitadores: boolean;
+  nuevotramitador: boolean;
+  verlistadotareas: boolean;
+  verEditartareatramite: boolean;
+  verNuevaNotifi: boolean;
+  verGenerarSalida: boolean;
+  verInsertarBolsa: boolean;
 }
 
 @Injectable()
 export class EditaExpedienteBolsaFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly notificationService: NotificationService,
   ) {}
+
+  limpiarFormularioBolsa(host: EditaExpedienteBolsaHost): void {
+    host.insertabolsacrear = new InsertaBolsaCrear();
+  }
+
+  clickAtrasBolsaCrear(host: EditaExpedienteBolsaHost): void {
+    host.verInsertarBolsa = false;
+    this.limpiarFormularioBolsa(host);
+  }
+
+  mostrarFormularioBolsa(host: VerBolsaCrearHost): void {
+    host.verTareasdelTramite = false;
+    host.verformnuevatarea = false;
+    host.verlistadotramitadores = false;
+    host.nuevotramitador = false;
+    host.verlistadotareas = false;
+    host.verEditartareatramite = false;
+    host.verNuevaNotifi = false;
+    host.verGenerarSalida = false;
+    host.verInsertarBolsa = true;
+  }
 
   crearInsertaBolsa(host: EditaExpedienteBolsaHost): void {
     host.insertabolsacrear.usuContr = host.usuContrl!;
@@ -60,11 +96,12 @@ export class EditaExpedienteBolsaFacade {
         host.numeroArchivo,
         host.idTarea,
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           if (response == null) {
             this.notificationService.saveSuccess('Propuesta de resolución');
-            host.limpiaInsertatBolsa();
+            this.limpiarFormularioBolsa(host);
             host.verTareasdelTramite = true;
             host.verInsertarBolsa = false;
             host.refrescoSourceTareasTramite(host.idTramite);
@@ -73,11 +110,11 @@ export class EditaExpedienteBolsaFacade {
         error: (response: HttpErrorResponse) => {
           if (response.status === 500) {
             this.notificationService.error('No se ha generado la propuesta de resolución.');
-            host.limpiaInsertatBolsa();
+            this.limpiarFormularioBolsa(host);
             return;
           }
           this.notificationService.saveSuccess('Propuesta de resolución');
-          host.limpiaInsertatBolsa();
+          this.limpiarFormularioBolsa(host);
         },
       });
   }

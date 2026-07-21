@@ -1,10 +1,10 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { ExpedientesService } from '../expedientes/expedientes.service';
 import { LeerMensajeRecibidos } from '../expedientes/expedientes';
 import { NavUiService } from './nav-ui.service';
 import { UserSessionService } from '../core/service/user-session.service';
+import { NavMensajesFacade } from './services/nav-mensajes.facade';
 
 export interface NavLink {
   path: string;
@@ -17,10 +17,10 @@ export interface NavLink {
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.css'],
+  providers: [NavMensajesFacade],
 })
 export class NavComponent implements OnInit, OnDestroy {
-
   readonly escudo = `assets/${environment.escudo}`;
 
   readonly navLinks: NavLink[] = [
@@ -32,37 +32,30 @@ export class NavComponent implements OnInit, OnDestroy {
     { path: '/administracion', icon: 'bi-gear', label: 'Administración', exact: true },
   ];
 
-  public leermensajerecibido: LeerMensajeRecibidos[] = [];
-  public nmensajespendientes = 0;
-  public nmensajestramitados = 0;
-  public nmensajesrechazados = 0;
+  leermensajerecibido: LeerMensajeRecibidos[] = [];
+  nmensajespendientes = 0;
+  nmensajestramitados = 0;
+  nmensajesrechazados = 0;
 
   mobileMenuOpen = false;
-  private mensajesInterval?: ReturnType<typeof setInterval>;
 
   constructor(
     public router: Router,
-    public expedientesService: ExpedientesService,
     private navUi: NavUiService,
-    private session: UserSessionService
-  ) { }
+    public session: UserSessionService,
+    private navMensajesFacade: NavMensajesFacade,
+  ) {}
 
   ngOnInit(): void {
-    this.navUi.mobileOpen$.subscribe(open => {
+    this.navUi.mobileOpen$.subscribe((open) => {
       this.mobileMenuOpen = open;
       document.body.classList.toggle('nav-mobile-open', open);
     });
-
-    this.verMensajesRecibido();
-    this.mensajesInterval = setInterval(() => {
-      this.numeroMensajespendientes();
-    }, 30000);
+    this.navMensajesFacade.startPolling(this);
   }
 
   ngOnDestroy(): void {
-    if (this.mensajesInterval) {
-      clearInterval(this.mensajesInterval);
-    }
+    this.navMensajesFacade.stopPolling();
     document.body.classList.remove('nav-mobile-open');
   }
 
@@ -90,38 +83,7 @@ export class NavComponent implements OnInit, OnDestroy {
     return this.session.department || 'Departamento';
   }
 
-  public numeroMensajespendientes(): void {
-    this.nmensajespendientes = 0;
-    this.nmensajestramitados = 0;
-    this.nmensajesrechazados = 0;
-    if (!this.leermensajerecibido) { return; }
-    this.leermensajerecibido.forEach(m => {
-      if (m.estado === 'PENDIENTE') {
-        this.nmensajespendientes++;
-      } else if (m.estado === 'TRAMITANDO') {
-        this.nmensajestramitados++;
-      } else if (m.estado === 'RECHAZADO') {
-        this.nmensajesrechazados++;
-      }
-    });
-    this.session.setMensajesRecibidosCount(this.nmensajespendientes.toString());
-    this.session.setMensajesTramitadosCount(this.nmensajestramitados.toString());
-  }
-
-  public verMensajesRecibido(): void {
-    if (!this.session.idOrgUsuar) {
-      return;
-    }
-
-    this.expedientesService.getMensajeListarRecibidos().subscribe({
-      next: (data: LeerMensajeRecibidos[]) => {
-        this.leermensajerecibido = data || [];
-        this.numeroMensajespendientes();
-      },
-    });
-  }
-
-  public logout(): void {
+  logout(): void {
     this.session.clear();
     this.closeMobileMenu();
     this.router.navigate(['/login']);

@@ -2,7 +2,7 @@ import { ACCIONES } from '../../../core/helper/tarea-acciones';
 import { TareaProcedimientoDTO } from '../../../core/models/tarea-procedimiento.dto';
 import { TipoObjetoTributarioDto } from '../../../core/models/tipo-objeto-tributario.dto';
 import { ChangeDetectorRef } from '@angular/core';
-import Swal from 'sweetalert2';
+import { NotificationService } from '../../../core/service/notification.service';
 
 export interface ResetActionStateHost {
   isConsultaAccionRunning: boolean;
@@ -97,15 +97,17 @@ export function isDNIAction(accion?: number | null): boolean {
   return accion === 6 || accion === 7 || accion === 8 || accion === 9 || accion === 10;
 }
 
-export function validarConsultaAccionClick(host: {
-  tareatramiteprocedimiento: TareaProcedimientoDTO;
-  introValorConsulta: string;
-  introTObjTrubu: TipoObjetoTributarioDto;
-}): boolean {
+export function validarConsultaAccionClick(
+  host: {
+    tareatramiteprocedimiento: TareaProcedimientoDTO;
+    introValorConsulta: string;
+    introTObjTrubu: TipoObjetoTributarioDto;
+  },
+  notificationService: NotificationService,
+): boolean {
   if (host.tareatramiteprocedimiento.accion !== 10) {
     if (!host.introValorConsulta || host.introValorConsulta.trim() === '') {
-      Swal.fire({
-        icon: 'warning',
+      notificationService.warning({
         title: 'Dato requerido',
         text: 'Por favor, ingrese el dato requerido para la consulta',
       });
@@ -115,8 +117,7 @@ export function validarConsultaAccionClick(host: {
   }
 
   if (!host.introTObjTrubu || Object.keys(host.introTObjTrubu).length === 0) {
-    Swal.fire({
-      icon: 'warning',
+    notificationService.warning({
       title: 'Dato requerido',
       text: 'Por favor, seleccione el tipo de objeto tributario',
     });

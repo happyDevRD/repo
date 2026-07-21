@@ -1,11 +1,11 @@
 ﻿import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import Swal from 'sweetalert2';
-import { Usuario } from './usuario';
-import { AuthService } from './auth.service';
+import { Usuario } from '../core/models/usuario.model';
+import { AuthService } from '../core/service/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UserSessionService } from '../core/service/user-session.service';
+import { NotificationService } from '../core/service/notification.service';
 
 
 @Component({
@@ -25,7 +25,8 @@ export class LoginComponent {
     public authService: AuthService,
     private http: HttpClient,
     public router: Router,
-    private session: UserSessionService
+    private session: UserSessionService,
+    private notificationService: NotificationService
   ) {
     this.usuario = new Usuario();
     this.rutaTxt = this.session.ruta;
@@ -49,9 +50,9 @@ export class LoginComponent {
         (error: HttpErrorResponse) => {
           console.error(error.status);
           if (error.status == 404) {
-            Swal.fire('Problemas con la configuración ', 'El fichero configurador no existe', 'error');
+            this.notificationService.error({ title: 'Problemas con la configuración ', text: 'El fichero configurador no existe' });
           } else {
-            Swal.fire('Problemas con la configuración ', 'El fichero configurador no esta adecuadamente relleno', 'error');
+            this.notificationService.error({ title: 'Problemas con la configuración ', text: 'El fichero configurador no esta adecuadamente relleno' });
           }
         }
       );
@@ -105,15 +106,13 @@ export class LoginComponent {
       },
       (err: HttpErrorResponse) => {
         if (err.status == 500) {
-          Swal.fire({
-            icon: 'error',
+          this.notificationService.error({
             title: 'Oops...',
             text: err.error.message,
             footer: 'El usuario al que corresponde el certificado no esta Registrado '
           });
         } else {
-          Swal.fire({
-            icon: 'error',
+          this.notificationService.error({
             title: 'Oops...',
             text: err.error.message,
             footer: 'No se pudo realizar la conexión '
@@ -130,7 +129,7 @@ export class LoginComponent {
       this.router.navigate(['/inicio']);
     } else {
       this.router.navigate(['/login']);
-      Swal.fire('', `El código introducido no es correcto`, 'error');
+      this.notificationService.error({ text: `El código introducido no es correcto` });
     }
   }
 
@@ -144,7 +143,7 @@ export class LoginComponent {
 
     if (this.usuario.usuario == '' || this.usuario.password == '') {
       this.spinner = false;
-      Swal.fire('Error Login', 'Hay campos vacios!!!', 'error');
+      this.notificationService.error({ title: 'Error Login', text: 'Hay campos vacios!!!' });
       return;
     }
 
@@ -188,9 +187,9 @@ export class LoginComponent {
       },
       err => {
         this.spinner = false;
-        Swal.fire('Error Login', err.error.message, 'error');
+        this.notificationService.error({ title: 'Error Login', text: err.error.message });
         if (err.status == 404) {
-          Swal.fire('Error Login', 'Usuario o Clave incorrectas!!', 'error');
+          this.notificationService.error({ title: 'Error Login', text: 'Usuario o Clave incorrectas!!' });
         }
       }
     );

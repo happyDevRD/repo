@@ -166,7 +166,7 @@
           </div>
           
           <!-- Tipo de documento (solo si no existe la persona) -->
-          <div class="row" *ngIf="existepersonaentidad">
+          <div class="row" *ngIf="personaFacade.existepersonaentidad">
             <div class="col-4 mb-3"><div class="form-floating">
               <select class="form-select" (change)="selecTipPerso(creasolicitud.tipPerso)" id="tipPerso"
                 name="tipPerso" [(ngModel)]="creasolicitud.tipPerso">
@@ -179,23 +179,23 @@
             </div></div>
           </div>
           <!-- Datos de la persona/entidad (solo si no existe) -->
-          <div class="row" *ngIf="existepersonaentidad">
-            <div class="col-12 mb-3" *ngIf="selectRazonSocial"><div class="form-floating">
+          <div class="row" *ngIf="personaFacade.existepersonaentidad">
+            <div class="col-12 mb-3" *ngIf="personaFacade.selectRazonSocial"><div class="form-floating">
               <input type="text" class="form-control" id="razSocia" name="razSocia"
                 [(ngModel)]="creasolicitud.razSocia" placeholder=" ">
               <label for="razSocia">Razón Social *</label>
             </div></div>
-            <div class="col-4 mb-3" *ngIf="selectnombre"><div class="form-floating">
+            <div class="col-4 mb-3" *ngIf="personaFacade.selectnombre"><div class="form-floating">
               <input type="text" class="form-control" id="nombreperso" name="nombreperso"
                 [(ngModel)]="creasolicitud.nombre" placeholder=" ">
               <label for="nombreperso">Nombre *</label>
             </div></div>
-            <div class="col-4 mb-3" *ngIf="selectape1"><div class="form-floating">
+            <div class="col-4 mb-3" *ngIf="personaFacade.selectape1"><div class="form-floating">
               <input type="text" class="form-control" id="apellido1" name="apellido1"
                 [(ngModel)]="creasolicitud.apellido1" placeholder=" ">
               <label for="apellido1">Primer Apellido *</label>
             </div></div>
-            <div class="col-4 mb-3" *ngIf="selectape2"><div class="form-floating">
+            <div class="col-4 mb-3" *ngIf="personaFacade.selectape2"><div class="form-floating">
               <input type="text" class="form-control" id="apellido2" name="apellido2"
                 [(ngModel)]="creasolicitud.apellido2" placeholder=" ">
               <label for="apellido2">Segundo Apellido *</label>
@@ -203,7 +203,7 @@
           </div>
           
           <!-- Dirección y ubicación -->
-          <div class="row" *ngIf="existepersonaentidad">
+          <div class="row" *ngIf="personaFacade.existepersonaentidad">
             <div class="col-12 mb-3"><div class="form-floating">
               <input type="text" class="form-control" id="direccion" name="direccion"
                 [(ngModel)]="creasolicitud.dirPosta" placeholder=" ">
@@ -225,7 +225,7 @@
               <select class="form-select" id="ps-mun" name="municipio" title="Municipio"
                 [(ngModel)]="creasolicitud.codMunic">
                 <option value="" disabled selected>Selecciona municipio</option>
-                <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
+                <option name="usuario" *ngFor="let municipio of personaFacade.municiflitro" [value]="municipio.id">
                   {{municipio.nm}}</option>
               </select>
               <label for="ps-mun">Municipio *</label>
@@ -235,31 +235,31 @@
 
 
           <!-- Información adicional del interesado (solo si existe) -->
-          <div class="row" *ngIf="dniok">
+          <div class="row" *ngIf="personaFacade.dniok">
             <div class="col-12 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="nombredni" id="nombre" name="nombre" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.nombredni" id="nombre" name="nombre" placeholder=" ">
               <label for="nombre">Nombre del Interesado</label>
             </div></div>
             <div class="col-12 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="direcciondni" id="direccion2" name="direccion2" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.direcciondni" id="direccion2" name="direccion2" placeholder=" ">
               <label for="direccion2">Dirección del Interesado</label>
             </div></div>
             <div class="col-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="cpdni" id="cp2" name="cp2" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.cpdni" id="cp2" name="cp2" placeholder=" ">
               <label for="cp2">Código Postal</label>
             </div></div>
             <div class="col-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="provinciadni" id="provincia2" name="provincia2" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.provinciadni" id="provincia2" name="provincia2" placeholder=" ">
               <label for="provincia2">Provincia</label>
             </div></div>
             <div class="col-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="nommunicipiodni" id="municipio2" name="municipio2" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.nommunicipiodni" id="municipio2" name="municipio2" placeholder=" ">
               <label for="municipio2">Municipio</label>
             </div></div>
           </div>
 
           <!-- Sección de representante -->
-          <div class="row" *ngIf="dniok">
+          <div class="row" *ngIf="personaFacade.dniok">
             <div class="col-2 text-start">
               <!-- Espacio para título de representante -->
             </div>
@@ -279,7 +279,7 @@
           </div>
 
           <!-- Datos del representante (cuando se cambia) -->
-          <div class="row" *ngIf="cambioRepresentante">
+          <div class="row" *ngIf="personaFacade.cambioRepresentante">
             <div class="col-4 mb-3"><div class="form-floating">
               <input type="text" class="form-control" id="nrepren" name="nrepren"
                 [(ngModel)]="creasolicitud.nombreRepre" placeholder=" ">
@@ -298,7 +298,7 @@
           </div>
 
           <!-- Dirección del representante -->
-          <div class="row" *ngIf="cambioRepresentante">
+          <div class="row" *ngIf="personaFacade.cambioRepresentante">
             <div class="col-12 mb-3"><div class="form-floating">
               <input type="text" class="form-control" id="direccionn" name="direccionn"
                 [(ngModel)]="creasolicitud.dirPostaRepre" placeholder=" ">
@@ -321,7 +321,7 @@
               <select class="form-select" id="ps-munn" name="Municipiorn" title="Municipiorn"
                 [(ngModel)]="creasolicitud.codMunicRepre">
                 <option value="" disabled selected>Selecciona municipio</option>
-                <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
+                <option name="usuario" *ngFor="let municipio of personaFacade.municiflitro" [value]="municipio.id">
                   {{municipio.nm}}</option>
               </select>
               <label for="ps-munn">Municipio *</label>
@@ -329,7 +329,7 @@
           </div>
 
           <!-- Grid de representantes -->
-          <div class="row" *ngIf="dniok">
+          <div class="row" *ngIf="personaFacade.dniok">
             <jqxGrid class="" [width]="'100%'" [autoheight]="true" [columnsautoresize]="true"
               [source]="sourceListRepre" (onRowclick)="selecrepresentante($event)" [pagesize]="4"
               [autoheight]="true" [pageable]="true" [altrows]="true" [filterable]="true" [sortable]="true"
@@ -337,7 +337,7 @@
           </div>
 
           <!-- Sección de representante cuando no existe -->
-          <div class="row" *ngIf="documrepre">
+          <div class="row" *ngIf="personaFacade.documrepre">
             <div class="col-12 mb-3">
               <hr>
               <h4>Datos nuevo representante {{creasolicitud.numDocumRepre}}</h4>
@@ -351,7 +351,7 @@
           </div>
 
           <!-- Datos del representante cuando no existe -->
-          <div class="row" *ngIf="existeRepresentante">
+          <div class="row" *ngIf="personaFacade.existeRepresentante">
             <div class="col-4 mb-3"><div class="form-floating">
               <input type="text" class="form-control" id="nrepre" name="nrepre"
                 [(ngModel)]="creasolicitud.nombreRepre" placeholder=" ">
@@ -370,7 +370,7 @@
           </div>
 
           <!-- Dirección del representante cuando no existe -->
-          <div class="row" *ngIf="existeRepresentante">
+          <div class="row" *ngIf="personaFacade.existeRepresentante">
             <div class="col-12 mb-3"><div class="form-floating">
               <input type="text" class="form-control" id="direccion3" name="direccion3"
                 [(ngModel)]="creasolicitud.dirPostaRepre" placeholder=" ">
@@ -392,7 +392,7 @@
               <select class="form-select" id="ps-mun3" name="Municipior" title="Municipior"
                 [(ngModel)]="creasolicitud.codMunicRepre">
                 <option value="" disabled selected>Selecciona municipio</option>
-                <option name="usuario" *ngFor="let municipio of municiflitro" [value]="municipio.id">
+                <option name="usuario" *ngFor="let municipio of personaFacade.municiflitro" [value]="municipio.id">
                   {{municipio.nm}}</option>
               </select>
               <label for="ps-mun3">Municipio *</label>
@@ -400,25 +400,25 @@
           </div>
 
           <!-- Información del representante encontrado -->
-          <div class="row" *ngIf="representanteok">
+          <div class="row" *ngIf="personaFacade.representanteok">
             <div class="col-12 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="nombredni" id="nombreRepre" name="nombreRepre" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.nombredni" id="nombreRepre" name="nombreRepre" placeholder=" ">
               <label for="nombreRepre">Nombre del Representante</label>
             </div></div>
             <div class="col-12 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="direcciondni" id="direccionRepre" name="direccionRepre" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.direcciondni" id="direccionRepre" name="direccionRepre" placeholder=" ">
               <label for="direccionRepre">Dirección del Representante</label>
             </div></div>
             <div class="col-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="cpdni" id="cpRepre" name="cpRepre" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.cpdni" id="cpRepre" name="cpRepre" placeholder=" ">
               <label for="cpRepre">Código Postal</label>
             </div></div>
             <div class="col-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="provinciadni" id="provinciaRepre" name="provinciaRepre" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.provinciadni" id="provinciaRepre" name="provinciaRepre" placeholder=" ">
               <label for="provinciaRepre">Provincia</label>
             </div></div>
             <div class="col-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="nommunicipiodni" id="municipioRepre" name="municipioRepre" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.nommunicipiodni" id="municipioRepre" name="municipioRepre" placeholder=" ">
               <label for="municipioRepre">Municipio</label>
             </div></div>
           </div>
@@ -532,7 +532,7 @@
                 type="text" 
                 class="form-control" 
                 disabled 
-                [value]="representanteSolicitud" 
+                [value]="personaFacade.representanteSolicitud" 
                 id="representante"
                 name="representante" placeholder=" ">
               <label for="representante">Representante</label>
@@ -553,7 +553,7 @@
                 type="text" 
                 disabled 
                 class="form-control" 
-                [value]="InteresadoSolicitud" 
+                [value]="personaFacade.InteresadoSolicitud" 
                 id="nombre"
                 name="nombre" placeholder=" ">
               <label for="nombre">Interesado</label>
@@ -564,7 +564,7 @@
                 type="text" 
                 disabled 
                 class="form-control" 
-                [value]="dirPosta" 
+                [value]="personaFacade.dirPosta" 
                 id="direccion"
                 name="direccion" placeholder=" ">
               <label for="direccion">Dirección</label>
@@ -575,7 +575,7 @@
                 type="text" 
                 disabled 
                 class="form-control" 
-                [value]="codPosta" 
+                [value]="personaFacade.codPosta" 
                 id="cp" 
                 name="cp" placeholder=" ">
               <label for="cp">Código Postal</label>
@@ -586,7 +586,7 @@
                 type="text" 
                 disabled 
                 class="form-control" 
-                [value]="provincia" 
+                [value]="personaFacade.provincia" 
                 id="provincia"
                 name="provincia" placeholder=" ">
               <label for="provincia">Provincia</label>
@@ -597,7 +597,7 @@
                 type="text" 
                 disabled 
                 class="form-control" 
-                [value]="Municipio" 
+                [value]="personaFacade.Municipio" 
                 id="municipio"
                 name="municipio" placeholder=" ">
               <label for="municipio">Municipio</label>
@@ -620,7 +620,7 @@
                 type="text" 
                 disabled 
                 class="form-control"
-                [value]="representanteexplistar.desPerEntid || representanteSolicitud" 
+                [value]="representanteexplistar.desPerEntid || personaFacade.representanteSolicitud" 
                 id="nombreRepresentante"
                 name="nombreRepresentante" placeholder=" ">
               <label for="nombreRepresentante">Representante</label>
@@ -837,11 +837,11 @@
               <label for="usuarioAsignado">Usuario Asignado</label>
             </div></div>
             <div class="col-md-6 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled [value]="InteresadoSolicitud" id="interesadoSol" name="interesadoSol" placeholder=" ">
+              <input type="text" class="form-control" disabled [value]="personaFacade.InteresadoSolicitud" id="interesadoSol" name="interesadoSol" placeholder=" ">
               <label for="interesadoSol">Interesado</label>
             </div></div>
             <div class="col-md-6 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" disabled value="{{representanteSolicitud}}" id="representanteSol" name="representanteSol" placeholder=" ">
+              <input type="text" class="form-control" disabled value="{{personaFacade.representanteSolicitud}}" id="representanteSol" name="representanteSol" placeholder=" ">
               <label for="representanteSol">Representante</label>
             </div></div>
             <div class="col-md-6 mb-3"><div class="form-floating">
@@ -930,7 +930,7 @@
           </div></div>
 
           <!-- Información del Interesado -->
-          <div *ngIf="dniok" class="row mt-4 mb-4">
+          <div *ngIf="personaFacade.dniok" class="row mt-4 mb-4">
             <div class="col-12">
               <h5 class="text-info mb-3 border-bottom pb-2">
                 <i class="bi bi-person-fill me-2"></i>Información del Interesado
@@ -938,32 +938,32 @@
             </div>
           </div>
           
-          <div *ngIf="dniok" class="row">
+          <div *ngIf="personaFacade.dniok" class="row">
             <div class="col-md-6 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" [value]="consultadni.nombre" id="nombreInt" name="nombreInt" readonly placeholder=" ">
+              <input type="text" class="form-control" [value]="personaFacade.consultadni.nombre" id="nombreInt" name="nombreInt" readonly placeholder=" ">
               <label for="nombreInt">Nombre</label>
             </div></div>
             <div class="col-md-6 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" [value]="consultadni.apellido1 + ' ' + consultadni.apellido2"
+              <input type="text" class="form-control" [value]="personaFacade.consultadni.apellido1 + ' ' + personaFacade.consultadni.apellido2"
                 id="apellidosInt" name="apellidosInt" readonly placeholder=" ">
               <label for="apellidosInt">Apellidos</label>
             </div></div>
             <div class="col-12 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" [value]="consultadni.dirPosta" id="direccionInt"
+              <input type="text" class="form-control" [value]="personaFacade.consultadni.dirPosta" id="direccionInt"
                 name="direccionInt" readonly placeholder=" ">
               <label for="direccionInt">Dirección</label>
             </div></div>
             <div class="col-md-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" [value]="consultadni.codPosta" id="cpInt" name="cpInt" readonly placeholder=" ">
+              <input type="text" class="form-control" [value]="personaFacade.consultadni.codPosta" id="cpInt" name="cpInt" readonly placeholder=" ">
               <label for="cpInt">Código Postal</label>
             </div></div>
             <div class="col-md-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" [value]="consultadni.provincia" id="provinciaInt"
+              <input type="text" class="form-control" [value]="personaFacade.consultadni.provincia" id="provinciaInt"
                 name="provinciaInt" readonly placeholder=" ">
               <label for="provinciaInt">Provincia</label>
             </div></div>
             <div class="col-md-4 mb-3"><div class="form-floating">
-              <input type="text" class="form-control" [value]="consultadni.municipio" id="municipioInt"
+              <input type="text" class="form-control" [value]="personaFacade.consultadni.municipio" id="municipioInt"
                 name="municipioInt" readonly placeholder=" ">
               <label for="municipioInt">Municipio</label>
             </div></div>

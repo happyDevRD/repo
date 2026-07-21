@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { Procedimiento } from './procedimiento';
 import { ProcedimientoService } from './procedimiento.service';
 import {Router, ActivatedRoute} from '@angular/router'
-import swal from 'sweetalert2';
 import { UserSessionService } from '../core/service/user-session.service';
 
 @Component({

@@ -9,9 +9,6 @@ import { VerProcedimientoComponent } from './ver-procedimiento.component';
 import { PermisoprocedimientoComponent } from './permisoprocedimiento.component';
 import { TareasProcedimientosComponent } from './tarea-procedimiento/tareas-procedimientos.component';
 import { MenuprocedimientoComponent } from './menuprocedimiento.component';
-import { FilDescripProcediPipe } from './pipe/fil-descrip-procedi.pipe';
-import { FilDeparProcediPipe } from './pipe/fil-depar-procedi.pipe';
-import { FilSiaProcediPipe } from './pipe/fil-sia-procedi.pipe';
 
 @NgModule({
   declarations: [
@@ -23,9 +20,6 @@ import { FilSiaProcediPipe } from './pipe/fil-sia-procedi.pipe';
     PermisoprocedimientoComponent,
     TareasProcedimientosComponent,
     MenuprocedimientoComponent,
-    FilDescripProcediPipe,
-    FilDeparProcediPipe,
-    FilSiaProcediPipe,
   ],
   imports: [
     SharedModule,

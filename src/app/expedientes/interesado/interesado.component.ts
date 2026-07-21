@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';

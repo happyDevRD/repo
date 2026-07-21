@@ -33,6 +33,14 @@
                 class="btn-iflow btn-iflow--primary" title="Datos ENI" type="button">
                 Datos ENI <i class="bi bi-chat-left-quote"></i>
               </button>
+              <button (click)="edita.handleEnviarDocumentoInside()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--primary" title="Enviar documento a INSIDE" type="button">
+                Enviar INSIDE <i class="bi bi-cloud-upload"></i>
+              </button>
+              <button (click)="edita.handleAltaDocumentoEniXmlInside()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--primary" title="Alta documento ENI XML desde disco" type="button">
+                Alta XML Doc. <i class="bi bi-file-earmark-code"></i>
+              </button>
               <button *ngIf="!edita.tareayafirmada && !edita.firmaDesatendida" (click)="edita.abreArchiFirmado()"
                 class="btn-iflow btn-iflow--primary" title="Documento Firmado" type="button">
                 Doc. Firmado <i class="bi bi-cloud-arrow-down"></i>

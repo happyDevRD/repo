@@ -9,6 +9,42 @@
           <div class="expediente-botones-navegacion">
             <!-- Botones de navegación desde trámites -->
             <div *ngIf="edita.botonVerNotifi && edita.vertramite">
+              <span *ngIf="edita.insideDryRun" class="badge bg-info text-dark me-2" title="Sin acceso REDSARA: respuestas simuladas">
+                INSIDE simulación
+              </span>
+              <span *ngIf="edita.insideUltimoEnvio?.estadoEnvio === 'PENDIENTE'" class="badge bg-warning text-dark me-2">
+                INSIDE pendiente
+              </span>
+              <span *ngIf="edita.insideUltimoEnvio?.estadoEnvio === 'ENVIADO' || edita.insideUltimoEnvio?.estadoEnvio === 'SIMULADO'" class="badge bg-success me-2">
+                INSIDE {{ edita.insideUltimoEnvio?.estadoEnvio === 'SIMULADO' ? 'simulado' : 'enviado' }}
+              </span>
+              <span *ngIf="edita.insideUltimoEnvio?.estadoEnvio === 'ERROR'" class="badge bg-danger me-2">
+                INSIDE error
+              </span>
+              <button (click)="edita.handleVerHistorialEnviosInside()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--secondary" title="Ver historial de envíos INSIDE" type="button">
+                Historial INSIDE <i class="bi bi-clock-history"></i>
+              </button>
+              <button (click)="edita.handleValidarExpedienteInside()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--secondary" title="Validar expediente antes de enviar a INSIDE" type="button">
+                Validar INSIDE <i class="bi bi-shield-check"></i>
+              </button>
+              <button (click)="edita.handleEnviarExpedienteInside()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--primary" title="Enviar expediente completo a INSIDE" type="button">
+                INSIDE Expediente <i class="bi bi-cloud-upload"></i>
+              </button>
+              <button (click)="edita.handleAltaExpedienteEniXmlInside()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--primary" title="Alta expediente ENI XML (expediente cerrado)" type="button">
+                Alta XML Expediente <i class="bi bi-file-earmark-code"></i>
+              </button>
+              <button (click)="edita.handleEnviarDocumentosInside()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--primary" title="Convertir todos los documentos en INSIDE" type="button">
+                INSIDE Documentos <i class="bi bi-files"></i>
+              </button>
+              <button (click)="edita.abrirModalRemisionJusticia()" [disabled]="edita.insideEnviando"
+                class="btn-iflow btn-iflow--primary" title="Remisión a Justicia" type="button">
+                Remisión Justicia <i class="bi bi-bank"></i>
+              </button>
               <button (click)="edita.verNotificaciones()" class="btn-iflow btn-iflow--primary"
                 title="Ver Notificaciones" type="button">
                 Ver Notificaciones <i class="bi bi-bell"></i>

@@ -1,13 +1,14 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import Swal from 'sweetalert2';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TareaProcedimientoDTO } from '../../../core/models/tarea-procedimiento.dto';
 import { TipoObjetoTributarioDto } from '../../../core/models/tipo-objeto-tributario.dto';
 import { ObjetoTributarioDto } from '../../../core/models/objeto-tributario.dto';
 import { ReciboCabeceraDto } from '../../../core/models/recibo-cabecera.dto';
 import { ExpedientesService } from '../../expedientes.service';
+import { NotificationService } from '../../../core/service/notification.service';
 import { Habitantes, PersonaEntidad, Vehiculo } from './tareas-accion.models';
 import { cargarRecibosPendientes, RecibosPendientesHost } from './tareas-recibos.helper';
 
@@ -73,9 +74,12 @@ function descargarBlob(blob: Blob, nombre: string): void {
 
 @Injectable()
 export class EditaExpedienteTareasConsultaFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly http: HttpClient,
+    private readonly notificationService: NotificationService,
   ) {}
 
   consultaAccion(host: ConsultaAccionHost, valor: unknown, idtipobje: TipoObjetoTributarioDto): void {
@@ -122,10 +126,9 @@ export class EditaExpedienteTareasConsultaFacade {
         this.abrirLiquidacion(host);
         break;
       default:
-        Swal.fire({
+        this.notificationService.error({
           title: 'Acción no reconocida',
           text: `La acción con código ${accion} no está implementada.`,
-          icon: 'error',
           confirmButtonText: 'Cerrar',
         });
         host.isConsultaAccionRunning = false;
@@ -135,11 +138,13 @@ export class EditaExpedienteTareasConsultaFacade {
   private consultaHabitantes(host: ConsultaAccionHost, valor: unknown): void {
     host.ediquetaValorConsulta = 'Introduzca documento';
     host.veoTipoObjetoTributario = false;
-    this.expedientesService.getConsultaHabitantea(String(valor)).subscribe({
+    this.expedientesService.getConsultaHabitantea(String(valor)).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (respuesta) => {
         host.habitantes = respuesta;
         host.isConsultaAccionRunning = false;
-        Swal.fire({
+        this.notificationService.custom({
           title: '<strong>Consulta Habitantes</strong>',
           html: htmlConsultaHabitantes(host.habitantes),
           showCloseButton: false,
@@ -149,7 +154,7 @@ export class EditaExpedienteTareasConsultaFacade {
         });
       },
       error: (error) => {
-        Swal.fire(error.error?.message);
+        this.notificationService.error(error.error?.message);
         host.isConsultaAccionRunning = false;
       },
     });
@@ -158,11 +163,13 @@ export class EditaExpedienteTareasConsultaFacade {
   private consultaVehiculo(host: ConsultaAccionHost, valor: unknown): void {
     host.ediquetaValorConsulta = 'Introduzca Matrícula';
     host.veoTipoObjetoTributario = false;
-    this.expedientesService.getConsultaVehiculo(String(valor)).subscribe({
+    this.expedientesService.getConsultaVehiculo(String(valor)).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (respuesta) => {
         host.vehiculo = respuesta;
         host.isConsultaAccionRunning = false;
-        Swal.fire({
+        this.notificationService.custom({
           title: '<strong>Consulta Vehículos</strong>',
           html: htmlConsultaVehiculo(host.vehiculo),
           showCloseButton: false,
@@ -172,7 +179,7 @@ export class EditaExpedienteTareasConsultaFacade {
         });
       },
       error: (error) => {
-        Swal.fire(error.error?.message);
+        this.notificationService.error(error.error?.message);
         host.isConsultaAccionRunning = false;
       },
     });
@@ -187,21 +194,23 @@ export class EditaExpedienteTareasConsultaFacade {
     host.veoTipoObjetoTributario = true;
 
     if (!idtipobje || !valor) {
-      Swal.fire('Debe seleccionar el tipo de objeto tributario y documento.');
+      this.notificationService.warning('Debe seleccionar el tipo de objeto tributario y documento.');
       host.isConsultaAccionRunning = false;
       return;
     }
 
     const idHisTip = idtipobje.idHisTipObjTribu;
     const idTip = idtipobje.idTipObjTribu;
-    this.expedientesService.getObjetoTributario(`${idHisTip}/${idTip}`, String(valor)).subscribe({
+    this.expedientesService.getObjetoTributario(`${idHisTip}/${idTip}`, String(valor)).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (respuesta) => {
         host.objetotributario = respuesta;
         host.veoConsultaObjetoTributario = true;
         host.isConsultaAccionRunning = false;
       },
       error: (error) => {
-        Swal.fire(error.error?.message);
+        this.notificationService.error(error.error?.message);
         host.isConsultaAccionRunning = false;
       },
     });
@@ -210,14 +219,16 @@ export class EditaExpedienteTareasConsultaFacade {
   private modificarDatosPersona(host: ConsultaAccionHost, valor: unknown): void {
     host.descripcionAccion = 'Modificar datos Persona';
     host.ediquetaValorConsulta = 'Introduzca documento';
-    this.expedientesService.getPersonaEntidad(String(valor)).subscribe({
+    this.expedientesService.getPersonaEntidad(String(valor)).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (respuesta) => {
         host.veoModifiDatosPerso = true;
         host.personaentidad = respuesta;
         host.isConsultaAccionRunning = false;
       },
       error: (error) => {
-        Swal.fire(error.error?.message);
+        this.notificationService.error(error.error?.message);
         host.isConsultaAccionRunning = false;
         host.resetActionState();
       },
@@ -227,13 +238,15 @@ export class EditaExpedienteTareasConsultaFacade {
   private bajaHabitante(host: ConsultaAccionHost, valor: unknown): void {
     host.descripcionAccion = 'Baja Habitante';
     host.ediquetaValorConsulta = 'Introduzca documento';
-    this.expedientesService.getPersonaEntidad(String(valor)).subscribe({
+    this.expedientesService.getPersonaEntidad(String(valor)).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (respuesta) => {
         host.veoBajaHabitante = true;
         host.personaentidad = respuesta;
       },
       error: (error) => {
-        Swal.fire(error.error?.message);
+        this.notificationService.error(error.error?.message);
         host.resetActionState();
       },
     });
@@ -245,7 +258,7 @@ export class EditaExpedienteTareasConsultaFacade {
     host.ediquetaValorConsulta = 'Introduzca documento';
 
     if (!host.introValorConsulta || !host.introTObjTrubu) {
-      Swal.fire('Debe ingresar el documento y tipo de objeto tributario.');
+      this.notificationService.warning('Debe ingresar el documento y tipo de objeto tributario.');
       host.isConsultaAccionRunning = false;
       return;
     }
@@ -254,7 +267,9 @@ export class EditaExpedienteTareasConsultaFacade {
     const idTip = host.introTObjTrubu.idTipObjTribu;
     const numDocum = host.introValorConsulta;
 
-    this.expedientesService.getObjetoTributario(`${idHisTip}/${idTip}`, numDocum).subscribe({
+    this.expedientesService.getObjetoTributario(`${idHisTip}/${idTip}`, numDocum).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (respuesta: ObjetoTributarioDto) => {
         host.objetotributario = respuesta;
         host.modifiObjetoTribu = true;
@@ -268,7 +283,7 @@ export class EditaExpedienteTareasConsultaFacade {
         host.resetActionState();
       },
       error: (error) => {
-        Swal.fire('Error', error.error?.message, 'error');
+        this.notificationService.error({ title: 'Error', text: error.error?.message });
         host.isConsultaAccionRunning = false;
         host.resetActionState();
       },
@@ -281,20 +296,22 @@ export class EditaExpedienteTareasConsultaFacade {
     host.ediquetaValorConsulta = 'Introduzca DNI';
     this.expedientesService
       .getVolanteEmpadronamiento(String(valor), host.idExpediente, host.usuContrl!)
-      .pipe(finalize(() => { host.cargando = false; }))
+      .pipe(
+        finalize(() => { host.cargando = false; }),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: (response: Blob) => {
           descargarBlob(new Blob([response], { type: response.type }), 'VolanteEmpadronamiento.pdf');
-          Swal.fire({
+          this.notificationService.success({
             title: 'Descarga completada',
             text: 'El Volante de Empadronamiento se ha descargado correctamente.',
-            icon: 'success',
             confirmButtonText: 'Aceptar',
           }).then(() => host.resetActionState());
         },
         error: (error: { error?: { message?: string } }) => {
           const msg = error?.error?.message || 'No se pudo generar el Volante de Empadronamiento.';
-          Swal.fire('Error', msg, 'error').then(() => host.resetActionState());
+          this.notificationService.error({ title: 'Error', text: msg }).then(() => host.resetActionState());
         },
       });
   }
@@ -311,20 +328,20 @@ export class EditaExpedienteTareasConsultaFacade {
           host.resetActionState();
           host.cdr.detectChanges();
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response: Blob) => {
           descargarBlob(new Blob([response], { type: response.type }), 'CertificadoEmpadronamiento.pdf');
-          Swal.fire({
+          this.notificationService.success({
             title: 'Descarga completada',
             text: 'El Certificado de Empadronamiento se ha descargado correctamente.',
-            icon: 'success',
             confirmButtonText: 'Aceptar',
           }).then(() => host.resetActionState());
         },
         error: (error: { error?: { message?: string } }) => {
           const msg = error?.error?.message || 'No se pudo generar el Certificado de Empadronamiento.';
-          Swal.fire('Error', msg, 'error').then(() => host.resetActionState());
+          this.notificationService.error({ title: 'Error', text: msg }).then(() => host.resetActionState());
         },
       });
   }
@@ -337,20 +354,21 @@ export class EditaExpedienteTareasConsultaFacade {
 
     const dni = String(valor ?? '').trim();
     if (!dni) {
-      Swal.fire({ title: 'Atención', text: 'Debe introducir un DNI', icon: 'warning' });
+      this.notificationService.warning({ title: 'Atención', text: 'Debe introducir un DNI' });
       host.isConsultaAccionRunning = false;
       host.cargando = false;
       return;
     }
 
     host.introValorConsulta = dni;
-    cargarRecibosPendientes(host, this.http)
+    cargarRecibosPendientes(host, this.http, this.notificationService)
       .pipe(
         finalize(() => {
           host.cargando = false;
           host.resetActionState();
           host.cdr.detectChanges();
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => { host.isConsultaAccionRunning = false; },
@@ -373,19 +391,19 @@ export class EditaExpedienteTareasConsultaFacade {
           host.resetActionState();
           host.cdr.detectChanges();
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (blob: Blob) => {
           descargarBlob(blob, 'certificado_deuda.pdf');
-          Swal.fire({
+          this.notificationService.success({
             title: 'Descarga completada',
             text: 'El Certificado de Deudas se ha descargado correctamente.',
-            icon: 'success',
             confirmButtonText: 'Aceptar',
           });
         },
         error: (error) => {
-          Swal.fire(error.error?.message);
+          this.notificationService.error(error.error?.message);
         },
       });
   }
@@ -416,6 +434,6 @@ export class EditaExpedienteTareasConsultaFacade {
   }
 
   loadRecibos(host: ConsultaAccionHost): Observable<ReciboCabeceraDto[]> {
-    return cargarRecibosPendientes(host, this.http);
+    return cargarRecibosPendientes(host, this.http, this.notificationService);
   }
 }

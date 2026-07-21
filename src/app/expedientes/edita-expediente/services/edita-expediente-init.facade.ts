@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModeloTeuListar } from '../../expedientes';
 import { ProcediPermisos } from '../../../procedimientos/procedimiento';
 import { ProcedimientoService } from '../../../procedimientos/procedimiento.service';
@@ -23,6 +24,8 @@ export interface EditaExpedienteInitHost {
 
 @Injectable()
 export class EditaExpedienteInitFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly procedimientoService: ProcedimientoService,
     private readonly expedientesService: ExpedientesService,
@@ -35,19 +38,25 @@ export class EditaExpedienteInitFacade {
     host.listadodeNotificaciones();
     host.getTipoObjetoTributario();
 
-    this.procedimientoService.getPermisoProcedi().subscribe({
+    this.procedimientoService.getPermisoProcedi().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (procedipermisos) => {
         host.procedipermiso = procedipermisos;
       },
     });
 
-    this.expedientesService.getPaises().subscribe({
+    this.expedientesService.getPaises().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (pais) => {
         host.pais = pais;
       },
     });
 
-    this.expedientesService.getModeloTeuListar().subscribe({
+    this.expedientesService.getModeloTeuListar().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (modeloteulistar) => {
         host.modeloteulistar = modeloteulistar;
       },

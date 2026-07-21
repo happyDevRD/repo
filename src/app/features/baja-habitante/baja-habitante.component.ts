@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import Swal from 'sweetalert2';
 import { PROVIN, MUNICIO, TIPO_BAJA } from '../../core/constants/datos';
 import { BajaHabitantes } from '../../core/models/baja-habitantes.model';
 import { PersonaEntidad } from '../../core/models/personaentidad.model';
 import { Pais } from '../../core/models/pais.model';
 import { ExpedientesService } from '../../expedientes/expedientes.service';
+import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
   selector: 'app-baja-habitante',
@@ -34,11 +34,14 @@ export class BajaHabitanteComponent implements OnInit {
   // Lista de países (se obtiene mediante el servicio)
   public pais: Pais[] = [];
 
-  constructor(private expedientesService: ExpedientesService) {}
+  constructor(
+    private expedientesService: ExpedientesService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
     if (!this.documento) {
-      Swal.fire("No se proporcionó el documento de la persona.");
+      this.notificationService.warning('No se proporcionó el documento de la persona.');
       return;
     }
     // Obtiene la persona usando el documento
@@ -56,7 +59,7 @@ export class BajaHabitanteComponent implements OnInit {
         });
       },
       error: (error) => {
-        Swal.fire(error.error.message || "Error al obtener los datos de la persona.");
+        this.notificationService.error(error.error.message || "Error al obtener los datos de la persona.");
       }
     });
   }
@@ -95,7 +98,7 @@ export class BajaHabitanteComponent implements OnInit {
         this.disablePais = true;
         this.disableMunicipio = false;
         if (!this.bajaHabitantes.proProDesti) {
-          Swal.fire("Los campos Provincia y Municipio son obligatorios");
+          this.notificationService.warning('Los campos Provincia y Municipio son obligatorios');
         }
         break;
       case "5": // Emigración
@@ -117,11 +120,11 @@ export class BajaHabitanteComponent implements OnInit {
   // Envía la baja al endpoint. Realiza validaciones previas.
   public bajaHabitante(): void {
     if (this.bajaHabitantes.tipBaja === "4" && !this.bajaHabitantes.proProDesti) {
-      Swal.fire("Los campos Provincia y Municipio son obligatorios");
+      this.notificationService.warning('Los campos Provincia y Municipio son obligatorios');
       return;
     }
     if (this.bajaHabitantes.tipBaja === "5" && this.bajaHabitantes.paiProDesti === "sin datos") {
-      Swal.fire("El campo País es obligatorio");
+      this.notificationService.warning('El campo País es obligatorio');
       return;
     }
 
@@ -135,11 +138,9 @@ export class BajaHabitanteComponent implements OnInit {
       console.error(error);
     }
 
-    Swal.fire({
+    this.notificationService.confirm({
       title: '¿Está seguro?',
       text: "Dar de baja a: " + this.persona.desPerEntid,
-      icon: 'warning',
-      showCancelButton: true,
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
@@ -147,10 +148,10 @@ export class BajaHabitanteComponent implements OnInit {
         this.expedientesService.envioBajaHabitantes(this.bajaHabitantes, this.persona.numDocum)
           .subscribe(
             respuesta => {
-              Swal.fire('Baja realizada', '', 'success');
+              this.notificationService.success({ title: 'Baja realizada' });
             },
             err => {
-              Swal.fire(err.error.message || 'Error al dar de baja', '', 'warning');
+              this.notificationService.warning({ title: err.error.message || 'Error al dar de baja' });
             }
           );
       }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { NavUiService } from '../Nav/nav-ui.service';
+import { NavUiService } from '../nav/nav-ui.service';
 import { resolvePageTitle } from '../layout/page-titles';
 import { filter, Subscription } from 'rxjs';
 

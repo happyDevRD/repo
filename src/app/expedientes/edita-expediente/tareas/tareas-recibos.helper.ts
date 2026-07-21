@@ -2,10 +2,10 @@ import { ChangeDetectorRef, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
-import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { ReciboCabeceraDto } from '../../../core/models/recibo-cabecera.dto';
 import { ModalManagerService } from '../../../core/service/modal-manager.service';
+import { NotificationService } from '../../../core/service/notification.service';
 
 export const RECIBOS_GRID_DATA_FIELDS = [
   { name: 'ejeRecib', type: 'number' },
@@ -37,6 +37,7 @@ const getModalManager = (): ModalManagerService | null => ModalManagerService.ge
 export function cargarRecibosPendientes(
   host: RecibosPendientesHost,
   http: HttpClient,
+  notificationService: NotificationService,
 ): Observable<ReciboCabeceraDto[]> {
   if (!host.introValorConsulta) {
     return of([]);
@@ -48,10 +49,9 @@ export function cargarRecibosPendientes(
       const modalManager = getModalManager();
 
       if (!data || data.length === 0) {
-        Swal.fire({
+        notificationService.info({
           title: 'Sin resultados',
           text: 'No se encontraron recibos pendientes de pago para el DNI ingresado.',
-          icon: 'info',
         });
         modalManager?.closeModal('recibosPendientesModal');
         return;
@@ -76,10 +76,9 @@ export function cargarRecibosPendientes(
       }
     }),
     catchError((error) => {
-      Swal.fire({
+      notificationService.error({
         title: 'Error',
         text: error.error?.message,
-        icon: 'error',
       });
       return throwError(() => error);
     }),

@@ -8,7 +8,6 @@ import { map } from 'rxjs';
 import { __await } from 'tslib';
 import { environment } from 'src/environments/environment';
 import { UserSessionService } from '../core/service/user-session.service';
-import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { NotificationService } from '../core/service/notification.service';
 import { ProcedimientoUiService } from './procedimiento-ui.service';

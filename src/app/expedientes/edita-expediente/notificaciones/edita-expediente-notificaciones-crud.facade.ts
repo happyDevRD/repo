@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CrearNotificacion } from '../../expedientes';
-import { InteresadoListarDto } from '../../../core/dto/interesado.dto';
+import { InteresadoListarDto } from '../../../core/models/interesado.dto';
 import { NotificationService } from '../../../core/service/notification.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { EditaExpedienteTareasFacade } from '../tareas/edita-expediente-tareas.facade';
@@ -55,6 +55,8 @@ export interface SolicitarCrearNotificacionHost extends CrearNotificacionConfirm
 
 @Injectable()
 export class EditaExpedienteNotificacionesCrudFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly notificacionesService: NotificacionesService,
     private readonly notificationService: NotificationService,
@@ -63,13 +65,13 @@ export class EditaExpedienteNotificacionesCrudFacade {
 
   vernotifi(host: EditaExpedienteNotificacionesCrudHost, id: number, modoVer = false): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.notificacionesService.getNotificacionVer(id).subscribe({
+      this.notificacionesService.getNotificacionVer(id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: (response: any) => {
           const notificacionver = Array.isArray(response) ? response[0] : response;
           if (!notificacionver) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
+            this.notificationService.error({
               text: 'No se pudieron cargar los datos de la notificación.',
             });
             reject(new Error('Sin datos'));
@@ -88,9 +90,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
           resolve();
         },
         error: (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
+          this.notificationService.error({
             text: 'No se pudo cargar la notificación. Por favor, inténtelo de nuevo.',
           });
           reject(error);
@@ -101,37 +101,34 @@ export class EditaExpedienteNotificacionesCrudFacade {
 
   editaNotifi(host: EditaExpedienteNotificacionesCrudHost): void {
     if (!host.creanotificacion || !host.idNotificacion) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
+      this.notificationService.error({
         text: 'No se puede editar la notificación. Faltan datos necesarios.',
       });
       return;
     }
 
     const datosParaEnviar = prepararDatosNotificacionParaEnvio(host.creanotificacion);
-    Swal.fire({
+    this.notificationService.custom({
       title: 'Guardando cambios...',
       allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
+      didOpen: () => this.notificationService.showLoading(),
     });
 
-    this.notificacionesService.editarNotificacion(datosParaEnviar as any, host.idNotificacion).subscribe({
+    this.notificacionesService.editarNotificacion(datosParaEnviar as any, host.idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         host.cerrarModalNotificacion();
         host.refresSourceListarNotifi();
         host.quitabotonesNotifi();
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
+        this.notificationService.success({
           text: `La notificación ${host.ejerNotifi}/${host.numeroNotifi} ha sido actualizada correctamente.`,
           timer: 2000,
           showConfirmButton: false,
         });
       },
       error: () => {
-        Swal.fire({
-          icon: 'error',
+        this.notificationService.error({
           title: 'Error al guardar',
           text: 'No se pudo actualizar la notificación. Por favor, inténtelo de nuevo.',
         });
@@ -144,20 +141,22 @@ export class EditaExpedienteNotificacionesCrudFacade {
       this.notificationService.warning('Seleccione una notificación.');
       return;
     }
-    Swal.fire({
+    this.notificationService.custom({
       title: 'Enviando a Notifica...',
       allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
+      didOpen: () => this.notificationService.showLoading(),
     });
-    this.notificacionesService.enviarANotifica(host.idNotificacion).subscribe({
+    this.notificacionesService.enviarANotifica(host.idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (response) => {
-        Swal.close();
+        this.notificationService.close();
         host.refresSourceListarNotifi();
         this.notificationService.success(response?.mensaje || 'Notificación enviada a Notifica.');
         host.listadodeNotificaciones();
       },
       error: (error) => {
-        Swal.close();
+        this.notificationService.close();
         this.notificationService.error(
           error?.error?.message || 'No se pudo enviar la notificación a Notifica.',
         );
@@ -170,20 +169,22 @@ export class EditaExpedienteNotificacionesCrudFacade {
       this.notificationService.warning('Seleccione una notificación.');
       return;
     }
-    Swal.fire({
+    this.notificationService.custom({
       title: 'Sincronizando con Notifica...',
       allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
+      didOpen: () => this.notificationService.showLoading(),
     });
-    this.notificacionesService.sincronizarNotifica(host.idNotificacion).subscribe({
+    this.notificacionesService.sincronizarNotifica(host.idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (response) => {
-        Swal.close();
+        this.notificationService.close();
         host.refresSourceListarNotifi();
         this.notificationService.success(response?.mensaje || 'Sincronización completada.');
         host.listadodeNotificaciones();
       },
       error: (error) => {
-        Swal.close();
+        this.notificationService.close();
         this.notificationService.error(
           error?.error?.message || 'No se pudo sincronizar con Notifica.',
         );
@@ -196,9 +197,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
       try {
         await this.vernotifi(host, host.idNotificacion, false);
       } catch {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
+        this.notificationService.error({
           text: 'No se pudieron cargar los datos de la notificación.',
         });
         return;
@@ -206,34 +205,31 @@ export class EditaExpedienteNotificacionesCrudFacade {
     }
 
     if (!host.notificacionver?.fecNotif) {
-      Swal.fire({
-        icon: 'warning',
+      this.notificationService.warning({
         title: 'Campo requerido',
         text: 'La notificación debe tener una fecha de notificación válida.',
       });
       return;
     }
     if (host.notificacionver?.situacion === 2) {
-      Swal.fire({
-        icon: 'warning',
+      this.notificationService.warning({
         title: 'Notificación ya enviada',
         text: 'Esta notificación ya ha sido enviada y no puede ser enviada nuevamente.',
       });
       return;
     }
     if (host.notificacionver?.situacion !== 1) {
-      Swal.fire({
-        icon: 'warning',
+      this.notificationService.warning({
         title: 'Estado incorrecto',
         text: 'Solo se pueden enviar notificaciones en estado GENERADA.',
       });
       return;
     }
 
-    Swal.fire({
+    this.notificationService.custom({
       title: 'Enviando notificación...',
       allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
+      didOpen: () => this.notificationService.showLoading(),
     });
 
     const datosParaEnviar = {
@@ -243,17 +239,17 @@ export class EditaExpedienteNotificacionesCrudFacade {
       usuContr: host.usuContrl,
     };
 
-    this.notificacionesService.enviarNotificacion(datosParaEnviar, host.idNotificacion).subscribe({
+    this.notificacionesService.enviarNotificacion(datosParaEnviar, host.idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
-        Swal.close();
+        this.notificationService.close();
         host.refresSourceListarNotifi();
         host.quitabotonesNotifi();
-        Swal.fire('Notificación enviada', '', 'success');
+        this.notificationService.success({ title: 'Notificación enviada' });
       },
       error: () => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
+        this.notificationService.error({
           text: 'No se pudo enviar la notificación.',
         });
       },
@@ -275,35 +271,32 @@ export class EditaExpedienteNotificacionesCrudFacade {
   }
 
   borrarNotificacion(host: EditaExpedienteNotificacionesCrudHost, id: number): void {
-    Swal.fire({
+    this.notificationService.confirm({
       title: `¿Confirma eliminar la notificación ${host.ejerNotifi}/${host.numeroNotifi} ?  `,
-      text: '',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (!result.isConfirmed) {
         return;
       }
-      this.notificacionesService.deleteNotificacion(id).subscribe({
+      this.notificacionesService.deleteNotificacion(id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: () => {
           host.refresSourceListarNotifi();
-          Swal.fire('Notificación Eliminada!', '', 'success');
+          this.notificationService.success({ title: 'Notificación Eliminada!' });
           host.quitabotonesNotifi();
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 403) {
-            Swal.fire({
+            this.notificationService.custom({
               title: 'La Notificiación no se encuentra en estado "GENERADA" ',
               showClass: { popup: 'animate__animated animate__fadeInDown' },
               hideClass: { popup: 'animate__animated animate__fadeOutUp' },
             });
             return;
           }
-          Swal.fire('No se pudo eliminar la Notificación!', '', 'info');
+          this.notificationService.info({ title: 'No se pudo eliminar la Notificación!' });
         },
       });
     });
@@ -311,7 +304,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
 
   publicarNotifi(host: EditaExpedienteNotificacionesCrudHost): void {
     if (!host.creanotificacion.fecPubBop || !host.creanotificacion.numBop) {
-      Swal.fire('Debe rellenar todos los campos obligatorios.');
+      this.notificationService.warning('Debe rellenar todos los campos obligatorios.');
       return;
     }
 
@@ -325,19 +318,20 @@ export class EditaExpedienteNotificacionesCrudFacade {
     notificacionPublicacion.numBop = host.creanotificacion.numBop;
     notificacionPublicacion.usuContr = host.usuContrl || '';
 
-    this.notificacionesService.PublicarNotificacion(notificacionPublicacion, host.idNotificacion).subscribe({
+    this.notificacionesService.PublicarNotificacion(notificacionPublicacion, host.idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         host.refresSourceListarNotifi();
         this.vernotifi(host, host.idNotificacion, host.modoVerNotificacion).then(() => {
           this.refrescarBotonesTrasAccion(host);
         });
-        Swal.fire('Notificacion Publicada!', '', 'success');
+        this.notificationService.success({ title: 'Notificacion Publicada!' });
         host.borrarDatosPublicacion();
         host.quitabotonesNotifi();
       },
       error: () => {
-        Swal.fire({
-          icon: 'error',
+        this.notificationService.error({
           title: 'Error al publicar',
           text: 'No se pudo publicar la notificación. Por favor, inténtelo de nuevo.',
         });
@@ -347,7 +341,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
 
   recepcionarNotificacion(host: EditaExpedienteNotificacionesCrudHost): void {
     if (!host.creanotificacion.fecRecNotif || !host.creanotificacion.receptor) {
-      Swal.fire('Debe rellenar todos los campos obligatorios.');
+      this.notificationService.warning('Debe rellenar todos los campos obligatorios.');
       return;
     }
 
@@ -364,24 +358,23 @@ export class EditaExpedienteNotificacionesCrudFacade {
       notificacionRecepcion.fecEnvio = fecEnvioOriginal;
     }
 
-    this.notificacionesService.recepcionarNotificacion(notificacionRecepcion, host.idNotificacion).subscribe({
+    this.notificacionesService.recepcionarNotificacion(notificacionRecepcion, host.idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         host.refresSourceListarNotifi();
         this.vernotifi(host, host.idNotificacion, host.modoVerNotificacion).then(() => {
           this.refrescarBotonesTrasAccion(host);
         });
         host.quitabotonesNotifi();
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
+        this.notificationService.success({
           text: `La notificación ${host.ejerNotifi}/${host.numeroNotifi} ha sido recepcionada correctamente.`,
           timer: 2000,
           showConfirmButton: false,
         });
       },
       error: () => {
-        Swal.fire({
-          icon: 'error',
+        this.notificationService.error({
           title: 'Error al recepcionar',
           text: 'No se pudo recepcionar la notificación. Por favor, inténtelo de nuevo.',
         });
@@ -395,7 +388,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
       !host.creanotificacion.motNotif &&
       !host.creanotificacion.notificador
     ) {
-      Swal.fire('Debe rellenar todos los campos obligatorios.');
+      this.notificationService.warning('Debe rellenar todos los campos obligatorios.');
       return;
     }
 
@@ -413,24 +406,23 @@ export class EditaExpedienteNotificacionesCrudFacade {
       notificacionDevolucion.fecEnvio = fecEnvioOriginal;
     }
 
-    this.notificacionesService.editarNotificacion(notificacionDevolucion, host.idNotificacion).subscribe({
+    this.notificacionesService.editarNotificacion(notificacionDevolucion, host.idNotificacion).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         host.refresSourceListarNotifi();
         this.vernotifi(host, host.idNotificacion, host.modoVerNotificacion).then(() => {
           this.refrescarBotonesTrasAccion(host);
         });
         host.quitabotonesNotifi();
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
+        this.notificationService.success({
           text: `La notificación ${host.ejerNotifi}/${host.numeroNotifi} ha sido devuelta correctamente.`,
           timer: 2000,
           showConfirmButton: false,
         });
       },
       error: () => {
-        Swal.fire({
-          icon: 'error',
+        this.notificationService.error({
           title: 'Error al devolver',
           text: 'No se pudo devolver la notificación. Por favor, inténtelo de nuevo.',
         });
@@ -439,13 +431,9 @@ export class EditaExpedienteNotificacionesCrudFacade {
   }
 
   anularNotificacion(host: EditaExpedienteNotificacionesCrudHost): void {
-    Swal.fire({
+    this.notificationService.confirm({
       title: `¿ Confirma Anular la notificación : ${host.ejerNotifi}/${host.numeroNotifi} ?`,
       text: 'Este paso no tendra marcha atras!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
@@ -458,15 +446,16 @@ export class EditaExpedienteNotificacionesCrudFacade {
       notificacionAnulacion.situacion = 6;
       notificacionAnulacion.usuContr = host.usuContrl || '';
 
-      this.notificacionesService.anularNotificacion(notificacionAnulacion, host.idNotificacion).subscribe({
+      this.notificacionesService.anularNotificacion(notificacionAnulacion, host.idNotificacion).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: () => {
           host.refresSourceListarNotifi();
           this.vernotifi(host, host.idNotificacion, host.modoVerNotificacion).then(() => {
             this.refrescarBotonesTrasAccion(host);
           });
           host.quitabotonesNotifi();
-          Swal.fire({
-            icon: 'success',
+          this.notificationService.success({
             title: '¡Anulada!',
             text: 'Esta notificación fue anulada.',
             timer: 2000,
@@ -474,8 +463,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
           });
         },
         error: () => {
-          Swal.fire({
-            icon: 'error',
+          this.notificationService.error({
             title: 'Error al anular',
             text: 'No se pudo anular la notificación. Por favor, inténtelo de nuevo.',
           });
@@ -485,12 +473,14 @@ export class EditaExpedienteNotificacionesCrudFacade {
   }
 
   crearNotificacionConfirmada(host: CrearNotificacionConfirmadaHost): void {
-    this.notificacionesService.crearNotificacion(host.creanotificacion, host.idTarea).subscribe({
+    this.notificacionesService.crearNotificacion(host.creanotificacion, host.idTarea).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         this.tareasFacade.refrescarGrid(host, host.idTramite);
         host.resetvariables();
         host.limpiarFormularioNotificacion();
-        Swal.fire('Crear Notificación', 'La notificación fue generada.', 'success').then(() => {
+        this.notificationService.success({ title: 'Crear Notificación', text: 'La notificación fue generada.' }).then(() => {
           host.cerrarModalCrearNotificacion();
         });
       },
@@ -511,7 +501,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
           }
         }
 
-        Swal.fire('Error', mensajeError, 'error').then(() => {
+        this.notificationService.error({ title: 'Error', text: mensajeError }).then(() => {
           host.limpiarEstadoModalError();
         });
       },
@@ -520,7 +510,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
 
   solicitarCreacionNotificacion(host: SolicitarCrearNotificacionHost): void {
     if (!host.idTarea) {
-      Swal.fire('Error', 'Debe seleccionar una tarea antes de crear la notificación', 'warning');
+      this.notificationService.warning({ title: 'Error', text: 'Debe seleccionar una tarea antes de crear la notificación' });
       return;
     }
 
@@ -532,11 +522,10 @@ export class EditaExpedienteNotificacionesCrudFacade {
       if (!host.creanotificacion.dni) {
         camposFaltantes.push('Interesado');
       }
-      Swal.fire(
-        'Error',
-        'Debe rellenar todos los campos obligatorios: ' + camposFaltantes.join(', '),
-        'warning',
-      );
+      this.notificationService.warning({
+        title: 'Error',
+        text: 'Debe rellenar todos los campos obligatorios: ' + camposFaltantes.join(', '),
+      });
       return;
     }
 
@@ -545,7 +534,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
     );
 
     if (!interesado) {
-      Swal.fire('Error', 'No se encontró el interesado seleccionado', 'error');
+      this.notificationService.error({ title: 'Error', text: 'No se encontró el interesado seleccionado' });
       return;
     }
 
@@ -557,11 +546,9 @@ export class EditaExpedienteNotificacionesCrudFacade {
       fechaActual: host.fecha,
     });
 
-    Swal.fire({
+    this.notificationService.confirm({
       title: 'Confirmar creación de notificación',
       text: `¿Está seguro de que desea crear la notificación para ${interesado.nomInter}?`,
-      icon: 'question',
-      showCancelButton: true,
       confirmButtonText: 'Crear Notificación',
       cancelButtonText: 'Cancelar',
     }).then((result) => {

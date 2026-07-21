@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProcedimientosComponent } from './procedimientos.component';
-import { FormnuevoprocediComponent } from './formnuevoprocedi.component';
 import { FormModifProcediComponent } from './form-modif-procedi.component';
 import { EditaProcedimientoComponent } from './edita-procedimiento.component';
 import { VerProcedimientoComponent } from './ver-procedimiento.component';

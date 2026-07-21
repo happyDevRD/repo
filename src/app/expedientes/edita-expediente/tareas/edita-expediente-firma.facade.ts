@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from 'src/environments/environment';
 import { ArchivoFirmadoEF } from '../../expedientes';
 import { ExpedientesService } from '../../expedientes.service';
+import { NotificationService } from '../../../core/service/notification.service';
 import { EditaExpedienteTareasFacade, EditaExpedienteTareasHost } from './edita-expediente-tareas.facade';
 
 export interface FirmaTareaHost extends EditaExpedienteTareasHost {
@@ -19,10 +20,13 @@ export interface FirmaTareaHost extends EditaExpedienteTareasHost {
 
 @Injectable()
 export class EditaExpedienteFirmaFacade {
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private readonly expedientesService: ExpedientesService,
     private readonly http: HttpClient,
     private readonly tareasFacade: EditaExpedienteTareasFacade,
+    private readonly notificationService: NotificationService,
   ) {}
 
   limpiarArchivoFirmaEF(host: FirmaTareaHost): void {
@@ -30,7 +34,9 @@ export class EditaExpedienteFirmaFacade {
   }
 
   cargarTipoFirma(host: FirmaTareaHost): void {
-    this.expedientesService.getTipoFirma(host.idTarea).subscribe({
+    this.expedientesService.getTipoFirma(host.idTarea).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (data) => console.log('MENSAJE DE RESPUESTA : ' + data),
       error: (error: HttpErrorResponse) => {
         console.error('Tipo de Firma : ' + error.error?.text);
@@ -57,11 +63,13 @@ export class EditaExpedienteFirmaFacade {
 
     const form = host.archivofirmadoef;
     if (!form.asunto || !form.prioridad || !form.texto) {
-      Swal.fire('Debe rellenar todos los campos obligatorios.');
+      this.notificationService.warning('Debe rellenar todos los campos obligatorios.');
       return;
     }
 
-    this.expedientesService.getTipoFirma(host.idTarea).subscribe({
+    this.expedientesService.getTipoFirma(host.idTarea).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (data) => console.log('MENSAJE DE RESPUESTA : ' + data),
       error: (error: HttpErrorResponse) => {
         console.error('TIPO DE FIRMA  +++++++++++++++' + error.error?.text);
@@ -69,38 +77,41 @@ export class EditaExpedienteFirmaFacade {
         if (error.error?.text === 'ATENDIDA') {
           this.expedientesService
             .postArchivoFirmadoEF(form, host.usuContrl, host.idTarea)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
               next: () => {
-                Swal.fire('Envio de firma ATENDIDA realizado con exito!', '', 'success');
+                this.notificationService.success({ title: 'Envio de firma ATENDIDA realizado con exito!' });
                 this.limpiarArchivoFirmaEF(host);
                 this.tareasFacade.refrescarGridAdapter(host);
                 host.spinnervisiblefirma = true;
               },
               error: (err: HttpErrorResponse) => {
                 console.log('paso por error: ' + err.error?.text);
-                Swal.fire(err.error?.message, '', 'warning');
+                this.notificationService.warning({ title: err.error?.message });
                 host.spinnervisiblefirma = true;
               },
             });
         }
 
         if (error.error?.text === undefined) {
-          Swal.fire('La Tarea de Procedimiento no tiene Proceso firmado');
+          this.notificationService.warning('La Tarea de Procedimiento no tiene Proceso firmado');
         }
       },
     });
   }
 
   enviarFirmaDesatendida(host: FirmaTareaHost): void {
-    this.expedientesService.postArchivoFirmadoEFDesatendida(host.usuContrl, host.idTarea).subscribe({
+    this.expedientesService.postArchivoFirmadoEFDesatendida(host.usuContrl, host.idTarea).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
-        Swal.fire('Envio de firma realizado con exito!', '', 'success');
+        this.notificationService.success({ title: 'Envio de firma realizado con exito!' });
         this.limpiarArchivoFirmaEF(host);
         this.tareasFacade.refrescarGridAdapter(host);
       },
       error: (err: HttpErrorResponse) => {
         console.log('paso por error: ' + err.error?.text);
-        Swal.fire(err.error?.message, '', 'warning');
+        this.notificationService.warning({ title: err.error?.message });
       },
     });
   }
@@ -109,24 +120,25 @@ export class EditaExpedienteFirmaFacade {
     host.descargaficheroFirmado = `${environment.apiUrl}archivo/firma/${host.numeroArchivo}/${host.usuContrl}/${host.idTarea}`;
 
     if (!host.numeroArchivo) {
-      Swal.fire('Esta tarea No tiene ningún documento asociado');
+      this.notificationService.warning('Esta tarea No tiene ningún documento asociado');
       return;
     }
 
-    this.http.get(host.descargaficheroFirmado).subscribe({
+    this.http.get(host.descargaficheroFirmado).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {},
       error: (err: HttpErrorResponse) => {
         if (err.status === 200) {
-          Swal.fire({
+          this.notificationService.success({
             position: 'center',
-            icon: 'success',
             title: 'Firma realizado con exito',
             showConfirmButton: false,
             timer: 2500,
           });
           host.refrescoSourceTareasTramite(host.idTramite);
         } else {
-          Swal.fire(err.error?.message);
+          this.notificationService.warning({ title: err.error?.message });
         }
 
         this.tareasFacade.refrescarGridAdapter(host);

@@ -1,0 +1,4 @@
+/* Structural shell only — visual styles come from Bootstrap + iflow-modal */
+:host {
+  display: contents;
+}
