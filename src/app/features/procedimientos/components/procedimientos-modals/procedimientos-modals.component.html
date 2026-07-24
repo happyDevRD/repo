@@ -1,0 +1,388 @@
+<!-- procedimientos-modals-permisos -->
+      <!-- Modal nuevoPermisoModal -->
+<app-modal-shell
+  modalId="nuevoPermisoModal"
+  title="Nuevo Permiso"
+  titleId="nuevoPermisoModalLabel"
+  dialogClass="modal-xl"
+  [showFooter]="false"
+>
+  <form modalBody id="formNuevoPermiso" (ngSubmit)="p.validateAndCreatePermiso($event)">
+<div class="form-floating">
+                  <select class="form-select" id="usuarioPermiso" name="plantilladefecto"
+                    [(ngModel)]="p.creapermisoprocedi.usuario" required>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let procedipermisos of p.procedipermiso" [value]="procedipermisos.usuario">
+                      {{ procedipermisos.usuario }}
+                    </option>
+                  </select>
+                  <label for="usuarioPermiso">Usuario *</label>
+                </div>
+                <div class="modal-footer px-0 pb-0">
+                  <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    (click)="p.atrasCrearPermisoProcedi(); p.cerrarModal('nuevoPermisoModal')">Cancelar</button>
+                  <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+                </div>
+  </form>
+</app-modal-shell>
+
+
+<!-- procedimientos-modals-atributos -->
+      <!-- Modal EditoAtributosModal -->
+<app-modal-shell
+  modalId="EditoAtributosModal"
+  title="Editar Atributos"
+  titleId="EditoAtributosLabel"
+  dialogClass="modal-xl"
+  [showFooter]="false"
+>
+  <form modalBody id="formEditarAtributos" (ngSubmit)="p.validateAndEditAtributo($event)">
+<div class="modal-body">
+                <div class="mb-4">
+                  <div class="form-floating">
+                    <select class="form-select" id="etipoatributo" name="etipoatributo"
+                      [(ngModel)]="p.atributoscrear.idAtrib" required
+                      (change)="p.asociaEtiquetaAtributosEditar(p.atributoscrear.idAtrib)">
+                      <option value="" disabled selected></option>
+                      <option *ngFor="let tipoAtributos of p.tipoAtributo" [value]="tipoAtributos.valor">
+                        {{ tipoAtributos.descripcion }}
+                      </option>
+                    </select>
+                    <label for="etipoatributo">Tipo de atributo *</label>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="eetiqueta" name="eetiqueta" type="text" [value]="p.etiGruAtrib"
+                        disabled placeholder=" ">
+                      <label for="eetiqueta">Etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="edetiqueta" name="edetiqueta" type="text"
+                        [(ngModel)]="p.atributoscrear.desGruAtrib" required placeholder=" ">
+                      <label for="edetiqueta">Descripción etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-floating">
+                      <input class="form-control" id="evinicial" name="evinicial" type="{{p.tipocaracteresAtributos}}"
+                        [(ngModel)]="p.atributoscrear.valInici" [disabled]="p.disabledAtrib"
+                        maxlength="{{p.maximoCaracAtributos}}" placeholder=" ">
+                      <label for="evinicial">Valor Inicial</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-floating">
+                      <input class="form-control" id="evminimo" name="evminimo" type="{{p.tipocaracteresAtributos}}"
+                        [(ngModel)]="p.atributoscrear.valMinim" [disabled]="p.disabledAtrib"
+                        maxlength="{{p.maximoCaracAtributos}}" placeholder=" ">
+                      <label for="evminimo">Valor mínimo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-floating">
+                      <input class="form-control" id="evmaximo" name="evmaximo" type="{{p.tipocaracteresAtributos}}"
+                        [(ngModel)]="p.atributoscrear.valMaxim" [disabled]="p.disabledAtrib"
+                        maxlength="{{p.maximoCaracAtributos}}" placeholder=" ">
+                      <label for="evmaximo">Valor máximo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 d-flex align-items-center">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="erequerido" name="requerido"
+                        (click)="p.requerido(1)">
+                      <label class="form-check-label" for="erequerido">Requerido</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                  (click)="p.limpioAtributosformulario(); p.cerrarModal('EditoAtributosModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+              </div>
+  </form>
+</app-modal-shell>
+
+
+      <!-- Modal NAtributosModal -->
+<app-modal-shell
+  modalId="NAtributosModal"
+  title="Nuevos Atributos"
+  titleId="NAtributosLabel"
+  dialogClass="modal-xl"
+  [showFooter]="false"
+>
+  <form modalBody id="formNuevosAtributos" (ngSubmit)="p.validateAndCreateAtributo($event)">
+<div class="modal-body">
+                <div class="mb-4">
+                  <div class="form-floating">
+                    <select class="form-select" id="tipoatributo" name="tipoatributo" required
+                      [(ngModel)]="p.atributoscrear.idAtrib" (ngModelChange)="p.asociaEtiquetaAtributos($event)">
+                      <option value="" disabled selected></option>
+                      <option *ngFor="let t of p.tipoAtributo" [value]="t.valor">{{ t.descripcion }}</option>
+                    </select>
+                    <label for="tipoatributo">Tipo de atributo *</label>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="etiqueta" name="etiqueta" type="text" required
+                        [(ngModel)]="p.atributoscrear.etiGruAtrib" placeholder=" ">
+                      <label for="etiqueta">Etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="detiqueta" name="detiqueta" type="text" required
+                        [(ngModel)]="p.atributoscrear.desGruAtrib" placeholder=" ">
+                      <label for="detiqueta">Descripción etiqueta *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-floating">
+                      <input class="form-control" id="vinicial" name="vinicial" [type]="p.tipocaracteresAtributos"
+                        [attr.maxlength]="p.maximoCaracAtributos" [disabled]="p.disabledAtrib"
+                        [(ngModel)]="p.atributoscrear.valInici" placeholder=" ">
+                      <label for="vinicial">Valor inicial</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-floating">
+                      <input class="form-control" id="vminimo" name="vminimo" [type]="p.tipocaracteresAtributos"
+                        [attr.maxlength]="p.maximoCaracAtributos" [disabled]="p.disabledAtrib"
+                        [(ngModel)]="p.atributoscrear.valMinim" placeholder=" ">
+                      <label for="vminimo">Valor mínimo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-floating">
+                      <input class="form-control" id="vmaximo" name="vmaximo" [type]="p.tipocaracteresAtributos"
+                        [attr.maxlength]="p.maximoCaracAtributos" [disabled]="p.disabledAtrib"
+                        [(ngModel)]="p.atributoscrear.valMaxim" placeholder=" ">
+                      <label for="vmaximo">Valor máximo</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2 d-flex align-items-center">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="requerido"
+                        (change)="p.requerido($any($event.target).checked ? 1 : 0)">
+                      <label class="form-check-label" for="requerido">Requerido</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                  (click)="p.limpioAtributosformulario(); p.cerrarModal('NAtributosModal')">Cancelar</button>
+                <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+              </div>
+  </form>
+</app-modal-shell>
+
+
+<!-- procedimientos-modals-tareas -->
+      <!-- Offcanvas: Modificar Tarea -->
+      <div class="offcanvas offcanvas-end offcanvas-iflow" id="modificarTareaOffcanvas" tabindex="-1"
+        aria-labelledby="modificarTareaOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h4 class="offcanvas-title" id="modificarTareaOffcanvasLabel">Modificar Tarea</h4>
+          <button type="button" class="btn-close" aria-label="Cerrar"
+            (click)="p.limpiarErroresModificarTarea(); p.cerrarOffcanvas('modificarTareaOffcanvas')"></button>
+        </div>
+        <div class="offcanvas-body">
+          <form id="formModificarTarea" (ngSubmit)="p.validateAndEditTarea($event)">
+            <div class="mb-3">
+              <div class="form-floating">
+                <input class="form-control" id="descripcionModTarea" name="descripcion" type="text"
+                  [(ngModel)]="p.editatareaprocedi.descripcion" required placeholder=" ">
+                <label for="descripcionModTarea">Descripción *</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="faseModificar" name="fase" [(ngModel)]="p.editatareaprocedi.faseTarea"
+                  required>
+                  <option value="" disabled selected></option>
+                  <option value="INICIO">Inicio</option>
+                  <option value="INSTRUCCION">Instrucción</option>
+                  <option value="RESOLUCION">Resolución</option>
+                </select>
+                <label for="faseModificar">Fase *</label>
+              </div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-12">
+                <div class="form-floating">
+                  <select (change)="p.peparadatosfirma(p.editatareaprocedi.plantillaDefecto)"
+                    [(ngModel)]="p.editatareaprocedi.plantillaDefecto" class="form-select" id="plantillaModificar"
+                    name="plantilladefecto" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLANTILLA">Sin Plantilla</option>
+                    <option *ngFor="let plantillatareas of p.plantillatarea; trackBy: trackByPlantilla" [value]="plantillatareas.plantilla">
+                      {{ plantillatareas.desPlant }}
+                    </option>
+                  </select>
+                  <label for="plantillaModificar">Plantilla por defecto *</label>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating">
+                  <select class="form-select" id="accionesModificar" name="acciones"
+                    [(ngModel)]="p.editatareaprocedi.acciones" required>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let accion of p.acciones; trackBy: trackByValor" [value]="accion.valor">{{ accion.descripcion }}</option>
+                  </select>
+                  <label for="accionesModificar">Acciones *</label>
+                </div>
+              </div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input class="form-control" id="plazoModificar" name="plazo" type="number"
+                    [(ngModel)]="p.editatareaprocedi.plazo" max="365" min="1" required placeholder=" ">
+                  <label for="plazoModificar">Plazo *</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <select class="form-select" id="tipoPlazoModificar" name="tipoplazo"
+                    [(ngModel)]="p.editatareaprocedi.tipoPlazo" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLAZO">Sin plazo</option>
+                    <option value="DIAS">Día</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                  <label for="tipoPlazoModificar">Tipo de plazo *</label>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="p.tpsinfirma" class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="firmaModificar" name="firmapordefecto1"
+                  [(ngModel)]="p.editatareaprocedi.firmapordefecto" required>
+                  <option value="" disabled selected></option>
+                  <option *ngFor="let firmaslistar of p.firmalistar; trackBy: trackByProcesoFirmado" [value]="firmaslistar.procesoFirmadoDefecto">
+                    {{ firmaslistar.descripcionCircuito }}
+                  </option>
+                </select>
+                <label for="firmaModificar">Firma por defecto *</label>
+              </div>
+            </div>
+            <div class="offcanvas-iflow__actions">
+              <button type="button" class="btn-iflow btn-iflow--secondary"
+                (click)="p.limpiarErroresModificarTarea(); p.cerrarOffcanvas('modificarTareaOffcanvas')">Cancelar</button>
+              <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Offcanvas: Nueva Tarea -->
+      <div class="offcanvas offcanvas-end offcanvas-iflow" id="tareasOffcanvas" tabindex="-1"
+        aria-labelledby="tareasOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h4 class="offcanvas-title" id="tareasOffcanvasLabel">Nueva Tarea</h4>
+          <button type="button" class="btn-close" aria-label="Cerrar"
+            (click)="p.borravaloresNuevaTarea(); p.cerrarOffcanvas('tareasOffcanvas')"></button>
+        </div>
+        <div class="offcanvas-body">
+          <form id="formNuevaTarea" (ngSubmit)="p.validateAndCreateTarea($event)">
+            <div class="mb-3">
+              <div class="form-floating">
+                <textarea class="form-control" id="descripcionTarea" name="descripcion"
+                  [(ngModel)]="p.creatareaprocedi.descripcion" required placeholder=" "
+                  style="min-height: 5rem"></textarea>
+                <label for="descripcionTarea">Descripción *</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="faseTarea" name="fase" [(ngModel)]="p.creatareaprocedi.fasetarea"
+                  required>
+                  <option value="" disabled selected></option>
+                  <option value="INICIO">Inicio</option>
+                  <option value="INSTRUCCION">Instrucción</option>
+                  <option value="RESOLUCION">Resolución</option>
+                </select>
+                <label for="faseTarea">Fase *</label>
+              </div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-12">
+                <div class="form-floating">
+                  <select (change)="p.peparadatosfirma(p.creatareaprocedi.plantilladefecto)"
+                    [(ngModel)]="p.creatareaprocedi.plantilladefecto" class="form-select" id="plantillaTarea"
+                    name="plantilladefecto" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLANTILLA">Sin Plantilla</option>
+                    <option *ngFor="let plantillatareas of p.plantillatarea; trackBy: trackByPlantilla" [value]="plantillatareas.plantilla">
+                      {{ plantillatareas.desPlant }}
+                    </option>
+                  </select>
+                  <label for="plantillaTarea">Plantilla por defecto *</label>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating">
+                  <select (change)="p.preparoAccion($event)" [(ngModel)]="p.creatareaprocedi.acciones" class="form-select"
+                    id="accionesTarea" name="acciones" required>
+                    <option value="" disabled selected></option>
+                    <option *ngFor="let accion of p.acciones; trackBy: trackByValor" [value]="accion.valor">{{ accion.descripcion }}</option>
+                  </select>
+                  <label for="accionesTarea">Acciones *</label>
+                </div>
+              </div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input class="form-control" id="plazoTarea" name="plazo" type="number"
+                    [(ngModel)]="p.creatareaprocedi.plazo" required min="1" max="365" placeholder=" ">
+                  <label for="plazoTarea">Plazo *</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <select class="form-select" id="tipoPlazoTarea" name="tipoplazo"
+                    [(ngModel)]="p.creatareaprocedi.tipoplazo" required>
+                    <option value="" disabled selected></option>
+                    <option value="SINPLAZO">Sin plazo</option>
+                    <option value="DIAS">Día</option>
+                    <option value="SEMANAS">Semana</option>
+                    <option value="MESES">Mes</option>
+                    <option value="ANOS">Año</option>
+                  </select>
+                  <label for="tipoPlazoTarea">Tipo plazo *</label>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="p.tpsinfirma" class="mb-3">
+              <div class="form-floating">
+                <select class="form-select" id="firmaTarea" name="firmapordefecto1"
+                  [(ngModel)]="p.creatareaprocedi.firmapordefecto" required>
+                  <option value="" disabled selected></option>
+                  <option *ngFor="let firmaslistar of p.firmalistar; trackBy: trackByProcesoFirmado" [value]="firmaslistar.procesoFirmadoDefecto">
+                    {{ firmaslistar.descripcionCircuito }}
+                  </option>
+                </select>
+                <label for="firmaTarea">Firma por defecto *</label>
+              </div>
+            </div>
+            <div class="offcanvas-iflow__actions">
+              <button type="button" class="btn-iflow btn-iflow--secondary"
+                (click)="p.borravaloresNuevaTarea(); p.cerrarOffcanvas('tareasOffcanvas')">Cancelar</button>
+              <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+

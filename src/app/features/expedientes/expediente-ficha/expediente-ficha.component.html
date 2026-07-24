@@ -1,0 +1,171 @@
+<app-shell contentId="hanging-icons">
+  <div class="page-panel expediente-ficha">
+    <header class="expediente-ficha__header">
+      <div class="expediente-ficha__header-text">
+        <p class="expedientes-header__eyebrow">Expediente</p>
+        <h2 class="expedientes-header__title" *ngIf="ficha.resumen">
+          {{ ficha.resumen.ejercicio }}/{{ ficha.resumen.numero }}
+          <span class="estado-badge ms-2"
+                [ngClass]="'estado-badge--' + (ficha.resumen.estado || '').toLowerCase()">
+            {{ ficha.resumen.estado }}
+          </span>
+        </h2>
+        <h2 class="expedientes-header__title" *ngIf="!ficha.resumen && ficha.cargando">Cargando…</h2>
+        <h2 class="expedientes-header__title" *ngIf="!ficha.resumen && ficha.errorCarga">{{ ficha.errorCarga }}</h2>
+        <p class="expediente-ficha__hint mb-0" *ngIf="ficha.resumen">{{ ficha.resumen.titulo }}</p>
+      </div>
+      <div class="expediente-ficha__header-actions">
+        <span *ngIf="ficha.insideDryRun"
+              class="badge bg-info text-dark"
+              [title]="simulacionTitle">
+          {{ simulacionBadge }}
+        </span>
+        <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                (click)="ficha.handleIrListado()">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> Listado
+        </button>
+      </div>
+    </header>
+
+    <ng-container *ngIf="ficha.resumen">
+      <ul class="nav nav-tabs expediente-flujo-tabs mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button type="button" class="nav-link"
+                  [class.active]="ficha.seccionActiva === 'tramitacion'"
+                  (click)="ficha.handleIrTramitacion()"
+                  role="tab"
+                  title="Volver al listado de expedientes">
+            Listado
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button type="button" class="nav-link"
+                  [class.active]="ficha.seccionActiva === 'inside'"
+                  (click)="ficha.handleIrInside()"
+                  role="tab">
+            <i class="bi bi-cloud-upload" aria-hidden="true"></i> INSIDE
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Tramitación -->
+      <section class="expediente-ficha__panel"
+               *ngIf="ficha.seccionActiva !== 'inside'"
+               aria-label="Tramitación">
+        <p class="expediente-ficha__hint">
+          Trabajo diario del expediente: trámites, tareas, notificaciones e interesados.
+        </p>
+        <dl class="expediente-ficha__dl mb-3">
+          <div>
+            <dt>Procedimiento</dt>
+            <dd>{{ ficha.resumen.procedimiento || '—' }}</dd>
+          </div>
+          <div>
+            <dt>Tramitador</dt>
+            <dd>{{ ficha.resumen.instructor || '—' }}</dd>
+          </div>
+        </dl>
+
+        <div class="expediente-ficha__acciones-fila mb-3">
+          <button type="button"
+                  class="btn-iflow btn-iflow--primary btn-iflow--sm"
+                  [disabled]="!ficha.puedeTramitar()"
+                  (click)="ficha.handleTramitar()">
+            <i class="bi bi-journal-check" aria-hidden="true"></i> Abrir tramitación
+          </button>
+          <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                  (click)="ficha.handleInteresados()">
+            <i class="bi bi-people" aria-hidden="true"></i> Interesados
+          </button>
+          <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                  [disabled]="!ficha.puedeAbrir()"
+                  (click)="ficha.handleAbrirExpediente()">
+            <i class="bi bi-unlock" aria-hidden="true"></i> Abrir
+          </button>
+          <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                  [disabled]="!ficha.puedeArchivar()"
+                  (click)="ficha.handleArchivarSimulado()">
+            <i class="bi bi-archive" aria-hidden="true"></i> Archivar
+          </button>
+        </div>
+
+        <div class="row g-3" *ngIf="ficha.puedeCerrar()">
+          <div class="col-md-6">
+            <h4 class="expediente-ficha__subtitle">Cerrar</h4>
+            <div class="form-floating mb-2">
+              <input class="form-control" type="date" id="fichaFecCierre"
+                     [(ngModel)]="ficha.fechacierreexpedi" name="fichaFecCierre">
+              <label for="fichaFecCierre">Fecha cierre</label>
+            </div>
+            <div class="form-floating mb-2">
+              <input class="form-control" type="text" id="fichaSerie"
+                     [(ngModel)]="ficha.serieDocumental" name="fichaSerie" placeholder="Serie">
+              <label for="fichaSerie">Serie documental</label>
+            </div>
+            <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
+                    (click)="ficha.handleCerrarExpediente()">
+              Cerrar expediente
+            </button>
+          </div>
+          <div class="col-md-6">
+            <h4 class="expediente-ficha__subtitle">Cancelar</h4>
+            <div class="form-floating mb-2">
+              <input class="form-control" type="date" id="fichaFecCancel"
+                     [(ngModel)]="ficha.fechacancelacionexpedi" name="fichaFecCancel">
+              <label for="fichaFecCancel">Fecha cancelación</label>
+            </div>
+            <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                    (click)="ficha.handleCancelarExpediente()">
+              Cancelar expediente
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab INSIDE -->
+      <section class="expediente-ficha__panel"
+               *ngIf="ficha.seccionActiva === 'inside'"
+               aria-label="INSIDE">
+        <p class="expediente-ficha__hint">
+          Interoperabilidad ENI / REDSARA.
+          <span *ngIf="ficha.insideDryRun">Modo simulación (sin red SARA).</span>
+        </p>
+        <div class="expediente-ficha__acciones-fila">
+          <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                  [disabled]="ficha.insideEnviando"
+                  (click)="ficha.handleValidarInside()">
+            <i class="bi bi-shield-check" aria-hidden="true"></i> Validar
+          </button>
+          <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
+                  [disabled]="ficha.insideEnviando || !ficha.puedeEnviarInside()"
+                  (click)="ficha.handleEnviarAltaXml()">
+            <i class="bi bi-cloud-upload" aria-hidden="true"></i> Alta XML
+          </button>
+        </div>
+        <p class="expediente-ficha__hint" *ngIf="!ficha.puedeEnviarInside()">
+          Alta XML cuando el expediente esté CERRADO o ARCHIVADO.
+        </p>
+
+        <h4 class="expediente-ficha__subtitle">Historial</h4>
+        <div *ngIf="!ficha.historialInside.length" class="expediente-ficha__empty">
+          Sin envíos todavía.
+        </div>
+        <ul class="expediente-ficha__historial" *ngIf="ficha.historialInside.length">
+          <li *ngFor="let item of ficha.historialInside">
+            <span class="badge"
+                  [ngClass]="{
+                    'bg-warning text-dark': item.estadoEnvio === 'PENDIENTE',
+                    'bg-success': item.estadoEnvio === 'ENVIADO' || item.estadoEnvio === 'SIMULADO',
+                    'bg-danger': item.estadoEnvio === 'ERROR',
+                    'bg-secondary': !item.estadoEnvio
+                  }">
+              {{ item.estadoEnvio || '—' }}
+            </span>
+            <strong>{{ item.operacion }}</strong>
+            <span class="text-muted">{{ item.fecha | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </li>
+        </ul>
+      </section>
+    </ng-container>
+  </div>
+</app-shell>

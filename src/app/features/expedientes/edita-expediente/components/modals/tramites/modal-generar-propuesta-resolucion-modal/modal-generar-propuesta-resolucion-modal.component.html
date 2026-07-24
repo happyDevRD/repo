@@ -1,0 +1,138 @@
+<app-modal-shell modalId="GenerarPropuestaResolucionModal" title="Generar Propuesta de Resolución"
+     titleId="GenerarPropuestaResolucionModalLabel" dialogClass="modal-xl" [staticBackdrop]="true" [showFooter]="false"
+     (closed)="ops.limpiarFormularioBolsa(edita)">
+     <form modalBody (ngSubmit)="ops.crearInsertaBolsa(edita)">
+          <div class="row g-3">
+               <div class="col-sm-4">
+                    <div class="form-floating">
+                         <input [(ngModel)]="edita.insertabolsacrear.fecAlta" class="form-control"
+                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
+                              required type="date" value="{{ edita.selected }}" placeholder=" ">
+                         <label for="falta">Fecha Alta* </label>
+
+                    </div>
+               </div>
+               <div class="col-sm-4">
+                    <div class="form-floating">
+
+                         <input [(ngModel)]="edita.insertabolsacrear.fecPrefe" class="form-control"
+                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
+                              required type="date" value="{{ edita.selected }}" placeholder=" ">
+                         <label for="fpreferente">Fecha Preferente* </label>
+                    </div>
+               </div>
+               <div class="col-sm-4">
+                    <div class="form-floating">
+
+                         <input [(ngModel)]="edita.insertabolsacrear.fecMaxResol" class="form-control"
+                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
+                              required type="date" value="{{ edita.selected }}" placeholder=" ">
+                         <label for="fecMaxResol">Fecha Max Resoluci�n* </label>
+                         <br>
+                    </div>
+               </div>
+          </div>
+          <div class="row">
+               <div class="col-sm-6">
+                    <div class="form-floating">
+                         <input [(ngModel)]="edita.insertabolsacrear.extracto" class="form-control" id="extracto"
+                              name="extracto" placeholder=" ">
+                         <label for="extracto">Extracto </label>
+
+                    </div>
+               </div>
+               <div class="col-sm-6">
+                    <div class="form-floating">
+                         <input [(ngModel)]="edita.insertabolsacrear.dictamen" class="form-control" id="dictamen"
+                              name="dictamen" placeholder=" ">
+                         <label for="dictamen">Dictamen </label>
+                         <br>
+
+                    </div>
+               </div>
+          </div>
+          <div class="row">
+               <div class="col-sm-12">
+                    <div class="form-floating">
+
+                         <input [(ngModel)]="edita.insertabolsacrear.observaciones" class="form-control" id="observa"
+                              name="observa" type="text" placeholder=" ">
+                         <label for="observa">Observaciones </label>
+                         <br>
+                    </div>
+               </div>
+
+          </div>
+
+
+          <div class="row">
+               <div class="col-sm-4">
+                    <div class="form-floating">
+                         <input [(ngModel)]="edita.insertabolsacrear.expMotiv" class="form-control" id="mexpe"
+                              name="mexpe" type="text" placeholder=" ">
+                         <label for="mexpe">Exposici�n Motivo </label>
+                         <br>
+                    </div>
+               </div>
+          </div>
+          <div class="row">
+               <div class="col-sm-3">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.insertabolsacrear.prioridad" class="form-select " id="prioridad"
+                              name="prioridad" required>
+
+                              <option [selected]="edita.opcionselect" name="0" value="0">BAJA</option>
+                              <option name="1" value="1">MEDIA</option>
+                              <option name="2" value="2">ALTA</option>
+                              <option name="3" value="3">MUY ALTA</option>
+                         </select>
+                         <label for="prioridad">Prioridad* </label>
+
+                    </div>
+               </div>
+               <div class="col-sm-3">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.insertabolsacrear.tipSesion" class="form-select " id="tsesion"
+                              name="tsesion" required>
+                              <option name="0" selected value=0>PLENO</option>
+                              <option name="1" value=1>JUNTA_GOBIERNO</option>
+                              <option name="2" value=2>COMISION_INFORMATIVA</option>
+                              <option name="3" value=3>NO APARECE</option>
+                              <option name="4" value=4>PLENO Y COMISION INFORMATIVA</option>
+                         </select>
+                         <label for="tsesion">Tipo Sesi�n* </label>
+
+                    </div>
+               </div>
+
+               <div class="col-sm-3">
+                    <div class="form-floating">
+
+                         <select [(ngModel)]="edita.insertabolsacrear.tipPunto" class="form-select " id="tsesion"
+                              name="tsesion" required>
+
+                              <option name="0" value=0>PROPUESTA</option>
+                              <option name="1" value=1>RUEGOS Y PREGUNTAS</option>
+
+
+                         </select>
+                         <label for="tsesion">Tipo Punto* </label>
+
+                         <br>
+                    </div>
+               </div>
+
+
+          </div>
+
+
+          <div class="modal-footer">
+               <button (click)="ops.clickAtrasBolsaCrear(edita)" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    data-bs-dismiss="modal" type="button">
+                    Cancelar
+               </button>
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    role="button">Guardar</button>
+          </div>
+     </form>
+</app-modal-shell>

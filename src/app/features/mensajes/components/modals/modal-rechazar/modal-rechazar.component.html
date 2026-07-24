@@ -1,0 +1,31 @@
+<app-modal-shell
+  modalId="DevolverMensajeModal"
+  title="Rechazar mensaje"
+  titleId="DevolverMensajeModalLabel"
+  dialogClass="modal-lg"
+  [showFooter]="false"
+>
+  <form modalBody id="formRechazarMensaje" (ngSubmit)="m.validateAndRechazarMensaje($event)">
+    <p class="small text-secondary mb-3">
+      Indica el motivo del rechazo. Esta acción no se puede deshacer.
+    </p>
+    <div class="mb-3">
+      <div class="form-floating">
+        <textarea
+          class="form-control"
+          style="min-height: 7rem"
+          name="descripcionRechazoMensaje"
+          id="descripcionRechazoMensaje"
+          [(ngModel)]="m.rechazamensaje.descripcionRechazo"
+          required
+          placeholder=" "
+        ></textarea>
+        <label class="required-field" for="descripcionRechazoMensaje">Motivo del rechazo *</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="handleCancelar()">Cancelar</button>
+      <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--danger">Rechazar</button>
+    </div>
+  </form>
+</app-modal-shell>

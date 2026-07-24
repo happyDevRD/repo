@@ -1,0 +1,142 @@
+import { Component, inject } from '@angular/core'
+import { EditaExpedienteComponent } from '../../edita-expediente.component'
+import { EditaExpedienteNotificacionesUiFacade } from '../../notificaciones/edita-expediente-notificaciones-ui.facade'
+import { EditaExpedienteTareasFacade } from '../../tareas/edita-expediente-tareas.facade'
+import { EditaExpedienteTramitesFacade } from '../../tramites/edita-expediente-tramites.facade'
+import { EditaExpedienteOperacionesFacade } from '../../operaciones/edita-expediente-operaciones.facade'
+import { EditaExpedienteRefs } from '../../services/edita-expediente-refs.service'
+import { ModalManagerService } from '../../../../../core/service/modal-manager.service'
+import { ModalActionEvent } from '../../../../../shared/modals/modal-action.model'
+
+@Component({
+  selector: 'app-edita-expediente-workspace',
+  templateUrl: './edita-expediente-workspace.component.html',
+})
+export class EditaExpedienteWorkspaceComponent {
+  readonly edita = inject(EditaExpedienteComponent)
+  private readonly notifUiFacade = inject(EditaExpedienteNotificacionesUiFacade)
+  private readonly tareasFacade = inject(EditaExpedienteTareasFacade)
+  private readonly tramitesFacade = inject(EditaExpedienteTramitesFacade)
+  private readonly operacionesFacade = inject(EditaExpedienteOperacionesFacade)
+  private readonly refs = inject(EditaExpedienteRefs)
+  private readonly modalManager = inject(ModalManagerService)
+
+  handleTramiteAction(event: ModalActionEvent): void {
+    switch (event.id) {
+      case 'nuevoTramite':
+        this.tramitesFacade.habilitaTramiteExp(this.edita)
+        this.modalManager.openModal('NuevoTramiteModal')
+        return
+      case 'borrarTramite':
+        this.tramitesFacade.borrarTramite(this.edita)
+        return
+      default:
+        return
+    }
+  }
+
+  handleNotificacionAction(event: ModalActionEvent): void {
+    const id = this.notifUiFacade.idNotificacion
+    switch (event.id) {
+      case 'teu':
+      case 'reenviarTeu':
+        this.notifUiFacade.abrirModalEnvioTeu()
+        return
+      case 'enviarNotifica':
+        this.notifUiFacade.enviarANotificaPlataforma()
+        return
+      case 'sincronizar':
+        this.notifUiFacade.sincronizarConNotificaPlataforma()
+        return
+      case 'enviar':
+        this.modalManager.openModal('EnvioNotifi')
+        return
+      case 'recepcionar':
+        this.modalManager.openModal('RecepNotifi')
+        return
+      case 'devolver':
+        this.modalManager.openModal('DevolverNotifi')
+        return
+      case 'publicar':
+        this.modalManager.openModal('PubliNotifModal')
+        return
+      case 'anular':
+        this.notifUiFacade.anularNotificacion()
+        return
+      case 'ver':
+        if (id != null) {
+          this.notifUiFacade.verNotificacion(undefined, id)
+        }
+        return
+      case 'borrar':
+        if (id != null) {
+          this.notifUiFacade.borrarNotificacion(undefined, id)
+        }
+        return
+      case 'descargaTeu':
+        this.notifUiFacade.descargarFichero()
+        return
+      default:
+        return
+    }
+  }
+
+  handleTareaAction(event: ModalActionEvent): void {
+    switch (event.id) {
+      case 'nuevaTarea':
+        this.tareasFacade.abrirModalNuevaTarea(this.edita, this.refs.fileInput)
+        return
+      case 'borrarTarea':
+        this.tareasFacade.borrarTarea(this.edita)
+        return
+      case 'descargaXml':
+        this.edita.descargaXml()
+        return
+      case 'conviertePDF':
+        this.tareasFacade.conviertePDF(this.edita)
+        return
+      case 'metadatos':
+        this.edita.lifecycleFacade.formatearFechaMetadata(this.edita, this.edita.vermetadatos.fecCaptura)
+        this.modalManager.openModal('metadatosModal')
+        return
+      case 'enviarInside':
+        this.operacionesFacade.handleEnviarDocumentoTarea(this.edita)
+        return
+      case 'altaXmlDoc':
+        this.operacionesFacade.handleAltaDocumentoEniXml(this.edita)
+        return
+      case 'docFirmado':
+        this.edita.abreArchiFirmado()
+        return
+      case 'descargarDocumento':
+      case 'docOriginal':
+        this.edita.abreArchivo()
+        return
+      case 'firmaAtendida':
+        this.modalManager.openModal('archifirmaef')
+        return
+      case 'firmaDesatendida':
+        this.tareasFacade.descargarArchivoFirmado(this.edita)
+        return
+      case 'propuestaResolucion':
+        this.modalManager.openModal('GenerarPropuestaResolucionModal')
+        return
+      case 'crearNotificacion':
+        this.notifUiFacade.clickNuevaNotificacion(this.edita)
+        this.modalManager.openModal('CrearNotificacionModal')
+        return
+      case 'generarSalida':
+        this.modalManager.openModal('GenerarSalidaModal')
+        return
+      case 'tablonAnuncios':
+        this.tareasFacade.crearTablonAnuncio(this.edita)
+        this.modalManager.openModal('crearTablonAnunciosModal')
+        return
+      case 'finalizarTarea':
+        this.edita.finalizartarea()
+        return
+      default:
+        return
+    }
+  }
+}

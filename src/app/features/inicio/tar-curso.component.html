@@ -1,0 +1,59 @@
+<app-shell>
+<app-menu-inicio></app-menu-inicio>
+
+      <div class="page-panel">
+        <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
+          <div>
+            <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Inicio</p>
+            <h2 class="h4 fw-bold mb-0">Tareas en curso</h2>
+          </div>
+          <div class="d-flex flex-wrap gap-2" *ngIf="numeroArchivo">
+            <button type="button" class="btn-iflow btn-iflow--primary" (click)="abreArchivo()" title="Abrir archivo">
+              <i class="bi bi-file-earmark-arrow-down" aria-hidden="true"></i> Abrir archivo
+            </button>
+          </div>
+        </header>
+
+        <div class="table-responsive grid-container">
+          <table class="table table-iflow table-hover">
+            <thead>
+              <tr>
+                <th scope="col" class="col-select"></th>
+                <th scope="col">Expediente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Interesado</th>
+                <th scope="col">Procedimiento</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Fecha apertura</th>
+                <th scope="col">Fecha calculada</th>
+                <th scope="col">Alerta</th>
+                <th scope="col">Usuario</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tarea of tareatramiteexpedienteusuariolistar"
+                  [class.table-row-selected]="idtarea === tarea.id">
+                <td>
+                  <input type="radio" class="form-check-input" name="RadioId"
+                         [checked]="idtarea === tarea.id"
+                         (click)="pulsaAccionesTarea(tarea.id, tarea.archivo)"
+                         [attr.aria-label]="'Seleccionar tarea ' + tarea.id">
+                </td>
+                <td>{{ tarea.id }}</td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td>{{ tarea.descripcion }}</td>
+                <td>{{ tarea.fecInicio }}</td>
+                <td>{{ tarea.propuestaResolucion }}</td>
+                <td>—</td>
+                <td>{{ tarea.usuario }}</td>
+              </tr>
+              <tr *ngIf="!tareatramiteexpedienteusuariolistar?.length">
+                <td colspan="10" class="table-empty">No hay tareas en curso</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</app-shell>

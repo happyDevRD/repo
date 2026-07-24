@@ -3,6 +3,11 @@ import { environment } from '../../../../environments/environment'
 import { InsideExpedienteOrchestrator } from './inside-expediente.orchestrator'
 import { InsideEnvioRegistroService } from './inside-envio-registro.service'
 import { NotificationService } from '../notification.service'
+import {
+  etiquetaInsideDryRunHtml,
+  isInsideDryRun,
+  tituloInsideConSimulacion,
+} from '../../constants/inside-simulacion.constants'
 
 @Injectable({
   providedIn: 'root',
@@ -22,10 +27,8 @@ export class InsidePostCierreService {
       return
     }
 
-    const dryRun = environment.inside.dryRun === true
-    const etiquetaDryRun = dryRun
-      ? '<p class="text-info"><strong>Modo simulación:</strong> sin acceso a REDSARA.</p>'
-      : ''
+    const dryRun = isInsideDryRun()
+    const etiquetaDryRun = etiquetaInsideDryRunHtml(dryRun)
 
     this.notificationService.confirm({
       title: 'Expediente cerrado',
@@ -42,10 +45,8 @@ export class InsidePostCierreService {
   }
 
   private ejecutarEnvio(expedienteId: number): void {
-    const dryRun = environment.inside.dryRun === true
-    const etiquetaDryRun = dryRun
-      ? '<p class="text-info"><strong>Modo simulación:</strong> sin acceso a REDSARA.</p>'
-      : ''
+    const dryRun = isInsideDryRun()
+    const etiquetaDryRun = etiquetaInsideDryRunHtml(dryRun)
 
     this.orchestrator.altaExpedienteEniXmlDesdeExpediente(expedienteId).subscribe({
       next: (respuesta) => {
@@ -56,7 +57,7 @@ export class InsidePostCierreService {
           { dryRun },
         )
         this.notificationService.success({
-          title: `Envío INSIDE${dryRun ? ' (simulación)' : ''}`,
+          title: tituloInsideConSimulacion('Envío INSIDE', dryRun),
           html: `
             ${etiquetaDryRun}
             <p><strong>Código:</strong> ${respuesta.codigoRespuesta ?? '-'}</p>

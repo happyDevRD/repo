@@ -1,0 +1,31 @@
+﻿<app-edita-expediente-workspace-tramites [vertramite]="edita.vertramite" [botonVerNotifi]="edita.botonVerNotifi"
+  [veonotificaciones]="edita.veonotificaciones" [veoTramitadores]="edita.veoTramitadores"
+  [toolbarActions]="edita.tramiteToolbarActions" [columns]="edita.columnsTramite" [source]="edita.sourceTramite"
+  [localization]="edita.localizationObject" (action)="handleTramiteAction($event)"
+  (rowClick)="edita.clickTramiteNuevo($event)"
+  (rowDoubleClick)="edita.onTramiteDoubleClick($event)"></app-edita-expediente-workspace-tramites>
+<app-edita-expediente-workspace-notificaciones [veonotificaciones]="edita.veonotificaciones"
+  [verInfoNotifi]="edita.notifUiFacade.verInfoNotifi" [idNotificacion]="edita.notifUiFacade.idNotificacion"
+  [actions]="edita.notifUiFacade.notificacionActions" [envioNotifica]="edita.notifUiFacade.envioNotifica"
+  [columns]="edita.columnsListarNotifi" [source]="edita.sourceListarNotifi" [localization]="edita.localizationObject"
+  (action)="handleNotificacionAction($event)" (rowClick)="edita.onNotificacionClick($event)"
+  (rowDoubleClick)="edita.onNotificacionDoubleClick($event)"></app-edita-expediente-workspace-notificaciones>
+<app-edita-expediente-workspace-tramitadores [visible]="edita.veoTramitadores" [columns]="edita.columnsTramitadores"
+  [source]="edita.sourceTramitadores" [localization]="edita.localizationObject"
+  (rowClick)="edita.clickTramitadores($event)"
+  (rowDoubleClick)="edita.onTramitadorDoubleClick($event)"></app-edita-expediente-workspace-tramitadores>
+<app-edita-expediente-workspace-tareas [verTareasdelTramite]="edita.verTareasdelTramite"
+  [verAccionesdeTarea]="edita.verAccionesdeTarea" [headerActions]="edita.tareaHeaderActions"
+  [toolbarActions]="edita.tareaToolbarActions" [columns]="edita.columnsTareasTramite"
+  [source]="edita.sourceTareasTramite" [localization]="edita.localizationObject" (action)="handleTareaAction($event)"
+  (rowClick)="edita.clicktareaNueva($event)"
+  (rowDoubleClick)="edita.onTareaDoubleClick($event)"></app-edita-expediente-workspace-tareas>
+<app-edita-expediente-workspace-tabs [expedienteEjercicio]="edita.verExpediente.ejercicio"
+  [expedienteNumero]="edita.verExpediente.numero" [idExpediente]="edita.idExpediente"
+  [verojointeresado]="edita.verojointeresado" [verborrarinteresado]="edita.verborrarinteresado"
+  [listarinteresadosdto]="edita.listarinteresadosdto" [verxml]="edita.verxml"
+  [verEditartareatramite]="edita.verEditartareatramite" [tareaDescripcion]="edita.tareatramiteexpedientever.descripcion"
+  [verNuevaNotifi]="edita.verNuevaNotifi" [verformnuevatarea]="edita.verformnuevatarea"
+  [cargando]="edita.tareasFacade.cargando" (nuevoInteresado)="edita.abrirModal('ninteresadoModal')"
+  (borrarInteresados)="edita.borrarInteresados()" (seleccionaInteresado)="edita.seleccionaInteresado($event)"
+  (verHistoricoExpediente)="edita.abrirModal('verExpedienteEditaModal')"></app-edita-expediente-workspace-tabs>

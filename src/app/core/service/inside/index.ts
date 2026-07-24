@@ -10,7 +10,6 @@ export { InsidePrepareApiService } from './inside-prepare-api.service';
 export { InsideEnvioApiService } from './inside-envio-api.service';
 export { InsideEnvioRegistroService } from './inside-envio-registro.service';
 export { InsidePostCierreService } from './inside-post-cierre.service';
-export { InsideIntegrationModule } from './inside-integration.module';
 
 export * from './inside.constants';
 export * from './inside-eni.constants';

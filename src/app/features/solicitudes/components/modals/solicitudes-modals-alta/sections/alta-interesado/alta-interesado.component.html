@@ -1,0 +1,126 @@
+<section class="soli-form-section" *ngIf="s.personaFacade.existepersonaentidad"
+      aria-labelledby="soli-alta-persona-nueva-title">
+      <h3 id="soli-alta-persona-nueva-title" class="soli-form-section__title">Alta de interesado</h3>
+      <p class="soli-form-section__desc">El documento no está registrado; completa los datos de la persona o entidad.</p>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="form-floating">
+            <select class="form-select" (change)="s.selecTipPerso(s.creasolicitud.tipPerso)"
+              id="tipPerso" name="tipPerso" [(ngModel)]="s.creasolicitud.tipPerso">
+              <option value="" disabled selected>Selecciona tipo de documento</option>
+              <option value="1">D.N.I.</option>
+              <option value="2">C.I.F</option>
+              <option value="3">Tarjeta Residencia</option>
+            </select>
+            <label class="required-field" for="tipPerso">Tipo de documento</label>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="s.personaFacade.selectRazonSocial">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="razSocia" name="razSocia"
+              [(ngModel)]="s.creasolicitud.razSocia" placeholder=" ">
+            <label class="required-field" for="razSocia">Razón social</label>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="s.personaFacade.selectnombre">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="nombreperso" name="nombreperso"
+              [(ngModel)]="s.creasolicitud.nombre" placeholder=" ">
+            <label class="required-field" for="nombreperso">Nombre</label>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="s.personaFacade.selectape1">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="apellido1" name="apellido1"
+              [(ngModel)]="s.creasolicitud.apellido1" placeholder=" ">
+            <label class="required-field" for="apellido1">Primer apellido</label>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="s.personaFacade.selectape2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="apellido2" name="apellido2"
+              [(ngModel)]="s.creasolicitud.apellido2" placeholder=" ">
+            <label class="required-field" for="apellido2">Segundo apellido</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="direccion" name="direccion"
+              [(ngModel)]="s.creasolicitud.dirPosta" placeholder=" ">
+            <label class="required-field" for="direccion">Dirección</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="number" class="form-control" id="cp" name="cp"
+              [(ngModel)]="s.creasolicitud.codPosta" placeholder=" ">
+            <label class="required-field" for="cp">Código postal</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <select class="form-select" id="ps-prov" (change)="s.gestimunicip(s.creasolicitud.codProvi)"
+              name="provincia" title="Provincia" [(ngModel)]="s.creasolicitud.codProvi">
+              <option value="" disabled selected>Selecciona provincia</option>
+              <option *ngFor="let provincias of s.provin; trackBy: trackById"
+                [value]="provincias.id">{{ provincias.nm }}</option>
+            </select>
+            <label class="required-field" for="ps-prov">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <select class="form-select" id="ps-mun" name="municipio" title="Municipio"
+              [(ngModel)]="s.creasolicitud.codMunic">
+              <option value="" disabled selected>Selecciona municipio</option>
+              <option *ngFor="let municipio of s.personaFacade.municiflitro; trackBy: trackById"
+                [value]="municipio.id">{{ municipio.nm }}</option>
+            </select>
+            <label class="required-field" for="ps-mun">Municipio</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<section class="soli-form-section" *ngIf="s.personaFacade.dniok"
+      aria-labelledby="soli-alta-interesado-title">
+      <h3 id="soli-alta-interesado-title" class="soli-form-section__title">Interesado encontrado</h3>
+      <p class="soli-form-section__desc">Datos de contacto asociados al documento indicado.</p>
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" disabled [value]="s.personaFacade.nombredni"
+              id="nombre" name="nombre" placeholder=" ">
+            <label for="nombre">Nombre del interesado</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" disabled [value]="s.personaFacade.direcciondni"
+              id="direccion2" name="direccion2" placeholder=" ">
+            <label for="direccion2">Dirección</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" disabled [value]="s.personaFacade.cpdni"
+              id="cp2" name="cp2" placeholder=" ">
+            <label for="cp2">Código postal</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" disabled [value]="s.personaFacade.provinciadni"
+              id="provincia2" name="provincia2" placeholder=" ">
+            <label for="provincia2">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" disabled [value]="s.personaFacade.nommunicipiodni"
+              id="municipio2" name="municipio2" placeholder=" ">
+            <label for="municipio2">Municipio</label>
+          </div>
+        </div>
+      </div>
+    </section>

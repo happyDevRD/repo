@@ -1,16 +1,26 @@
 <div
-  class="modal fade iflow-modal"
+  class="modal fade"
+  [ngClass]="modalClass"
   [id]="modalId"
   tabindex="-1"
   [attr.aria-labelledby]="resolvedTitleId"
   aria-hidden="true"
   [attr.data-bs-backdrop]="staticBackdrop ? 'static' : null"
+  [attr.data-bs-keyboard]="keyboard ? null : 'false'"
 >
-  <div class="modal-dialog" [ngClass]="dialogClass">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 *ngIf="headingLevel === 'h4'" class="modal-title" [id]="resolvedTitleId">{{ title }}</h4>
-        <h5 *ngIf="headingLevel === 'h5'" class="modal-title" [id]="resolvedTitleId">{{ title }}</h5>
+  <div class="modal-dialog modal-dialog-centered" [ngClass]="dialogClass">
+    <div class="modal-content" [ngClass]="contentClass">
+      <div class="modal-header" [ngClass]="headerClass">
+        <ng-container *ngIf="!customHeader">
+          <h4
+            class="modal-title"
+            [class.fs-5]="headingLevel === 'h5'"
+            [id]="resolvedTitleId"
+          >
+            {{ title }}<ng-content select="[modalTitle]"></ng-content>
+          </h4>
+        </ng-container>
+        <ng-content select="[modalHeader]"></ng-content>
         <button
           type="button"
           class="btn-close"

@@ -1,116 +1,11 @@
 <div class="container py-3" *ngIf="persona">
-  <!-- Tarjeta: Modificar Datos Personas -->
   <div class="card mb-4">
     <div class="card-header bg-primary text-white">
       <h5 class="mb-0">Modificar Datos Personas</h5>
     </div>
     <div class="card-body">
-      <!-- Sección Identificación -->
-      <div class="row g-3">
-        <div class="col-md-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder=" "
-                   [(ngModel)]="persona.nombre">
-            <label for="nombre">Nombre</label>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="ape1" name="ape1" placeholder=" "
-                   [(ngModel)]="persona.apellido1">
-            <label for="ape1">Primer apellido</label>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="ape2" name="ape2" placeholder=" "
-                   [(ngModel)]="persona.apellido2">
-            <label for="ape2">Segundo apellido</label>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="numdocu" name="numdocu" placeholder=" "
-                   [value]="persona.numDocum" disabled>
-            <label for="numdocu">Número de Documento</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sección Dirección -->
-      <div class="row g-3 mt-3">
-        <div class="col-md-6">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="direccion" name="direccion" placeholder=" "
-                   [(ngModel)]="persona.dirPosta">
-            <label for="direccion">Dirección</label>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="cp" name="cp" placeholder=" "
-                   [(ngModel)]="persona.codPosta">
-            <label for="cp">Código Postal</label>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-floating">
-            <select class="form-select" id="provinciarn" name="provinciarn" title="Provincia"
-                    [(ngModel)]="persona.codProvi" (change)="onProvinciaChange()">
-              <option *ngFor="let provincia of provincia" [value]="provincia.id">
-                {{ provincia.nm }}
-              </option>
-            </select>
-            <label for="provinciarn">Provincia</label>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-floating">
-            <select class="form-select" id="Municipiorn" name="Municipiorn" title="Municipio"
-                    [(ngModel)]="persona.codMunic" (change)="onMunicipioChange()">
-              <option [ngValue]="null" disabled>
-                {{ persona.municipio || 'Seleccione Municipio' }}
-              </option>
-              <option *ngFor="let municipio of municipioFiltro" [ngValue]="municipio.id">
-                {{ municipio.nm }}
-              </option>
-            </select>
-            <label for="Municipiorn">Municipio</label>
-
-
-          </div>
-        </div>
-      </div>
-
-      <!-- Sección Contacto -->
-      <div class="row g-3 mt-3">
-        <div class="col-md-6">
-          <div class="form-floating">
-            <input type="email" class="form-control" id="email" name="email" placeholder=" "
-                   [(ngModel)]="persona.email">
-            <label for="email">Correo Electrónico</label>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-floating">
-            <input type="tel" class="form-control" id="telm" name="telm" placeholder=" "
-                   [(ngModel)]="persona.telMovil">
-            <label for="telm">Teléfono móvil</label>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-floating">
-            <input type="tel" class="form-control" id="telF" name="telF" placeholder=" "
-                   [(ngModel)]="persona.telFijo">
-            <label for="telF">Teléfono Fijo</label>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-          <button (click)="onActualizarDatos()" type="button" class="btn-iflow btn-iflow--primary w-100">
-            Actualizar Datos
-          </button>
-        </div>
-      </div>
+      <app-modificar-datos-persona-identidad></app-modificar-datos-persona-identidad>
+      <app-modificar-datos-persona-contacto></app-modificar-datos-persona-contacto>
     </div>
   </div>
 </div>

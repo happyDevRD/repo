@@ -1,0 +1,30 @@
+<div class="page-panel procedimientos-page">
+  <header class="procedimientos-header">
+    <div class="procedimientos-header__text">
+      <p class="procedimientos-header__eyebrow">Configuración del departamento</p>
+      <h2 class="procedimientos-header__title">Procedimientos</h2>
+      <p class="procedimientos-header__dept">
+        <i class="bi bi-building" aria-hidden="true"></i>
+        {{ p.departamento }}
+      </p>
+    </div>
+    <button class="btn-iflow btn-iflow--primary" type="button" (click)="p.abrirNuevoProcedimientoModal()">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Nuevo procedimiento
+    </button>
+  </header>
+
+  <div class="grid-container proc-list-grid">
+    <app-iflow-grid #gridProcedimientos
+      id="gridProcedimientos"
+      selectionMode="radio"
+      radioName="Procedimientos"
+      (rowClick)="p.enviamos($event)"
+      (rowDoubleClick)="p.onProcedimientoDoubleClick($event)"
+      [columns]="p.columnsPro"
+      [columnsresize]="true"
+      [localization]="p.localizationObject"
+      [source]="p.sourcePro">
+    </app-iflow-grid>
+  </div>
+</div>

@@ -22,7 +22,7 @@ import {
   InsideMapperOptions,
   InsideTareaDocumentoContext,
 } from './inside-iflow.context.models';
-import { ListarInteresados, TareaTramiteExpporExpedi, VerExpediente } from '../../../expedientes/expedientes';
+import { ListarInteresados, TareaTramiteExpporExpedi, VerExpediente } from '../../models/expediente-domain.model';
 
 const padSecuencia = (valor: number | string, longitud = 7): string =>
   String(valor).padStart(longitud, '0');

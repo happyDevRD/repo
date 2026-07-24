@@ -1,0 +1,24 @@
+<div *ngIf="verTareasdelTramite" class="seccion-tareas-tramite">
+  <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
+    <div>
+      <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Trámite</p>
+      <h2 class="h4 fw-bold mb-0">Listado de Tareas del Trámite</h2>
+    </div>
+    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="headerActions"
+      (action)="handleAction($event)">
+    </app-modal-action-bar>
+  </header>
+
+  <div *ngIf="verAccionesdeTarea" class="acciones-botones-container">
+    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="toolbarActions"
+      (action)="handleAction($event)">
+    </app-modal-action-bar>
+  </div>
+
+  <div class="grid-container">
+    <app-iflow-grid #gridTareas id="gridTareasTramite" selectionMode="radio" radioName="TareasTramite"
+      (rowClick)="handleRowClick($event)" (rowDoubleClick)="handleRowDoubleClick($event)" [columns]="columns"
+      [localization]="localization" [source]="source">
+    </app-iflow-grid>
+  </div>
+</div>

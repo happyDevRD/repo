@@ -1,0 +1,109 @@
+  <!-- Tarjeta de Baja de Habitante -->
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Baja de Habitante</h5>
+    </div>
+    <div class="card-body">
+      <!-- Sección Baja de Habitante -->
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="tbaja"
+              name="tbaja"
+              title="Tipo de Baja"
+              [(ngModel)]="bh.bajaHabitantes.tipBaja"
+              (change)="bh.AccionTipoBaja()">
+              <option *ngFor="let tipo of bh.TipoBaja" [value]="tipo.codigo">
+                {{ tipo.descripcion }}
+              </option>
+            </select>
+            <label for="tbaja">Tipo de Baja</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="date"
+              class="form-control"
+              id="startmovi"
+              name="trip-startmovi"
+              placeholder=" "
+              [(ngModel)]="bh.bajaHabitantes.fecMovim">
+            <label for="startmovi">Fecha Movimiento</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="date"
+              class="form-control"
+              id="startreal"
+              name="trip-startreal"
+              placeholder=" "
+              [(ngModel)]="bh.bajaHabitantes.fecReal">
+            <label for="startreal">Fecha Real</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="pais"
+              name="pais"
+              title="País"
+              [(ngModel)]="bh.bajaHabitantes.paiProDesti"
+              [disabled]="bh.disablePais">
+              <option *ngFor="let p of bh.pais" [value]="p.codPais">
+                {{ p.desPais }}
+              </option>
+            </select>
+            <label for="pais">País</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Provincia y Municipio para la Baja -->
+      <div class="row g-3 mt-3">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="provinciarn"
+              name="provinciarn"
+              title="Provincia"
+              [(ngModel)]="bh.bajaHabitantes.proProDesti"
+              (change)="bh.gestimunicip(bh.bajaHabitantes.proProDesti)"
+              [disabled]="bh.disableMunicipio">
+              <option *ngFor="let provincia of bh.provin" [value]="provincia.id">
+                {{ provincia.nm }}
+              </option>
+            </select>
+            <label for="provinciarn">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="Municipiorn"
+              name="Municipiorn"
+              title="Municipio"
+              [(ngModel)]="bh.bajaHabitantes.munProDesti"
+              [disabled]="bh.disableMunicipio">
+              <option *ngFor="let municipio of bh.municiflitro" [value]="municipio.id">
+                {{ municipio.nm }}
+              </option>
+            </select>
+            <label for="Municipiorn">Municipio</label>
+          </div>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button (click)="bh.bajaHabitante()" type="button" class="btn-iflow btn-iflow--primary w-100">
+            Baja Habitante
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

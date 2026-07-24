@@ -1,0 +1,118 @@
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Datos de la Persona</h5>
+    </div>
+    <div class="card-body">
+      <!-- Información de la Persona (solo lectura) -->
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              placeholder=" "
+              [(ngModel)]="bh.persona.nombre"
+              disabled>
+            <label for="nombre">Nombre</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="ape1"
+              name="ape1"
+              placeholder=" "
+              [(ngModel)]="bh.persona.apellido1"
+              disabled>
+            <label for="ape1">Primer apellido</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="ape2"
+              name="ape2"
+              placeholder=" "
+              [(ngModel)]="bh.persona.apellido2"
+              disabled>
+            <label for="ape2">Segundo apellido</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="numdocu"
+              name="numdocu"
+              placeholder=" "
+              [value]="bh.persona.numDocum"
+              disabled>
+            <label for="numdocu">Número de Documento</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Dirección -->
+      <div class="row g-3 mt-3">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="dir"
+              name="dir"
+              placeholder=" "
+              [value]="bh.persona.dirPosta"
+              disabled>
+            <label for="dir">Dirección</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="cp"
+              name="cp"
+              placeholder=" "
+              [value]="bh.persona.codPosta"
+              disabled>
+            <label for="cp">Código Postal</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="provi"
+              name="provi"
+              placeholder=" "
+              [value]="bh.persona.provincia"
+              disabled>
+            <label for="provi">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="muni"
+              name="muni"
+              placeholder=" "
+              [value]="bh.persona.municipio"
+              disabled>
+            <label for="muni">Municipio</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

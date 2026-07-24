@@ -18,8 +18,9 @@ export interface PersonaEntidadDto {
   dirPosta: string;
   municipio: string;
   provincia: string;
-  codMunic?: number | null;
-  codProvi?: number | null;
+  /** Backend String (código INE). */
+  codMunic?: string | number | null;
+  codProvi?: string | number | null;
   email?: string | null;
   telFijo?: string | null;
   telMovil?: string | null;

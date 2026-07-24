@@ -1,0 +1,17 @@
+<app-shell contentId="hanging-icons">
+  <app-access-denied *ngIf="!session.canManageProcedimientos" title="Sin acceso a procedimientos"
+    message="Este usuario no tiene permisos para gestionar procedimientos.">
+  </app-access-denied>
+
+  <ng-container *ngIf="session.canManageProcedimientos">
+    <app-menuprocedimiento></app-menuprocedimiento>
+
+    <ng-container *ngIf="!isWorkspaceMode">
+      <app-procedimientos-list></app-procedimientos-list>
+      <app-procedimientos-modals-alta></app-procedimientos-modals-alta>
+    </ng-container>
+
+    <app-procedimientos-workspace *ngIf="isWorkspaceMode"></app-procedimientos-workspace>
+    <app-procedimientos-modals></app-procedimientos-modals>
+  </ng-container>
+</app-shell>

@@ -1,0 +1,160 @@
+<app-modal-shell modalId="EditarTareaTramiteModal" title="Editar Tarea del Tr�mite"
+     titleId="EditarTareaTramiteModalLabel" dialogClass="modal-xl" [staticBackdrop]="true" [showFooter]="false"
+     (closed)="tareas.verListadoTareasModal(edita)">
+     <form modalBody (ngSubmit)="tareas.editarTarea(edita)">
+          <div class="row g-3">
+               <div class="col-sm-6">
+                    <div class="form-floating">
+
+                         <input [(ngModel)]="edita.tareatramiteexpedienteeditar.fecInicio"
+                              [(ngModel)]="edita.tareatramiteexpedienteeditar.fecInicio" [value]="edita.FecIniTarea"
+                              class="form-control" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
+                              type="date" placeholder=" ">
+                         <label for="documento">Fecha de Tarea* </label>
+
+
+                    </div>
+               </div>
+               <div class="col-sm-6">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.tareatramiteexpedienteeditar.tareaProcedimiento"
+                              class="form-select " id="tareap" name="tareap">
+
+                              <option [selected]="edita.tareaProcedimientoVer.descripcion" disabled>{{
+                                   edita.tareaProcedimientoVer.descripcion }}
+                              </option>
+                              <option *ngFor="let listastareaprocedi of edita.listatareaprocedi; trackBy: trackById"
+                                   name="si" value={{ listastareaprocedi.id }}>
+                                   <p *ngIf="edita.TramiteFase ==listastareaprocedi.faseTarea"> {{
+                                        listastareaprocedi.descripcion }}</p>
+                              </option>
+                         </select>
+                         <label for="tareap">Tarea Procedimiento *</label>
+                         <br>
+                    </div>
+               </div>
+
+               <div class="col-sm-6">
+                    <div class="form-floating">
+                         <input #fileInput (change)="edita.upload($event,edita.idTramite)"
+                              [(ngModel)]="edita.tareatramiteexpedienteeditar.archivo" accept=".pdf"
+                              class="form-control" id="formFile" name="doc" type="file" required>
+                         <label for="doc">Seleccione Documento *</label>
+                         <br>
+                    </div>
+               </div>
+
+               <div class="col-sm-6">
+                    <div class="form-floating">
+                         <input [value]="edita.nombreArchivoTarea" class="form-control" disabled id="descripcion"
+                              name="descripcion" type="text" placeholder=" ">
+                         <label for="descripcion"> Nombre Documento Actual </label>
+                         <br>
+                    </div>
+               </div>
+          </div>
+
+
+          <div class="row">
+               <div class="col-sm-12">
+                    <div class="form-floating">
+                         <input [(ngModel)]="edita.tareatramiteexpedienteeditar.descripcion"
+                              [value]="edita.tareatramiteexpedienteeditar.descripcion" class="form-control"
+                              id="descripcion" name="descripcion" required type="text" placeholder=" ">
+                         <label for="descripcion">Descripci�n* </label>
+                         <br>
+                    </div>
+               </div>
+
+
+          </div>
+          <div class="row">
+               <div class="col-6">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.tareatramiteexpedienteeditar.anexo" [value]="edita.anexoTarea"
+                              class="form-select " id="anexo" name="anexo" required>
+                              <option value=0>Fichero Anexo</option>
+                              <option value=1>Documentaci�n F�sica Requerida</option>
+                              <option value=2>Fichero Enlace</option>
+                              <option value=3>Documentaci�n F�sica Complementaria</option>
+
+                         </select>
+                         <label for="anexo">Anexo *</label>
+
+                    </div>
+               </div>
+               <div class="col-6">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.tareatramiteexpedienteeditar.documAportada"
+                              [value]="edita.docAportadaTarea" class="form-select " id="docapor" name="docapor"
+                              required>
+                              <option value=0>Ninguno</option>
+                              <option value=1>Copia</option>
+                              <option value=2>Compulsado</option>
+                              <option value=3>Copia Original</option>
+                              <option value=4>Original</option>
+
+                         </select>
+                         <label for="docapor">Documentaci�n Aportada *</label>
+                         <br>
+                    </div>
+               </div>
+               <div class="col-6">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.tareatramiteexpedienteeditar.tipoDocumEni"
+                              [value]="edita.docEniTarea" class="form-select " id="tipoDocumEni" name="tipoDocumEni"
+                              required>
+                              <option selected value="TD01">Resoluci�n</option>
+                              <option value="TD02">Acuerdo</option>
+                              <option value="TD03">Contrato</option>
+                              <option value="TD04">Convenio</option>
+                              <option value="TD05">Declaraci�n</option>
+                              <option value="TD06">Comunicaci�n</option>
+                              <option value="TD07">Notificaci�n</option>
+                              <option value="TD08">Publicaci�n</option>
+                              <option value="TD09">Acuse de recibo</option>
+                              <option value="TD10">Acta</option>
+                              <option value="TD11">Certificado</option>
+                              <option value="TD12">Diligencia</option>
+                              <option value="TD13">Informe</option>
+                              <option value="TD14">Solicitud</option>
+                              <option value="TD15">Denuncia</option>
+                              <option value="TD16">Alegaci�n</option>
+                              <option value="TD17">Recursos</option>
+                              <option value="TD18">Comunicaci�n ciudadano</option>
+                              <option value="TD19">Factura</option>
+                              <option value="TD20">Otros incautados</option>
+                              <option value="TD21">Otros</option>
+
+                         </select>
+                         <label for="tipoDocumEni">Tipo Documento ENI *</label>
+                    </div>
+               </div>
+               <div class="col-6">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.tareatramiteexpedienteeditar.documentacion"
+                              [value]="edita.DocumentacionTarea" class="form-select " id="documentacion"
+                              name="documentacion" required>
+                              <option selected value=1>Documentaci�n Adjunta Digitalizada</option>
+                              <option value=2>Documentaci�n Adjunta en Soporte Papel</option>
+                              <option value=3>Documentaci�n Adjunta Digitalizada y en Papel</option>
+                         </select>
+                         <label for="documentacion">Documentaci�n *</label>
+                         <br>
+                    </div>
+               </div>
+          </div>
+
+
+          <div class="modal-footer">
+               <br>
+               <button (click)="tareas.verListadoTareasModal(edita)" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    data-bs-dismiss="modal" type="button">
+                    Cancelar
+               </button>
+               <button *ngIf="edita.puedoEditarTarea" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    data-bs-dismiss="modal" role="button">Guardar
+               </button>
+          </div>
+     </form>
+</app-modal-shell>

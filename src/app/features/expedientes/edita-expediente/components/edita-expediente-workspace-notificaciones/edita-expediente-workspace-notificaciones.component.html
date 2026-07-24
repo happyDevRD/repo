@@ -1,0 +1,23 @@
+<!-- Botones de acciones de notificaciones -->
+<div *ngIf="showToolbar" class="acciones-botones-container d-flex flex-wrap align-items-center gap-2">
+  <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsBeforeNotifica"
+    (action)="handleAction($event)">
+  </app-modal-action-bar>
+
+  <app-notificaciones-notifica-panel [veoEnviarNotifica]="veoEnviarNotifica"
+    [veoSincronizarNotifica]="veoSincronizarNotifica" [envioNotifica]="envioNotifica"
+    (enviar)="handleEnviarANotificaPlataforma()" (sincronizar)="handleSincronizarConNotificaPlataforma()">
+  </app-notificaciones-notifica-panel>
+
+  <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsAfterNotifica"
+    (action)="handleAction($event)">
+  </app-modal-action-bar>
+</div>
+
+<!-- Grid de Notificaciones -->
+<div *ngIf="veonotificaciones" class="grid-container">
+  <app-iflow-grid #gridNotificaciones id="gridNotificaciones" selectionMode="radio" radioName="Notificacion"
+    (rowClick)="handleRowClick($event)" (rowDoubleClick)="handleRowDoubleClick($event)" [columns]="columns"
+    [localization]="localization" [source]="source">
+  </app-iflow-grid>
+</div>

@@ -1,0 +1,87 @@
+<section class="soli-context" aria-label="Solicitud seleccionada" *ngIf="s.hasSolicitudSeleccionada">
+  <div class="soli-context__main">
+    <div class="soli-context__title-row">
+      <h3 class="soli-context__title">{{ s.asuntoSolicitud || 'Solicitud seleccionada' }}</h3>
+      <span
+        class="soli-badge"
+        [class.soli-badge--pendiente]="s.estadoSolicitudSeleccionada === 'PENDIENTE'"
+        [class.soli-badge--aceptada]="s.estadoSolicitudSeleccionada === 'ACEPTADA'"
+        [class.soli-badge--rechazada]="s.estadoSolicitudSeleccionada === 'RECHAZADA'"
+      >
+        {{ s.estadoSolicitudLabel }}
+      </span>
+    </div>
+
+    <div class="soli-context__meta">
+      <span class="soli-context__label">No</span>
+      <span class="soli-context__value">{{ s.ejerNumeroSolicitud || '-' }}</span>
+      <span class="soli-context__sep" aria-hidden="true"></span>
+      <span class="soli-context__label">Fecha</span>
+      <span class="soli-context__value">{{ s.FIniSolicitud || '-' }}</span>
+      <span class="soli-context__sep" aria-hidden="true"></span>
+      <span class="soli-context__label">Interesado</span>
+      <span class="soli-context__value">{{ s.personaFacade.InteresadoSolicitud || '-' }}</span>
+      <span class="soli-context__sep" aria-hidden="true"></span>
+      <span class="soli-context__label">Asignado</span>
+      <span class="soli-context__value">{{ s.usuarioSolicitud || '-' }}</span>
+      <ng-container *ngIf="s.expsolicitud">
+        <span class="soli-context__sep" aria-hidden="true"></span>
+        <span class="soli-context__label">Expediente</span>
+        <span class="soli-context__value">{{ s.expsolicitud }}</span>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="soli-context__actions">
+    <button
+      *ngIf="s.canEditarSolicitud"
+      type="button"
+      class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+      (click)="handleEditarSolicitud()"
+    >
+      <i class="bi bi-pencil" aria-hidden="true"></i> Editar
+    </button>
+    <button
+      *ngIf="s.VeoRegDoc"
+      type="button"
+      class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+      (click)="handleVerRegistroDocumento()"
+    >
+      <i class="bi bi-file-earmark-text" aria-hidden="true"></i> Registro
+    </button>
+    <button
+      *ngIf="s.canAsignarInstructor"
+      type="button"
+      class="btn-iflow btn-iflow--primary btn-iflow--sm"
+      (click)="handleAsignarInstructor()"
+    >
+      <i class="bi bi-person-fill-add" aria-hidden="true"></i> Asignar
+    </button>
+    <button
+      *ngIf="s.canRechazarSolicitud"
+      type="button"
+      class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+      (click)="handleRechazarSolicitud()"
+    >
+      <i class="bi bi-x-circle" aria-hidden="true"></i> Rechazar
+    </button>
+    <button
+      *ngIf="s.canIniciarExpediente"
+      type="button"
+      class="btn-iflow btn-iflow--primary btn-iflow--sm"
+      (click)="handleIniciarExpediente()"
+    >
+      <i class="bi bi-play-fill" aria-hidden="true"></i> Iniciar expediente
+    </button>
+    <button
+      *ngIf="s.canEliminarSolicitud"
+      type="button"
+      class="btn-iflow btn-iflow--danger btn-iflow--sm"
+      (click)="handleEliminarSolicitud()"
+      aria-label="Eliminar solicitud"
+      title="Eliminar solicitud"
+    >
+      <i class="bi bi-trash" aria-hidden="true"></i>
+    </button>
+  </div>
+</section>

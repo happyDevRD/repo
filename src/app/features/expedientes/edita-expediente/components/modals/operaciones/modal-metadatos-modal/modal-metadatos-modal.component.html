@@ -1,0 +1,70 @@
+<app-modal-shell modalId="metadatosModal" title="Metadatos del Documento ENI" titleId="metadatosModalLabel"
+     dialogClass="modal-xl" [showFooter]="false">
+     <form modalBody>
+          <div class="px-3">
+               <div class="row g-3">
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input [value]="edita.vermetadatos.versionNTI" class="form-control" disabled id="nti"
+                                   name="nti" type="text" placeholder=" ">
+                              <label for="nti">Versión NTI </label>
+                              <br>
+                         </div>
+                    </div>
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input [value]="edita.vermetadatos.identificador" class="form-control" disabled
+                                   id="Identificadord" name="Identificadord" type="text" placeholder=" ">
+                              <label for="Identificadord">Identificador del
+                                   Documento </label>
+                              <br>
+                         </div>
+                    </div>
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input [value]="edita.vermetadatos.organo" class="form-control" disabled id="Órgano"
+                                   name="Órgano" type="text" placeholder=" ">
+                              <label for="Órgano">Órgano </label>
+                              <br>
+                         </div>
+                    </div>
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input [value]="edita.fechametadatabuena" class="form-control" disabled id="Captura"
+                                   name="Captura" type="text" placeholder=" ">
+                              <label for="Captura">Fecha de Captura</label>
+                              <br>
+                         </div>
+                    </div>
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input [value]="edita.vermetadatos.origen" class="form-control" disabled id="Origen"
+                                   name="Origen" type="text" placeholder=" ">
+                              <label for="Origen">Origen </label>
+                              <br>
+                         </div>
+                    </div>
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input [value]="edita.vermetadatos.versionNTI" class="form-control" disabled id="Estado"
+                                   name="Estado" type="text" placeholder=" ">
+                              <label for="Estado">Estado </label>
+                              <br>
+                         </div>
+                    </div>
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input [value]="edita.vermetadatos.tipDocum" class="form-control" disabled id="tDocumento"
+                                   name="tDocumento" type="text" placeholder=" ">
+                              <label for="tDocumento">Tipo de Documento</label>
+                              <br>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="modal-footer">
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    type="button">Cerrar</button>
+          </div>
+     </form>
+</app-modal-shell>

@@ -1,4 +1,4 @@
-import { TareaTramiteExpporExpedi, VerExpediente } from '../../../expedientes/expedientes';
+import { TareaTramiteExpporExpedi, VerExpediente } from '../../models/expediente-domain.model';
 import { InsideIflowContext } from './inside-iflow.context.models';
 import {
   buildIdentificadorExpedienteEni,

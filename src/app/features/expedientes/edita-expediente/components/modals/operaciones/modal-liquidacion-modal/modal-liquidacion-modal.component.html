@@ -1,0 +1,13 @@
+<app-modal-shell modalId="liquidacionModal" title="Generar Liquidación" titleId="liquidacionModalLabel"
+     dialogClass="modal-xl" [dismissOnClose]="false" (closed)="edita.cerrarModalLiquidacion()">
+     <div modalBody>
+          <app-liquidacion-form [idExped]="edita.idExpediente"
+               [tipoObjTribDesc]="tareas.tipoObjetoSeleccionado.codTipObjTribu"
+               [idTipObjTribu]="tareas.tipoObjetoSeleccionado.idTipObjTribu"
+               [idHisTipObjTribu]="tareas.tipoObjetoSeleccionado.idHisTipObjTribu"></app-liquidacion-form>
+     </div>
+     <div modalFooter>
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="edita.cerrarModalLiquidacion()">Cerrar</button>
+     </div>
+</app-modal-shell>

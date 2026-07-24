@@ -1,0 +1,68 @@
+          <div class="row g-3 mb-3">
+            <div class="col-md-4"><div class="form-floating">
+              <input type="date" id="fecOpera" class="form-control" formControlName="fecOpera"
+                     placeholder=" " required>
+              <label for="fecOpera">Fecha Operación</label>
+            </div></div>
+            <div class="col-md-8"><div class="form-floating">
+              <input type="text" id="txtOpera" class="form-control" formControlName="txtOpera"
+                     placeholder=" " required>
+              <label for="txtOpera">Descripción Operación</label>
+            </div></div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-3"><div class="form-floating">
+              <select id="tipoIva" class="form-select" formControlName="tipoIva" required>
+                <option *ngFor="let option of op.tipoIvaOptions" [value]="option">
+                  {{ option === '' ? 'Sin IVA' : option + '%' }}
+                </option>
+              </select>
+              <label for="tipoIva">Tipo IVA</label>
+            </div></div>
+            <!-- Campo Importe Total con formato de moneda -->
+            <div class="col-md-4"><div class="form-floating">
+              <input type="text" id="impTotal" class="form-control"
+                     formControlName="impTotal"
+                     placeholder=" " required
+                     currencyMask [options]="op.currencyOptions">
+              <label for="impTotal">Importe Total (€)</label>
+            </div></div>
+            <!-- Campo Importe Descuentos con formato de moneda -->
+            <div class="col-md-4"><div class="form-floating">
+              <input type="text" id="impDto" class="form-control"
+                     formControlName="impDto"
+                     placeholder=" "
+                     currencyMask [options]="op.currencyOptions">
+              <label for="impDto">Importe Descuentos (€)</label>
+            </div></div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <!-- Mostrar Importe IVA calculado con formato de moneda -->
+            <div class="col-md-6"><div class="form-floating">
+              <input type="text" id="impIva" class="form-control readonly-field"
+                     [value]="op.operacionForm.get('impIva')?.value | currency:'EUR':'symbol':'1.2-2'" readonly placeholder=" ">
+              <label for="impIva">Importe IVA (€)</label>
+            </div></div>
+            <!-- Mostrar Importe Líquido calculado con formato de moneda -->
+            <div class="col-md-6"><div class="form-floating">
+              <input type="text" id="impLiqui" class="form-control readonly-field"
+                     [value]="op.operacionForm.get('impLiqui')?.value | currency:'EUR':'symbol':'1.2-2'" readonly placeholder=" ">
+              <label for="impLiqui">Importe Líquido (€)</label>
+            </div></div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-12"><div class="form-floating">
+              <textarea id="observaciones" class="form-control" formControlName="observaciones"
+                        placeholder=" " rows="3"></textarea>
+              <label for="observaciones">Observaciones</label>
+            </div></div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary" [disabled]="op.operacionForm.invalid">
+              Guardar Operación
+            </button>
+          </div>

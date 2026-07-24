@@ -1,4 +1,4 @@
-import { ListarInteresados, TareaTramiteExpporExpedi, VerExpediente, VerMetadatos } from '../../../expedientes/expedientes';
+import { ListarInteresados, TareaTramiteExpporExpedi, VerExpediente, VerMetadatos } from '../../models/expediente-domain.model';
 import { InsideValidacionResult } from './inside-validation.helper';
 
 export interface IndiceEniDto {

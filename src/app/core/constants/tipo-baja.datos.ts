@@ -1,4 +1,6 @@
-﻿export const TIPO_BAJA = [
+﻿import { TipoBajaCatalogo } from '../models/ine-catalogo.model'
+
+export const TIPO_BAJA: TipoBajaCatalogo[] = [
   {
     codigo: '1',
     descripcion: 'Fallecimiento',

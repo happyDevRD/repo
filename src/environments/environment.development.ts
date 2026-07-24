@@ -25,6 +25,11 @@ export const environment = {
   procedimientos: 'procedimientos.svg',
   salir: 'Salida.svg',
 
+  /**
+   * INSIDE — demo / sin REDSARA: dryRun=true (mock SOAP vía proxy backend).
+   * Cutover REDSARA: dryRun=false + application.properties inside.soap.dry-run=false
+   * + credenciales mTLS. Ver INSIDE_CUTOVER_REDSARA_STEPS en inside-simulacion.constants.ts
+   */
   inside: {
     insideWsUrl: 'https://se-e-inside.redsara.es/inside/services/InsideWSService',
     gInsideWsUrl: 'https://se-e-inside.redsara.es/inside/services/GInsideWSService',

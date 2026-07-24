@@ -9,7 +9,7 @@ export class DocumentosListar {
   fechaSubida!: string;
   usuContr!: string;
   fecContr!: string
-
+  archivo?: string | number
 }
 
 

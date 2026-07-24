@@ -1,0 +1,59 @@
+<app-modal-shell modalId="verExpedienteEditaModal" titleId="verExpedienteEditaModalLabel"
+     dialogClass="modal-lg modal-dialog-centered modal-dialog-scrollable" headingLevel="h5">
+     <span modalTitle>Expediente {{ edita.verExpediente.ejercicio }}/{{ edita.verExpediente.numero }}</span>
+     <div modalBody>
+          <div class="row g-3 mb-3">
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input type="text" class="form-control" id="tituloVerEdita"
+                              [value]="edita.verExpediente.titulo" readonly placeholder=" ">
+                         <label for="tituloVerEdita">Título</label>
+                    </div>
+               </div>
+          </div>
+          <div class="row g-3 mb-3">
+               <div class="col-md-4">
+                    <div class="form-floating">
+                         <input type="text" class="form-control" id="estadoVerEdita"
+                              [value]="edita.verExpediente.estado" readonly placeholder=" ">
+                         <label for="estadoVerEdita">Estado</label>
+                    </div>
+               </div>
+               <div class="col-md-4">
+                    <div class="form-floating">
+                         <input type="text" class="form-control" id="faseVerEdita" [value]="edita.verExpediente.fase"
+                              readonly placeholder=" ">
+                         <label for="faseVerEdita">Fase</label>
+                    </div>
+               </div>
+               <div class="col-md-4">
+                    <div class="form-floating">
+                         <input type="text" class="form-control" id="procedimientoVerEdita"
+                              [value]="edita.verExpediente.procedimiento?.descripcion || ''" readonly placeholder=" ">
+                         <label for="procedimientoVerEdita">Procedimiento</label>
+                    </div>
+               </div>
+          </div>
+          <div class="row g-3">
+               <div class="col-md-6">
+                    <div class="form-floating">
+                         <input type="text" class="form-control" id="interesadoVerEdita"
+                              [value]="edita.verExpediente.personaEntidad?.desPerEntid || edita.verExpediente.personaEntidad?.nombre || ''"
+                              readonly placeholder=" ">
+                         <label for="interesadoVerEdita">Interesado</label>
+                    </div>
+               </div>
+               <div class="col-md-6">
+                    <div class="form-floating">
+                         <input type="email" class="form-control" id="emailVerEdita" [value]="edita.verExpediente.email"
+                              readonly placeholder=" ">
+                         <label for="emailVerEdita">Correo electrónico</label>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div modalFooter>
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               data-bs-dismiss="modal">Cerrar</button>
+     </div>
+</app-modal-shell>

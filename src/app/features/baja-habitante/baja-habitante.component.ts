@@ -3,7 +3,7 @@ import { PROVIN, MUNICIO, TIPO_BAJA } from '../../core/constants/datos';
 import { BajaHabitantes } from '../../core/models/baja-habitantes.model';
 import { PersonaEntidad } from '../../core/models/personaentidad.model';
 import { Pais } from '../../core/models/pais.model';
-import { ExpedientesService } from '../../expedientes/expedientes.service';
+import { PersonaEntidadApiService } from '../../core/service/persona/persona-entidad-api.service';
 import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
@@ -35,7 +35,7 @@ export class BajaHabitanteComponent implements OnInit {
   public pais: Pais[] = [];
 
   constructor(
-    private expedientesService: ExpedientesService,
+    private personaEntidadApi: PersonaEntidadApiService,
     private notificationService: NotificationService
   ) {}
 
@@ -45,11 +45,11 @@ export class BajaHabitanteComponent implements OnInit {
       return;
     }
     // Obtiene la persona usando el documento
-    this.expedientesService.getPersonaEntidad(this.documento).subscribe({
+    this.personaEntidadApi.getPersonaEntidad(this.documento).subscribe({
       next: (respuesta) => {
         this.persona = respuesta;
         // Después de obtener la persona, se obtienen los países
-        this.expedientesService.getPaises().subscribe({
+        this.personaEntidadApi.getPaises().subscribe({
           next: (paises) => {
             this.pais = paises;
           },
@@ -130,7 +130,7 @@ export class BajaHabitanteComponent implements OnInit {
 
     // Ajusta el valor de munProDesti si es necesario
     try {
-      let munProDesti: string = this.bajaHabitantes.munProDesti;
+      let munProDesti: string = this.bajaHabitantes.munProDesti ?? '';
       if (munProDesti && munProDesti.length > 2) {
         this.bajaHabitantes.munProDesti = munProDesti.slice(-2);
       }
@@ -145,7 +145,7 @@ export class BajaHabitanteComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.expedientesService.envioBajaHabitantes(this.bajaHabitantes, this.persona.numDocum)
+        this.personaEntidadApi.envioBajaHabitantes(this.bajaHabitantes, this.persona.numDocum ?? '')
           .subscribe(
             respuesta => {
               this.notificationService.success({ title: 'Baja realizada' });

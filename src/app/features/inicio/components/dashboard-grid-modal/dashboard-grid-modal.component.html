@@ -1,0 +1,45 @@
+<app-modal-shell
+ [modalId]="modalId"
+ [titleId]="modalId + 'Label'"
+ modalClass="dashboard-grid-modal"
+ dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+ contentClass="dashboard-grid-modal__content"
+ headerClass="dashboard-grid-modal__header"
+ bodyClass="dashboard-grid-modal__body"
+ [customHeader]="true"
+ [dismissOnClose]="false"
+ (closed)="close()"
+>
+ <div modalHeader class="dashboard-grid-modal__header-text">
+ <h4 class="modal-title" [id]="modalId + 'Label'">{{ title }}</h4>
+ <p class="dashboard-grid-modal__meta" *ngIf="recordCount !== null">
+ {{ recordCount }} {{ recordCount === 1 ? 'registro' : 'registros' }}
+ </p>
+ </div>
+
+ <div modalBody>
+ <p *ngIf="isEmpty" class="dashboard-grid-modal__empty">
+ No hay registros pendientes en esta consulta.
+ </p>
+ <div *ngIf="!isEmpty && source"
+ class="dashboard-grid-modal__scroll"
+ [style.min-width.px]="gridMinWidth || null">
+ <app-iflow-grid #grid
+ [height]="gridHeight"
+ [source]="source"
+ [columns]="columns"
+ [columnsresize]="true"
+ [localization]="localizationObject"
+ class="dashboard-grid-modal__grid">
+      </app-iflow-grid>
+ </div>
+ </div>
+
+ <div modalFooter class="dashboard-grid-modal__footer">
+ <button type="button"
+ class="btn-iflow btn-iflow--secondary"
+ (click)="close()">
+ Cerrar
+ </button>
+ </div>
+</app-modal-shell>

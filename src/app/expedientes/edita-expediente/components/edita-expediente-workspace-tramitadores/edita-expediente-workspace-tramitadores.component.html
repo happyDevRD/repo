@@ -1,9 +1,0 @@
-﻿        <!-- Grid de Tramitadores -->
-        <div *ngIf="edita.veoTramitadores" class="grid-container">
-                      <jqxGrid #gridTramitadores (onRowclick)="edita.clickTramitadores($event)" (onRowdoubleclick)="edita.onTramitadorDoubleClick($event)"
-            [altrows]="true" [autoheight]="true" [columns]="edita.columnsTramitadores" [columnsautoresize]="true"
-            [filterable]="true" [localization]="edita.localizationObject" [pageable]="true" [pagesize]="10"
-            [sortable]="true" [source]="edita.sourceTramitadores" [width]="'100%'" class="">
-          </jqxGrid>
-        </div>
-

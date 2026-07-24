@@ -1,0 +1,74 @@
+      <!-- Sección Dirección -->
+      <div class="row g-3 mt-3">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="direccion" name="direccion" placeholder=" "
+                   [(ngModel)]="mdp.persona.dirPosta">
+            <label for="direccion">Dirección</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="cp" name="cp" placeholder=" "
+                   [(ngModel)]="mdp.persona.codPosta">
+            <label for="cp">Código Postal</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <select class="form-select" id="provinciarn" name="provinciarn" title="Provincia"
+                    [(ngModel)]="mdp.persona.codProvi" (change)="mdp.onProvinciaChange()">
+              <option *ngFor="let provincia of mdp.provincia" [value]="provincia.id">
+                {{ provincia.nm }}
+              </option>
+            </select>
+            <label for="provinciarn">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <select class="form-select" id="Municipiorn" name="Municipiorn" title="Municipio"
+                    [(ngModel)]="mdp.persona.codMunic" (change)="mdp.onMunicipioChange()">
+              <option [ngValue]="null" disabled>
+                {{ mdp.persona.municipio || 'Seleccione Municipio' }}
+              </option>
+              <option *ngFor="let municipio of mdp.municipioFiltro" [ngValue]="municipio.id">
+                {{ municipio.nm }}
+              </option>
+            </select>
+            <label for="Municipiorn">Municipio</label>
+
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Contacto -->
+      <div class="row g-3 mt-3">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input type="email" class="form-control" id="email" name="email" placeholder=" "
+                   [(ngModel)]="mdp.persona.email">
+            <label for="email">Correo Electrónico</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input type="tel" class="form-control" id="telm" name="telm" placeholder=" "
+                   [(ngModel)]="mdp.persona.telMovil">
+            <label for="telm">Teléfono móvil</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input type="tel" class="form-control" id="telF" name="telF" placeholder=" "
+                   [(ngModel)]="mdp.persona.telFijo">
+            <label for="telF">Teléfono Fijo</label>
+          </div>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button (click)="mdp.onActualizarDatos()" type="button" class="btn-iflow btn-iflow--primary w-100">
+            Actualizar Datos
+          </button>
+        </div>
+      </div>

@@ -1,0 +1,407 @@
+<!-- teu -->
+
+        <!-- Modal Envío TEU -->
+    <app-modal-shell
+      modalId="EnvioTeu"
+      title="Envio T.E.U."
+      titleId="EnvioTeuLabel"
+      dialogClass="modal-xl"
+      [showFooter]="false"
+    >
+      <form modalBody #teuForm="ngForm" (ngSubmit)="handleCrearModeloTeuFichero()">
+<div class="row g-3 mb-3">
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="modeloteucrear.fecSolic" class="form-control" id="fecSolic" name="fecSolic"
+                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="isFechaSolicInvalid" placeholder=" ">
+                  <label class="form-label" for="fecSolic">Fecha de Solicitud *</label>
+                  </div><div *ngIf="isFechaSolicInvalid" class="invalid-feedback">
+                    La fecha de solicitud es obligatoria
+                  </div></div>
+
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="modeloteucrear.fecGener" class="form-control" id="fecGener" name="fecGener"
+                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="isFechaGenerInvalid" placeholder=" ">
+                  <label class="form-label" for="fecGener">Fecha de Generaci�n *</label>
+                  </div><div *ngIf="isFechaGenerInvalid" class="invalid-feedback">
+                    La fecha de generaci�n es obligatoria
+                  </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="modeloteucrear.fecFirma" class="form-control" id="fecFirma" name="fecFirma"
+                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="isFechaFirmaInvalid" placeholder=" ">
+                  <label class="form-label" for="fecFirma">Fecha de Firma *</label>
+                  </div><div *ngIf="isFechaFirmaInvalid" class="invalid-feedback">
+                    La fecha de firma es obligatoria
+                  </div></div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-sm-6"><div class="form-floating">
+                  <select id="materia" class="form-select" [(ngModel)]="modeloteucrear.idMater" name="materia" required>
+                    <option value="">Seleccione una materia</option>
+                    <option value="1">Agricultura y Ganader�a</option>
+                    <option value="2">Aguas</option>
+                    <option value="3">Catastro</option>
+                    <option value="4">Caza y Pesca</option>
+                    <option value="5">Consumo</option>
+                    <option value="6">Cr�dito, Banca y Seguros</option>
+                    <option value="7">Cultura y Espect�culos</option>
+                    <option value="8">Deportes</option>
+                    <option value="9">Econom�a y Comercio</option>
+                    <option value="10">Empleados P�blicos</option>
+                    <option value="11">Empleo</option>
+                    <option value="12">Energ�a</option>
+                    <option value="13">Educaci�n</option>
+                    <option value="14">Ense�anza Universitaria</option>
+                    <option value="15">Estad�sticas</option>
+                    <option value="16">Expropiaciones</option>
+                    <option value="17">Extranjer�a</option>
+                    <option value="18">Fuerzas Armadas</option>
+                    <option value="19">Hacienda</option>
+                    <option value="20">Industria y Artesan�a</option>
+                    <option value="21">Inspecci�n de Trabajo</option>
+                    <option value="22">Juego</option>
+                    <option value="23">Medio Ambiente y Sostenibilidad</option>
+                    <option value="24">Metrolog�a</option>
+                    <option value="25">Navegaci�n A�rea</option>
+                    <option value="26">Navegaci�n Mar�tima, Puertos y Marina Mercante</option>
+                    <option value="27">Notar�as</option>
+                    <option value="28">Urbanismo y Vivienda</option>
+                    <option value="29">Padr�n Municipal de Habitantes</option>
+                    <option value="30">Parimonio y Propiedades P�blicas</option>
+                    <option value="31">Propiedad Intelectual</option>
+                    <option value="32">Propiedad Industrial</option>
+                    <option value="33">Protecci�n de Datos de Car�cter</option>
+                    <option value="34">Registros de la Propiedad</option>
+                    <option value="35">Responsabilidad Patrimonial</option>
+                    <option value="36">Sanidad y Farmacia</option>
+                    <option value="37">Seguridad Ciudadana y Protecci�n Civil</option>
+                    <option value="38">Prestaciones de Seguridad Social y de Acci�n Social Mar�tima</option>
+                    <option value="39">Servicios Funerarios</option>
+                    <option value="40">Servicios Sociales</option>
+                    <option value="41">Subvenciones, Becas y otras Ayudas</option>
+                    <option value="42">Telecomunicaciones y Nuevas Tecnolog�as</option>
+                    <option value="43">Tr�fico, Circulaci�n y Seguridad Vial</option>
+                    <option value="44">Transportes Terretres</option>
+                    <option value="45">Turismo</option>
+                    <option value="46">Otras</option>
+                    <option value="47">Inscripci�n, Afiliaci�n y Recaudaci�n de la Seguridad Social</option>
+                  </select>
+                  <label class="form-label" for="materia">Materia *</label>
+                </div></div>
+
+                <div class="col-sm-6">
+                  <label for="idModel" class="form-label">Modelo *</label>
+                  <select id="idModel" class="form-select" [(ngModel)]="modeloteucrear.idModel" name="idModel" required>
+                    <option *ngFor="let listado of modeloteulistar; trackBy: trackByIdModel" [value]="listado.idModel">
+                      {{ listado.desModel }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6"><div class="form-floating">
+                  <input [(ngModel)]="modeloteucrear.procedimiento" class="form-control" id="procedimiento"
+                    name="procedimiento" type="text" placeholder=" ">
+                  <label for="procedimiento">Procedimiento </label>
+                </div></div>
+                <div class="col-sm-6"><div class="form-floating">
+                  <select [(ngModel)]="modeloteucrear.forPubli" class="form-select " id="forPublic" name="forPublic">
+                    <option value=1>En Extracto</option>
+                    <option value=2>�ntegra</option>
+                  </select>
+                  <label for="forPublic">Forma Publicaci�n </label>
+                  <br>
+                </div></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12"><div class="form-floating">
+
+                  <input [(ngModel)]="modeloteucrear.email" class="form-control form-floating" id="email" name="email"
+                    type="text" placeholder=" ">
+                  <label for="email">Correo Electr�nico </label>
+                  <br>
+                </div></div>
+                <div class="col-sm-12"><div class="form-floating">
+                  <input [(ngModel)]="modeloteucrear.url" class="form-control " id="url" name="url" type="text" placeholder=" ">
+                  <label for="url">Url </label>
+                  <br>
+                </div></div>
+                <div class="col-3 "></div>
+                <div class="col-3 "></div>
+                <div class="col-3 text-start">
+                  <input [(ngModel)]="modeloteucrear.datPerso" id="datoperso" name="datoperso" type="checkbox">Incluir
+                  datos personales eee
+                  <input [(ngModel)]="modeloteucrear.texPlura" id="incltex" name="incltex" type="checkbox">
+                  Incluir Textos
+                  <input [(ngModel)]="modeloteucrear.incLgt" id="leygene" name="leygene" type="checkbox">Ley
+                  general tributaria
+                </div>
+              </div>
+              <div class="col-1 "></div>
+              <div class="modal-footer">
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
+              </div>
+      </form>
+    </app-modal-shell>
+
+
+<!-- notifi-old-devolver -->
+
+        <!-- Modal Devolver Notificación (antiguo) -->
+    <app-modal-shell
+      modalId="DevolverNotifiOLD"
+      title="Devolver Notificación"
+      titleId="DevolverNotifiLabel"
+      dialogClass="modal-xl"
+      [staticBackdrop]="true"
+      [keyboard]="false"
+      [showFooter]="false"
+    >
+      <form modalBody (ngSubmit)="handleDevolverNotificacion()">
+<div class="row g-3">
+
+                <div class="col-sm-4"><div class="form-floating">
+                  <input [(ngModel)]="creanotificacion.fecRecNotif" class="form-control" data-mdb-inline="true"
+                    id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{ selected }}" placeholder=" ">
+                  <label for="documento">Fecha de Devoluci�n</label>
+
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <select [(ngModel)]="creanotificacion.motNotif" [value]="notificacionver.motNotif"
+                    class="form-select" id="desMotNotif" name="desMotNotif" required>
+
+                    <option *ngFor="let motivosnotificacioneslistar of motivonotificacioneslistar; trackBy: trackByMotNotif"
+                      name="descripcionMotivo" value={{ motivosnotificacioneslistar.motNotif }}> {{ motivosnotificacioneslistar.descripcion }}
+                    </option>
+
+                  </select>
+                  <label for="desMotNotif">Motivo Notificaci�n* </label>
+                </div></div>
+                <div class="col-sm-4"><div class="form-floating">
+                  <select [(ngModel)]="creanotificacion.notificador" class="form-select" id="notificador"
+                    name="notificador" required>
+
+                    <option *ngFor="let notificalistar of notificadorlistar; trackBy: trackByNotificador" name="notificadorNotifi"
+                      value={{ notificalistar.notificador }}> {{ notificalistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="receptor">Notificador* </label>
+                </div></div>
+              </div>
+
+              <div class="modal-footer">
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
+              </div>
+      </form>
+    </app-modal-shell>
+
+
+<!-- notifi-old-ver -->
+
+        <!-- Modal Ver/Editar Notificación (antiguo) -->
+    <app-modal-shell
+      modalId="verNotifiModalOLD"
+      title=""
+      titleId="verNotifiModalLabel"
+      dialogClass="modal-xl"
+      [staticBackdrop]="true"
+      [showFooter]="false"
+    >
+      <ng-container modalTitle>{{ modoVerNotificacion ? 'Ver Notificación' : 'Editar Notificación' }}</ng-container>
+      <form modalBody (ngSubmit)="handleEditaNotifi()">
+<div class="row g-3">
+                <div class="col-sm-2"><div class="form-floating">
+
+                  <input [value]="notificacionver.ejeNotif" class="form-control" id="ejeNotif" name="ejeNotif" readonly
+                    type="text" placeholder=" ">
+                  <label for="ejeNotif">Ejercicio </label>
+
+
+                </div></div>
+                <div class="col-sm-2"><div class="form-floating">
+
+                  <input [value]="notificacionver.numNotif" class="form-control" id="numNotif" name="numNotif" readonly
+                    type="text" placeholder=" ">
+                  <label for="numNotif">N�mero Notificaci�n </label>
+
+
+                </div></div>
+
+
+                <div class="col-sm-2"><div class="form-floating">
+
+                  <select [(ngModel)]="creanotificacion.forNotif" [value]="notificacionver.forNotif"
+                    class="form-select " id="fnotifi" name="fnotifi" [disabled]="modoVerNotificacion">
+
+                    <option name="correoP" value=0>Correo postal</option>
+                    <option name="telematico" value=1>Telem�tica</option>
+
+                  </select>
+                  <label for="fnotifi">Forma Notificaci�n </label>
+
+
+                  <br>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+
+                  <input [value]="fechNotifi" class="form-control" disabled id="numNotif" name="FechNotif" type="text" placeholder=" ">
+                  <label for="numNotif">Fecha Notificaci�n </label>
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+                  <input (change)="handleSolicitarDni(creanotificacion.dni)" [(ngModel)]="creanotificacion.dni"
+                    [value]="notificacionver.personaEntidad?.numDocum || ''" class="form-control" id="interesado"
+                    name="interesado" type="text" [disabled]="modoVerNotificacion" placeholder=" ">
+
+                  <label for="interesado"> Interesado DNI*</label>
+
+                  <br>
+                </div></div>
+
+
+              </div>
+              <div class="row">
+                <div class="col-sm-12"><div class="form-floating">
+
+                  <input [(ngModel)]="creanotificacion.observacion" [value]="notificacionver.observacion"
+                    class="form-control" id="observacion" name="observacion" type="text"
+                    [disabled]="modoVerNotificacion" placeholder=" ">
+                  <label for="observacion">Observaciones* </label>
+                  <br>
+
+
+                </div></div>
+
+
+                <div class="row">
+                  <br>
+
+
+                </div>
+
+              </div>
+              <div class="row">
+
+
+                <div class="col-sm-3"><div class="form-floating">
+                  <select [(ngModel)]="creanotificacion.motNotif" [value]="notificacionver.motNotif"
+                    class="form-select " id="desMotNotif" name="desMotNotif" required [disabled]="modoVerNotificacion">
+
+                    <option *ngFor="let motivosnotificacioneslistar of motivonotificacioneslistar; trackBy: trackByMotNotif"
+                      name="descripcionMotivo" value={{ motivosnotificacioneslistar.motNotif }}> {{ motivosnotificacioneslistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="desMotNotif">Motivo Notificaci�n* </label>
+
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+                  <select [(ngModel)]="creanotificacion.receptor" class="form-select " id="receptor" name="receptor"
+                    required [disabled]="modoVerNotificacion">
+
+                    <option *ngFor="let receptornotifislistar of receptornotifilistar; trackBy: trackByReceptor" name="receptorNotifi"
+                      value={{ receptornotifislistar.receptor }}> {{ receptornotifislistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="receptor">Recepci�n* </label>
+
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+                  <select [(ngModel)]="creanotificacion.notificador" class="form-select " id="notificador"
+                    name="notificador" required [disabled]="modoVerNotificacion">
+
+                    <option *ngFor="let notificalistar of notificadorlistar; trackBy: trackByNotificador" name="notificadorNotifi"
+                      value={{ notificalistar.notificador }}> {{ notificalistar.descripcion }}
+                    </option>
+
+
+                  </select>
+                  <label for="receptor">Notificador* </label>
+
+                </div></div>
+                <div class="col-sm-3"><div class="form-floating">
+
+                  <select [(ngModel)]="creanotificacion.situacion" class="form-select " id="situacion" name="situacion"
+                    required [disabled]="modoVerNotificacion">
+                    <option name="0" value=1>GENERADA</option>
+                    <option name="1" value=2>ENVIADA</option>
+                    <option name="2" value=3>RECEPCIONADA</option>
+                    <option name="3" value=4>DEVUELTA</option>
+                    <option name="4" value=5>COBRADA</option>
+                    <option name="5" value=6>ANULADA</option>
+
+
+                  </select>
+                  <label for="situacion">Situaci�n* </label>
+                  <br>
+
+
+                </div></div>
+
+              </div>
+
+              <div class="row">
+
+
+              </div>
+              <br>
+
+              <div class="row">
+                <div *ngIf="dniok" class="col-8 col-sm-6"><div class="form-floating">
+
+                  <input class="form-control" id="nombre" name="nombre" type="text" value={{ consultadni.nombre }} placeholder=" ">
+                  <label for="representante">Nombre</label>
+                </div></div>
+                <div *ngIf="dniok" class="col-8 col-sm-6"><div class="form-floating">
+
+                  <input class="form-control" id="Apellidos" name="Apellidos" type="text"
+                    value="{{ consultadni.apellido1 }} {{ consultadni.apellido2 }}" placeholder=" ">
+                  <label for="asignado">Apellidos </label>
+                </div></div>
+
+
+              </div>
+              <br>
+              <div *ngIf="dniok" class="mb-3"><div class="form-floating">
+
+                <input class="form-control" id="direccion" name="direccion" type="text"
+                  value="{{ consultadni.dirPosta }}" placeholder=" ">
+                <label for="direccion">Direcci�n</label>
+              </div></div>
+
+              <div class="row g-3">
+                <div *ngIf="dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="cp" name="cp" type="text" value="{{ consultadni.codPosta }}" placeholder=" ">
+                  <label for="cp">C�digo Postal</label>
+                </div></div>
+                <div *ngIf="dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="provincia" name="provincia" type="text"
+                    value="{{ consultadni.provincia }}" placeholder=" ">
+                  <label for="provincia">Provincia </label>
+                </div></div>
+                <div *ngIf="dniok" class="col-8 col-sm-4"><div class="form-floating">
+
+                  <input class="form-control" id="Municipio" name="municipio" type="text"
+                    value="{{ consultadni.municipio }}" placeholder=" ">
+                  <label for="municipio">Municipio </label>
+                </div></div>
+
+              </div>
+              <div class="modal-footer">
+                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                <button *ngIf="!modoVerNotificacion" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                  role="button">Guardar</button>
+                <button *ngIf="modoVerNotificacion" class="btn-iflow modal-footer__btn btn-iflow--secondary" type="button"
+                  (click)="handleHabilitarEdicionNotificacion()">Editar Notificaci�n</button>
+              </div>
+      </form>
+    </app-modal-shell>

@@ -11,7 +11,15 @@ Componente (fino)
       → HttpClient / SOAP client
 ```
 
-Plantilla: `src/app/core/service/inside/` + facades en `expedientes/edita-expediente/`.
+Plantilla: `src/app/core/service/inside/` + facades en `features/expedientes/edita-expediente/`.
+
+## Formularios y modernización Angular
+
+- **Nuevas features:** Reactive Forms (patrón `features/operacion-form`).
+- **Legacy:** template-driven (`ngModel`); adelgazar con facades e Inputs tipados en paneles.
+- **Modales:** preferir `app-modal-shell` (`shared/components/modal-shell`); mismos `modalId` para `ModalManagerService`. Header compuesto: `[customHeader]` + slot `[modalHeader]`.
+- **Acciones de modal/toolbar:** usar `app-modal-action-bar` + `ModalAction[]` derivados del estado (`shared/modals`). No añadir nuevos booleanos `veo*` ni `@Input` de visibilidad por botón; resolver capacidades en helpers/facades (piloto: notificaciones en edita-expediente).
+- **Signals / standalone de dominio:** aplazados hasta upgrade Angular 16 → 18+.
 
 ## Modelos
 
@@ -29,4 +37,4 @@ Sustituir placeholders en CI. No committear IPs internas.
 
 ## Servicios InSide
 
-Los servicios InSide usan `providedIn: 'root'`. No hace falta importar `InsideIntegrationModule` en `AppModule`.
+Los servicios InSide usan `providedIn: 'root'`. No hace falta un NgModule vacío de integración; inyectar los servicios desde `core/service/inside`.

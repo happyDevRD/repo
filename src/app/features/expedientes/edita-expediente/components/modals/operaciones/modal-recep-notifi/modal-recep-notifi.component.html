@@ -1,0 +1,41 @@
+<app-modal-shell modalId="RecepNotifi" title="Recepción de Notificación" titleId="RecepNotifiLabel"
+     dialogClass="modal-xl" [staticBackdrop]="true" [keyboard]="false" [showFooter]="false"
+     (closed)="notif.borraDatosRecepcion()">
+     <form modalBody (ngSubmit)="notif.recepcionarNotificacion()">
+          <div class="row g-3">
+               <div class="col-sm-4">
+                    <div class="form-floating">
+                         <input [(ngModel)]="notif.creanotificacion.fecRecNotif" class="form-control"
+                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
+                              type="date" value="{{ edita.selected }}" placeholder=" ">
+                         <label for="documento">Fecha de Recepción</label>
+                    </div>
+               </div>
+               <div class="col-sm-4">
+                    <div class="form-floating">
+                         <select [(ngModel)]="notif.creanotificacion.receptor" class="form-select "
+                              id="receptor" name="receptor" required>
+                              <option
+                                   *ngFor="let receptornotifislistar of notif.receptornotifilistar; trackBy: trackByReceptor"
+                                   name="receptorNotifi" value={{ receptornotifislistar.receptor }}> {{
+                                   receptornotifislistar.descripcion }}
+                              </option>
+                         </select>
+                         <label for="receptor">Receptor* </label>
+                    </div>
+               </div>
+               <div class="col-sm-4">
+                    <div class="form-floating"></div>
+               </div>
+          </div>
+          <br>
+          <div class="modal-footer">
+               <button (click)="notif.borraDatosRecepcion()"
+                    class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    type="button">Cancelar
+               </button>
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    role="button">Guardar</button>
+          </div>
+     </form>
+</app-modal-shell>

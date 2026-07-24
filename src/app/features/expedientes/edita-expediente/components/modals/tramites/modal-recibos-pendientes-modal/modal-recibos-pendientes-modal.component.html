@@ -1,0 +1,15 @@
+<app-modal-shell modalId="recibosPendientesModal" title="Recibos Pendientes de Pago"
+     titleId="recibosPendientesModalLabel" dialogClass="modal-xl" bodyClass="position-relative">
+     <div *ngIf="tareas.cargando" class="spinner-overlay">
+          <div class="spinner-border text-primary" role="status">
+               <span class="visually-hidden">Cargando...</span>
+          </div>
+     </div>
+     <app-iflow-grid #gridRecibos [source]="$any(tareas.dataAdapter)"
+          [columns]="$any(tareas.columnsRecibos)" [localization]="edita.localizationObject">
+     </app-iflow-grid>
+     <div modalFooter>
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               data-bs-dismiss="modal">Cerrar</button>
+     </div>
+</app-modal-shell>

@@ -1,0 +1,28 @@
+<section class="soli-workspace" aria-label="Espacio de trabajo de solicitudes">
+  <app-solicitudes-context></app-solicitudes-context>
+
+  <section class="soli-panel" aria-labelledby="soli-listado-title">
+    <header class="soli-panel__head">
+      <div>
+        <h3 id="soli-listado-title" class="soli-panel__title">Listado</h3>
+        <p class="soli-panel__desc">
+          Selecciona una fila para ver el detalle, documentos y acciones disponibles.
+          Doble clic abre la edicion cuando la solicitud es editable.
+        </p>
+      </div>
+    </header>
+    <div class="soli-panel__body soli-panel__body--grid">
+      <app-solicitudes-list></app-solicitudes-list>
+    </div>
+  </section>
+
+  <div *ngIf="!s.hasSolicitudSeleccionada" class="soli-empty-state" role="status">
+    <i class="bi bi-inbox soli-empty-state__icon" aria-hidden="true"></i>
+    <p class="soli-empty-state__title">Ninguna solicitud seleccionada</p>
+    <p class="soli-empty-state__desc">
+      Elige una solicitud del listado para gestionar documentos, asignacion o inicio de expediente.
+    </p>
+  </div>
+
+  <app-solicitudes-documentos *ngIf="s.verLisDoc"></app-solicitudes-documentos>
+</section>

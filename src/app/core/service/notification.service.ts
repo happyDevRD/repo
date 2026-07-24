@@ -1,51 +1,52 @@
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { Injectable } from '@angular/core'
+import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2'
 
 export interface NotificationOptions {
-  title?: string;
-  text?: string;
-  html?: string;
-  footer?: string;
-  icon?: 'success' | 'error' | 'warning' | 'info' | 'question';
-  confirmButtonText?: string;
-  cancelButtonText?: string;
-  showCancelButton?: boolean;
-  showConfirmButton?: boolean;
-  showCloseButton?: boolean;
-  focusConfirm?: boolean;
-  position?: 'top' | 'top-start' | 'top-end' | 'center' | 'center-start' | 'center-end' | 'bottom' | 'bottom-start' | 'bottom-end';
-  allowOutsideClick?: boolean;
-  allowEscapeKey?: boolean;
-  timer?: number;
-  timerProgressBar?: boolean;
-  didOpen?: () => void;
-  showClass?: { popup?: string };
-  hideClass?: { popup?: string };
-  width?: string | number;
+  title?: string
+  text?: string
+  html?: string
+  footer?: string
+  icon?: 'success' | 'error' | 'warning' | 'info' | 'question'
+  confirmButtonText?: string
+  cancelButtonText?: string
+  showCancelButton?: boolean
+  showConfirmButton?: boolean
+  showCloseButton?: boolean
+  focusConfirm?: boolean
+  position?: 'top' | 'top-start' | 'top-end' | 'center' | 'center-start' | 'center-end' | 'bottom' | 'bottom-start' | 'bottom-end'
+  allowOutsideClick?: boolean
+  allowEscapeKey?: boolean
+  timer?: number
+  timerProgressBar?: boolean
+  didOpen?: () => void
+  showClass?: { popup?: string }
+  hideClass?: { popup?: string }
+  width?: string | number
 }
+
+/** Por encima de modales iFlow (base 1055 + stacks) */
+const SWAL_Z_INDEX = '20000'
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor() { }
-
   /**
    * Muestra una notificación de éxito
    */
-  success(options: NotificationOptions | string): Promise<any> {
+  success(options: NotificationOptions | string): Promise<SweetAlertResult> {
     if (typeof options === 'string') {
-      return Swal.fire({
+      return this.fire({
         title: '¡Éxito!',
         text: options,
         icon: 'success',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#3085d6'
-      });
+        confirmButtonColor: '#3085d6',
+      })
     }
-    
-    return Swal.fire({
+
+    return this.fire({
       title: options.title || '¡Éxito!',
       text: options.text,
       html: options.html,
@@ -55,25 +56,26 @@ export class NotificationService {
       timer: options.timer,
       timerProgressBar: options.timerProgressBar,
       position: options.position,
-      showConfirmButton: options.showConfirmButton
-    });
+      showConfirmButton: options.showConfirmButton,
+      didOpen: options.didOpen,
+    })
   }
 
   /**
    * Muestra una notificación de error
    */
-  error(options: NotificationOptions | string): Promise<any> {
+  error(options: NotificationOptions | string): Promise<SweetAlertResult> {
     if (typeof options === 'string') {
-      return Swal.fire({
+      return this.fire({
         title: 'Error',
         text: options,
         icon: 'error',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#d33'
-      });
+        confirmButtonColor: '#d33',
+      })
     }
-    
-    return Swal.fire({
+
+    return this.fire({
       title: options.title || 'Error',
       text: options.text,
       html: options.html,
@@ -82,25 +84,26 @@ export class NotificationService {
       confirmButtonText: options.confirmButtonText || 'Aceptar',
       confirmButtonColor: '#d33',
       timer: options.timer,
-      timerProgressBar: options.timerProgressBar
-    });
+      timerProgressBar: options.timerProgressBar,
+      didOpen: options.didOpen,
+    })
   }
 
   /**
    * Muestra una notificación de advertencia
    */
-  warning(options: NotificationOptions | string): Promise<any> {
+  warning(options: NotificationOptions | string): Promise<SweetAlertResult> {
     if (typeof options === 'string') {
-      return Swal.fire({
+      return this.fire({
         title: 'Advertencia',
         text: options,
         icon: 'warning',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#f39c12'
-      });
+        confirmButtonColor: '#f39c12',
+      })
     }
-    
-    return Swal.fire({
+
+    return this.fire({
       title: options.title || 'Advertencia',
       text: options.text,
       html: options.html,
@@ -110,25 +113,26 @@ export class NotificationService {
       timer: options.timer,
       timerProgressBar: options.timerProgressBar,
       position: options.position,
-      showConfirmButton: options.showConfirmButton
-    });
+      showConfirmButton: options.showConfirmButton,
+      didOpen: options.didOpen,
+    })
   }
 
   /**
    * Muestra una notificación de información
    */
-  info(options: NotificationOptions | string): Promise<any> {
+  info(options: NotificationOptions | string): Promise<SweetAlertResult> {
     if (typeof options === 'string') {
-      return Swal.fire({
+      return this.fire({
         title: 'Información',
         text: options,
         icon: 'info',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#17a2b8'
-      });
+        confirmButtonColor: '#17a2b8',
+      })
     }
-    
-    return Swal.fire({
+
+    return this.fire({
       title: options.title || 'Información',
       text: options.text,
       html: options.html,
@@ -136,16 +140,17 @@ export class NotificationService {
       confirmButtonText: options.confirmButtonText || 'Aceptar',
       confirmButtonColor: '#17a2b8',
       timer: options.timer,
-      timerProgressBar: options.timerProgressBar
-    });
+      timerProgressBar: options.timerProgressBar,
+      didOpen: options.didOpen,
+    })
   }
 
   /**
    * Muestra una confirmación con botones Sí/No
    */
-  confirm(options: NotificationOptions | string): Promise<any> {
+  confirm(options: NotificationOptions | string): Promise<SweetAlertResult> {
     if (typeof options === 'string') {
-      return Swal.fire({
+      return this.fire({
         title: 'Confirmar',
         text: options,
         icon: 'question',
@@ -153,11 +158,11 @@ export class NotificationService {
         confirmButtonText: 'Sí',
         cancelButtonText: 'No',
         confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#6c757d'
-      });
+        cancelButtonColor: '#6c757d',
+      })
     }
-    
-    return Swal.fire({
+
+    return this.fire({
       title: options.title || 'Confirmar',
       text: options.text,
       html: options.html,
@@ -166,8 +171,9 @@ export class NotificationService {
       confirmButtonText: options.confirmButtonText || 'Sí',
       cancelButtonText: options.cancelButtonText || 'No',
       confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#6c757d'
-    });
+      cancelButtonColor: '#6c757d',
+      didOpen: options.didOpen,
+    })
   }
 
   /**
@@ -175,8 +181,8 @@ export class NotificationService {
    * por los métodos anteriores (p.ej. modales de progreso sin icono, con html
    * propio o que controlan manualmente el cierre mediante `close()`).
    */
-  custom(options: NotificationOptions): Promise<any> {
-    return Swal.fire({
+  custom(options: NotificationOptions): Promise<SweetAlertResult> {
+    return this.fire({
       title: options.title,
       text: options.text,
       html: options.html,
@@ -196,15 +202,15 @@ export class NotificationService {
       didOpen: options.didOpen,
       showClass: options.showClass,
       hideClass: options.hideClass,
-      width: options.width
-    });
+      width: options.width,
+    })
   }
 
   /**
    * Cierra cualquier notificación abierta (p.ej. un modal de progreso mostrado con `custom()`).
    */
   close(): void {
-    Swal.close();
+    Swal.close()
   }
 
   /**
@@ -212,99 +218,99 @@ export class NotificationService {
    * (uso típico: `didOpen: () => this.notificationService.showLoading()`).
    */
   showLoading(): void {
-    Swal.showLoading();
+    Swal.showLoading()
   }
 
   /**
    * Muestra una notificación de campos incompletos (específica para formularios)
    */
-  incompleteFields(message?: string): Promise<any> {
-    return Swal.fire({
+  incompleteFields(message?: string): Promise<SweetAlertResult> {
+    return this.fire({
       title: 'Campos incompletos',
       text: message || 'Por favor, complete todos los campos obligatorios.',
       icon: 'warning',
       confirmButtonText: 'OK',
-      confirmButtonColor: '#f39c12'
-    });
+      confirmButtonColor: '#f39c12',
+    })
   }
 
   /**
    * Muestra una notificación de campos incompletos con validación visual
    */
-  incompleteFieldsWithValidation(message?: string): Promise<any> {
-    return Swal.fire({
+  incompleteFieldsWithValidation(message?: string): Promise<SweetAlertResult> {
+    return this.fire({
       title: 'Campos incompletos',
       text: message || 'Por favor, complete todos los campos obligatorios.',
       icon: 'warning',
       confirmButtonText: 'OK',
-      confirmButtonColor: '#f39c12'
-    });
+      confirmButtonColor: '#f39c12',
+    })
   }
 
   /**
    * Muestra una notificación de validación de formulario
    */
-  validationError(fieldName?: string): Promise<any> {
-    const message = fieldName 
+  validationError(fieldName?: string): Promise<SweetAlertResult> {
+    const message = fieldName
       ? `Por favor, verifique el campo: ${fieldName}`
-      : 'Por favor, verifique los datos ingresados.';
-    
-    return Swal.fire({
+      : 'Por favor, verifique los datos ingresados.'
+
+    return this.fire({
       title: 'Error de validación',
       text: message,
       icon: 'error',
       confirmButtonText: 'Aceptar',
-      confirmButtonColor: '#d33'
-    });
+      confirmButtonColor: '#d33',
+    })
   }
 
   /**
    * Muestra una notificación de guardado exitoso
    */
-  saveSuccess(entityName?: string): Promise<any> {
-    const message = entityName 
+  saveSuccess(entityName?: string): Promise<SweetAlertResult> {
+    const message = entityName
       ? `${entityName} guardado exitosamente.`
-      : 'Datos guardados exitosamente.';
-    
-    return Swal.fire({
+      : 'Datos guardados exitosamente.'
+
+    return this.fire({
       title: '¡Guardado!',
       text: message,
       icon: 'success',
       confirmButtonText: 'Aceptar',
       confirmButtonColor: '#3085d6',
       timer: 2000,
-      timerProgressBar: true
-    });
+      timerProgressBar: true,
+    })
   }
 
   /**
    * Muestra una notificación de eliminación exitosa
    */
-  deleteSuccess(entityName?: string): Promise<any> {
-    const message = entityName 
+  deleteSuccess(entityName?: string): Promise<SweetAlertResult> {
+    const message = entityName
       ? `${entityName} eliminado exitosamente.`
-      : 'Elemento eliminado exitosamente.';
-    
-    return Swal.fire({
+      : 'Elemento eliminado exitosamente.'
+
+    return this.fire({
       title: '¡Eliminado!',
       text: message,
       icon: 'success',
       confirmButtonText: 'Aceptar',
       confirmButtonColor: '#3085d6',
       timer: 2000,
-      timerProgressBar: true
-    });
+      timerProgressBar: true,
+    })
   }
 
   /**
    * Muestra una confirmación de eliminación
    */
-  confirmDelete(entityName?: string): Promise<any> {
-    const message = entityName 
+  confirmDelete(entityName?: string): Promise<SweetAlertResult> {
+    const message = entityName
       ? `¿Está seguro de que desea eliminar este ${entityName}?`
-      : '¿Está seguro de que desea eliminar este elemento?';
-    
-    return Swal.fire({
+      : '¿Está seguro de que desea eliminar este elemento?'
+
+    return this.fire({
       title: 'Confirmar eliminación',
       text: message,
       icon: 'warning',
@@ -312,7 +318,21 @@ export class NotificationService {
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#6c757d'
-    });
+      cancelButtonColor: '#6c757d',
+    })
   }
-} 
+
+  private fire(options: SweetAlertOptions): Promise<SweetAlertResult> {
+    const userDidOpen = options.didOpen
+    return Swal.fire({
+      ...options,
+      didOpen: (popup) => {
+        const container = document.querySelector('.swal2-container') as HTMLElement | null
+        if (container) {
+          container.style.zIndex = SWAL_Z_INDEX
+        }
+        userDidOpen?.(popup)
+      },
+    })
+  }
+}

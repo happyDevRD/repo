@@ -1,0 +1,6 @@
+<!-- Grid de Tramitadores -->
+<div *ngIf="visible" class="grid-container">
+  <app-iflow-grid #gridTramitadores id="gridTramitadores" (rowClick)="handleRowClick($event)"
+    (rowDoubleClick)="handleRowDoubleClick($event)" [columns]="columns" [localization]="localization" [source]="source">
+  </app-iflow-grid>
+</div>

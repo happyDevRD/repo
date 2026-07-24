@@ -1,0 +1,12 @@
+<div class="grid-container">
+  <app-iflow-grid
+    #gridSolicitudes
+    selectionMode="radio"
+    radioName="Solicitudes"
+    (rowClick)="handleRowClick($event)"
+    (rowDoubleClick)="handleRowDoubleClick($event)"
+    [columns]="s.columnsSolici"
+    [localization]="s.localizationObject"
+    [source]="s.sourceSolici">
+  </app-iflow-grid>
+</div>

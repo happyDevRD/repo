@@ -1,0 +1,88 @@
+    <fieldset *ngIf="ge.registrarFactura" class="factura-section">
+      <legend class="h6">Datos de la Factura</legend>
+
+      <div class="row g-3">
+        <div class="col-md-8 mb-3"><div class="form-floating">
+          <select class="form-select" id="contabilidad" [(ngModel)]="ge.factura.idConta" name="idConta" [required]="ge.registrarFactura">
+            <option [ngValue]="null">-- Seleccione --</option>
+            <option *ngFor="let conta of ge.contabilidades" [value]="conta.idConta">{{ conta.rotConta }}</option>
+          </select>
+          <label for="contabilidad">Contabilidad <span class="text-danger">*</span></label>
+        </div></div>
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <input type="date" class="form-control readonly-field" id="fecRegistro" [ngModel]="ge.fechaHoy" name="fecRegistro" disabled placeholder=" ">
+          <label for="fecRegistro">Fecha Registro</label>
+        </div></div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <input type="text" class="form-control" id="numJusExter" [(ngModel)]="ge.factura.numJusExter" name="numJusExter" maxlength="50" [required]="ge.registrarFactura" placeholder=" "/>
+          <label for="numJusExter">Número de Factura <span class="text-danger">*</span></label>
+        </div></div>
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <input type="date" class="form-control" id="fecJusExter" [(ngModel)]="ge.factura.fecJusExter" name="fecJusExter" [required]="ge.registrarFactura" placeholder=" ">
+          <label for="fecJusExter">Fecha Factura <span class="text-danger">*</span></label>
+        </div></div>
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <select class="form-select" id="tipoDoc" [(ngModel)]="ge.factura.indTipDocum" name="indTipDocum" [required]="ge.registrarFactura">
+            <option [value]="null">-- Seleccione --</option>
+            <option [value]="1">Factura</option>
+            <option [value]="2">Justificante Gasto</option>
+          </select>
+          <label for="tipoDoc">Tipo de Documento <span class="text-danger">*</span></label>
+        </div></div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <input type="text" class="form-control" id="impTotal" [(ngModel)]="ge.factura.impTotal" name="impTotal" [required]="ge.registrarFactura" (ngModelChange)="ge.calcularImportes()" currencyMask [options]="ge.currencyOptions" placeholder=" "/>
+          <label for="impTotal">Importe Total (€) <span class="text-danger">*</span></label>
+        </div></div>
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <input type="text" class="form-control" id="impDto" [(ngModel)]="ge.factura.impDto" name="impDto" (ngModelChange)="ge.calcularImportes()" currencyMask [options]="ge.currencyOptions" placeholder=" "/>
+          <label for="impDto">Importe Descuentos (€)</label>
+        </div></div>
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <select class="form-select" id="tipoIVA" [(ngModel)]="ge.tipoIVA" name="tipoIVA" [required]="ge.registrarFactura" (ngModelChange)="ge.calcularImportes()">
+            <option [value]="0.00">Sin IVA</option>
+            <option [value]="0.04">4%</option>
+            <option [value]="0.10">10%</option>
+            <option [value]="0.21">21%</option>
+          </select>
+          <label for="tipoIVA">Tipo IVA <span class="text-danger">*</span></label>
+        </div></div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6 mb-3"><div class="form-floating">
+          <select class="form-select" id="indArea" [(ngModel)]="ge.factura.indArea" name="indArea" [required]="ge.registrarFactura">
+            <option [value]="null">-- Seleccione --</option>
+            <option [value]="1">Gastos</option>
+            <option [value]="2">No presupuestaria</option>
+          </select>
+          <label for="indArea">Área <span class="text-danger">*</span></label>
+        </div></div>
+        <div class="col-md-6 mb-3"><div class="form-floating">
+          <input type="text" class="form-control" id="txtJusGasto" [(ngModel)]="ge.factura.txtJusGasto" name="txtJusGasto" maxlength="200" placeholder=" "/>
+          <label for="txtJusGasto">Descripción del Gasto</label>
+        </div></div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <input type="text" class="form-control readonly-field" id="impIva" name="impIva" [(ngModel)]="ge.factura.impIva" currencyMask [options]="ge.currencyOptions" readonly placeholder=" "/>
+          <label for="impIva">Importe IVA (€)</label>
+        </div></div>
+        <div class="col-md-4 mb-3"><div class="form-floating">
+          <input type="text" class="form-control readonly-field" id="impLiqui" name="impLiqui" [(ngModel)]="ge.factura.impLiqui" currencyMask [options]="ge.currencyOptions" readonly placeholder=" "/>
+          <label for="impLiqui">Importe Líquido (€)</label>
+        </div></div>
+        <div class="col-md-4 mb-3">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="indIvaDeduc" [(ngModel)]="ge.factura.indIvaDeduc" name="indIvaDeduc"/>
+            <label class="form-check-label" for="indIvaDeduc">IVA Deducible</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>

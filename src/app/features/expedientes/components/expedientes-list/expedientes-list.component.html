@@ -1,0 +1,37 @@
+<section class="expedientes-listado" aria-label="Listado de expedientes">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+    <h3 class="expedientes-listado__titulo mb-0">Listado</h3>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <span *ngIf="e.insideDryRun" class="badge bg-info text-dark" title="Sin acceso REDSARA">
+        INSIDE simulación
+      </span>
+      <span *ngIf="e.insidePendientesCount > 0" class="badge bg-warning text-dark">
+        {{ e.insidePendientesCount }} pendiente(s) INSIDE
+      </span>
+      <span *ngIf="e.insidePendientesErrorCount > 0" class="badge bg-danger">
+        {{ e.insidePendientesErrorCount }} error(es) INSIDE
+      </span>
+      <button class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+              type="button"
+              [class.btn-iflow--primary]="e.filtroInsidePendientes"
+              title="Mostrar solo expedientes pendientes de envío a INSIDE"
+              (click)="e.toggleFiltroInsidePendientes()">
+        <i class="bi bi-funnel" aria-hidden="true"></i>
+        {{ e.filtroInsidePendientes ? 'Ver todos' : 'Pendientes INSIDE' }}
+      </button>
+    </div>
+  </div>
+  <div class="grid-container">
+    <app-iflow-grid #gridExpedientes
+      id="gridExpedientes"
+      selectionMode="radio"
+      radioName="Expedientes"
+      (rowClick)="e.marcaExpedienteNuevo($event)"
+      (rowDoubleClick)="e.onExpedienteDoubleClick($event)"
+      [columns]="e.columnsExpe"
+      [columnsresize]="true"
+      [localization]="e.localizationObject"
+      [source]="e.sourceExp">
+    </app-iflow-grid>
+  </div>
+</section>

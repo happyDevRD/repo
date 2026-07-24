@@ -1,0 +1,66 @@
+      <!-- Modal NprocediModal -->
+<app-modal-shell
+  modalId="NprocediModal"
+  title="Nuevo Procedimiento"
+  titleId="NprocediModalLabel"
+  dialogClass="modal-xl"
+  [showFooter]="false"
+>
+  <form modalBody id="formNuevoProcedimiento" (ngSubmit)="p.validateAndCreateProcedimiento($event)">
+<div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="descripcionNueva" name="descripcion" type="text"
+                        [(ngModel)]="p.crearprocedi.descripcion" required placeholder=" ">
+                      <label for="descripcionNueva">Descripción *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" id="codigoSIANuevo" name="codigoSIA" type="text"
+                        [(ngModel)]="p.crearprocedi.codigoSia" required placeholder=" ">
+                      <label for="codigoSIANuevo">Código SIA *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <select class="form-select" id="modalidadNueva" name="modalidad"
+                        [(ngModel)]="p.crearprocedi.modalidad" required>
+                        <option [ngValue]="null" disabled selected hidden></option>
+                        <option [ngValue]="1">Presencial</option>
+                        <option [ngValue]="2">Web con certificado</option>
+                        <option [ngValue]="3">Web sin certificado</option>
+                        <option [ngValue]="4">Presencial y Web con certificado</option>
+                        <option [ngValue]="5">Presencial y Web sin certificado</option>
+                      </select>
+                      <label for="modalidadNueva">Modalidad *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <select class="form-select" id="MateriaNueva" name="Materia" [(ngModel)]="p.crearprocedi.materia"
+                        required>
+                        <option [ngValue]="null" disabled selected hidden></option>
+                        <option *ngFor="let materiaprocedi of p.materiaprocedimiento"
+                          [ngValue]="materiaprocedi.idMatProce">
+                          {{ materiaprocedi.descripcion }}
+                        </option>
+                      </select>
+                      <label for="MateriaNueva">Materia *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <input class="form-control" id="siglasNueva" name="siglas" type="text" maxlength="5"
+                        [(ngModel)]="p.crearprocedi.siglas" required placeholder=" ">
+                      <label for="siglasNueva">Siglas *</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer px-0 pb-0">
+                  <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    (click)="p.limpiarErrores(); p.cerrarModal('NprocediModal')">Cancelar</button>
+                  <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+                </div>
+  </form>
+</app-modal-shell>

@@ -1,0 +1,51 @@
+<app-shell>
+<app-menuprocedimiento></app-menuprocedimiento>
+      <div class="page-panel">
+        <ul class="nav nav-tabs nav-tabs-iflow" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="datosProcedi-tab" data-bs-toggle="tab" data-bs-target="#datosProcedi" type="button" role="tab" aria-controls="datosProcedi" aria-selected="true">Nuevo procedimiento</button>
+  </li>
+  <li class="nav-item" id="idtarea" role="presentation" *ngIf="vermenu == true">
+    <button class="nav-link" id="tareaProcedi-tab" data-bs-toggle="tab" data-bs-target="#tareaProcedi" type="button" role="tab" aria-controls="tareaProcedi" aria-selected="false">Tareas procedimiento</button>
+  </li>
+  <li class="nav-item" id="idpermi" role="presentation" *ngIf="vermenu == true">
+    <button class="nav-link" id="permiProcedi-tab" data-bs-toggle="tab" data-bs-target="#permiProcedi" type="button" role="tab" aria-controls="permiProcedi" aria-selected="false">Permisos del procedimiento</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="datosProcedi" role="tabpanel" aria-labelledby="datosProcedi-tab">
+    <div *ngIf="!idProcedimiento" class="p-4 text-muted" role="status" aria-live="polite">
+      Redirigiendo al listado de procedimientos…
+    </div>
+    <div *ngIf="idProcedimiento" class="form-section">
+      <div class="row g-3">
+        <div class="col-md-8"><div class="form-floating">
+          <input type="text" class="form-control" [ngModel]="procedimiento.descripcion" name="descripcionVer"
+            id="descripcionVer" readonly placeholder=" ">
+          <label for="descripcionVer">Descripción</label>
+        </div></div>
+        <div class="col-md-4"><div class="form-floating">
+          <input type="text" class="form-control" [ngModel]="procedimiento.codigoSia" name="codigoSiaVer"
+            id="codigoSiaVer" readonly placeholder=" ">
+          <label for="codigoSiaVer">Código SIA</label>
+        </div></div>
+      </div>
+      <div class="form-actions mt-3">
+        <button class="btn-iflow btn-iflow--secondary" type="button" [routerLink]="['/procedimientos']">Volver al listado</button>
+        <button class="btn-iflow btn-iflow--primary" type="button" [routerLink]="['/procedimientos', idProcedimiento]">Editar procedimiento</button>
+      </div>
+    </div>
+  </div>
+
+  <app-formnuevoprocedi-tareas></app-formnuevoprocedi-tareas>
+<div class="tab-pane fade" id="permiProcedi" role="tabpanel" aria-labelledby="permiProcedi-tab">
+  <div class="empty-state mt-3">
+    <i class="bi bi-shield-lock empty-state__icon" aria-hidden="true"></i>
+    <p><strong>Permisos del procedimiento</strong></p>
+    <p>Una vez guardado el procedimiento, gestione los permisos desde <strong>Editar procedimiento</strong> en el listado.</p>
+  </div>
+</div>
+
+      </div>
+    </div>
+</app-shell>

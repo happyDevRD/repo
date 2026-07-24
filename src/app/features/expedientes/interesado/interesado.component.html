@@ -1,0 +1,12 @@
+<app-shell contentId="hanging-icons">
+  <app-access-denied
+    *ngIf="!session.canManageExpedientes"
+    title="Sin acceso a expedientes"
+    message="Este usuario no tiene permisos para gestionar interesados del expediente.">
+  </app-access-denied>
+
+  <ng-container *ngIf="session.canManageExpedientes">
+    <app-interesado-list></app-interesado-list>
+    <app-interesado-modals></app-interesado-modals>
+  </ng-container>
+</app-shell>

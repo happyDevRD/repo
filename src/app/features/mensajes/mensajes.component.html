@@ -1,0 +1,7 @@
+<app-shell *ngIf="session.user" contentId="hanging-icons">
+  <div class="page-panel mensajes-page">
+    <app-mensajes-header></app-mensajes-header>
+    <app-mensajes-workspace></app-mensajes-workspace>
+  </div>
+  <app-mensajes-modal-rechazar></app-mensajes-modal-rechazar>
+</app-shell>

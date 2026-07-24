@@ -1,0 +1,48 @@
+<app-modal-shell modalId="crearTablonAnunciosModal" title="Nuevo Tablón de anuncios"
+     titleId="crearTablonAnunciosModalLabel" dialogClass="modal-xl" [showFooter]="false">
+     <form modalBody (ngSubmit)="tareas.crearTablonAnuncio(edita)">
+          <div class="col-12">
+               <div class="form-floating">
+                    <input [(ngModel)]="edita.creartablonanuncio.desAnunc" class="form-control" id="Descripción"
+                         name="Descripción" type="text" placeholder=" ">
+                    <label for="municipio">Descripción * </label>
+                    <br>
+               </div>
+          </div>
+          <div class="row">
+               <div class="col-3">
+                    <div class="form-floating">
+                         <select [(ngModel)]="edita.creartablonanuncio.tipAnunc" class="form-select " id="tanuncio"
+                              name="tanuncio" required>
+                              <option value=0>Edicto</option>
+                              <option value=1>Anuncio</option>
+                         </select>
+                         <label for="fnotifi">Tipo de anuncio *</label>
+                    </div>
+               </div>
+               <div class="col-4">
+                    <div class="form-floating">
+                         <input [(ngModel)]="edita.creartablonanuncio.fecDesde" class="form-control"
+                              data-mdb-inline="true" id="desde" max="2099-12-31" min="2023-01-01" name="hasta"
+                              type="date" value="{{ edita.selected }}" placeholder=" ">
+                         <label for="desde">Desde</label>
+                    </div>
+               </div>
+               <div class="col-4">
+                    <div class="form-floating">
+                         <input [(ngModel)]="edita.creartablonanuncio.fecHasta" class="form-control"
+                              data-mdb-inline="true" id="hasta" max="2099-12-31" min="2023-01-01" name="hasta"
+                              type="date" value="{{ edita.selected }}" placeholder=" ">
+                         <label for="hasta">Hasta</label>
+                         <br>
+                    </div>
+               </div>
+          </div>
+          <div class="modal-footer">
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    type="button">Cancelar</button>
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    role="button">Guardar</button>
+          </div>
+     </form>
+</app-modal-shell>

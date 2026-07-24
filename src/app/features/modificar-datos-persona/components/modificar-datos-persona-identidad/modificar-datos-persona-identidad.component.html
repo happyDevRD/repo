@@ -1,0 +1,31 @@
+      <!-- Sección Identificación -->
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="nombre" name="nombre" placeholder=" "
+                   [(ngModel)]="mdp.persona.nombre">
+            <label for="nombre">Nombre</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="ape1" name="ape1" placeholder=" "
+                   [(ngModel)]="mdp.persona.apellido1">
+            <label for="ape1">Primer apellido</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="ape2" name="ape2" placeholder=" "
+                   [(ngModel)]="mdp.persona.apellido2">
+            <label for="ape2">Segundo apellido</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="numdocu" name="numdocu" placeholder=" "
+                   [value]="mdp.persona.numDocum" disabled>
+            <label for="numdocu">Número de Documento</label>
+          </div>
+        </div>
+      </div>

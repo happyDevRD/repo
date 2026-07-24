@@ -1,0 +1,44 @@
+<app-modal-shell modalId="NuevoTramiteModal" title="Nuevo Trámite" titleId="NuevoTramiteModalLabel"
+     dialogClass="modal-xl modal-dialog-centered" bodyClass="p-4" [showFooter]="false"
+     (closed)="tramites.limpiarErroresTramite()">
+     <form modalBody id="formNuevoTramite" (ngSubmit)="handleSubmit($event)">
+          <div class="row mb-4">
+               <div class="col-6">
+                    <div class="form-floating">
+                         <select class="form-select" id="fase" name="fase" [(ngModel)]="edita.creartramiteexp.fase"
+                              required>
+                              <option value="" disabled selected></option>
+                              <option value="INICIO">INICIO</option>
+                              <option value="INSTRUCCION">INSTRUCCION</option>
+                              <option value="RESOLUCION">RESOLUCION</option>
+                         </select>
+                         <label for="fase">Fase *</label>
+                    </div>
+               </div>
+               <div class="col-6">
+                    <div class="form-floating">
+                         <input class="form-control" id="fecTramite" name="fecTramite" type="date"
+                              [(ngModel)]="edita.creartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31"
+                              placeholder=" ">
+                         <label for="fecTramite">Fecha Trámite</label>
+                    </div>
+               </div>
+          </div>
+          <div class="row">
+               <div class="col-12">
+                    <div class="form-floating">
+                         <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
+                              [(ngModel)]="edita.creartramiteexp.descripcion" required minlength="1" maxlength="500"
+                              placeholder=" "></textarea>
+                         <label for="descripcion">Descripción *</label>
+                    </div>
+               </div>
+          </div>
+          <div class="row mt-2 mb-4"></div>
+          <div class="modal-footer">
+               <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    (click)="tramites.limpiarErroresTramite()">Cancelar</button>
+               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+          </div>
+     </form>
+</app-modal-shell>

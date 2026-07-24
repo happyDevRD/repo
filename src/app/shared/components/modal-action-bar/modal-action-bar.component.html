@@ -1,0 +1,17 @@
+<div [class]="containerClass" *ngIf="visible.length">
+  <button
+    *ngFor="let item of visible"
+    type="button"
+    [class]="toneClass(item)"
+    [class.btn-iflow--icon]="!!item.iconOnly"
+    [disabled]="!!item.disabled || !!item.busy"
+    [attr.title]="item.title || item.label"
+    [attr.aria-label]="item.iconOnly ? (item.title || item.label) : null"
+    (click)="handleClick(item.id)">
+    <ng-container *ngIf="!item.iconOnly">{{ item.label }}</ng-container>
+    <i *ngIf="item.icon" [class]="item.icon" aria-hidden="true"></i>
+    <div *ngIf="item.busy" class="spinner-border spinner-border-sm text-info ms-1" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </button>
+</div>

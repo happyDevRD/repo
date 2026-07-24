@@ -10,7 +10,7 @@ import {
   validarExpedienteParaInside,
 } from './inside-validation.helper'
 import { InsideIflowContext } from './inside-iflow.context.models'
-import { TareaTramiteExpporExpedi, VerExpediente } from '../../../expedientes/expedientes'
+import { TareaTramiteExpporExpedi, VerExpediente } from '../../models/expediente-domain.model'
 
 describe('inside-iflow.mapper', () => {
   it('buildIdentificadorExpedienteEni genera formato ENI esperado', () => {

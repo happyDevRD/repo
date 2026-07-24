@@ -1,0 +1,17 @@
+<section class="msg-workspace" aria-label="Espacio de trabajo de mensajes">
+  <div class="msg-split">
+    <section class="msg-panel msg-split__list" aria-labelledby="msg-listado-title">
+      <header class="msg-panel__head msg-panel__head--compact">
+        <div>
+          <h3 id="msg-listado-title" class="msg-panel__title">Bandeja</h3>
+          <p class="msg-panel__desc">{{ m.inboxCountLabel }}</p>
+        </div>
+      </header>
+      <app-mensajes-list></app-mensajes-list>
+    </section>
+
+    <section class="msg-panel msg-split__detail" aria-label="Detalle">
+      <app-mensajes-context></app-mensajes-context>
+    </section>
+  </div>
+</section>

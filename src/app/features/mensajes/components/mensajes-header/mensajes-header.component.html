@@ -1,0 +1,73 @@
+<header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
+  <div>
+    <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Comunicación</p>
+    <h2 class="h4 fw-bold mb-0">Mensajes</h2>
+    <p class="small text-secondary mb-0 mt-1">
+      Bandeja unificada de entrada y salida. Filtra y selecciona un mensaje para ver el detalle.
+    </p>
+  </div>
+  <span *ngIf="m.nmensajespendientes > 0" class="msg-badge msg-badge--pendiente">
+    {{ m.nmensajespendientes }} pendientes
+  </span>
+</header>
+
+<div class="msg-toolbar">
+  <div class="msg-toolbar__row">
+    <div class="msg-tabs" role="tablist" aria-label="Dirección de mensajes">
+      <button
+        type="button"
+        role="tab"
+        class="msg-tabs__btn"
+        [class.is-active]="m.filtroDireccion === 'todos'"
+        (click)="handleDireccion('todos')"
+      >
+        Todos
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="msg-tabs__btn"
+        [class.is-active]="m.filtroDireccion === 'recibido'"
+        (click)="handleDireccion('recibido')"
+      >
+        <i class="bi bi-envelope-arrow-down" aria-hidden="true"></i>
+        Recibidos
+        <span *ngIf="m.nmensajespendientes > 0" class="msg-tabs__count">{{ m.nmensajespendientes }}</span>
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="msg-tabs__btn"
+        [class.is-active]="m.filtroDireccion === 'enviado'"
+        (click)="handleDireccion('enviado')"
+      >
+        <i class="bi bi-envelope-arrow-up" aria-hidden="true"></i>
+        Enviados
+      </button>
+    </div>
+
+    <label class="msg-search">
+      <span class="visually-hidden">Buscar mensajes</span>
+      <i class="bi bi-search msg-search__icon" aria-hidden="true"></i>
+      <input
+        type="search"
+        class="msg-search__input"
+        placeholder="Buscar texto, persona o expediente…"
+        [value]="m.filtroTexto"
+        (input)="handleBusqueda($event)"
+      >
+    </label>
+  </div>
+
+  <div class="msg-chips" role="group" aria-label="Estado">
+    <button
+      *ngFor="let filtro of m.estadoFiltros"
+      type="button"
+      class="msg-chip"
+      [class.is-active]="m.filtroEstado === filtro.value"
+      (click)="handleEstado(filtro.value)"
+    >
+      {{ filtro.label }}
+    </button>
+  </div>
+</div>

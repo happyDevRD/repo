@@ -1,0 +1,31 @@
+<app-modal-shell modalId="PubliNotifModal" title="Publicar Notificación" titleId="exampleModalLabel"
+     dialogClass="modal-xl" [staticBackdrop]="true" [showFooter]="false" (closed)="notif.borrarDatosPublicacion()">
+     <form modalBody (ngSubmit)="notif.publicarNotifi()">
+          <div class="row g-3">
+               <div class="col-sm-4">
+                    <div class="form-floating">
+                         <input (blur)="notif.fechamas15()"
+                              [(ngModel)]="notif.creanotificacion.fecPubBop" class="form-control"
+                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
+                              type="date" value="{{ edita.selected }}" placeholder=" ">
+                         <label for="documento">Fecha de Publicación *</label>
+                    </div>
+               </div>
+               <div class="col-sm-4">
+                    <div class="form-floating">
+                         <input [(ngModel)]="notif.creanotificacion.numBop" class="form-control"
+                              id="procedimiento" name="procedimiento" type="text" placeholder=" ">
+                         <label for="procedimiento">B.O.E. * </label>
+                         <br>
+                    </div>
+               </div>
+          </div>
+          <div class="modal-footer">
+               <button (click)="notif.borrarDatosPublicacion()" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+                    data-bs-dismiss="modal" type="button">Cancelar
+               </button>
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
+                    role="button">Guardar</button>
+          </div>
+     </form>
+</app-modal-shell>

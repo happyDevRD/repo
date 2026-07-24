@@ -1,0 +1,42 @@
+<div class="msg-list" role="list" aria-label="Listado de mensajes">
+  <button
+    *ngFor="let item of m.filteredInbox; trackBy: trackByKey"
+    type="button"
+    role="listitem"
+    class="msg-row"
+    [class.is-selected]="m.selectedKey === item.key"
+    (click)="handleSelect(item)"
+  >
+    <span
+      class="msg-row__dir"
+      [class.msg-row__dir--in]="item.direccion === 'recibido'"
+      [class.msg-row__dir--out]="item.direccion === 'enviado'"
+      [attr.title]="item.direccion === 'recibido' ? 'Recibido' : 'Enviado'"
+    >
+      <i
+        class="bi"
+        [class.bi-envelope-arrow-down]="item.direccion === 'recibido'"
+        [class.bi-envelope-arrow-up]="item.direccion === 'enviado'"
+        aria-hidden="true"
+      ></i>
+    </span>
+
+    <span class="msg-row__body">
+      <span class="msg-row__title">{{ item.descripcion || 'Sin descripción' }}</span>
+      <span class="msg-row__meta">
+        {{ item.direccion === 'recibido' ? (item.nomRemit || 'Sin remitente') : (item.nomDesti || 'Sin destinatario') }}
+        <ng-container *ngIf="item.idExped"> · Exp. {{ item.idExped }}</ng-container>
+      </span>
+    </span>
+
+    <span class="msg-row__side">
+      <span class="msg-badge msg-badge--sm" [ngClass]="estadoClass(item.estado)">{{ estadoLabel(item.estado) }}</span>
+      <span class="msg-row__date">{{ fechaCorta(item.fecEnvio) }}</span>
+    </span>
+  </button>
+
+  <div *ngIf="m.filteredInbox.length === 0" class="msg-list-empty" role="status">
+    <i class="bi bi-inbox" aria-hidden="true"></i>
+    <p>No hay mensajes con estos filtros</p>
+  </div>
+</div>

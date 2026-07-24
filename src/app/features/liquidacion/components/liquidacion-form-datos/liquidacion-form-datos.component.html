@@ -1,0 +1,64 @@
+
+      <!-- Row 1: Sujeto Pasivo y Tipo de Objeto Tributario -->
+      <div class="row g-3">
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text"
+                 id="sujetoPasivo"
+                 class="form-control"
+                 [(ngModel)]="lf.nombreInteresado"
+                 [ngModelOptions]="{standalone: true}"
+                 disabled
+                 aria-describedby="sujetoPasivoHelp" placeholder=" ">
+          <label for="sujetoPasivo">Sujeto Pasivo</label>
+          <small id="sujetoPasivoHelp" class="visually-hidden">Información del sujeto pasivo</small>
+        </div></div>
+
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text" id="tipoObjTrib" class="form-control" [value]="lf.tipoObjTribDesc" disabled placeholder=" ">
+          <label for="tipoObjTrib">Tipo de Objeto Tributario</label>
+        </div></div>
+      </div>
+
+      <!-- Row 2: Tipo de Liquidación y Cuota -->
+      <div class="row g-3 mt-1">
+        <div class="col-md-6"><div class="form-floating">
+          <select id="tipLiqui" class="form-select" [(ngModel)]="lf.liquidacion.tipLiqui" name="tipLiqui" required>
+            <option [value]="1">Liquidación</option>
+            <option [value]="2">Autoliquidación</option>
+          </select>
+          <label for="tipLiqui">Tipo de Liquidación</label>
+        </div></div>
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text"
+                 id="cuota"
+                 class="form-control"
+                 [(ngModel)]="lf.liquidacion.cuoLiqui"
+                 name="cuota"
+                 (ngModelChange)="lf.calculaTotal()"
+                 placeholder=" "
+                 currencyMask [options]="lf.currencyOptions"
+                 required>
+          <label for="cuota">Cuota (€)</label>
+        </div></div>
+      </div>
+
+      <!-- Row 3: Porcentaje de Bonificación -->
+      <div class="row g-3 mt-1">
+        <div class="col-md-6">
+          <label for="porBonif" class="form-label">Porcentaje de Bonificación</label>
+          <div class="input-group">
+            <input type="number"
+                   step="0.01"
+                   id="porBonif"
+                   class="form-control"
+                   [(ngModel)]="lf.liquidacion.porBonif"
+                   name="porBonif"
+                   (ngModelChange)="lf.calculaTotal()"
+                   placeholder=" "
+                   min="0"
+                   max="100"
+                   required>
+            <span class="input-group-text">%</span>
+          </div>
+        </div>
+      </div>

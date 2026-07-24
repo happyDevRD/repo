@@ -1,0 +1,35 @@
+<!-- NUEVO DOCUMENTO -->
+<app-modal-shell
+ modalId="documentoModal"
+ title="Nuevo Documento"
+ titleId="exampleModalLabel"
+ dialogClass="modal-xl modal-dialog-centered"
+ [showFooter]="false"
+ (closed)="s.cerrarModal('documentoModal')"
+>
+ <form modalBody enctype="multipart/form-data">
+ <div class="row g-3">
+ <div class="col-12"><div class="form-floating">
+ <textarea class="form-control" required id="descripcion" name="descripcion"
+ [(ngModel)]="s.descripcionArchivo" placeholder=" " rows="3"></textarea>
+ <label for="descripcion">Descripción *</label>
+ </div></div>
+ <div class="col-12"><div class="form-floating">
+ <input #fileInput class="form-control" (change)='s.upload($event,s.idsolicitud)' type="file"
+ id="formFile" accept=".pdf,.docx,.odt,.jpg,.jpeg,.png">
+ <label for="formFile">Nuevo Documento * (PDF, DOCX, ODT, JPG, PNG)</label>
+ </div></div>
+ </div>
+ <br>
+ <div *ngIf="s.subidaArchivo" class="text-center my-3">
+ <div class="spinner-border text-primary" role="status">
+ <span class="visually-hidden">Subiendo...</span>
+ </div>
+ <div>Subiendo archivo...</div>
+ </div>
+ <div class="modal-footer">
+ <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="s.cancelarDocumento(); s.cerrarModal('documentoModal')">Cancelar</button>
+ <button type="button" class="btn-iflow modal-footer__btn btn-iflow--primary" (click)="s.guardarDocumento()">Guardar</button>
+ </div>
+ </form>
+</app-modal-shell>

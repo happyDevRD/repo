@@ -1,0 +1,211 @@
+<app-modal-shell
+  modalId="edicionSolicitudModal"
+  title="Modificar Solicitud"
+  titleId="edicionSolicitudModalLabel"
+  dialogClass="modal-xl modal-dialog-centered"
+  [staticBackdrop]="true"
+  [keyboard]="false"
+  [dismissOnClose]="false"
+  (closed)="s.cerrarModal('edicionSolicitudModal')"
+>
+  <form modalBody id="formModificarSolicitud" (ngSubmit)="s.onModificarSolicitudSubmit()">
+<div class="row g-3">
+            <div class="col-9"><div class="form-floating">
+              <input 
+                type="text" 
+                [value]="s.versolicitud.asunto" 
+                class="form-control" 
+                id="asunto" 
+                name="asunto"
+                [(ngModel)]="s.editasolicitud.asunto"
+                required
+                [class.is-invalid]="s.isAsuntoModificarInvalid()" placeholder=" ">
+              <label for="asunto">Asunto *</label>
+              <br>
+            </div></div>
+            <div class="col-3"><div class="form-floating">
+              <input 
+                [value]="s.versolicitud.fecInicio" 
+                class="form-control" 
+                type="date"
+                id="fechaSolicitud" 
+                name="fechaSolicitud" 
+                min="2023-01-01" 
+                max="2099-12-31"
+                [(ngModel)]="s.editasolicitud.fecInicio"
+                required
+                [class.is-invalid]="s.isFechaModificarInvalid()" placeholder=" ">
+              <label for="fechaSolicitud">Fecha Solicitud *</label>
+              <br>
+            </div></div>
+            <div class="col-3"><div class="form-floating">
+              <select 
+                [value]="s.versolicitud.estado" 
+                disabled 
+                class="form-select" 
+                id="estado" 
+                name="estado"
+                [(ngModel)]="s.editasolicitud.estado">
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="ACEPTADA">Aceptada</option>
+                <option value="RECHAZADA">Rechazada</option>
+              </select>
+              <label for="estado">Estado</label>
+              <br>
+            </div></div>
+            <div class="col-3"><div class="form-floating">
+              <select 
+                [value]="s.versolicitud.usuario" 
+                class="form-select" 
+                id="asignado" 
+                name="asignado"
+                [(ngModel)]="s.editasolicitud.usuario">
+                <option value="" disabled>Selecciona un usuario</option>
+                <option *ngFor="let procedipermisos of s.procedipermiso" [value]="procedipermisos.usuario">
+                  {{procedipermisos.usuario}}
+                </option>
+              </select>
+              <label for="asignado">Asignado a</label>
+              <br>
+            </div></div>
+            <div class="col-6"><div class="form-floating">
+              <input 
+                type="text" 
+                class="form-control" 
+                disabled 
+                id="departamento" 
+                [value]="s.depart"
+                name="departamento" placeholder=" ">
+              <label for="departamento">Departamento</label>
+              <br>
+            </div></div>
+            <div class="col-4"><div class="form-floating">
+              <input 
+                type="text" 
+                class="form-control" 
+                required 
+                [(ngModel)]="s.editasolicitud.dni" 
+                (change)="s.soliciUsuario(s.editasolicitud.dni)" 
+                id="interesado"
+                name="interesado"
+                [class.is-invalid]="s.isDniModificarInvalid()" placeholder=" ">
+              <label for="interesado">Interesado DNI *</label>
+              <br>
+            </div></div>
+            <div class="col-4"><div class="form-floating">
+              <input 
+                type="text" 
+                class="form-control" 
+                disabled 
+                [value]="s.personaFacade.representanteSolicitud" 
+                id="representante"
+                name="representante" placeholder=" ">
+              <label for="representante">Representante</label>
+              <br>
+            </div></div>
+            <div *ngIf="s.editasolicitud.formaNotifi==1" class="col-12"><div class="form-floating">
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                name="email" 
+                [(ngModel)]="s.editasolicitud.email" placeholder=" ">
+              <label for="email">Correo electrónico *</label>
+              <br>
+            </div></div>
+            <div class="col-12"><div class="form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="s.personaFacade.InteresadoSolicitud" 
+                id="nombre"
+                name="nombre" placeholder=" ">
+              <label for="nombre">Interesado</label>
+              <br>
+            </div></div>
+            <div class="col-12"><div class="form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="s.personaFacade.dirPosta" 
+                id="direccion"
+                name="direccion" placeholder=" ">
+              <label for="direccion">Dirección</label>
+              <br>
+            </div></div>
+            <div class="col-4"><div class="form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="s.personaFacade.codPosta" 
+                id="cp" 
+                name="cp" placeholder=" ">
+              <label for="cp">Código Postal</label>
+              <br>
+            </div></div>
+            <div class="col-4"><div class="form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="s.personaFacade.provincia" 
+                id="provincia"
+                name="provincia" placeholder=" ">
+              <label for="provincia">Provincia</label>
+              <br>
+            </div></div>
+            <div class="col-4"><div class="form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control" 
+                [value]="s.personaFacade.Municipio" 
+                id="municipio"
+                name="municipio" placeholder=" ">
+              <label for="municipio">Municipio</label>
+              <br>
+            </div></div>
+            <div class="col-10"><div class="form-floating">
+              <div class="checkbox-input-field">
+                <input 
+                  type="checkbox" 
+                  name="selecrepre" 
+                  id="selecrepre"
+                  [(ngModel)]="s.seleccionoRepre" 
+                  [value]="1">
+                <span class="checkbox-text">Seleccionar Representante</span>
+              </div>
+              <br>
+            </div></div>
+            <div class="col-4"><div class="form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control"
+                [value]="s.representanteexplistar.desPerEntid || s.personaFacade.representanteSolicitud" 
+                id="nombreRepresentante"
+                name="nombreRepresentante" placeholder=" ">
+              <label for="nombreRepresentante">Representante</label>
+              <br>
+            </div></div>
+            <div class="col-8"><div class="form-floating">
+              <input 
+                type="text" 
+                disabled 
+                class="form-control"
+                [value]="s.representanteexplistar.dirPosta || s.direccionRepresentante" 
+                id="direccionRepresentante"
+                name="direccionRepresentante" placeholder=" ">
+              <label for="direccionRepresentante">Dirección</label>
+              <br>
+            </div></div>
+          </div>
+  </form>
+  <div modalFooter>
+            <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="s.limpiaDatosEditarSolicitudes(); s.cerrarModal('edicionSolicitudModal')">Cancelar</button>
+            <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+          </div>
+</app-modal-shell>

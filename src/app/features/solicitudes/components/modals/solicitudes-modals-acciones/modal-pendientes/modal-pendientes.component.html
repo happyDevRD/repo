@@ -1,0 +1,88 @@
+<app-modal-shell
+ modalId="SoliciPendientesModal"
+ title="Solicitudes Pendientes/Rechazar"
+ titleId="SoliciPendientesModalLabel"
+ dialogClass="modal-xl modal-dialog-centered"
+ [staticBackdrop]="true"
+ [keyboard]="false"
+ (closed)="s.limpiacadenaEstadoSolicitudes()"
+>
+ <div modalBody class="px-3">
+ <app-iflow-grid hidden
+ [source]="s.sourceSoliciPendientes" (rowClick)="s.selecsolicitudNueva($event)"
+ [columns]="s.columnsSoliciPendi" [localization]="s.localizationObject" #gridPendientes>
+      </app-iflow-grid>
+ <div>
+ <div class="row g-3">
+ <form>
+ <div class="col-3"><div class="form-floating">
+ <select class="form-select " id="estado" name="estado"
+ (change)="s.valorEstato(s.cadenaEstadoSolicitudes)" [(ngModel)]="s.cadenaEstadoSolicitudes">
+ <option value="PENDIENTE">PENDIENTE</option>
+ <option value="RECHAZADA">RECHAZADA</option>
+ </select>
+ <label for="estado">Estado</label>
+ <br>
+ </div></div>
+ </form>
+ </div>
+ <br>
+ <div #content>
+ <table *ngIf="s.cadenaEstadoSolicitudes =='PENDIENTE'" class="table table-borderless">
+ <thead>
+ <tr>
+ <th scope="col">Ejercicio/Número</th>
+ <th scope="col">Fecha Solicitud</th>
+ <th scope="col">Asunto</th>
+ <th scope="col">Estado</th>
+ <th scope="col">Asignado a</th>
+ <th scope="col">Interesado</th>
+ <th scope="col">N. Registro</th>
+ </tr>
+ </thead>
+ <tbody *ngFor="let solicilistar of s.solicitudlistar">
+ <tr *ngIf="solicilistar.estado !=s.estado">
+ <td>{{solicilistar.ejercicio}}/{{solicilistar.numero}}</td>
+ <td>{{solicilistar.fecInicio}}</td>
+ <td>{{solicilistar.asunto}}</td>
+ <td>{{solicilistar.estado}}</td>
+ <td>{{solicilistar.usuario}}</td>
+ <td>{{solicilistar.personaEntidad.desPerEntid}}</td>
+ <td>{{solicilistar.ejeNumRegis}}</td>
+ </tr>
+ </tbody>
+ </table>
+ <table *ngIf="s.cadenaEstadoSolicitudes =='RECHAZADA'" class="table table-borderless">
+ <thead>
+ <tr>
+ <th scope="col">Ejercicio/Número</th>
+ <th scope="col">Fecha Solicitud</th>
+ <th scope="col">Asunto</th>
+ <th scope="col">Estado</th>
+ <th scope="col">Asignado a</th>
+ <th scope="col">Interesado</th>
+ <th scope="col">N. Registro</th>
+ </tr>
+ </thead>
+ <tbody *ngFor="let solicilistar of s.solicitudlistar">
+ <tr *ngIf="solicilistar.estado !=s.estado">
+ <td>{{solicilistar.ejercicio}}/{{solicilistar.numero}}</td>
+ <td>{{solicilistar.fecInicio}}</td>
+ <td>{{solicilistar.asunto}}</td>
+ <td>{{solicilistar.estado}}</td>
+ <td>{{solicilistar.usuario}}</td>
+ <td>{{solicilistar.personaEntidad.desPerEntid}}</td>
+ <td>{{solicilistar.ejeNumRegis}}</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+ <div modalFooter>
+ <button type="button" class="btn-iflow modal-footer__btn btn-iflow--primary" (click)="s.generaPdfSolicitudes()">PDF <i
+ class="bi bi-file-earmark-pdf icons_botton_left"></i> </button>
+ <button class="btn-iflow modal-footer__btn btn-iflow--secondary" hidden role="button">Excel <i
+ class="bi bi-file-earmark-excel ms-2"></i></button>
+ </div>
+</app-modal-shell>

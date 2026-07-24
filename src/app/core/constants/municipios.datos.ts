@@ -1,11 +1,13 @@
-﻿export const MUNICIO= [
+import { MunicipioIne } from '../models/ine-catalogo.model'
+
+export const MUNICIO: MunicipioIne[] = [
   {
     id: "01002",
     nm: "Amurrio"
   },
   {
     id: "01049",
-    nm: "AÃ±ana"
+    nm: "Añana"
   },
   {
     id: "01003",
@@ -13,7 +15,7 @@
   },
   {
     id: "01006",
-    nm: "ArmiÃ±Ã³n"
+    nm: "Armiñón"
   },
   {
     id: "01037",
@@ -37,7 +39,7 @@
   },
   {
     id: "01011",
-    nm: "BaÃ±os de Ebro/MaÃ±ueta"
+    nm: "Baños de Ebro/Mañueta"
   },
   {
     id: "01013",
@@ -77,7 +79,7 @@
   },
   {
     id: "01901",
-    nm: "IruÃ±a Oka/IruÃ±a de Oca"
+    nm: "Iruña Oka/Iruña de Oca"
   },
   {
     id: "01027",
@@ -97,7 +99,7 @@
   },
   {
     id: "01030",
-    nm: "LagrÃ¡n"
+    nm: "Lagrán"
   },
   {
     id: "01031",
@@ -109,7 +111,7 @@
   },
   {
     id: "01902",
-    nm: "LantarÃ³n"
+    nm: "Lantarón"
   },
   {
     id: "01033",
@@ -129,7 +131,7 @@
   },
   {
     id: "01039",
-    nm: "Moreda de Ãlava/Moreda Araba"
+    nm: "Moreda de Álava/Moreda Araba"
   },
   {
     id: "01041",
@@ -141,11 +143,11 @@
   },
   {
     id: "01043",
-    nm: "OyÃ³n-Oion"
+    nm: "Oyón-Oion"
   },
   {
     id: "01044",
-    nm: "PeÃ±acerrada-Urizaharra"
+    nm: "Peñacerrada-Urizaharra"
   },
   {
     id: "01047",
@@ -161,7 +163,7 @@
   },
   {
     id: "01053",
-    nm: "San MillÃ¡n/Donemiliaga"
+    nm: "San Millán/Donemiliaga"
   },
   {
     id: "01054",
@@ -169,11 +171,11 @@
   },
   {
     id: "01055",
-    nm: "ValdegovÃ­a/Gaubea"
+    nm: "Valdegovía/Gaubea"
   },
   {
     id: "01057",
-    nm: "Villabuena de Ãlava/Eskuernaga"
+    nm: "Villabuena de Álava/Eskuernaga"
   },
   {
     id: "01059",
@@ -181,7 +183,7 @@
   },
   {
     id: "01060",
-    nm: "YÃ©cora/Iekora"
+    nm: "Yécora/Iekora"
   },
   {
     id: "01061",
@@ -225,7 +227,7 @@
   },
   {
     id: "02007",
-    nm: "AlcalÃ¡ del JÃºcar"
+    nm: "Alcalá del Júcar"
   },
   {
     id: "02008",
@@ -277,15 +279,15 @@
   },
   {
     id: "02020",
-    nm: "CarcelÃ©n"
+    nm: "Carcelén"
   },
   {
     id: "02021",
-    nm: "Casas de Juan NÃºÃ±ez"
+    nm: "Casas de Juan Núñez"
   },
   {
     id: "02022",
-    nm: "Casas de LÃ¡zaro"
+    nm: "Casas de Lázaro"
   },
   {
     id: "02023",
@@ -293,7 +295,7 @@
   },
   {
     id: "02024",
-    nm: "Casas-IbÃ¡Ã±ez"
+    nm: "Casas-Ibáñez"
   },
   {
     id: "02025",
@@ -305,7 +307,7 @@
   },
   {
     id: "02029",
-    nm: "Chinchilla de Monte-AragÃ³n"
+    nm: "Chinchilla de Monte-Aragón"
   },
   {
     id: "02027",
@@ -321,7 +323,7 @@
   },
   {
     id: "02031",
-    nm: "FÃ©rez"
+    nm: "Férez"
   },
   {
     id: "02032",
@@ -329,7 +331,7 @@
   },
   {
     id: "02033",
-    nm: "Fuente-Ãlamo"
+    nm: "Fuente-Álamo"
   },
   {
     id: "02034",
@@ -345,7 +347,7 @@
   },
   {
     id: "02037",
-    nm: "HellÃ­n"
+    nm: "Hellín"
   },
   {
     id: "02038",
@@ -373,7 +375,7 @@
   },
   {
     id: "02044",
-    nm: "LiÃ©tor"
+    nm: "Liétor"
   },
   {
     id: "02045",
@@ -433,15 +435,15 @@
   },
   {
     id: "02060",
-    nm: "PeÃ±as de San Pedro"
+    nm: "Peñas de San Pedro"
   },
   {
     id: "02059",
-    nm: "PeÃ±ascosa"
+    nm: "Peñascosa"
   },
   {
     id: "02061",
-    nm: "PÃ©trola"
+    nm: "Pétrola"
   },
   {
     id: "02062",
@@ -449,7 +451,7 @@
   },
   {
     id: "02901",
-    nm: "Pozo CaÃ±ada"
+    nm: "Pozo Cañada"
   },
   {
     id: "02063",
@@ -469,7 +471,7 @@
   },
   {
     id: "02067",
-    nm: "RiÃ³par"
+    nm: "Riópar"
   },
   {
     id: "02068",
@@ -513,7 +515,7 @@
   },
   {
     id: "02078",
-    nm: "Villalgordo del JÃºcar"
+    nm: "Villalgordo del Júcar"
   },
   {
     id: "02079",
@@ -557,7 +559,7 @@
   },
   {
     id: "03004",
-    nm: "AigÃ¼es"
+    nm: "Aigües"
   },
   {
     id: "03005",
@@ -565,7 +567,7 @@
   },
   {
     id: "03006",
-    nm: "AlcalalÃ­"
+    nm: "Alcalalí"
   },
   {
     id: "03007",
@@ -585,7 +587,7 @@
   },
   {
     id: "03011",
-    nm: "AlfÃ s del Pi, l'"
+    nm: "Alfàs del Pi, l'"
   },
   {
     id: "03012",
@@ -593,7 +595,7 @@
   },
   {
     id: "03013",
-    nm: "AlgueÃ±a"
+    nm: "Algueña"
   },
   {
     id: "03014",
@@ -601,7 +603,7 @@
   },
   {
     id: "03015",
-    nm: "AlmoradÃ­"
+    nm: "Almoradí"
   },
   {
     id: "03016",
@@ -621,7 +623,7 @@
   },
   {
     id: "03001",
-    nm: "AtzÃºbia, l'"
+    nm: "Atzúbia, l'"
   },
   {
     id: "03020",
@@ -641,7 +643,7 @@
   },
   {
     id: "03024",
-    nm: "BenejÃºzar"
+    nm: "Benejúzar"
   },
   {
     id: "03025",
@@ -653,11 +655,11 @@
   },
   {
     id: "03027",
-    nm: "BeniardÃ¡"
+    nm: "Beniardá"
   },
   {
     id: "03028",
-    nm: "BeniarrÃ©s"
+    nm: "Beniarrés"
   },
   {
     id: "03030",
@@ -681,7 +683,7 @@
   },
   {
     id: "03034",
-    nm: "BenijÃ³far"
+    nm: "Benijófar"
   },
   {
     id: "03035",
@@ -737,7 +739,7 @@
   },
   {
     id: "03048",
-    nm: "Callosa d'en SarriÃ "
+    nm: "Callosa d'en Sarrià"
   },
   {
     id: "03047",
@@ -753,7 +755,7 @@
   },
   {
     id: "03052",
-    nm: "CaÃ±ada"
+    nm: "Cañada"
   },
   {
     id: "03053",
@@ -797,7 +799,7 @@
   },
   {
     id: "03063",
-    nm: "DÃ©nia"
+    nm: "Dénia"
   },
   {
     id: "03064",
@@ -825,7 +827,7 @@
   },
   {
     id: "03077",
-    nm: "FondÃ³ de les Neus, el/HondÃ³n de las Nieves"
+    nm: "Fondó de les Neus, el/Hondón de las Nieves"
   },
   {
     id: "03070",
@@ -853,7 +855,7 @@
   },
   {
     id: "03078",
-    nm: "HondÃ³n de los Frailes"
+    nm: "Hondón de los Frailes"
   },
   {
     id: "03079",
@@ -865,7 +867,7 @@
   },
   {
     id: "03082",
-    nm: "JÃ¡vea/XÃ bia"
+    nm: "Jávea/Xàbia"
   },
   {
     id: "03083",
@@ -873,7 +875,7 @@
   },
   {
     id: "03085",
-    nm: "LlÃ­ber"
+    nm: "Llíber"
   },
   {
     id: "03084",
@@ -889,7 +891,7 @@
   },
   {
     id: "03089",
-    nm: "MonÃ³var/MonÃ²ver"
+    nm: "Monóvar/Monòver"
   },
   {
     id: "03903",
@@ -949,7 +951,7 @@
   },
   {
     id: "03103",
-    nm: "PenÃ guila"
+    nm: "Penàguila"
   },
   {
     id: "03104",
@@ -961,7 +963,7 @@
   },
   {
     id: "03105",
-    nm: "PinÃ³s, el/Pinoso"
+    nm: "Pinós, el/Pinoso"
   },
   {
     id: "03106",
@@ -985,11 +987,11 @@
   },
   {
     id: "03110",
-    nm: "RÃ fol d'AlmÃºnia, el"
+    nm: "Ràfol d'Almúnia, el"
   },
   {
     id: "03111",
-    nm: "RedovÃ¡n"
+    nm: "Redován"
   },
   {
     id: "03112",
@@ -1053,7 +1055,7 @@
   },
   {
     id: "03127",
-    nm: "TÃ rbena"
+    nm: "Tàrbena"
   },
   {
     id: "03128",
@@ -1073,7 +1075,7 @@
   },
   {
     id: "03132",
-    nm: "Torremanzanas/Torre de les MaÃ§anes, la"
+    nm: "Torremanzanas/Torre de les Maçanes, la"
   },
   {
     id: "03133",
@@ -1081,7 +1083,7 @@
   },
   {
     id: "03134",
-    nm: "Vall d'AlcalÃ , la"
+    nm: "Vall d'Alcalà, la"
   },
   {
     id: "03136",
@@ -1109,7 +1111,7 @@
   },
   {
     id: "03081",
-    nm: "XalÃ³"
+    nm: "Xaló"
   },
   {
     id: "04001",
@@ -1125,7 +1127,7 @@
   },
   {
     id: "04004",
-    nm: "AlbÃ¡nchez"
+    nm: "Albánchez"
   },
   {
     id: "04005",
@@ -1141,7 +1143,7 @@
   },
   {
     id: "04008",
-    nm: "AlcÃ³ntar"
+    nm: "Alcóntar"
   },
   {
     id: "04009",
@@ -1153,19 +1155,19 @@
   },
   {
     id: "04011",
-    nm: "Alhama de AlmerÃ­a"
+    nm: "Alhama de Almería"
   },
   {
     id: "04012",
-    nm: "AlicÃºn"
+    nm: "Alicún"
   },
   {
     id: "04013",
-    nm: "AlmerÃ­a"
+    nm: "Almería"
   },
   {
     id: "04014",
-    nm: "AlmÃ³cita"
+    nm: "Almócita"
   },
   {
     id: "04015",
@@ -1181,7 +1183,7 @@
   },
   {
     id: "04018",
-    nm: "ArmuÃ±a de Almanzora"
+    nm: "Armuña de Almanzora"
   },
   {
     id: "04019",
@@ -1193,7 +1195,7 @@
   },
   {
     id: "04020",
-    nm: "BayÃ¡rcal"
+    nm: "Bayárcal"
   },
   {
     id: "04021",
@@ -1201,7 +1203,7 @@
   },
   {
     id: "04022",
-    nm: "BÃ©dar"
+    nm: "Bédar"
   },
   {
     id: "04023",
@@ -1217,7 +1219,7 @@
   },
   {
     id: "04027",
-    nm: "BenizalÃ³n"
+    nm: "Benizalón"
   },
   {
     id: "04028",
@@ -1229,7 +1231,7 @@
   },
   {
     id: "04030",
-    nm: "CanjÃ¡yar"
+    nm: "Canjáyar"
   },
   {
     id: "04031",
@@ -1253,7 +1255,7 @@
   },
   {
     id: "04034",
-    nm: "CÃ³bdar"
+    nm: "Cóbdar"
   },
   {
     id: "04035",
@@ -1261,7 +1263,7 @@
   },
   {
     id: "04038",
-    nm: "DalÃ­as"
+    nm: "Dalías"
   },
   {
     id: "04902",
@@ -1281,15 +1283,15 @@
   },
   {
     id: "04045",
-    nm: "FiÃ±ana"
+    nm: "Fiñana"
   },
   {
     id: "04046",
-    nm: "FondÃ³n"
+    nm: "Fondón"
   },
   {
     id: "04047",
-    nm: "GÃ¡dor"
+    nm: "Gádor"
   },
   {
     id: "04048",
@@ -1301,19 +1303,19 @@
   },
   {
     id: "04050",
-    nm: "GÃ©rgal"
+    nm: "Gérgal"
   },
   {
     id: "04051",
-    nm: "HuÃ©cija"
+    nm: "Huécija"
   },
   {
     id: "04052",
-    nm: "HuÃ©rcal de AlmerÃ­a"
+    nm: "Huércal de Almería"
   },
   {
     id: "04053",
-    nm: "HuÃ©rcal-Overa"
+    nm: "Huércal-Overa"
   },
   {
     id: "04054",
@@ -1321,7 +1323,7 @@
   },
   {
     id: "04055",
-    nm: "InstinciÃ³n"
+    nm: "Instinción"
   },
   {
     id: "04056",
@@ -1329,15 +1331,15 @@
   },
   {
     id: "04057",
-    nm: "LÃ¡ujar de Andarax"
+    nm: "Láujar de Andarax"
   },
   {
     id: "04058",
-    nm: "LÃ­jar"
+    nm: "Líjar"
   },
   {
     id: "04059",
-    nm: "LubrÃ­n"
+    nm: "Lubrín"
   },
   {
     id: "04060",
@@ -1345,7 +1347,7 @@
   },
   {
     id: "04061",
-    nm: "LÃºcar"
+    nm: "Lúcar"
   },
   {
     id: "04062",
@@ -1353,11 +1355,11 @@
   },
   {
     id: "04063",
-    nm: "MarÃ­a"
+    nm: "María"
   },
   {
     id: "04064",
-    nm: "MojÃ¡car"
+    nm: "Mojácar"
   },
   {
     id: "04903",
@@ -1369,7 +1371,7 @@
   },
   {
     id: "04066",
-    nm: "NÃ­jar"
+    nm: "Níjar"
   },
   {
     id: "04067",
@@ -1381,7 +1383,7 @@
   },
   {
     id: "04069",
-    nm: "Olula del RÃ­o"
+    nm: "Olula del Río"
   },
   {
     id: "04070",
@@ -1397,7 +1399,7 @@
   },
   {
     id: "04073",
-    nm: "Paterna del RÃ­o"
+    nm: "Paterna del Río"
   },
   {
     id: "04074",
@@ -1405,7 +1407,7 @@
   },
   {
     id: "04075",
-    nm: "PulpÃ­"
+    nm: "Pulpí"
   },
   {
     id: "04076",
@@ -1413,7 +1415,7 @@
   },
   {
     id: "04077",
-    nm: "RÃ¡gol"
+    nm: "Rágol"
   },
   {
     id: "04078",
@@ -1429,15 +1431,15 @@
   },
   {
     id: "04081",
-    nm: "Santa Fe de MondÃºjar"
+    nm: "Santa Fe de Mondújar"
   },
   {
     id: "04082",
-    nm: "SenÃ©s"
+    nm: "Senés"
   },
   {
     id: "04083",
-    nm: "SerÃ³n"
+    nm: "Serón"
   },
   {
     id: "04084",
@@ -1445,7 +1447,7 @@
   },
   {
     id: "04085",
-    nm: "SomontÃ­n"
+    nm: "Somontín"
   },
   {
     id: "04086",
@@ -1453,7 +1455,7 @@
   },
   {
     id: "04087",
-    nm: "SuflÃ­"
+    nm: "Suflí"
   },
   {
     id: "04088",
@@ -1473,7 +1475,7 @@
   },
   {
     id: "04092",
-    nm: "TÃ­jola"
+    nm: "Tíjola"
   },
   {
     id: "04901",
@@ -1493,7 +1495,7 @@
   },
   {
     id: "04096",
-    nm: "UrrÃ¡cal"
+    nm: "Urrácal"
   },
   {
     id: "04097",
@@ -1501,11 +1503,11 @@
   },
   {
     id: "04098",
-    nm: "VÃ©lez-Blanco"
+    nm: "Vélez-Blanco"
   },
   {
     id: "04099",
-    nm: "VÃ©lez-Rubio"
+    nm: "Vélez-Rubio"
   },
   {
     id: "04100",
@@ -1517,7 +1519,7 @@
   },
   {
     id: "04102",
-    nm: "VÃ­car"
+    nm: "Vícar"
   },
   {
     id: "04103",
@@ -1565,7 +1567,7 @@
   },
   {
     id: "05016",
-    nm: "ArÃ©valo"
+    nm: "Arévalo"
   },
   {
     id: "05017",
@@ -1577,11 +1579,11 @@
   },
   {
     id: "05019",
-    nm: "Ãvila"
+    nm: "Ávila"
   },
   {
     id: "05021",
-    nm: "Barco de Ãvila, El"
+    nm: "Barco de Ávila, El"
   },
   {
     id: "05022",
@@ -1589,7 +1591,7 @@
   },
   {
     id: "05023",
-    nm: "BarromÃ¡n"
+    nm: "Barromán"
   },
   {
     id: "05024",
@@ -1617,11 +1619,11 @@
   },
   {
     id: "05033",
-    nm: "BlascomillÃ¡n"
+    nm: "Blascomillán"
   },
   {
     id: "05034",
-    nm: "BlasconuÃ±o de Matacabras"
+    nm: "Blasconuño de Matacabras"
   },
   {
     id: "05035",
@@ -1629,7 +1631,7 @@
   },
   {
     id: "05036",
-    nm: "BohodÃ³n, El"
+    nm: "Bohodón, El"
   },
   {
     id: "05037",
@@ -1681,7 +1683,7 @@
   },
   {
     id: "05049",
-    nm: "CardeÃ±osa"
+    nm: "Cardeñosa"
   },
   {
     id: "05051",
@@ -1717,11 +1719,11 @@
   },
   {
     id: "05067",
-    nm: "ChamartÃ­n"
+    nm: "Chamartín"
   },
   {
     id: "05059",
-    nm: "CillÃ¡n"
+    nm: "Cillán"
   },
   {
     id: "05060",
@@ -1737,7 +1739,7 @@
   },
   {
     id: "05063",
-    nm: "Collado del MirÃ³n"
+    nm: "Collado del Mirón"
   },
   {
     id: "05064",
@@ -1769,7 +1771,7 @@
   },
   {
     id: "05073",
-    nm: "Flores de Ãvila"
+    nm: "Flores de Ávila"
   },
   {
     id: "05074",
@@ -1785,11 +1787,11 @@
   },
   {
     id: "05077",
-    nm: "Fuente el SaÃºz"
+    nm: "Fuente el Saúz"
   },
   {
     id: "05078",
-    nm: "Fuentes de AÃ±o"
+    nm: "Fuentes de Año"
   },
   {
     id: "05079",
@@ -1809,11 +1811,11 @@
   },
   {
     id: "05083",
-    nm: "GemuÃ±o"
+    nm: "Gemuño"
   },
   {
     id: "05085",
-    nm: "Gil GarcÃ­a"
+    nm: "Gil García"
   },
   {
     id: "05084",
@@ -1821,7 +1823,7 @@
   },
   {
     id: "05086",
-    nm: "GimialcÃ³n"
+    nm: "Gimialcón"
   },
   {
     id: "05087",
@@ -1829,7 +1831,7 @@
   },
   {
     id: "05088",
-    nm: "Grandes y San MartÃ­n"
+    nm: "Grandes y San Martín"
   },
   {
     id: "05089",
@@ -1837,7 +1839,7 @@
   },
   {
     id: "05090",
-    nm: "Gutierre-MuÃ±oz"
+    nm: "Gutierre-Muñoz"
   },
   {
     id: "05092",
@@ -1845,7 +1847,7 @@
   },
   {
     id: "05093",
-    nm: "HerradÃ³n de Pinares"
+    nm: "Herradón de Pinares"
   },
   {
     id: "05094",
@@ -1853,7 +1855,7 @@
   },
   {
     id: "05095",
-    nm: "Higuera de las DueÃ±as"
+    nm: "Higuera de las Dueñas"
   },
   {
     id: "05096",
@@ -1885,7 +1887,7 @@
   },
   {
     id: "05106",
-    nm: "Hoyos de Miguel MuÃ±oz"
+    nm: "Hoyos de Miguel Muñoz"
   },
   {
     id: "05104",
@@ -1909,7 +1911,7 @@
   },
   {
     id: "05110",
-    nm: "LanzahÃ­ta"
+    nm: "Lanzahíta"
   },
   {
     id: "05113",
@@ -1941,11 +1943,11 @@
   },
   {
     id: "05119",
-    nm: "ManjabÃ¡lago y Ortigosa de Rioalmar"
+    nm: "Manjabálago y Ortigosa de Rioalmar"
   },
   {
     id: "05120",
-    nm: "MarlÃ­n"
+    nm: "Marlín"
   },
   {
     id: "05121",
@@ -1953,7 +1955,7 @@
   },
   {
     id: "05122",
-    nm: "MartÃ­nez"
+    nm: "Martínez"
   },
   {
     id: "05123",
@@ -1965,7 +1967,7 @@
   },
   {
     id: "05125",
-    nm: "MengamuÃ±oz"
+    nm: "Mengamuñoz"
   },
   {
     id: "05126",
@@ -1977,11 +1979,11 @@
   },
   {
     id: "05128",
-    nm: "MingorrÃ­a"
+    nm: "Mingorría"
   },
   {
     id: "05129",
-    nm: "MirÃ³n, El"
+    nm: "Mirón, El"
   },
   {
     id: "05130",
@@ -1989,11 +1991,11 @@
   },
   {
     id: "05131",
-    nm: "MirueÃ±a de los Infanzones"
+    nm: "Mirueña de los Infanzones"
   },
   {
     id: "05132",
-    nm: "MombeltrÃ¡n"
+    nm: "Mombeltrán"
   },
   {
     id: "05133",
@@ -2005,39 +2007,39 @@
   },
   {
     id: "05135",
-    nm: "MuÃ±ana"
+    nm: "Muñana"
   },
   {
     id: "05136",
-    nm: "MuÃ±ico"
+    nm: "Muñico"
   },
   {
     id: "05138",
-    nm: "MuÃ±ogalindo"
+    nm: "Muñogalindo"
   },
   {
     id: "05139",
-    nm: "MuÃ±ogrande"
+    nm: "Muñogrande"
   },
   {
     id: "05140",
-    nm: "MuÃ±omer del Peco"
+    nm: "Muñomer del Peco"
   },
   {
     id: "05141",
-    nm: "MuÃ±opepe"
+    nm: "Muñopepe"
   },
   {
     id: "05142",
-    nm: "MuÃ±osancho"
+    nm: "Muñosancho"
   },
   {
     id: "05143",
-    nm: "MuÃ±otello"
+    nm: "Muñotello"
   },
   {
     id: "05144",
-    nm: "Narrillos del Ãlamo"
+    nm: "Narrillos del Álamo"
   },
   {
     id: "05145",
@@ -2045,7 +2047,7 @@
   },
   {
     id: "05149",
-    nm: "Narros de SaldueÃ±a"
+    nm: "Narros de Saldueña"
   },
   {
     id: "05147",
@@ -2057,7 +2059,7 @@
   },
   {
     id: "05152",
-    nm: "Nava de ArÃ©valo"
+    nm: "Nava de Arévalo"
   },
   {
     id: "05153",
@@ -2125,7 +2127,7 @@
   },
   {
     id: "05168",
-    nm: "Navas del MarquÃ©s, Las"
+    nm: "Navas del Marqués, Las"
   },
   {
     id: "05169",
@@ -2185,7 +2187,7 @@
   },
   {
     id: "05183",
-    nm: "Pedro-RodrÃ­guez"
+    nm: "Pedro-Rodríguez"
   },
   {
     id: "05184",
@@ -2193,11 +2195,11 @@
   },
   {
     id: "05185",
-    nm: "PeÃ±alba de Ãvila"
+    nm: "Peñalba de Ávila"
   },
   {
     id: "05186",
-    nm: "PiedrahÃ­ta"
+    nm: "Piedrahíta"
   },
   {
     id: "05187",
@@ -2233,7 +2235,7 @@
   },
   {
     id: "05195",
-    nm: "RiofrÃ­o"
+    nm: "Riofrío"
   },
   {
     id: "05196",
@@ -2245,19 +2247,19 @@
   },
   {
     id: "05198",
-    nm: "SalvadiÃ³s"
+    nm: "Salvadiós"
   },
   {
     id: "05199",
-    nm: "San BartolomÃ© de BÃ©jar"
+    nm: "San Bartolomé de Béjar"
   },
   {
     id: "05200",
-    nm: "San BartolomÃ© de Corneja"
+    nm: "San Bartolomé de Corneja"
   },
   {
     id: "05201",
-    nm: "San BartolomÃ© de Pinares"
+    nm: "San Bartolomé de Pinares"
   },
   {
     id: "05206",
@@ -2273,7 +2275,7 @@
   },
   {
     id: "05209",
-    nm: "San GarcÃ­a de Ingelmos"
+    nm: "San García de Ingelmos"
   },
   {
     id: "05901",
@@ -2301,11 +2303,11 @@
   },
   {
     id: "05215",
-    nm: "San MartÃ­n de la Vega del Alberche"
+    nm: "San Martín de la Vega del Alberche"
   },
   {
     id: "05216",
-    nm: "San MartÃ­n del Pimpollar"
+    nm: "San Martín del Pimpollar"
   },
   {
     id: "05217",
@@ -2325,11 +2327,11 @@
   },
   {
     id: "05231",
-    nm: "San Vicente de ArÃ©valo"
+    nm: "San Vicente de Arévalo"
   },
   {
     id: "05204",
-    nm: "SanchidriÃ¡n"
+    nm: "Sanchidrián"
   },
   {
     id: "05205",
@@ -2345,23 +2347,23 @@
   },
   {
     id: "05226",
-    nm: "Santa MarÃ­a de los Caballeros"
+    nm: "Santa María de los Caballeros"
   },
   {
     id: "05224",
-    nm: "Santa MarÃ­a del Arroyo"
+    nm: "Santa María del Arroyo"
   },
   {
     id: "05225",
-    nm: "Santa MarÃ­a del Berrocal"
+    nm: "Santa María del Berrocal"
   },
   {
     id: "05902",
-    nm: "Santa MarÃ­a del Cubillo"
+    nm: "Santa María del Cubillo"
   },
   {
     id: "05227",
-    nm: "Santa MarÃ­a del TiÃ©tar"
+    nm: "Santa María del Tiétar"
   },
   {
     id: "05228",
@@ -2377,7 +2379,7 @@
   },
   {
     id: "05230",
-    nm: "Santo TomÃ© de Zabarcos"
+    nm: "Santo Tomé de Zabarcos"
   },
   {
     id: "05232",
@@ -2397,7 +2399,7 @@
   },
   {
     id: "05236",
-    nm: "Solana de Ãvila"
+    nm: "Solana de Ávila"
   },
   {
     id: "05237",
@@ -2421,11 +2423,11 @@
   },
   {
     id: "05242",
-    nm: "TiÃ±osillos"
+    nm: "Tiñosillos"
   },
   {
     id: "05243",
-    nm: "TolbaÃ±os"
+    nm: "Tolbaños"
   },
   {
     id: "05244",
@@ -2433,7 +2435,7 @@
   },
   {
     id: "05245",
-    nm: "Tornadizos de Ãvila"
+    nm: "Tornadizos de Ávila"
   },
   {
     id: "05247",
@@ -2441,11 +2443,11 @@
   },
   {
     id: "05246",
-    nm: "TÃ³rtoles"
+    nm: "Tórtoles"
   },
   {
     id: "05249",
-    nm: "UmbrÃ­as"
+    nm: "Umbrías"
   },
   {
     id: "05251",
@@ -2457,7 +2459,7 @@
   },
   {
     id: "05253",
-    nm: "Vega de Santa MarÃ­a"
+    nm: "Vega de Santa María"
   },
   {
     id: "05254",
@@ -2473,11 +2475,11 @@
   },
   {
     id: "05905",
-    nm: "Villanueva de Ãvila"
+    nm: "Villanueva de Ávila"
   },
   {
     id: "05258",
-    nm: "Villanueva de GÃ³mez"
+    nm: "Villanueva de Gómez"
   },
   {
     id: "05259",
@@ -2501,7 +2503,7 @@
   },
   {
     id: "05264",
-    nm: "ViÃ±egra de MoraÃ±a"
+    nm: "Viñegra de Moraña"
   },
   {
     id: "05265",
@@ -2509,7 +2511,7 @@
   },
   {
     id: "05266",
-    nm: "Zapardiel de la CaÃ±ada"
+    nm: "Zapardiel de la Cañada"
   },
   {
     id: "05267",
@@ -2549,7 +2551,7 @@
   },
   {
     id: "06009",
-    nm: "AljucÃ©n"
+    nm: "Aljucén"
   },
   {
     id: "06010",
@@ -2561,7 +2563,7 @@
   },
   {
     id: "06012",
-    nm: "Arroyo de San ServÃ¡n"
+    nm: "Arroyo de San Serván"
   },
   {
     id: "06013",
@@ -2617,7 +2619,7 @@
   },
   {
     id: "06026",
-    nm: "Calera de LeÃ³n"
+    nm: "Calera de León"
   },
   {
     id: "06027",
@@ -2669,7 +2671,7 @@
   },
   {
     id: "06038",
-    nm: "Cordobilla de LÃ¡cara"
+    nm: "Cordobilla de Lácara"
   },
   {
     id: "06039",
@@ -2685,7 +2687,7 @@
   },
   {
     id: "06043",
-    nm: "Don Ãlvaro"
+    nm: "Don Álvaro"
   },
   {
     id: "06044",
@@ -2693,7 +2695,7 @@
   },
   {
     id: "06045",
-    nm: "EntrÃ­n Bajo"
+    nm: "Entrín Bajo"
   },
   {
     id: "06046",
@@ -2733,7 +2735,7 @@
   },
   {
     id: "06055",
-    nm: "Fuentes de LeÃ³n"
+    nm: "Fuentes de León"
   },
   {
     id: "06056",
@@ -2757,7 +2759,7 @@
   },
   {
     id: "06060",
-    nm: "GuareÃ±a"
+    nm: "Guareña"
   },
   {
     id: "06061",
@@ -2813,7 +2815,7 @@
   },
   {
     id: "06072",
-    nm: "LobÃ³n"
+    nm: "Lobón"
   },
   {
     id: "06075",
@@ -2837,7 +2839,7 @@
   },
   {
     id: "06080",
-    nm: "MedellÃ­n"
+    nm: "Medellín"
   },
   {
     id: "06081",
@@ -2849,7 +2851,7 @@
   },
   {
     id: "06083",
-    nm: "MÃ©rida"
+    nm: "Mérida"
   },
   {
     id: "06084",
@@ -2861,7 +2863,7 @@
   },
   {
     id: "06086",
-    nm: "MontemolÃ­n"
+    nm: "Montemolín"
   },
   {
     id: "06087",
@@ -2893,7 +2895,7 @@
   },
   {
     id: "06094",
-    nm: "Oliva de MÃ©rida"
+    nm: "Oliva de Mérida"
   },
   {
     id: "06095",
@@ -2917,7 +2919,7 @@
   },
   {
     id: "06100",
-    nm: "PeÃ±alsordo"
+    nm: "Peñalsordo"
   },
   {
     id: "06101",
@@ -2941,7 +2943,7 @@
   },
   {
     id: "06108",
-    nm: "Puebla de Sancho PÃ©rez"
+    nm: "Puebla de Sancho Pérez"
   },
   {
     id: "06105",
@@ -2985,7 +2987,7 @@
   },
   {
     id: "06116",
-    nm: "SalvaleÃ³n"
+    nm: "Salvaleón"
   },
   {
     id: "06117",
@@ -2993,15 +2995,15 @@
   },
   {
     id: "06119",
-    nm: "San Pedro de MÃ©rida"
+    nm: "San Pedro de Mérida"
   },
   {
     id: "06123",
-    nm: "San Vicente de AlcÃ¡ntara"
+    nm: "San Vicente de Alcántara"
   },
   {
     id: "06118",
-    nm: "Sancti-SpÃ­ritus"
+    nm: "Sancti-Spíritus"
   },
   {
     id: "06120",
@@ -3017,7 +3019,7 @@
   },
   {
     id: "06124",
-    nm: "Segura de LeÃ³n"
+    nm: "Segura de León"
   },
   {
     id: "06125",
@@ -3037,7 +3039,7 @@
   },
   {
     id: "06129",
-    nm: "TÃ¡liga"
+    nm: "Táliga"
   },
   {
     id: "06130",
@@ -3053,7 +3055,7 @@
   },
   {
     id: "06133",
-    nm: "TorremejÃ­a"
+    nm: "Torremejía"
   },
   {
     id: "06134",
@@ -3109,7 +3111,7 @@
   },
   {
     id: "06143",
-    nm: "Valverde de LeganÃ©s"
+    nm: "Valverde de Leganés"
   },
   {
     id: "06144",
@@ -3117,7 +3119,7 @@
   },
   {
     id: "06145",
-    nm: "Valverde de MÃ©rida"
+    nm: "Valverde de Mérida"
   },
   {
     id: "06149",
@@ -3125,7 +3127,7 @@
   },
   {
     id: "06150",
-    nm: "VillagarcÃ­a de la Torre"
+    nm: "Villagarcía de la Torre"
   },
   {
     id: "06151",
@@ -3161,7 +3163,7 @@
   },
   {
     id: "06159",
-    nm: "ZahÃ­nos"
+    nm: "Zahínos"
   },
   {
     id: "06160",
@@ -3181,11 +3183,11 @@
   },
   {
     id: "07001",
-    nm: "AlarÃ³"
+    nm: "Alaró"
   },
   {
     id: "07003",
-    nm: "AlcÃºdia"
+    nm: "Alcúdia"
   },
   {
     id: "07004",
@@ -3201,7 +3203,7 @@
   },
   {
     id: "07006",
-    nm: "ArtÃ "
+    nm: "Artà"
   },
   {
     id: "07007",
@@ -3213,7 +3215,7 @@
   },
   {
     id: "07009",
-    nm: "BÃºger"
+    nm: "Búger"
   },
   {
     id: "07010",
@@ -3221,7 +3223,7 @@
   },
   {
     id: "07011",
-    nm: "CalviÃ "
+    nm: "Calvià"
   },
   {
     id: "07012",
@@ -3253,7 +3255,7 @@
   },
   {
     id: "07018",
-    nm: "DeiÃ "
+    nm: "Deià"
   },
   {
     id: "07026",
@@ -3301,7 +3303,7 @@
   },
   {
     id: "07030",
-    nm: "LlubÃ­"
+    nm: "Llubí"
   },
   {
     id: "07031",
@@ -3317,7 +3319,7 @@
   },
   {
     id: "07032",
-    nm: "MaÃ³-MahÃ³n"
+    nm: "Maó-Mahón"
   },
   {
     id: "07035",
@@ -3325,7 +3327,7 @@
   },
   {
     id: "07036",
-    nm: "MarratxÃ­"
+    nm: "Marratxí"
   },
   {
     id: "07037",
@@ -3337,7 +3339,7 @@
   },
   {
     id: "07038",
-    nm: "MontuÃ¯ri"
+    nm: "Montuïri"
   },
   {
     id: "07039",
@@ -3357,7 +3359,7 @@
   },
   {
     id: "07042",
-    nm: "PollenÃ§a"
+    nm: "Pollença"
   },
   {
     id: "07043",
@@ -3389,19 +3391,19 @@
   },
   {
     id: "07051",
-    nm: "Sant LlorenÃ§ des Cardassar"
+    nm: "Sant Llorenç des Cardassar"
   },
   {
     id: "07052",
-    nm: "Sant LluÃ­s"
+    nm: "Sant Lluís"
   },
   {
     id: "07053",
-    nm: "Santa EugÃ¨nia"
+    nm: "Santa Eugènia"
   },
   {
     id: "07054",
-    nm: "Santa EulÃ ria des Riu"
+    nm: "Santa Eulària des Riu"
   },
   {
     id: "07055",
@@ -3409,11 +3411,11 @@
   },
   {
     id: "07056",
-    nm: "Santa MarÃ­a del CamÃ­"
+    nm: "Santa María del Camí"
   },
   {
     id: "07057",
-    nm: "SantanyÃ­"
+    nm: "Santanyí"
   },
   {
     id: "07058",
@@ -3429,7 +3431,7 @@
   },
   {
     id: "07061",
-    nm: "SÃ³ller"
+    nm: "Sóller"
   },
   {
     id: "07062",
@@ -3465,7 +3467,7 @@
   },
   {
     id: "08005",
-    nm: "Ametlla del VallÃ¨s, L'"
+    nm: "Ametlla del Vallès, L'"
   },
   {
     id: "08006",
@@ -3477,7 +3479,7 @@
   },
   {
     id: "08008",
-    nm: "ArgenÃ§ola"
+    nm: "Argençola"
   },
   {
     id: "08009",
@@ -3485,19 +3487,19 @@
   },
   {
     id: "08010",
-    nm: "ArtÃ©s"
+    nm: "Artés"
   },
   {
     id: "08011",
-    nm: "AviÃ "
+    nm: "Avià"
   },
   {
     id: "08012",
-    nm: "AvinyÃ³"
+    nm: "Avinyó"
   },
   {
     id: "08013",
-    nm: "Avinyonet del PenedÃ¨s"
+    nm: "Avinyonet del Penedès"
   },
   {
     id: "08015",
@@ -3505,15 +3507,15 @@
   },
   {
     id: "08904",
-    nm: "Badia del VallÃ¨s"
+    nm: "Badia del Vallès"
   },
   {
     id: "08016",
-    nm: "BagÃ "
+    nm: "Bagà"
   },
   {
     id: "08017",
-    nm: "BalenyÃ "
+    nm: "Balenyà"
   },
   {
     id: "08018",
@@ -3521,7 +3523,7 @@
   },
   {
     id: "08252",
-    nm: "BarberÃ  del VallÃ¨s"
+    nm: "Barberà del Vallès"
   },
   {
     id: "08019",
@@ -3545,7 +3547,7 @@
   },
   {
     id: "08024",
-    nm: "BorredÃ "
+    nm: "Borredà"
   },
   {
     id: "08025",
@@ -3597,7 +3599,7 @@
   },
   {
     id: "08038",
-    nm: "CallÃºs"
+    nm: "Callús"
   },
   {
     id: "08036",
@@ -3617,7 +3619,7 @@
   },
   {
     id: "08042",
-    nm: "CÃ noves i SamalÃºs"
+    nm: "Cànoves i Samalús"
   },
   {
     id: "08043",
@@ -3661,7 +3663,7 @@
   },
   {
     id: "08051",
-    nm: "Castellar del VallÃ¨s"
+    nm: "Castellar del Vallès"
   },
   {
     id: "08053",
@@ -3685,7 +3687,7 @@
   },
   {
     id: "08060",
-    nm: "Castellfollit de RiubregÃ³s"
+    nm: "Castellfollit de Riubregós"
   },
   {
     id: "08059",
@@ -3693,7 +3695,7 @@
   },
   {
     id: "08061",
-    nm: "CastellgalÃ­"
+    nm: "Castellgalí"
   },
   {
     id: "08062",
@@ -3701,19 +3703,19 @@
   },
   {
     id: "08063",
-    nm: "CastellolÃ­"
+    nm: "Castellolí"
   },
   {
     id: "08064",
-    nm: "CastellterÃ§ol"
+    nm: "Castellterçol"
   },
   {
     id: "08065",
-    nm: "CastellvÃ­ de la Marca"
+    nm: "Castellví de la Marca"
   },
   {
     id: "08066",
-    nm: "CastellvÃ­ de Rosanes"
+    nm: "Castellví de Rosanes"
   },
   {
     id: "08067",
@@ -3725,15 +3727,15 @@
   },
   {
     id: "08266",
-    nm: "Cerdanyola del VallÃ¨s"
+    nm: "Cerdanyola del Vallès"
   },
   {
     id: "08068",
-    nm: "CervellÃ³"
+    nm: "Cervelló"
   },
   {
     id: "08069",
-    nm: "CollbatÃ³"
+    nm: "Collbató"
   },
   {
     id: "08070",
@@ -3749,7 +3751,7 @@
   },
   {
     id: "08073",
-    nm: "CornellÃ  de Llobregat"
+    nm: "Cornellà de Llobregat"
   },
   {
     id: "08074",
@@ -3781,11 +3783,11 @@
   },
   {
     id: "08134",
-    nm: "FigarÃ³-Montmany"
+    nm: "Figaró-Montmany"
   },
   {
     id: "08080",
-    nm: "FÃ­gols"
+    nm: "Fígols"
   },
   {
     id: "08082",
@@ -3793,7 +3795,7 @@
   },
   {
     id: "08081",
-    nm: "Fogars de MontclÃºs"
+    nm: "Fogars de Montclús"
   },
   {
     id: "08083",
@@ -3805,15 +3807,15 @@
   },
   {
     id: "08085",
-    nm: "Font-rubÃ­"
+    nm: "Font-rubí"
   },
   {
     id: "08086",
-    nm: "Franqueses del VallÃ¨s, Les"
+    nm: "Franqueses del Vallès, Les"
   },
   {
     id: "08090",
-    nm: "GaiÃ "
+    nm: "Gaià"
   },
   {
     id: "08087",
@@ -3825,7 +3827,7 @@
   },
   {
     id: "08089",
-    nm: "GavÃ "
+    nm: "Gavà"
   },
   {
     id: "08091",
@@ -3857,7 +3859,7 @@
   },
   {
     id: "08099",
-    nm: "Guardiola de BerguedÃ "
+    nm: "Guardiola de Berguedà"
   },
   {
     id: "08100",
@@ -3889,19 +3891,19 @@
   },
   {
     id: "08107",
-    nm: "LliÃ§Ã  d'Amunt"
+    nm: "Lliçà d'Amunt"
   },
   {
     id: "08108",
-    nm: "LliÃ§Ã  de Vall"
+    nm: "Lliçà de Vall"
   },
   {
     id: "08106",
-    nm: "Llinars del VallÃ¨s"
+    nm: "Llinars del Vallès"
   },
   {
     id: "08109",
-    nm: "LluÃ§Ã "
+    nm: "Lluçà"
   },
   {
     id: "08110",
@@ -3937,7 +3939,7 @@
   },
   {
     id: "08117",
-    nm: "Masies de VoltregÃ , Les"
+    nm: "Masies de Voltregà, Les"
   },
   {
     id: "08118",
@@ -3953,7 +3955,7 @@
   },
   {
     id: "08121",
-    nm: "MatarÃ³"
+    nm: "Mataró"
   },
   {
     id: "08122",
@@ -3961,7 +3963,7 @@
   },
   {
     id: "08138",
-    nm: "MoiÃ "
+    nm: "Moià"
   },
   {
     id: "08123",
@@ -3969,7 +3971,7 @@
   },
   {
     id: "08124",
-    nm: "Mollet del VallÃ¨s"
+    nm: "Mollet del Vallès"
   },
   {
     id: "08128",
@@ -4005,11 +4007,11 @@
   },
   {
     id: "08135",
-    nm: "MontmelÃ³"
+    nm: "Montmeló"
   },
   {
     id: "08136",
-    nm: "MontornÃ¨s del VallÃ¨s"
+    nm: "Montornès del Vallès"
   },
   {
     id: "08137",
@@ -4029,19 +4031,19 @@
   },
   {
     id: "08141",
-    nm: "NavÃ s"
+    nm: "Navàs"
   },
   {
     id: "08142",
-    nm: "Nou de BerguedÃ , La"
+    nm: "Nou de Berguedà, La"
   },
   {
     id: "08143",
-    nm: "Ã’dena"
+    nm: "�dena"
   },
   {
     id: "08145",
-    nm: "OlÃ¨rdola"
+    nm: "Olèrdola"
   },
   {
     id: "08146",
@@ -4065,23 +4067,23 @@
   },
   {
     id: "08150",
-    nm: "OrÃ­s"
+    nm: "Orís"
   },
   {
     id: "08151",
-    nm: "OristÃ "
+    nm: "Oristà"
   },
   {
     id: "08152",
-    nm: "OrpÃ­"
+    nm: "Orpí"
   },
   {
     id: "08153",
-    nm: "Ã’rrius"
+    nm: "�rrius"
   },
   {
     id: "08154",
-    nm: "Pacs del PenedÃ¨s"
+    nm: "Pacs del Penedès"
   },
   {
     id: "08155",
@@ -4089,15 +4091,15 @@
   },
   {
     id: "08156",
-    nm: "Palau-solitÃ  i Plegamans"
+    nm: "Palau-solità i Plegamans"
   },
   {
     id: "08157",
-    nm: "PallejÃ "
+    nm: "Pallejà"
   },
   {
     id: "08905",
-    nm: "Palma de CervellÃ³, La"
+    nm: "Palma de Cervelló, La"
   },
   {
     id: "08158",
@@ -4105,7 +4107,7 @@
   },
   {
     id: "08159",
-    nm: "Parets del VallÃ¨s"
+    nm: "Parets del Vallès"
   },
   {
     id: "08160",
@@ -4121,7 +4123,7 @@
   },
   {
     id: "08164",
-    nm: "Pla del PenedÃ¨s, El"
+    nm: "Pla del Penedès, El"
   },
   {
     id: "08165",
@@ -4133,7 +4135,7 @@
   },
   {
     id: "08167",
-    nm: "PolinyÃ "
+    nm: "Polinyà"
   },
   {
     id: "08182",
@@ -4149,7 +4151,7 @@
   },
   {
     id: "08171",
-    nm: "Prats de LluÃ§anÃ¨s"
+    nm: "Prats de Lluçanès"
   },
   {
     id: "08170",
@@ -4157,15 +4159,15 @@
   },
   {
     id: "08230",
-    nm: "PremiÃ  de Dalt"
+    nm: "Premià de Dalt"
   },
   {
     id: "08172",
-    nm: "PremiÃ  de Mar"
+    nm: "Premià de Mar"
   },
   {
     id: "08174",
-    nm: "PuigdÃ lber"
+    nm: "Puigdàlber"
   },
   {
     id: "08175",
@@ -4193,7 +4195,7 @@
   },
   {
     id: "08181",
-    nm: "Roca del VallÃ¨s, La"
+    nm: "Roca del Vallès, La"
   },
   {
     id: "08183",
@@ -4201,11 +4203,11 @@
   },
   {
     id: "08184",
-    nm: "RubÃ­"
+    nm: "Rubí"
   },
   {
     id: "08185",
-    nm: "RubiÃ³"
+    nm: "Rubió"
   },
   {
     id: "08901",
@@ -4217,7 +4219,7 @@
   },
   {
     id: "08188",
-    nm: "SagÃ s"
+    nm: "Sagàs"
   },
   {
     id: "08190",
@@ -4229,11 +4231,11 @@
   },
   {
     id: "08194",
-    nm: "Sant AdriÃ  de BesÃ²s"
+    nm: "Sant Adrià de Besòs"
   },
   {
     id: "08195",
-    nm: "Sant AgustÃ­ de LluÃ§anÃ¨s"
+    nm: "Sant Agustí de Lluçanès"
   },
   {
     id: "08196",
@@ -4257,11 +4259,11 @@
   },
   {
     id: "08201",
-    nm: "Sant Boi de LluÃ§anÃ¨s"
+    nm: "Sant Boi de Lluçanès"
   },
   {
     id: "08203",
-    nm: "Sant CebriÃ  de Vallalta"
+    nm: "Sant Cebrià de Vallalta"
   },
   {
     id: "08202",
@@ -4273,7 +4275,7 @@
   },
   {
     id: "08205",
-    nm: "Sant Cugat del VallÃ¨s"
+    nm: "Sant Cugat del Vallès"
   },
   {
     id: "08206",
@@ -4305,11 +4307,11 @@
   },
   {
     id: "08213",
-    nm: "Sant FruitÃ³s de Bages"
+    nm: "Sant Fruitós de Bages"
   },
   {
     id: "08215",
-    nm: "Sant HipÃ²lit de VoltregÃ "
+    nm: "Sant Hipòlit de Voltregà"
   },
   {
     id: "08193",
@@ -4317,7 +4319,7 @@
   },
   {
     id: "08216",
-    nm: "Sant Jaume de FrontanyÃ "
+    nm: "Sant Jaume de Frontanyà"
   },
   {
     id: "08218",
@@ -4325,15 +4327,15 @@
   },
   {
     id: "08217",
-    nm: "Sant Joan DespÃ­"
+    nm: "Sant Joan Despí"
   },
   {
     id: "08903",
-    nm: "Sant JuliÃ  de Cerdanyola"
+    nm: "Sant Julià de Cerdanyola"
   },
   {
     id: "08220",
-    nm: "Sant JuliÃ  de Vilatorta"
+    nm: "Sant Julià de Vilatorta"
   },
   {
     id: "08221",
@@ -4341,31 +4343,31 @@
   },
   {
     id: "08222",
-    nm: "Sant LlorenÃ§ d'Hortons"
+    nm: "Sant Llorenç d'Hortons"
   },
   {
     id: "08223",
-    nm: "Sant LlorenÃ§ Savall"
+    nm: "Sant Llorenç Savall"
   },
   {
     id: "08225",
-    nm: "Sant MartÃ­ d'Albars"
+    nm: "Sant Martí d'Albars"
   },
   {
     id: "08224",
-    nm: "Sant MartÃ­ de Centelles"
+    nm: "Sant Martí de Centelles"
   },
   {
     id: "08226",
-    nm: "Sant MartÃ­ de Tous"
+    nm: "Sant Martí de Tous"
   },
   {
     id: "08227",
-    nm: "Sant MartÃ­ Sarroca"
+    nm: "Sant Martí Sarroca"
   },
   {
     id: "08228",
-    nm: "Sant MartÃ­ Sesgueioles"
+    nm: "Sant Martí Sesgueioles"
   },
   {
     id: "08229",
@@ -4381,7 +4383,7 @@
   },
   {
     id: "08233",
-    nm: "Sant Pere de TorellÃ³"
+    nm: "Sant Pere de Torelló"
   },
   {
     id: "08234",
@@ -4397,7 +4399,7 @@
   },
   {
     id: "08236",
-    nm: "Sant QuintÃ­ de Mediona"
+    nm: "Sant Quintí de Mediona"
   },
   {
     id: "08237",
@@ -4405,7 +4407,7 @@
   },
   {
     id: "08238",
-    nm: "Sant Quirze del VallÃ¨s"
+    nm: "Sant Quirze del Vallès"
   },
   {
     id: "08239",
@@ -4413,11 +4415,11 @@
   },
   {
     id: "08240",
-    nm: "Sant SadurnÃ­ d'Anoia"
+    nm: "Sant Sadurní d'Anoia"
   },
   {
     id: "08241",
-    nm: "Sant SadurnÃ­ d'Osormort"
+    nm: "Sant Sadurní d'Osormort"
   },
   {
     id: "08098",
@@ -4425,27 +4427,27 @@
   },
   {
     id: "08262",
-    nm: "Sant VicenÃ§ de Castellet"
+    nm: "Sant Vicenç de Castellet"
   },
   {
     id: "08264",
-    nm: "Sant VicenÃ§ de Montalt"
+    nm: "Sant Vicenç de Montalt"
   },
   {
     id: "08265",
-    nm: "Sant VicenÃ§ de TorellÃ³"
+    nm: "Sant Vicenç de Torelló"
   },
   {
     id: "08263",
-    nm: "Sant VicenÃ§ dels Horts"
+    nm: "Sant Vicenç dels Horts"
   },
   {
     id: "08243",
-    nm: "Santa CecÃ­lia de VoltregÃ "
+    nm: "Santa Cecília de Voltregà"
   },
   {
     id: "08244",
-    nm: "Santa Coloma de CervellÃ³"
+    nm: "Santa Coloma de Cervelló"
   },
   {
     id: "08245",
@@ -4453,19 +4455,19 @@
   },
   {
     id: "08246",
-    nm: "Santa EugÃ¨nia de Berga"
+    nm: "Santa Eugènia de Berga"
   },
   {
     id: "08247",
-    nm: "Santa EulÃ lia de Riuprimer"
+    nm: "Santa Eulàlia de Riuprimer"
   },
   {
     id: "08248",
-    nm: "Santa EulÃ lia de RonÃ§ana"
+    nm: "Santa Eulàlia de Ronçana"
   },
   {
     id: "08249",
-    nm: "Santa Fe del PenedÃ¨s"
+    nm: "Santa Fe del Penedès"
   },
   {
     id: "08250",
@@ -4485,7 +4487,7 @@
   },
   {
     id: "08255",
-    nm: "Santa Maria de MerlÃ¨s"
+    nm: "Santa Maria de Merlès"
   },
   {
     id: "08257",
@@ -4497,11 +4499,11 @@
   },
   {
     id: "08258",
-    nm: "Santa Maria d'OlÃ³"
+    nm: "Santa Maria d'Oló"
   },
   {
     id: "08260",
-    nm: "Santa PerpÃ¨tua de Mogoda"
+    nm: "Santa Perpètua de Mogoda"
   },
   {
     id: "08261",
@@ -4537,7 +4539,7 @@
   },
   {
     id: "08274",
-    nm: "SÃºria"
+    nm: "Súria"
   },
   {
     id: "08276",
@@ -4553,7 +4555,7 @@
   },
   {
     id: "08275",
-    nm: "TavÃ¨rnoles"
+    nm: "Tavèrnoles"
   },
   {
     id: "08280",
@@ -4561,7 +4563,7 @@
   },
   {
     id: "08281",
-    nm: "TeiÃ "
+    nm: "Teià"
   },
   {
     id: "08279",
@@ -4581,7 +4583,7 @@
   },
   {
     id: "08285",
-    nm: "TorellÃ³"
+    nm: "Torelló"
   },
   {
     id: "08286",
@@ -4649,7 +4651,7 @@
   },
   {
     id: "08305",
-    nm: "Vilafranca del PenedÃ¨s"
+    nm: "Vilafranca del Penedès"
   },
   {
     id: "08306",
@@ -4661,15 +4663,15 @@
   },
   {
     id: "08302",
-    nm: "Vilanova del CamÃ­"
+    nm: "Vilanova del Camí"
   },
   {
     id: "08902",
-    nm: "Vilanova del VallÃ¨s"
+    nm: "Vilanova del Vallès"
   },
   {
     id: "08307",
-    nm: "Vilanova i la GeltrÃº"
+    nm: "Vilanova i la Geltrú"
   },
   {
     id: "08214",
@@ -4681,7 +4683,7 @@
   },
   {
     id: "08304",
-    nm: "VilobÃ­ del PenedÃ¨s"
+    nm: "Vilobí del Penedès"
   },
   {
     id: "08308",
@@ -4697,7 +4699,7 @@
   },
   {
     id: "09006",
-    nm: "Aguas CÃ¡ndidas"
+    nm: "Aguas Cándidas"
   },
   {
     id: "09007",
@@ -4717,7 +4719,7 @@
   },
   {
     id: "09907",
-    nm: "Alfoz de QuintanadueÃ±as"
+    nm: "Alfoz de Quintanadueñas"
   },
   {
     id: "09012",
@@ -4773,7 +4775,7 @@
   },
   {
     id: "09026",
-    nm: "ArlanzÃ³n"
+    nm: "Arlanzón"
   },
   {
     id: "09027",
@@ -4789,11 +4791,11 @@
   },
   {
     id: "09032",
-    nm: "Avellanosa de MuÃ±Ã³"
+    nm: "Avellanosa de Muñó"
   },
   {
     id: "09033",
-    nm: "BahabÃ³n de Esgueva"
+    nm: "Bahabón de Esgueva"
   },
   {
     id: "09034",
@@ -4801,11 +4803,11 @@
   },
   {
     id: "09035",
-    nm: "BaÃ±os de Valdearados"
+    nm: "Baños de Valdearados"
   },
   {
     id: "09036",
-    nm: "BaÃ±uelos de Bureba"
+    nm: "Bañuelos de Bureba"
   },
   {
     id: "09037",
@@ -4821,7 +4823,7 @@
   },
   {
     id: "09041",
-    nm: "Barrio de MuÃ±Ã³"
+    nm: "Barrio de Muñó"
   },
   {
     id: "09043",
@@ -4837,7 +4839,7 @@
   },
   {
     id: "09046",
-    nm: "BascuÃ±ana"
+    nm: "Bascuñana"
   },
   {
     id: "09047",
@@ -4861,7 +4863,7 @@
   },
   {
     id: "09054",
-    nm: "BozoÃ³"
+    nm: "Bozoó"
   },
   {
     id: "09055",
@@ -4889,11 +4891,11 @@
   },
   {
     id: "09061",
-    nm: "CabaÃ±es de Esgueva"
+    nm: "Cabañes de Esgueva"
   },
   {
     id: "09062",
-    nm: "CabezÃ³n de la Sierra"
+    nm: "Cabezón de la Sierra"
   },
   {
     id: "09064",
@@ -4929,15 +4931,15 @@
   },
   {
     id: "09073",
-    nm: "CardeÃ±adijo"
+    nm: "Cardeñadijo"
   },
   {
     id: "09074",
-    nm: "CardeÃ±ajimeno"
+    nm: "Cardeñajimeno"
   },
   {
     id: "09075",
-    nm: "CardeÃ±uela Riopico"
+    nm: "Cardeñuela Riopico"
   },
   {
     id: "09076",
@@ -4981,7 +4983,7 @@
   },
   {
     id: "09090",
-    nm: "Castrillo Mota de JudÃ­os"
+    nm: "Castrillo Mota de Judíos"
   },
   {
     id: "09091",
@@ -5005,11 +5007,11 @@
   },
   {
     id: "09098",
-    nm: "Cerezo de RÃ­o TirÃ³n"
+    nm: "Cerezo de Río Tirón"
   },
   {
     id: "09100",
-    nm: "CerratÃ³n de Juarros"
+    nm: "Cerratón de Juarros"
   },
   {
     id: "09101",
@@ -5037,7 +5039,7 @@
   },
   {
     id: "09109",
-    nm: "Condado de TreviÃ±o"
+    nm: "Condado de Treviño"
   },
   {
     id: "09110",
@@ -5045,7 +5047,7 @@
   },
   {
     id: "09112",
-    nm: "CoruÃ±a del Conde"
+    nm: "Coruña del Conde"
   },
   {
     id: "09113",
@@ -5069,7 +5071,7 @@
   },
   {
     id: "09120",
-    nm: "EncÃ­o"
+    nm: "Encío"
   },
   {
     id: "09122",
@@ -5085,7 +5087,7 @@
   },
   {
     id: "09125",
-    nm: "EstÃ©par"
+    nm: "Estépar"
   },
   {
     id: "09127",
@@ -5093,23 +5095,23 @@
   },
   {
     id: "09128",
-    nm: "FrandovÃ­nez"
+    nm: "Frandovínez"
   },
   {
     id: "09129",
-    nm: "Fresneda de la Sierra TirÃ³n"
+    nm: "Fresneda de la Sierra Tirón"
   },
   {
     id: "09130",
-    nm: "FresneÃ±a"
+    nm: "Fresneña"
   },
   {
     id: "09131",
-    nm: "Fresnillo de las DueÃ±as"
+    nm: "Fresnillo de las Dueñas"
   },
   {
     id: "09132",
-    nm: "Fresno de RÃ­o TirÃ³n"
+    nm: "Fresno de Río Tirón"
   },
   {
     id: "09133",
@@ -5117,7 +5119,7 @@
   },
   {
     id: "09134",
-    nm: "FrÃ­as"
+    nm: "Frías"
   },
   {
     id: "09135",
@@ -5125,11 +5127,11 @@
   },
   {
     id: "09136",
-    nm: "FuentecÃ©n"
+    nm: "Fuentecén"
   },
   {
     id: "09137",
-    nm: "FuentelcÃ©sped"
+    nm: "Fuentelcésped"
   },
   {
     id: "09138",
@@ -5161,11 +5163,11 @@
   },
   {
     id: "09149",
-    nm: "GrisaleÃ±a"
+    nm: "Grisaleña"
   },
   {
     id: "09151",
-    nm: "Gumiel de IzÃ¡n"
+    nm: "Gumiel de Izán"
   },
   {
     id: "09152",
@@ -5213,7 +5215,7 @@
   },
   {
     id: "09169",
-    nm: "HortigÃ¼ela"
+    nm: "Hortigüela"
   },
   {
     id: "09170",
@@ -5221,7 +5223,7 @@
   },
   {
     id: "09172",
-    nm: "HuÃ©rmeces"
+    nm: "Huérmeces"
   },
   {
     id: "09173",
@@ -5281,11 +5283,11 @@
   },
   {
     id: "09191",
-    nm: "JurisdicciÃ³n de Lara"
+    nm: "Jurisdicción de Lara"
   },
   {
     id: "09192",
-    nm: "JurisdicciÃ³n de San Zadornil"
+    nm: "Jurisdicción de San Zadornil"
   },
   {
     id: "09194",
@@ -5309,7 +5311,7 @@
   },
   {
     id: "09199",
-    nm: "Mambrilla de CastrejÃ³n"
+    nm: "Mambrilla de Castrejón"
   },
   {
     id: "09200",
@@ -5349,7 +5351,7 @@
   },
   {
     id: "09906",
-    nm: "Merindad de RÃ­o Ubierna"
+    nm: "Merindad de Río Ubierna"
   },
   {
     id: "09215",
@@ -5377,7 +5379,7 @@
   },
   {
     id: "09221",
-    nm: "ModÃºbar de la Emparedada"
+    nm: "Modúbar de la Emparedada"
   },
   {
     id: "09223",
@@ -5425,11 +5427,11 @@
   },
   {
     id: "09236",
-    nm: "Olmillos de MuÃ±Ã³"
+    nm: "Olmillos de Muñó"
   },
   {
     id: "09238",
-    nm: "OÃ±a"
+    nm: "Oña"
   },
   {
     id: "09239",
@@ -5465,7 +5467,7 @@
   },
   {
     id: "09249",
-    nm: "Palazuelos de MuÃ±Ã³"
+    nm: "Palazuelos de Muñó"
   },
   {
     id: "09250",
@@ -5489,19 +5491,19 @@
   },
   {
     id: "09259",
-    nm: "Pedrosa de RÃ­o Ãšrbel"
+    nm: "Pedrosa de Río �arbel"
   },
   {
     id: "09257",
-    nm: "Pedrosa del PÃ¡ramo"
+    nm: "Pedrosa del Páramo"
   },
   {
     id: "09258",
-    nm: "Pedrosa del PrÃ­ncipe"
+    nm: "Pedrosa del Príncipe"
   },
   {
     id: "09261",
-    nm: "PeÃ±aranda de Duero"
+    nm: "Peñaranda de Duero"
   },
   {
     id: "09262",
@@ -5509,7 +5511,7 @@
   },
   {
     id: "09265",
-    nm: "PiÃ©rnigas"
+    nm: "Piérnigas"
   },
   {
     id: "09266",
@@ -5537,7 +5539,7 @@
   },
   {
     id: "09273",
-    nm: "PrÃ¡danos de Bureba"
+    nm: "Prádanos de Bureba"
   },
   {
     id: "09274",
@@ -5549,7 +5551,7 @@
   },
   {
     id: "09276",
-    nm: "Puebla de ArganzÃ³n, La"
+    nm: "Puebla de Arganzón, La"
   },
   {
     id: "09277",
@@ -5569,11 +5571,11 @@
   },
   {
     id: "09283",
-    nm: "QuintanaÃ©lez"
+    nm: "Quintanaélez"
   },
   {
     id: "09287",
-    nm: "QuintanaortuÃ±o"
+    nm: "Quintanaortuño"
   },
   {
     id: "09288",
@@ -5601,7 +5603,7 @@
   },
   {
     id: "09298",
-    nm: "Quintanilla San GarcÃ­a"
+    nm: "Quintanilla San García"
   },
   {
     id: "09301",
@@ -5617,11 +5619,11 @@
   },
   {
     id: "09303",
-    nm: "RÃ¡banos"
+    nm: "Rábanos"
   },
   {
     id: "09304",
-    nm: "RabÃ© de las Calzadas"
+    nm: "Rabé de las Calzadas"
   },
   {
     id: "09306",
@@ -5681,7 +5683,7 @@
   },
   {
     id: "09325",
-    nm: "Royuela de RÃ­o Franco"
+    nm: "Royuela de Río Franco"
   },
   {
     id: "09326",
@@ -5705,7 +5707,7 @@
   },
   {
     id: "09332",
-    nm: "SaldaÃ±a de Burgos"
+    nm: "Saldaña de Burgos"
   },
   {
     id: "09334",
@@ -5713,7 +5715,7 @@
   },
   {
     id: "09335",
-    nm: "San AdriÃ¡n de Juarros"
+    nm: "San Adrián de Juarros"
   },
   {
     id: "09337",
@@ -5721,15 +5723,15 @@
   },
   {
     id: "09338",
-    nm: "San MamÃ©s de Burgos"
+    nm: "San Mamés de Burgos"
   },
   {
     id: "09339",
-    nm: "San MartÃ­n de Rubiales"
+    nm: "San Martín de Rubiales"
   },
   {
     id: "09340",
-    nm: "San MillÃ¡n de Lara"
+    nm: "San Millán de Lara"
   },
   {
     id: "09360",
@@ -5745,7 +5747,7 @@
   },
   {
     id: "09346",
-    nm: "Santa Cruz del Valle UrbiÃ³n"
+    nm: "Santa Cruz del Valle Urbión"
   },
   {
     id: "09347",
@@ -5753,23 +5755,23 @@
   },
   {
     id: "09348",
-    nm: "Santa InÃ©s"
+    nm: "Santa Inés"
   },
   {
     id: "09350",
-    nm: "Santa MarÃ­a del Campo"
+    nm: "Santa María del Campo"
   },
   {
     id: "09351",
-    nm: "Santa MarÃ­a del Invierno"
+    nm: "Santa María del Invierno"
   },
   {
     id: "09352",
-    nm: "Santa MarÃ­a del Mercadillo"
+    nm: "Santa María del Mercadillo"
   },
   {
     id: "09353",
-    nm: "Santa MarÃ­a Rivarredonda"
+    nm: "Santa María Rivarredonda"
   },
   {
     id: "09354",
@@ -5777,11 +5779,11 @@
   },
   {
     id: "09355",
-    nm: "SantibÃ¡Ã±ez de Esgueva"
+    nm: "Santibáñez de Esgueva"
   },
   {
     id: "09356",
-    nm: "SantibÃ¡Ã±ez del Val"
+    nm: "Santibáñez del Val"
   },
   {
     id: "09358",
@@ -5793,11 +5795,11 @@
   },
   {
     id: "09362",
-    nm: "SarracÃ­n"
+    nm: "Sarracín"
   },
   {
     id: "09363",
-    nm: "SasamÃ³n"
+    nm: "Sasamón"
   },
   {
     id: "09365",
@@ -5825,11 +5827,11 @@
   },
   {
     id: "09374",
-    nm: "Susinos del PÃ¡ramo"
+    nm: "Susinos del Páramo"
   },
   {
     id: "09375",
-    nm: "TamarÃ³n"
+    nm: "Tamarón"
   },
   {
     id: "09377",
@@ -5853,7 +5855,7 @@
   },
   {
     id: "09384",
-    nm: "TordÃ³mar"
+    nm: "Tordómar"
   },
   {
     id: "09386",
@@ -5877,7 +5879,7 @@
   },
   {
     id: "09391",
-    nm: "TÃ³rtoles de Esgueva"
+    nm: "Tórtoles de Esgueva"
   },
   {
     id: "09392",
@@ -5897,7 +5899,7 @@
   },
   {
     id: "09398",
-    nm: "Ãšrbel del Castillo"
+    nm: "�arbel del Castillo"
   },
   {
     id: "09400",
@@ -5941,7 +5943,7 @@
   },
   {
     id: "09902",
-    nm: "Valle de SantibÃ¡Ã±ez"
+    nm: "Valle de Santibáñez"
   },
   {
     id: "09905",
@@ -5977,7 +5979,7 @@
   },
   {
     id: "09419",
-    nm: "ValluÃ©rcanes"
+    nm: "Valluércanes"
   },
   {
     id: "09407",
@@ -5993,7 +5995,7 @@
   },
   {
     id: "09423",
-    nm: "VileÃ±a"
+    nm: "Vileña"
   },
   {
     id: "09427",
@@ -6005,7 +6007,7 @@
   },
   {
     id: "09429",
-    nm: "Villaescusa la SombrÃ­a"
+    nm: "Villaescusa la Sombría"
   },
   {
     id: "09430",
@@ -6057,7 +6059,7 @@
   },
   {
     id: "09444",
-    nm: "Villamayor de TreviÃ±o"
+    nm: "Villamayor de Treviño"
   },
   {
     id: "09445",
@@ -6073,11 +6075,11 @@
   },
   {
     id: "09448",
-    nm: "VillangÃ³mez"
+    nm: "Villangómez"
   },
   {
     id: "09449",
-    nm: "Villanueva de ArgaÃ±o"
+    nm: "Villanueva de Argaño"
   },
   {
     id: "09450",
@@ -6093,11 +6095,11 @@
   },
   {
     id: "09455",
-    nm: "VillaquirÃ¡n de la Puebla"
+    nm: "Villaquirán de la Puebla"
   },
   {
     id: "09456",
-    nm: "VillaquirÃ¡n de los Infantes"
+    nm: "Villaquirán de los Infantes"
   },
   {
     id: "09903",
@@ -6153,7 +6155,7 @@
   },
   {
     id: "09478",
-    nm: "VizcaÃ­nos"
+    nm: "Vizcaínos"
   },
   {
     id: "09480",
@@ -6161,7 +6163,7 @@
   },
   {
     id: "09482",
-    nm: "Zarzosa de RÃ­o Pisuerga"
+    nm: "Zarzosa de Río Pisuerga"
   },
   {
     id: "09483",
@@ -6169,11 +6171,11 @@
   },
   {
     id: "09485",
-    nm: "ZuÃ±eda"
+    nm: "Zuñeda"
   },
   {
     id: "10001",
-    nm: "AbadÃ­a"
+    nm: "Abadía"
   },
   {
     id: "10002",
@@ -6185,7 +6187,7 @@
   },
   {
     id: "10004",
-    nm: "AcehÃºche"
+    nm: "Acehúche"
   },
   {
     id: "10005",
@@ -6197,23 +6199,23 @@
   },
   {
     id: "10903",
-    nm: "AlagÃ³n del RÃ­o"
+    nm: "Alagón del Río"
   },
   {
     id: "10007",
-    nm: "AlbalÃ¡"
+    nm: "Albalá"
   },
   {
     id: "10008",
-    nm: "AlcÃ¡ntara"
+    nm: "Alcántara"
   },
   {
     id: "10009",
-    nm: "AlcollarÃ­n"
+    nm: "Alcollarín"
   },
   {
     id: "10010",
-    nm: "AlcuÃ©scar"
+    nm: "Alcuéscar"
   },
   {
     id: "10012",
@@ -6241,7 +6243,7 @@
   },
   {
     id: "10017",
-    nm: "AlÃ­a"
+    nm: "Alía"
   },
   {
     id: "10018",
@@ -6253,7 +6255,7 @@
   },
   {
     id: "10020",
-    nm: "AlmoharÃ­n"
+    nm: "Almoharín"
   },
   {
     id: "10021",
@@ -6269,7 +6271,7 @@
   },
   {
     id: "10024",
-    nm: "BaÃ±os de Montemayor"
+    nm: "Baños de Montemayor"
   },
   {
     id: "10025",
@@ -6277,7 +6279,7 @@
   },
   {
     id: "10026",
-    nm: "BelvÃ­s de Monroy"
+    nm: "Belvís de Monroy"
   },
   {
     id: "10027",
@@ -6305,7 +6307,7 @@
   },
   {
     id: "10033",
-    nm: "CabaÃ±as del Castillo"
+    nm: "Cabañas del Castillo"
   },
   {
     id: "10034",
@@ -6321,7 +6323,7 @@
   },
   {
     id: "10037",
-    nm: "CÃ¡ceres"
+    nm: "Cáceres"
   },
   {
     id: "10038",
@@ -6349,11 +6351,11 @@
   },
   {
     id: "10044",
-    nm: "CaÃ±amero"
+    nm: "Cañamero"
   },
   {
     id: "10045",
-    nm: "CaÃ±averal"
+    nm: "Cañaveral"
   },
   {
     id: "10046",
@@ -6369,7 +6371,7 @@
   },
   {
     id: "10049",
-    nm: "Casar de CÃ¡ceres"
+    nm: "Casar de Cáceres"
   },
   {
     id: "10050",
@@ -6385,11 +6387,11 @@
   },
   {
     id: "10053",
-    nm: "Casas de Don GÃ³mez"
+    nm: "Casas de Don Gómez"
   },
   {
     id: "10056",
-    nm: "Casas de MillÃ¡n"
+    nm: "Casas de Millán"
   },
   {
     id: "10057",
@@ -6397,7 +6399,7 @@
   },
   {
     id: "10054",
-    nm: "Casas del CastaÃ±ar"
+    nm: "Casas del Castañar"
   },
   {
     id: "10055",
@@ -6413,11 +6415,11 @@
   },
   {
     id: "10060",
-    nm: "CastaÃ±ar de Ibor"
+    nm: "Castañar de Ibor"
   },
   {
     id: "10061",
-    nm: "CeclavÃ­n"
+    nm: "Ceclavín"
   },
   {
     id: "10062",
@@ -6457,7 +6459,7 @@
   },
   {
     id: "10071",
-    nm: "DescargamarÃ­a"
+    nm: "Descargamaría"
   },
   {
     id: "10072",
@@ -6493,15 +6495,15 @@
   },
   {
     id: "10081",
-    nm: "GargÃ¼era"
+    nm: "Gargüera"
   },
   {
     id: "10082",
-    nm: "Garrovillas de AlconÃ©tar"
+    nm: "Garrovillas de Alconétar"
   },
   {
     id: "10083",
-    nm: "GarvÃ­n"
+    nm: "Garvín"
   },
   {
     id: "10084",
@@ -6533,7 +6535,7 @@
   },
   {
     id: "10091",
-    nm: "Guijo de Santa BÃ¡rbara"
+    nm: "Guijo de Santa Bárbara"
   },
   {
     id: "10092",
@@ -6541,11 +6543,11 @@
   },
   {
     id: "10093",
-    nm: "HernÃ¡n-PÃ©rez"
+    nm: "Hernán-Pérez"
   },
   {
     id: "10094",
-    nm: "Herrera de AlcÃ¡ntara"
+    nm: "Herrera de Alcántara"
   },
   {
     id: "10095",
@@ -6553,7 +6555,7 @@
   },
   {
     id: "10096",
-    nm: "HervÃ¡s"
+    nm: "Hervás"
   },
   {
     id: "10097",
@@ -6573,7 +6575,7 @@
   },
   {
     id: "10101",
-    nm: "HuÃ©laga"
+    nm: "Huélaga"
   },
   {
     id: "10102",
@@ -6585,7 +6587,7 @@
   },
   {
     id: "10104",
-    nm: "JaraÃ­z de la Vera"
+    nm: "Jaraíz de la Vera"
   },
   {
     id: "10105",
@@ -6605,7 +6607,7 @@
   },
   {
     id: "10109",
-    nm: "LogrosÃ¡n"
+    nm: "Logrosán"
   },
   {
     id: "10110",
@@ -6621,7 +6623,7 @@
   },
   {
     id: "10113",
-    nm: "MadroÃ±era"
+    nm: "Madroñera"
   },
   {
     id: "10114",
@@ -6629,7 +6631,7 @@
   },
   {
     id: "10115",
-    nm: "Malpartida de CÃ¡ceres"
+    nm: "Malpartida de Cáceres"
   },
   {
     id: "10116",
@@ -6641,11 +6643,11 @@
   },
   {
     id: "10118",
-    nm: "Mata de AlcÃ¡ntara"
+    nm: "Mata de Alcántara"
   },
   {
     id: "10119",
-    nm: "MembrÃ­o"
+    nm: "Membrío"
   },
   {
     id: "10120",
@@ -6673,7 +6675,7 @@
   },
   {
     id: "10126",
-    nm: "MontÃ¡nchez"
+    nm: "Montánchez"
   },
   {
     id: "10127",
@@ -6701,7 +6703,7 @@
   },
   {
     id: "10133",
-    nm: "Navas del MadroÃ±o"
+    nm: "Navas del Madroño"
   },
   {
     id: "10134",
@@ -6709,7 +6711,7 @@
   },
   {
     id: "10135",
-    nm: "NuÃ±omoral"
+    nm: "Nuñomoral"
   },
   {
     id: "10136",
@@ -6721,7 +6723,7 @@
   },
   {
     id: "10138",
-    nm: "PasarÃ³n de la Vera"
+    nm: "Pasarón de la Vera"
   },
   {
     id: "10139",
@@ -6733,7 +6735,7 @@
   },
   {
     id: "10141",
-    nm: "Peraleda de San RomÃ¡n"
+    nm: "Peraleda de San Román"
   },
   {
     id: "10142",
@@ -6777,7 +6779,7 @@
   },
   {
     id: "10152",
-    nm: "Pozuelo de ZarzÃ³n"
+    nm: "Pozuelo de Zarzón"
   },
   {
     id: "10905",
@@ -6833,7 +6835,7 @@
   },
   {
     id: "10164",
-    nm: "San MartÃ­n de Trevejo"
+    nm: "San Martín de Trevejo"
   },
   {
     id: "10165",
@@ -6853,7 +6855,7 @@
   },
   {
     id: "10169",
-    nm: "Santiago de AlcÃ¡ntara"
+    nm: "Santiago de Alcántara"
   },
   {
     id: "10170",
@@ -6861,11 +6863,11 @@
   },
   {
     id: "10171",
-    nm: "SantibÃ¡Ã±ez el Alto"
+    nm: "Santibáñez el Alto"
   },
   {
     id: "10172",
-    nm: "SantibÃ¡Ã±ez el Bajo"
+    nm: "Santibáñez el Bajo"
   },
   {
     id: "10173",
@@ -6881,7 +6883,7 @@
   },
   {
     id: "10176",
-    nm: "SerrejÃ³n"
+    nm: "Serrejón"
   },
   {
     id: "10177",
@@ -6889,7 +6891,7 @@
   },
   {
     id: "10178",
-    nm: "TalavÃ¡n"
+    nm: "Talaván"
   },
   {
     id: "10179",
@@ -6901,11 +6903,11 @@
   },
   {
     id: "10181",
-    nm: "Tejeda de TiÃ©tar"
+    nm: "Tejeda de Tiétar"
   },
   {
     id: "10904",
-    nm: "TiÃ©tar"
+    nm: "Tiétar"
   },
   {
     id: "10182",
@@ -6925,11 +6927,11 @@
   },
   {
     id: "10188",
-    nm: "Torre de Santa MarÃ­a"
+    nm: "Torre de Santa María"
   },
   {
     id: "10185",
-    nm: "Torrecilla de los Ãngeles"
+    nm: "Torrecilla de los Ángeles"
   },
   {
     id: "10186",
@@ -6937,7 +6939,7 @@
   },
   {
     id: "10190",
-    nm: "TorrejÃ³n el Rubio"
+    nm: "Torrejón el Rubio"
   },
   {
     id: "10189",
@@ -6969,7 +6971,7 @@
   },
   {
     id: "10197",
-    nm: "ValdecaÃ±as de Tajo"
+    nm: "Valdecañas de Tajo"
   },
   {
     id: "10198",
@@ -6977,7 +6979,7 @@
   },
   {
     id: "10199",
-    nm: "ValdehÃºncar"
+    nm: "Valdehúncar"
   },
   {
     id: "10200",
@@ -6993,7 +6995,7 @@
   },
   {
     id: "10203",
-    nm: "Valencia de AlcÃ¡ntara"
+    nm: "Valencia de Alcántara"
   },
   {
     id: "10204",
@@ -7021,7 +7023,7 @@
   },
   {
     id: "10209",
-    nm: "VillamesÃ­as"
+    nm: "Villamesías"
   },
   {
     id: "10210",
@@ -7053,7 +7055,7 @@
   },
   {
     id: "10217",
-    nm: "Zarza de MontÃ¡nchez"
+    nm: "Zarza de Montánchez"
   },
   {
     id: "10218",
@@ -7065,11 +7067,11 @@
   },
   {
     id: "11001",
-    nm: "AlcalÃ¡ de los Gazules"
+    nm: "Alcalá de los Gazules"
   },
   {
     id: "11002",
-    nm: "AlcalÃ¡ del Valle"
+    nm: "Alcalá del Valle"
   },
   {
     id: "11003",
@@ -7113,7 +7115,7 @@
   },
   {
     id: "11012",
-    nm: "CÃ¡diz"
+    nm: "Cádiz"
   },
   {
     id: "11013",
@@ -7153,7 +7155,7 @@
   },
   {
     id: "11022",
-    nm: "LÃ­nea de la ConcepciÃ³n, La"
+    nm: "Línea de la Concepción, La"
   },
   {
     id: "11023",
@@ -7173,7 +7175,7 @@
   },
   {
     id: "11027",
-    nm: "Puerto de Santa MarÃ­a, El"
+    nm: "Puerto de Santa María, El"
   },
   {
     id: "11028",
@@ -7193,7 +7195,7 @@
   },
   {
     id: "11902",
-    nm: "San JosÃ© del Valle"
+    nm: "San José del Valle"
   },
   {
     id: "11033",
@@ -7201,7 +7203,7 @@
   },
   {
     id: "11032",
-    nm: "SanlÃºcar de Barrameda"
+    nm: "Sanlúcar de Barrameda"
   },
   {
     id: "11034",
@@ -7213,7 +7215,7 @@
   },
   {
     id: "11036",
-    nm: "Torre AlhÃ¡quime"
+    nm: "Torre Alháquime"
   },
   {
     id: "11037",
@@ -7233,7 +7235,7 @@
   },
   {
     id: "11041",
-    nm: "VillamartÃ­n"
+    nm: "Villamartín"
   },
   {
     id: "11042",
@@ -7241,15 +7243,15 @@
   },
   {
     id: "12002",
-    nm: "AÃ­n"
+    nm: "Aín"
   },
   {
     id: "12003",
-    nm: "AlbocÃ sser"
+    nm: "Albocàsser"
   },
   {
     id: "12004",
-    nm: "AlcalÃ  de Xivert"
+    nm: "Alcalà de Xivert"
   },
   {
     id: "12005",
@@ -7273,7 +7275,7 @@
   },
   {
     id: "12010",
-    nm: "AlmedÃ­jar"
+    nm: "Almedíjar"
   },
   {
     id: "12011",
@@ -7281,7 +7283,7 @@
   },
   {
     id: "12901",
-    nm: "Alqueries, les/AlquerÃ­as del NiÃ±o Perdido"
+    nm: "Alqueries, les/Alquerías del Niño Perdido"
   },
   {
     id: "12012",
@@ -7289,7 +7291,7 @@
   },
   {
     id: "12013",
-    nm: "AraÃ±uel"
+    nm: "Arañuel"
   },
   {
     id: "12014",
@@ -7309,11 +7311,11 @@
   },
   {
     id: "12017",
-    nm: "AyÃ³dar"
+    nm: "Ayódar"
   },
   {
     id: "12018",
-    nm: "AzuÃ©bar"
+    nm: "Azuébar"
   },
   {
     id: "12020",
@@ -7321,7 +7323,7 @@
   },
   {
     id: "12022",
-    nm: "BejÃ­s"
+    nm: "Bejís"
   },
   {
     id: "12024",
@@ -7337,11 +7339,11 @@
   },
   {
     id: "12027",
-    nm: "BenicarlÃ³"
+    nm: "Benicarló"
   },
   {
     id: "12028",
-    nm: "Benicasim/BenicÃ ssim"
+    nm: "Benicasim/Benicàssim"
   },
   {
     id: "12029",
@@ -7349,7 +7351,7 @@
   },
   {
     id: "12021",
-    nm: "BetxÃ­"
+    nm: "Betxí"
   },
   {
     id: "12032",
@@ -7365,7 +7367,7 @@
   },
   {
     id: "12034",
-    nm: "CÃ lig"
+    nm: "Càlig"
   },
   {
     id: "12036",
@@ -7385,7 +7387,7 @@
   },
   {
     id: "12040",
-    nm: "CastellÃ³n de la Plana/CastellÃ³ de la Plana"
+    nm: "Castellón de la Plana/Castelló de la Plana"
   },
   {
     id: "12041",
@@ -7393,7 +7395,7 @@
   },
   {
     id: "12042",
-    nm: "CatÃ­"
+    nm: "Catí"
   },
   {
     id: "12043",
@@ -7413,7 +7415,7 @@
   },
   {
     id: "12056",
-    nm: "ChÃ³var"
+    nm: "Chóvar"
   },
   {
     id: "12045",
@@ -7433,7 +7435,7 @@
   },
   {
     id: "12050",
-    nm: "Coves de VinromÃ , les"
+    nm: "Coves de Vinromà, les"
   },
   {
     id: "12051",
@@ -7465,7 +7467,7 @@
   },
   {
     id: "12064",
-    nm: "Fuentes de AyÃ³dar"
+    nm: "Fuentes de Ayódar"
   },
   {
     id: "12065",
@@ -7477,7 +7479,7 @@
   },
   {
     id: "12068",
-    nm: "HerbÃ©s"
+    nm: "Herbés"
   },
   {
     id: "12069",
@@ -7489,7 +7491,7 @@
   },
   {
     id: "12071",
-    nm: "JÃ©rica"
+    nm: "Jérica"
   },
   {
     id: "12074",
@@ -7517,7 +7519,7 @@
   },
   {
     id: "12078",
-    nm: "MontÃ¡n"
+    nm: "Montán"
   },
   {
     id: "12079",
@@ -7553,11 +7555,11 @@
   },
   {
     id: "12088",
-    nm: "PavÃ­as"
+    nm: "Pavías"
   },
   {
     id: "12089",
-    nm: "PenÃ­scola/PeÃ±Ã­scola"
+    nm: "Peníscola/Peñíscola"
   },
   {
     id: "12090",
@@ -7565,7 +7567,7 @@
   },
   {
     id: "12093",
-    nm: "Pobla de BenifassÃ , la"
+    nm: "Pobla de Benifassà, la"
   },
   {
     id: "12094",
@@ -7589,7 +7591,7 @@
   },
   {
     id: "12097",
-    nm: "SacaÃ±et"
+    nm: "Sacañet"
   },
   {
     id: "12098",
@@ -7597,11 +7599,11 @@
   },
   {
     id: "12101",
-    nm: "San Rafael del RÃ­o"
+    nm: "San Rafael del Río"
   },
   {
     id: "12902",
-    nm: "Sant Joan de MorÃ³"
+    nm: "Sant Joan de Moró"
   },
   {
     id: "12099",
@@ -7625,7 +7627,7 @@
   },
   {
     id: "12105",
-    nm: "Sierra EngarcerÃ¡n"
+    nm: "Sierra Engarcerán"
   },
   {
     id: "12106",
@@ -7649,7 +7651,7 @@
   },
   {
     id: "12111",
-    nm: "TÃ­rig"
+    nm: "Tírig"
   },
   {
     id: "12112",
@@ -7661,7 +7663,7 @@
   },
   {
     id: "12114",
-    nm: "TorÃ¡s"
+    nm: "Torás"
   },
   {
     id: "12115",
@@ -7677,7 +7679,7 @@
   },
   {
     id: "12120",
-    nm: "Torre d'en DomÃ©nec, la"
+    nm: "Torre d'en Doménec, la"
   },
   {
     id: "12117",
@@ -7705,7 +7707,7 @@
   },
   {
     id: "12126",
-    nm: "Vall d'UixÃ³, la"
+    nm: "Vall d'Uixó, la"
   },
   {
     id: "12123",
@@ -7717,7 +7719,7 @@
   },
   {
     id: "12128",
-    nm: "VilafamÃ©s"
+    nm: "Vilafamés"
   },
   {
     id: "12132",
@@ -7741,7 +7743,7 @@
   },
   {
     id: "12130",
-    nm: "Villahermosa del RÃ­o"
+    nm: "Villahermosa del Río"
   },
   {
     id: "12131",
@@ -7757,7 +7759,7 @@
   },
   {
     id: "12138",
-    nm: "VinarÃ²s"
+    nm: "Vinaròs"
   },
   {
     id: "12139",
@@ -7781,7 +7783,7 @@
   },
   {
     id: "13001",
-    nm: "AbenÃ³jar"
+    nm: "Abenójar"
   },
   {
     id: "13002",
@@ -7797,7 +7799,7 @@
   },
   {
     id: "13005",
-    nm: "AlcÃ¡zar de San Juan"
+    nm: "Alcázar de San Juan"
   },
   {
     id: "13006",
@@ -7821,7 +7823,7 @@
   },
   {
     id: "13011",
-    nm: "AlmadÃ©n"
+    nm: "Almadén"
   },
   {
     id: "13012",
@@ -7837,7 +7839,7 @@
   },
   {
     id: "13015",
-    nm: "AlmodÃ³var del Campo"
+    nm: "Almodóvar del Campo"
   },
   {
     id: "13016",
@@ -7873,7 +7875,7 @@
   },
   {
     id: "13023",
-    nm: "BolaÃ±os de Calatrava"
+    nm: "Bolaños de Calatrava"
   },
   {
     id: "13024",
@@ -7897,7 +7899,7 @@
   },
   {
     id: "13029",
-    nm: "CaÃ±ada de Calatrava"
+    nm: "Cañada de Calatrava"
   },
   {
     id: "13030",
@@ -7905,7 +7907,7 @@
   },
   {
     id: "13031",
-    nm: "CarriÃ³n de Calatrava"
+    nm: "Carrión de Calatrava"
   },
   {
     id: "13032",
@@ -7917,7 +7919,7 @@
   },
   {
     id: "13038",
-    nm: "ChillÃ³n"
+    nm: "Chillón"
   },
   {
     id: "13034",
@@ -7933,7 +7935,7 @@
   },
   {
     id: "13037",
-    nm: "CÃ³zar"
+    nm: "Cózar"
   },
   {
     id: "13039",
@@ -7941,7 +7943,7 @@
   },
   {
     id: "13040",
-    nm: "FernÃ¡n Caballero"
+    nm: "Fernán Caballero"
   },
   {
     id: "13041",
@@ -7961,7 +7963,7 @@
   },
   {
     id: "13045",
-    nm: "GranÃ¡tula de Calatrava"
+    nm: "Granátula de Calatrava"
   },
   {
     id: "13046",
@@ -7993,7 +7995,7 @@
   },
   {
     id: "13052",
-    nm: "MalagÃ³n"
+    nm: "Malagón"
   },
   {
     id: "13053",
@@ -8029,11 +8031,11 @@
   },
   {
     id: "13061",
-    nm: "Pedro MuÃ±oz"
+    nm: "Pedro Muñoz"
   },
   {
     id: "13062",
-    nm: "PicÃ³n"
+    nm: "Picón"
   },
   {
     id: "13063",
@@ -8061,11 +8063,11 @@
   },
   {
     id: "13069",
-    nm: "Puebla del PrÃ­ncipe"
+    nm: "Puebla del Príncipe"
   },
   {
     id: "13070",
-    nm: "Puerto LÃ¡pice"
+    nm: "Puerto Lápice"
   },
   {
     id: "13071",
@@ -8097,7 +8099,7 @@
   },
   {
     id: "13076",
-    nm: "Santa Cruz de los CÃ¡Ã±amos"
+    nm: "Santa Cruz de los Cáñamos"
   },
   {
     id: "13077",
@@ -8105,7 +8107,7 @@
   },
   {
     id: "13078",
-    nm: "SocuÃ©llamos"
+    nm: "Socuéllamos"
   },
   {
     id: "13080",
@@ -8141,7 +8143,7 @@
   },
   {
     id: "13087",
-    nm: "ValdepeÃ±as"
+    nm: "Valdepeñas"
   },
   {
     id: "13088",
@@ -8185,7 +8187,7 @@
   },
   {
     id: "13098",
-    nm: "Viso del MarquÃ©s"
+    nm: "Viso del Marqués"
   },
   {
     id: "14001",
@@ -8205,11 +8207,11 @@
   },
   {
     id: "14005",
-    nm: "AlmodÃ³var del RÃ­o"
+    nm: "Almodóvar del Río"
   },
   {
     id: "14006",
-    nm: "AÃ±ora"
+    nm: "Añora"
   },
   {
     id: "14007",
@@ -8217,7 +8219,7 @@
   },
   {
     id: "14008",
-    nm: "BelalcÃ¡zar"
+    nm: "Belalcázar"
   },
   {
     id: "14009",
@@ -8225,11 +8227,11 @@
   },
   {
     id: "14010",
-    nm: "BenamejÃ­"
+    nm: "Benamejí"
   },
   {
     id: "14011",
-    nm: "BlÃ¡zquez, Los"
+    nm: "Blázquez, Los"
   },
   {
     id: "14012",
@@ -8241,7 +8243,7 @@
   },
   {
     id: "14014",
-    nm: "CaÃ±ete de las Torres"
+    nm: "Cañete de las Torres"
   },
   {
     id: "14015",
@@ -8249,7 +8251,7 @@
   },
   {
     id: "14016",
-    nm: "CardeÃ±a"
+    nm: "Cardeña"
   },
   {
     id: "14017",
@@ -8261,7 +8263,7 @@
   },
   {
     id: "14019",
-    nm: "Castro del RÃ­o"
+    nm: "Castro del Río"
   },
   {
     id: "14020",
@@ -8269,11 +8271,11 @@
   },
   {
     id: "14021",
-    nm: "CÃ³rdoba"
+    nm: "Córdoba"
   },
   {
     id: "14022",
-    nm: "DoÃ±a MencÃ­a"
+    nm: "Doña Mencía"
   },
   {
     id: "14023",
@@ -8293,7 +8295,7 @@
   },
   {
     id: "14027",
-    nm: "FernÃ¡n-NÃºÃ±ez"
+    nm: "Fernán-Núñez"
   },
   {
     id: "14028",
@@ -8309,7 +8311,7 @@
   },
   {
     id: "14031",
-    nm: "Fuente-TÃ³jar"
+    nm: "Fuente-Tójar"
   },
   {
     id: "14032",
@@ -8317,7 +8319,7 @@
   },
   {
     id: "14033",
-    nm: "GuadalcÃ¡zar"
+    nm: "Guadalcázar"
   },
   {
     id: "14034",
@@ -8333,7 +8335,7 @@
   },
   {
     id: "14037",
-    nm: "IznÃ¡jar"
+    nm: "Iznájar"
   },
   {
     id: "14038",
@@ -8345,7 +8347,7 @@
   },
   {
     id: "14040",
-    nm: "MontalbÃ¡n de CÃ³rdoba"
+    nm: "Montalbán de Córdoba"
   },
   {
     id: "14041",
@@ -8381,7 +8383,7 @@
   },
   {
     id: "14049",
-    nm: "Palma del RÃ­o"
+    nm: "Palma del Río"
   },
   {
     id: "14050",
@@ -8393,7 +8395,7 @@
   },
   {
     id: "14052",
-    nm: "PeÃ±arroya-Pueblonuevo"
+    nm: "Peñarroya-Pueblonuevo"
   },
   {
     id: "14053",
@@ -8405,7 +8407,7 @@
   },
   {
     id: "14055",
-    nm: "Priego de CÃ³rdoba"
+    nm: "Priego de Córdoba"
   },
   {
     id: "14056",
@@ -8421,7 +8423,7 @@
   },
   {
     id: "14059",
-    nm: "San SebastiÃ¡n de los Ballesteros"
+    nm: "San Sebastián de los Ballesteros"
   },
   {
     id: "14061",
@@ -8449,11 +8451,11 @@
   },
   {
     id: "14066",
-    nm: "Villa del RÃ­o"
+    nm: "Villa del Río"
   },
   {
     id: "14067",
-    nm: "Villafranca de CÃ³rdoba"
+    nm: "Villafranca de Córdoba"
   },
   {
     id: "14068",
@@ -8461,7 +8463,7 @@
   },
   {
     id: "14069",
-    nm: "Villanueva de CÃ³rdoba"
+    nm: "Villanueva de Córdoba"
   },
   {
     id: "14070",
@@ -8477,7 +8479,7 @@
   },
   {
     id: "14073",
-    nm: "Villaviciosa de CÃ³rdoba"
+    nm: "Villaviciosa de Córdoba"
   },
   {
     id: "14074",
@@ -8509,11 +8511,11 @@
   },
   {
     id: "15006",
-    nm: "ArzÃºa"
+    nm: "Arzúa"
   },
   {
     id: "15007",
-    nm: "BaÃ±a, A"
+    nm: "Baña, A"
   },
   {
     id: "15008",
@@ -8533,15 +8535,15 @@
   },
   {
     id: "15012",
-    nm: "BoqueixÃ³n"
+    nm: "Boqueixón"
   },
   {
     id: "15013",
-    nm: "BriÃ³n"
+    nm: "Brión"
   },
   {
     id: "15014",
-    nm: "Cabana de BergantiÃ±os"
+    nm: "Cabana de Bergantiños"
   },
   {
     id: "15015",
@@ -8549,7 +8551,7 @@
   },
   {
     id: "15016",
-    nm: "CamariÃ±as"
+    nm: "Camariñas"
   },
   {
     id: "15017",
@@ -8565,7 +8567,7 @@
   },
   {
     id: "15901",
-    nm: "CariÃ±o"
+    nm: "Cariño"
   },
   {
     id: "15020",
@@ -8593,11 +8595,11 @@
   },
   {
     id: "15027",
-    nm: "CoirÃ³s"
+    nm: "Coirós"
   },
   {
     id: "15028",
-    nm: "CorcubiÃ³n"
+    nm: "Corcubión"
   },
   {
     id: "15029",
@@ -8605,7 +8607,7 @@
   },
   {
     id: "15030",
-    nm: "CoruÃ±a, A"
+    nm: "Coruña, A"
   },
   {
     id: "15031",
@@ -8621,7 +8623,7 @@
   },
   {
     id: "15034",
-    nm: "DumbrÃ­a"
+    nm: "Dumbría"
   },
   {
     id: "15035",
@@ -8657,11 +8659,11 @@
   },
   {
     id: "15043",
-    nm: "Malpica de BergantiÃ±os"
+    nm: "Malpica de Bergantiños"
   },
   {
     id: "15044",
-    nm: "MaÃ±Ã³n"
+    nm: "Mañón"
   },
   {
     id: "15045",
@@ -8673,11 +8675,11 @@
   },
   {
     id: "15047",
-    nm: "MesÃ­a"
+    nm: "Mesía"
   },
   {
     id: "15048",
-    nm: "MiÃ±o"
+    nm: "Miño"
   },
   {
     id: "15049",
@@ -8697,11 +8699,11 @@
   },
   {
     id: "15052",
-    nm: "MuxÃ­a"
+    nm: "Muxía"
   },
   {
     id: "15054",
-    nm: "NarÃ³n"
+    nm: "Narón"
   },
   {
     id: "15055",
@@ -8745,7 +8747,7 @@
   },
   {
     id: "15065",
-    nm: "PadrÃ³n"
+    nm: "Padrón"
   },
   {
     id: "15066",
@@ -8753,7 +8755,7 @@
   },
   {
     id: "15067",
-    nm: "Pobra do CaramiÃ±al, A"
+    nm: "Pobra do Caramiñal, A"
   },
   {
     id: "15068",
@@ -8765,7 +8767,7 @@
   },
   {
     id: "15070",
-    nm: "Pontes de GarcÃ­a RodrÃ­guez, As"
+    nm: "Pontes de García Rodríguez, As"
   },
   {
     id: "15071",
@@ -8789,7 +8791,7 @@
   },
   {
     id: "15076",
-    nm: "San SadurniÃ±o"
+    nm: "San Sadurniño"
   },
   {
     id: "15077",
@@ -8837,7 +8839,7 @@
   },
   {
     id: "15087",
-    nm: "ValdoviÃ±o"
+    nm: "Valdoviño"
   },
   {
     id: "15089",
@@ -8861,15 +8863,15 @@
   },
   {
     id: "16001",
-    nm: "Abia de la ObispalÃ­a"
+    nm: "Abia de la Obispalía"
   },
   {
     id: "16002",
-    nm: "AcebrÃ³n, El"
+    nm: "Acebrón, El"
   },
   {
     id: "16003",
-    nm: "AlarcÃ³n"
+    nm: "Alarcón"
   },
   {
     id: "16004",
@@ -8885,11 +8887,11 @@
   },
   {
     id: "16007",
-    nm: "Alberca de ZÃ¡ncara, La"
+    nm: "Alberca de Záncara, La"
   },
   {
     id: "16008",
-    nm: "AlcalÃ¡ de la Vega"
+    nm: "Alcalá de la Vega"
   },
   {
     id: "16009",
@@ -8897,7 +8899,7 @@
   },
   {
     id: "16010",
-    nm: "AlcÃ¡zar del Rey"
+    nm: "Alcázar del Rey"
   },
   {
     id: "16011",
@@ -8925,7 +8927,7 @@
   },
   {
     id: "16017",
-    nm: "AlmodÃ³var del Pinar"
+    nm: "Almodóvar del Pinar"
   },
   {
     id: "16018",
@@ -8957,7 +8959,7 @@
   },
   {
     id: "16026",
-    nm: "Atalaya del CaÃ±avate"
+    nm: "Atalaya del Cañavate"
   },
   {
     id: "16027",
@@ -8965,11 +8967,11 @@
   },
   {
     id: "16029",
-    nm: "BarchÃ­n del Hoyo"
+    nm: "Barchín del Hoyo"
   },
   {
     id: "16030",
-    nm: "BascuÃ±ana de San Pedro"
+    nm: "Bascuñana de San Pedro"
   },
   {
     id: "16031",
@@ -8977,7 +8979,7 @@
   },
   {
     id: "16032",
-    nm: "BelinchÃ³n"
+    nm: "Belinchón"
   },
   {
     id: "16033",
@@ -9001,7 +9003,7 @@
   },
   {
     id: "16039",
-    nm: "Buenache de AlarcÃ³n"
+    nm: "Buenache de Alarcón"
   },
   {
     id: "16040",
@@ -9009,7 +9011,7 @@
   },
   {
     id: "16041",
-    nm: "BuendÃ­a"
+    nm: "Buendía"
   },
   {
     id: "16042",
@@ -9025,7 +9027,7 @@
   },
   {
     id: "16901",
-    nm: "Campos del ParaÃ­so"
+    nm: "Campos del Paraíso"
   },
   {
     id: "16045",
@@ -9033,39 +9035,39 @@
   },
   {
     id: "16046",
-    nm: "CaÃ±ada del Hoyo"
+    nm: "Cañada del Hoyo"
   },
   {
     id: "16047",
-    nm: "CaÃ±ada Juncosa"
+    nm: "Cañada Juncosa"
   },
   {
     id: "16048",
-    nm: "CaÃ±amares"
+    nm: "Cañamares"
   },
   {
     id: "16049",
-    nm: "CaÃ±avate, El"
+    nm: "Cañavate, El"
   },
   {
     id: "16050",
-    nm: "CaÃ±averas"
+    nm: "Cañaveras"
   },
   {
     id: "16051",
-    nm: "CaÃ±averuelas"
+    nm: "Cañaveruelas"
   },
   {
     id: "16052",
-    nm: "CaÃ±ete"
+    nm: "Cañete"
   },
   {
     id: "16053",
-    nm: "CaÃ±izares"
+    nm: "Cañizares"
   },
   {
     id: "16055",
-    nm: "Carboneras de GuadazaÃ³n"
+    nm: "Carboneras de Guadazaón"
   },
   {
     id: "16056",
@@ -9081,7 +9083,7 @@
   },
   {
     id: "16060",
-    nm: "Casas de BenÃ­tez"
+    nm: "Casas de Benítez"
   },
   {
     id: "16061",
@@ -9109,7 +9111,7 @@
   },
   {
     id: "16067",
-    nm: "CastejÃ³n"
+    nm: "Castejón"
   },
   {
     id: "16068",
@@ -9121,11 +9123,11 @@
   },
   {
     id: "16072",
-    nm: "Castillo de GarcimuÃ±oz"
+    nm: "Castillo de Garcimuñoz"
   },
   {
     id: "16071",
-    nm: "Castillo-AlbarÃ¡Ã±ez"
+    nm: "Castillo-Albaráñez"
   },
   {
     id: "16073",
@@ -9133,7 +9135,7 @@
   },
   {
     id: "16023",
-    nm: "ChillarÃ³n de Cuenca"
+    nm: "Chillarón de Cuenca"
   },
   {
     id: "16081",
@@ -9153,7 +9155,7 @@
   },
   {
     id: "16082",
-    nm: "EnguÃ­danos"
+    nm: "Enguídanos"
   },
   {
     id: "16083",
@@ -9181,7 +9183,7 @@
   },
   {
     id: "16904",
-    nm: "Fuentenava de JÃ¡baga"
+    nm: "Fuentenava de Jábaga"
   },
   {
     id: "16089",
@@ -9193,7 +9195,7 @@
   },
   {
     id: "16092",
-    nm: "GabaldÃ³n"
+    nm: "Gabaldón"
   },
   {
     id: "16093",
@@ -9201,7 +9203,7 @@
   },
   {
     id: "16094",
-    nm: "GascueÃ±a"
+    nm: "Gascueña"
   },
   {
     id: "16095",
@@ -9249,7 +9251,7 @@
   },
   {
     id: "16107",
-    nm: "HuÃ©lamo"
+    nm: "Huélamo"
   },
   {
     id: "16108",
@@ -9257,11 +9259,11 @@
   },
   {
     id: "16109",
-    nm: "HuÃ©rguina"
+    nm: "Huérguina"
   },
   {
     id: "16110",
-    nm: "Huerta de la ObispalÃ­a"
+    nm: "Huerta de la Obispalía"
   },
   {
     id: "16111",
@@ -9289,7 +9291,7 @@
   },
   {
     id: "16118",
-    nm: "LedaÃ±a"
+    nm: "Ledaña"
   },
   {
     id: "16119",
@@ -9357,7 +9359,7 @@
   },
   {
     id: "16139",
-    nm: "Olivares de JÃºcar"
+    nm: "Olivares de Júcar"
   },
   {
     id: "16140",
@@ -9369,7 +9371,7 @@
   },
   {
     id: "16142",
-    nm: "Olmedilla de AlarcÃ³n"
+    nm: "Olmedilla de Alarcón"
   },
   {
     id: "16143",
@@ -9381,7 +9383,7 @@
   },
   {
     id: "16146",
-    nm: "PajarÃ³n"
+    nm: "Pajarón"
   },
   {
     id: "16147",
@@ -9413,7 +9415,7 @@
   },
   {
     id: "16154",
-    nm: "PedroÃ±eras, Las"
+    nm: "Pedroñeras, Las"
   },
   {
     id: "16155",
@@ -9437,7 +9439,7 @@
   },
   {
     id: "16160",
-    nm: "Pineda de GigÃ¼ela"
+    nm: "Pineda de Gigüela"
   },
   {
     id: "16161",
@@ -9497,11 +9499,11 @@
   },
   {
     id: "16177",
-    nm: "ReÃ­llo"
+    nm: "Reíllo"
   },
   {
     id: "16181",
-    nm: "RozalÃ©n del Monte"
+    nm: "Rozalén del Monte"
   },
   {
     id: "16185",
@@ -9521,7 +9523,7 @@
   },
   {
     id: "16189",
-    nm: "SalvacaÃ±ete"
+    nm: "Salvacañete"
   },
   {
     id: "16190",
@@ -9533,7 +9535,7 @@
   },
   {
     id: "16192",
-    nm: "San MartÃ­n de Boniches"
+    nm: "San Martín de Boniches"
   },
   {
     id: "16193",
@@ -9545,15 +9547,15 @@
   },
   {
     id: "16196",
-    nm: "Santa MarÃ­a de los Llanos"
+    nm: "Santa María de los Llanos"
   },
   {
     id: "16195",
-    nm: "Santa MarÃ­a del Campo Rus"
+    nm: "Santa María del Campo Rus"
   },
   {
     id: "16197",
-    nm: "Santa MarÃ­a del Val"
+    nm: "Santa María del Val"
   },
   {
     id: "16198",
@@ -9561,7 +9563,7 @@
   },
   {
     id: "16199",
-    nm: "Solera de GabaldÃ³n"
+    nm: "Solera de Gabaldón"
   },
   {
     id: "16909",
@@ -9573,11 +9575,11 @@
   },
   {
     id: "16203",
-    nm: "TarancÃ³n"
+    nm: "Tarancón"
   },
   {
     id: "16204",
-    nm: "TÃ©bar"
+    nm: "Tébar"
   },
   {
     id: "16205",
@@ -9617,11 +9619,11 @@
   },
   {
     id: "16218",
-    nm: "UclÃ©s"
+    nm: "Uclés"
   },
   {
     id: "16219",
-    nm: "UÃ±a"
+    nm: "Uña"
   },
   {
     id: "16906",
@@ -9645,7 +9647,7 @@
   },
   {
     id: "16902",
-    nm: "ValdetÃ³rtola"
+    nm: "Valdetórtola"
   },
   {
     id: "16903",
@@ -9665,7 +9667,7 @@
   },
   {
     id: "16236",
-    nm: "Valverde de JÃºcar"
+    nm: "Valverde de Júcar"
   },
   {
     id: "16237",
@@ -9693,7 +9695,7 @@
   },
   {
     id: "16244",
-    nm: "VillagarcÃ­a del Llano"
+    nm: "Villagarcía del Llano"
   },
   {
     id: "16245",
@@ -9725,11 +9727,11 @@
   },
   {
     id: "16253",
-    nm: "Villar de CaÃ±as"
+    nm: "Villar de Cañas"
   },
   {
     id: "16254",
-    nm: "Villar de Domingo GarcÃ­a"
+    nm: "Villar de Domingo García"
   },
   {
     id: "16255",
@@ -9757,7 +9759,7 @@
   },
   {
     id: "16265",
-    nm: "Villarejo de la PeÃ±uela"
+    nm: "Villarejo de la Peñuela"
   },
   {
     id: "16266",
@@ -9785,7 +9787,7 @@
   },
   {
     id: "16274",
-    nm: "VÃ­llora"
+    nm: "Víllora"
   },
   {
     id: "16275",
@@ -9793,11 +9795,11 @@
   },
   {
     id: "16276",
-    nm: "YÃ©meda"
+    nm: "Yémeda"
   },
   {
     id: "16277",
-    nm: "Zafra de ZÃ¡ncara"
+    nm: "Zafra de Záncara"
   },
   {
     id: "16278",
@@ -9821,7 +9823,7 @@
   },
   {
     id: "17003",
-    nm: "AlbanyÃ "
+    nm: "Albanyà"
   },
   {
     id: "17004",
@@ -9837,11 +9839,11 @@
   },
   {
     id: "17008",
-    nm: "AnglÃ¨s"
+    nm: "Anglès"
   },
   {
     id: "17009",
-    nm: "ArbÃºcies"
+    nm: "Arbúcies"
   },
   {
     id: "17010",
@@ -9853,7 +9855,7 @@
   },
   {
     id: "17012",
-    nm: "Avinyonet de PuigventÃ³s"
+    nm: "Avinyonet de Puigventós"
   },
   {
     id: "17015",
@@ -9861,7 +9863,7 @@
   },
   {
     id: "17016",
-    nm: "BÃ scara"
+    nm: "Bàscara"
   },
   {
     id: "17013",
@@ -9869,15 +9871,15 @@
   },
   {
     id: "17018",
-    nm: "Bellcaire d'EmpordÃ "
+    nm: "Bellcaire d'Empordà"
   },
   {
     id: "17019",
-    nm: "BesalÃº"
+    nm: "Besalú"
   },
   {
     id: "17020",
-    nm: "BescanÃ³"
+    nm: "Bescanó"
   },
   {
     id: "17021",
@@ -9885,7 +9887,7 @@
   },
   {
     id: "17022",
-    nm: "Bisbal d'EmpordÃ , La"
+    nm: "Bisbal d'Empordà, La"
   },
   {
     id: "17234",
@@ -9909,7 +9911,7 @@
   },
   {
     id: "17026",
-    nm: "BorrassÃ "
+    nm: "Borrassà"
   },
   {
     id: "17027",
@@ -9929,7 +9931,7 @@
   },
   {
     id: "17032",
-    nm: "CadaquÃ©s"
+    nm: "Cadaqués"
   },
   {
     id: "17033",
@@ -9941,11 +9943,11 @@
   },
   {
     id: "17035",
-    nm: "CamÃ³s"
+    nm: "Camós"
   },
   {
     id: "17036",
-    nm: "CampdevÃ nol"
+    nm: "Campdevànol"
   },
   {
     id: "17037",
@@ -9973,7 +9975,7 @@
   },
   {
     id: "17044",
-    nm: "CassÃ  de la Selva"
+    nm: "Cassà de la Selva"
   },
   {
     id: "17046",
@@ -9981,7 +9983,7 @@
   },
   {
     id: "17047",
-    nm: "CastellÃ³ d'EmpÃºries"
+    nm: "Castelló d'Empúries"
   },
   {
     id: "17048",
@@ -9993,11 +9995,11 @@
   },
   {
     id: "17049",
-    nm: "CelrÃ "
+    nm: "Celrà"
   },
   {
     id: "17050",
-    nm: "CerviÃ  de Ter"
+    nm: "Cervià de Ter"
   },
   {
     id: "17051",
@@ -10013,19 +10015,19 @@
   },
   {
     id: "17057",
-    nm: "CorÃ§Ã "
+    nm: "Corçà"
   },
   {
     id: "17056",
-    nm: "CornellÃ  del Terri"
+    nm: "Cornellà del Terri"
   },
   {
     id: "17058",
-    nm: "CrespiÃ "
+    nm: "Crespià"
   },
   {
     id: "17901",
-    nm: "CruÃ¯lles, Monells i Sant SadurnÃ­ de l'Heura"
+    nm: "Cruïlles, Monells i Sant Sadurní de l'Heura"
   },
   {
     id: "17060",
@@ -10049,11 +10051,11 @@
   },
   {
     id: "17065",
-    nm: "EsponellÃ "
+    nm: "Esponellà"
   },
   {
     id: "17005",
-    nm: "Far d'EmpordÃ , El"
+    nm: "Far d'Empordà, El"
   },
   {
     id: "17066",
@@ -10061,11 +10063,11 @@
   },
   {
     id: "17067",
-    nm: "FlaÃ§Ã "
+    nm: "Flaçà"
   },
   {
     id: "17068",
-    nm: "FoixÃ "
+    nm: "Foixà"
   },
   {
     id: "17069",
@@ -10089,11 +10091,11 @@
   },
   {
     id: "17074",
-    nm: "FortiÃ "
+    nm: "Fortià"
   },
   {
     id: "17075",
-    nm: "GarrigÃ s"
+    nm: "Garrigàs"
   },
   {
     id: "17076",
@@ -10113,7 +10115,7 @@
   },
   {
     id: "17080",
-    nm: "GombrÃ¨n"
+    nm: "Gombrèn"
   },
   {
     id: "17081",
@@ -10129,7 +10131,7 @@
   },
   {
     id: "17084",
-    nm: "IsÃ²vol"
+    nm: "Isòvol"
   },
   {
     id: "17085",
@@ -10141,11 +10143,11 @@
   },
   {
     id: "17087",
-    nm: "JuiÃ "
+    nm: "Juià"
   },
   {
     id: "17088",
-    nm: "LladÃ³"
+    nm: "Lladó"
   },
   {
     id: "17089",
@@ -10161,7 +10163,7 @@
   },
   {
     id: "17092",
-    nm: "LlanÃ§Ã "
+    nm: "Llançà"
   },
   {
     id: "17093",
@@ -10169,7 +10171,7 @@
   },
   {
     id: "17094",
-    nm: "LlÃ­via"
+    nm: "Llívia"
   },
   {
     id: "17095",
@@ -10181,11 +10183,11 @@
   },
   {
     id: "17102",
-    nm: "MaÃ§anet de Cabrenys"
+    nm: "Maçanet de Cabrenys"
   },
   {
     id: "17103",
-    nm: "MaÃ§anet de la Selva"
+    nm: "Maçanet de la Selva"
   },
   {
     id: "17097",
@@ -10193,7 +10195,7 @@
   },
   {
     id: "17098",
-    nm: "MaiÃ  de Montcal"
+    nm: "Maià de Montcal"
   },
   {
     id: "17100",
@@ -10217,7 +10219,7 @@
   },
   {
     id: "17107",
-    nm: "MollÃ³"
+    nm: "Molló"
   },
   {
     id: "17109",
@@ -10253,11 +10255,11 @@
   },
   {
     id: "17118",
-    nm: "PalamÃ³s"
+    nm: "Palamós"
   },
   {
     id: "17119",
-    nm: "Palau de Santa EulÃ lia"
+    nm: "Palau de Santa Eulàlia"
   },
   {
     id: "17121",
@@ -10281,7 +10283,7 @@
   },
   {
     id: "17126",
-    nm: "ParlavÃ "
+    nm: "Parlavà"
   },
   {
     id: "17128",
@@ -10289,7 +10291,7 @@
   },
   {
     id: "17129",
-    nm: "Pedret i MarzÃ "
+    nm: "Pedret i Marzà"
   },
   {
     id: "17130",
@@ -10313,7 +10315,7 @@
   },
   {
     id: "17136",
-    nm: "PontÃ³s"
+    nm: "Pontós"
   },
   {
     id: "17137",
@@ -10333,7 +10335,7 @@
   },
   {
     id: "17141",
-    nm: "PuigcerdÃ "
+    nm: "Puigcerdà"
   },
   {
     id: "17142",
@@ -10345,11 +10347,11 @@
   },
   {
     id: "17143",
-    nm: "RabÃ³s"
+    nm: "Rabós"
   },
   {
     id: "17144",
-    nm: "RegencÃ³s"
+    nm: "Regencós"
   },
   {
     id: "17145",
@@ -10385,7 +10387,7 @@
   },
   {
     id: "17153",
-    nm: "RupiÃ "
+    nm: "Rupià"
   },
   {
     id: "17154",
@@ -10413,7 +10415,7 @@
   },
   {
     id: "17160",
-    nm: "Sant Feliu de GuÃ­xols"
+    nm: "Sant Feliu de Guíxols"
   },
   {
     id: "17161",
@@ -10453,23 +10455,23 @@
   },
   {
     id: "17169",
-    nm: "Sant JuliÃ  de Ramis"
+    nm: "Sant Julià de Ramis"
   },
   {
     id: "17903",
-    nm: "Sant JuliÃ  del Llor i BonmatÃ­"
+    nm: "Sant Julià del Llor i Bonmatí"
   },
   {
     id: "17171",
-    nm: "Sant LlorenÃ§ de la Muga"
+    nm: "Sant Llorenç de la Muga"
   },
   {
     id: "17172",
-    nm: "Sant MartÃ­ de LlÃ©mena"
+    nm: "Sant Martí de Llémena"
   },
   {
     id: "17173",
-    nm: "Sant MartÃ­ Vell"
+    nm: "Sant Martí Vell"
   },
   {
     id: "17174",
@@ -10477,7 +10479,7 @@
   },
   {
     id: "17175",
-    nm: "Sant Miquel de FluviÃ "
+    nm: "Sant Miquel de Fluvià"
   },
   {
     id: "17176",
@@ -10485,7 +10487,7 @@
   },
   {
     id: "17177",
-    nm: "Sant Pau de SegÃºries"
+    nm: "Sant Pau de Segúries"
   },
   {
     id: "17178",
@@ -10501,7 +10503,7 @@
   },
   {
     id: "17182",
-    nm: "Santa Llogaia d'Ã€lguema"
+    nm: "Santa Llogaia d'ìlguema"
   },
   {
     id: "17184",
@@ -10509,7 +10511,7 @@
   },
   {
     id: "17186",
-    nm: "SarriÃ  de Ter"
+    nm: "Sarrià de Ter"
   },
   {
     id: "17187",
@@ -10521,11 +10523,11 @@
   },
   {
     id: "17190",
-    nm: "SerinyÃ "
+    nm: "Serinyà"
   },
   {
     id: "17191",
-    nm: "Serra de DarÃ³"
+    nm: "Serra de Daró"
   },
   {
     id: "17192",
@@ -10545,7 +10547,7 @@
   },
   {
     id: "17195",
-    nm: "Tallada d'EmpordÃ , La"
+    nm: "Tallada d'Empordà, La"
   },
   {
     id: "17196",
@@ -10557,15 +10559,15 @@
   },
   {
     id: "17198",
-    nm: "Torroella de FluviÃ "
+    nm: "Torroella de Fluvià"
   },
   {
     id: "17199",
-    nm: "Torroella de MontgrÃ­"
+    nm: "Torroella de Montgrí"
   },
   {
     id: "17200",
-    nm: "TortellÃ "
+    nm: "Tortellà"
   },
   {
     id: "17201",
@@ -10577,7 +10579,7 @@
   },
   {
     id: "17204",
-    nm: "UllÃ "
+    nm: "Ullà"
   },
   {
     id: "17205",
@@ -10589,7 +10591,7 @@
   },
   {
     id: "17206",
-    nm: "UrÃºs"
+    nm: "Urús"
   },
   {
     id: "17014",
@@ -10605,7 +10607,7 @@
   },
   {
     id: "17170",
-    nm: "Vallfogona de RipollÃ¨s"
+    nm: "Vallfogona de Ripollès"
   },
   {
     id: "17209",
@@ -10613,7 +10615,7 @@
   },
   {
     id: "17210",
-    nm: "VentallÃ³"
+    nm: "Ventalló"
   },
   {
     id: "17211",
@@ -10621,7 +10623,7 @@
   },
   {
     id: "17212",
-    nm: "VidrÃ "
+    nm: "Vidrà"
   },
   {
     id: "17213",
@@ -10657,7 +10659,7 @@
   },
   {
     id: "17223",
-    nm: "VilajuÃ¯ga"
+    nm: "Vilajuïga"
   },
   {
     id: "17224",
@@ -10685,11 +10687,11 @@
   },
   {
     id: "17222",
-    nm: "VilaÃ¼r"
+    nm: "Vilaür"
   },
   {
     id: "17233",
-    nm: "VilobÃ­ d'Onyar"
+    nm: "Vilobí d'Onyar"
   },
   {
     id: "17232",
@@ -10697,7 +10699,7 @@
   },
   {
     id: "18001",
-    nm: "AgrÃ³n"
+    nm: "Agrón"
   },
   {
     id: "18002",
@@ -10709,19 +10711,19 @@
   },
   {
     id: "18004",
-    nm: "AlbondÃ³n"
+    nm: "Albondón"
   },
   {
     id: "18005",
-    nm: "AlbuÃ±Ã¡n"
+    nm: "Albuñán"
   },
   {
     id: "18006",
-    nm: "AlbuÃ±ol"
+    nm: "Albuñol"
   },
   {
     id: "18007",
-    nm: "AlbuÃ±uelas"
+    nm: "Albuñuelas"
   },
   {
     id: "18010",
@@ -10741,19 +10743,19 @@
   },
   {
     id: "18014",
-    nm: "AlhendÃ­n"
+    nm: "Alhendín"
   },
   {
     id: "18015",
-    nm: "AlicÃºn de Ortega"
+    nm: "Alicún de Ortega"
   },
   {
     id: "18016",
-    nm: "AlmegÃ­jar"
+    nm: "Almegíjar"
   },
   {
     id: "18017",
-    nm: "AlmuÃ±Ã©car"
+    nm: "Almuñécar"
   },
   {
     id: "18904",
@@ -10789,11 +10791,11 @@
   },
   {
     id: "18027",
-    nm: "BenalÃºa"
+    nm: "Benalúa"
   },
   {
     id: "18028",
-    nm: "BenalÃºa de las Villas"
+    nm: "Benalúa de las Villas"
   },
   {
     id: "18029",
@@ -10801,27 +10803,27 @@
   },
   {
     id: "18030",
-    nm: "BÃ©rchules"
+    nm: "Bérchules"
   },
   {
     id: "18032",
-    nm: "BubiÃ³n"
+    nm: "Bubión"
   },
   {
     id: "18033",
-    nm: "BusquÃ­star"
+    nm: "Busquístar"
   },
   {
     id: "18034",
-    nm: "CacÃ­n"
+    nm: "Cacín"
   },
   {
     id: "18035",
-    nm: "CÃ¡diar"
+    nm: "Cádiar"
   },
   {
     id: "18036",
-    nm: "CÃ¡jar"
+    nm: "Cájar"
   },
   {
     id: "18114",
@@ -10833,7 +10835,7 @@
   },
   {
     id: "18038",
-    nm: "CampotÃ©jar"
+    nm: "Campotéjar"
   },
   {
     id: "18039",
@@ -10841,7 +10843,7 @@
   },
   {
     id: "18040",
-    nm: "CÃ¡Ã±ar"
+    nm: "Cáñar"
   },
   {
     id: "18042",
@@ -10853,11 +10855,11 @@
   },
   {
     id: "18044",
-    nm: "CÃ¡staras"
+    nm: "Cástaras"
   },
   {
     id: "18045",
-    nm: "CastillÃ©jar"
+    nm: "Castilléjar"
   },
   {
     id: "18046",
@@ -10909,11 +10911,11 @@
   },
   {
     id: "18056",
-    nm: "CÃºllar"
+    nm: "Cúllar"
   },
   {
     id: "18057",
-    nm: "CÃºllar Vega"
+    nm: "Cúllar Vega"
   },
   {
     id: "18063",
@@ -10937,27 +10939,27 @@
   },
   {
     id: "18068",
-    nm: "DÃ­lar"
+    nm: "Dílar"
   },
   {
     id: "18069",
-    nm: "DÃ³lar"
+    nm: "Dólar"
   },
   {
     id: "18915",
-    nm: "Domingo PÃ©rez de Granada"
+    nm: "Domingo Pérez de Granada"
   },
   {
     id: "18070",
-    nm: "DÃºdar"
+    nm: "Dúdar"
   },
   {
     id: "18071",
-    nm: "DÃºrcal"
+    nm: "Dúrcal"
   },
   {
     id: "18072",
-    nm: "EscÃºzar"
+    nm: "Escúzar"
   },
   {
     id: "18074",
@@ -10989,7 +10991,7 @@
   },
   {
     id: "18084",
-    nm: "GÃ³jar"
+    nm: "Gójar"
   },
   {
     id: "18085",
@@ -11013,7 +11015,7 @@
   },
   {
     id: "18906",
-    nm: "GuÃ¡jares, Los"
+    nm: "Guájares, Los"
   },
   {
     id: "18093",
@@ -11021,35 +11023,35 @@
   },
   {
     id: "18094",
-    nm: "GÃ¼Ã©jar Sierra"
+    nm: "Güéjar Sierra"
   },
   {
     id: "18095",
-    nm: "GÃ¼evÃ©jar"
+    nm: "Güevéjar"
   },
   {
     id: "18096",
-    nm: "HuÃ©lago"
+    nm: "Huélago"
   },
   {
     id: "18097",
-    nm: "HuÃ©neja"
+    nm: "Huéneja"
   },
   {
     id: "18098",
-    nm: "HuÃ©scar"
+    nm: "Huéscar"
   },
   {
     id: "18099",
-    nm: "HuÃ©tor de SantillÃ¡n"
+    nm: "Huétor de Santillán"
   },
   {
     id: "18100",
-    nm: "HuÃ©tor TÃ¡jar"
+    nm: "Huétor Tájar"
   },
   {
     id: "18101",
-    nm: "HuÃ©tor Vega"
+    nm: "Huétor Vega"
   },
   {
     id: "18102",
@@ -11057,7 +11059,7 @@
   },
   {
     id: "18103",
-    nm: "Ãtrabo"
+    nm: "Ítrabo"
   },
   {
     id: "18105",
@@ -11065,7 +11067,7 @@
   },
   {
     id: "18106",
-    nm: "JÃ¡tar"
+    nm: "Játar"
   },
   {
     id: "18107",
@@ -11089,11 +11091,11 @@
   },
   {
     id: "18115",
-    nm: "LÃ¡char"
+    nm: "Láchar"
   },
   {
     id: "18116",
-    nm: "LanjarÃ³n"
+    nm: "Lanjarón"
   },
   {
     id: "18117",
@@ -11101,11 +11103,11 @@
   },
   {
     id: "18119",
-    nm: "LecrÃ­n"
+    nm: "Lecrín"
   },
   {
     id: "18120",
-    nm: "LentegÃ­"
+    nm: "Lentegí"
   },
   {
     id: "18121",
@@ -11121,11 +11123,11 @@
   },
   {
     id: "18124",
-    nm: "LÃºjar"
+    nm: "Lújar"
   },
   {
     id: "18126",
-    nm: "MalahÃ¡, La"
+    nm: "Malahá, La"
   },
   {
     id: "18127",
@@ -11137,11 +11139,11 @@
   },
   {
     id: "18132",
-    nm: "MoclÃ­n"
+    nm: "Moclín"
   },
   {
     id: "18133",
-    nm: "MolvÃ­zar"
+    nm: "Molvízar"
   },
   {
     id: "18134",
@@ -11149,11 +11151,11 @@
   },
   {
     id: "18135",
-    nm: "MontefrÃ­o"
+    nm: "Montefrío"
   },
   {
     id: "18136",
-    nm: "MontejÃ­car"
+    nm: "Montejícar"
   },
   {
     id: "18137",
@@ -11165,7 +11167,7 @@
   },
   {
     id: "18909",
-    nm: "MorelÃ¡bor"
+    nm: "Morelábor"
   },
   {
     id: "18140",
@@ -11181,15 +11183,15 @@
   },
   {
     id: "18143",
-    nm: "NigÃ¼elas"
+    nm: "Nigüelas"
   },
   {
     id: "18144",
-    nm: "NÃ­var"
+    nm: "Nívar"
   },
   {
     id: "18145",
-    nm: "OgÃ­jares"
+    nm: "Ogíjares"
   },
   {
     id: "18146",
@@ -11197,11 +11199,11 @@
   },
   {
     id: "18147",
-    nm: "Ã“rgiva"
+    nm: "�rgiva"
   },
   {
     id: "18148",
-    nm: "OtÃ­var"
+    nm: "Otívar"
   },
   {
     id: "18150",
@@ -11213,7 +11215,7 @@
   },
   {
     id: "18152",
-    nm: "Pedro MartÃ­nez"
+    nm: "Pedro Martínez"
   },
   {
     id: "18153",
@@ -11237,11 +11239,11 @@
   },
   {
     id: "18159",
-    nm: "PÃ­Ã±ar"
+    nm: "Píñar"
   },
   {
     id: "18161",
-    nm: "PolÃ­car"
+    nm: "Polícar"
   },
   {
     id: "18162",
@@ -11249,7 +11251,7 @@
   },
   {
     id: "18163",
-    nm: "PÃ³rtugos"
+    nm: "Pórtugos"
   },
   {
     id: "18164",
@@ -11265,7 +11267,7 @@
   },
   {
     id: "18168",
-    nm: "QuÃ©ntar"
+    nm: "Quéntar"
   },
   {
     id: "18170",
@@ -11277,7 +11279,7 @@
   },
   {
     id: "18173",
-    nm: "SalobreÃ±a"
+    nm: "Salobreña"
   },
   {
     id: "18174",
@@ -11289,11 +11291,11 @@
   },
   {
     id: "18176",
-    nm: "SoportÃºjar"
+    nm: "Soportújar"
   },
   {
     id: "18177",
-    nm: "SorvilÃ¡n"
+    nm: "Sorvilán"
   },
   {
     id: "18901",
@@ -11305,19 +11307,19 @@
   },
   {
     id: "18179",
-    nm: "TorvizcÃ³n"
+    nm: "Torvizcón"
   },
   {
     id: "18180",
-    nm: "TrevÃ©lez"
+    nm: "Trevélez"
   },
   {
     id: "18181",
-    nm: "TurÃ³n"
+    nm: "Turón"
   },
   {
     id: "18182",
-    nm: "UgÃ­jar"
+    nm: "Ugíjar"
   },
   {
     id: "18914",
@@ -11325,7 +11327,7 @@
   },
   {
     id: "18907",
-    nm: "Valle del ZalabÃ­"
+    nm: "Valle del Zalabí"
   },
   {
     id: "18902",
@@ -11333,7 +11335,7 @@
   },
   {
     id: "18183",
-    nm: "VÃ¡lor"
+    nm: "Válor"
   },
   {
     id: "18911",
@@ -11341,7 +11343,7 @@
   },
   {
     id: "18184",
-    nm: "VÃ©lez de Benaudalla"
+    nm: "Vélez de Benaudalla"
   },
   {
     id: "18185",
@@ -11361,11 +11363,11 @@
   },
   {
     id: "18188",
-    nm: "Villanueva MesÃ­a"
+    nm: "Villanueva Mesía"
   },
   {
     id: "18189",
-    nm: "VÃ­znar"
+    nm: "Víznar"
   },
   {
     id: "18192",
@@ -11381,11 +11383,11 @@
   },
   {
     id: "18194",
-    nm: "ZÃºjar"
+    nm: "Zújar"
   },
   {
     id: "19001",
-    nm: "AbÃ¡nades"
+    nm: "Abánades"
   },
   {
     id: "19002",
@@ -11421,7 +11423,7 @@
   },
   {
     id: "19010",
-    nm: "Alcolea de las PeÃ±as"
+    nm: "Alcolea de las Peñas"
   },
   {
     id: "19011",
@@ -11445,7 +11447,7 @@
   },
   {
     id: "19018",
-    nm: "AlhÃ³ndiga"
+    nm: "Alhóndiga"
   },
   {
     id: "19019",
@@ -11465,7 +11467,7 @@
   },
   {
     id: "19023",
-    nm: "AlocÃ©n"
+    nm: "Alocén"
   },
   {
     id: "19024",
@@ -11477,7 +11479,7 @@
   },
   {
     id: "19031",
-    nm: "AngÃ³n"
+    nm: "Angón"
   },
   {
     id: "19032",
@@ -11497,7 +11499,7 @@
   },
   {
     id: "19037",
-    nm: "ArbancÃ³n"
+    nm: "Arbancón"
   },
   {
     id: "19038",
@@ -11513,7 +11515,7 @@
   },
   {
     id: "19041",
-    nm: "ArmuÃ±a de TajuÃ±a"
+    nm: "Armuña de Tajuña"
   },
   {
     id: "19042",
@@ -11521,7 +11523,7 @@
   },
   {
     id: "19043",
-    nm: "AtanzÃ³n"
+    nm: "Atanzón"
   },
   {
     id: "19044",
@@ -11529,7 +11531,7 @@
   },
   {
     id: "19045",
-    nm: "AuÃ±Ã³n"
+    nm: "Auñón"
   },
   {
     id: "19046",
@@ -11541,11 +11543,11 @@
   },
   {
     id: "19048",
-    nm: "BaÃ±os de Tajo"
+    nm: "Baños de Tajo"
   },
   {
     id: "19049",
-    nm: "BaÃ±uelos"
+    nm: "Bañuelos"
   },
   {
     id: "19050",
@@ -11581,7 +11583,7 @@
   },
   {
     id: "19059",
-    nm: "Campillo de DueÃ±as"
+    nm: "Campillo de Dueñas"
   },
   {
     id: "19060",
@@ -11589,7 +11591,7 @@
   },
   {
     id: "19061",
-    nm: "CampisÃ¡balos"
+    nm: "Campisábalos"
   },
   {
     id: "19064",
@@ -11601,7 +11603,7 @@
   },
   {
     id: "19066",
-    nm: "CaÃ±izar"
+    nm: "Cañizar"
   },
   {
     id: "19067",
@@ -11621,11 +11623,11 @@
   },
   {
     id: "19074",
-    nm: "CaspueÃ±as"
+    nm: "Caspueñas"
   },
   {
     id: "19075",
-    nm: "CastejÃ³n de Henares"
+    nm: "Castejón de Henares"
   },
   {
     id: "19076",
@@ -11661,7 +11663,7 @@
   },
   {
     id: "19106",
-    nm: "ChillarÃ³n del Rey"
+    nm: "Chillarón del Rey"
   },
   {
     id: "19105",
@@ -11725,7 +11727,7 @@
   },
   {
     id: "19108",
-    nm: "DurÃ³n"
+    nm: "Durón"
   },
   {
     id: "19109",
@@ -11753,11 +11755,11 @@
   },
   {
     id: "19115",
-    nm: "EstablÃ©s"
+    nm: "Establés"
   },
   {
     id: "19116",
-    nm: "EstriÃ©gana"
+    nm: "Estriégana"
   },
   {
     id: "19117",
@@ -11769,7 +11771,7 @@
   },
   {
     id: "19119",
-    nm: "FuencemillÃ¡n"
+    nm: "Fuencemillán"
   },
   {
     id: "19120",
@@ -11797,7 +11799,7 @@
   },
   {
     id: "19126",
-    nm: "GalÃ¡pagos"
+    nm: "Galápagos"
   },
   {
     id: "19127",
@@ -11805,7 +11807,7 @@
   },
   {
     id: "19129",
-    nm: "GascueÃ±a de Bornova"
+    nm: "Gascueña de Bornova"
   },
   {
     id: "19130",
@@ -11821,7 +11823,7 @@
   },
   {
     id: "19134",
-    nm: "HerrerÃ­a"
+    nm: "Herrería"
   },
   {
     id: "19135",
@@ -11849,7 +11851,7 @@
   },
   {
     id: "19145",
-    nm: "Hortezuela de OcÃ©n"
+    nm: "Hortezuela de Océn"
   },
   {
     id: "19146",
@@ -11857,7 +11859,7 @@
   },
   {
     id: "19147",
-    nm: "HuÃ©rmeces del Cerro"
+    nm: "Huérmeces del Cerro"
   },
   {
     id: "19148",
@@ -11877,7 +11879,7 @@
   },
   {
     id: "19153",
-    nm: "IniÃ©stola"
+    nm: "Iniéstola"
   },
   {
     id: "19154",
@@ -11901,7 +11903,7 @@
   },
   {
     id: "19160",
-    nm: "Loranca de TajuÃ±a"
+    nm: "Loranca de Tajuña"
   },
   {
     id: "19161",
@@ -11913,7 +11915,7 @@
   },
   {
     id: "19163",
-    nm: "LuzÃ³n"
+    nm: "Luzón"
   },
   {
     id: "19165",
@@ -11921,7 +11923,7 @@
   },
   {
     id: "19166",
-    nm: "MÃ¡laga del Fresno"
+    nm: "Málaga del Fresno"
   },
   {
     id: "19167",
@@ -11937,7 +11939,7 @@
   },
   {
     id: "19170",
-    nm: "MaranchÃ³n"
+    nm: "Maranchón"
   },
   {
     id: "19171",
@@ -11945,7 +11947,7 @@
   },
   {
     id: "19172",
-    nm: "Masegoso de TajuÃ±a"
+    nm: "Masegoso de Tajuña"
   },
   {
     id: "19173",
@@ -11993,7 +11995,7 @@
   },
   {
     id: "19185",
-    nm: "MiÃ±osa, La"
+    nm: "Miñosa, La"
   },
   {
     id: "19186",
@@ -12001,7 +12003,7 @@
   },
   {
     id: "19187",
-    nm: "MiralrÃ­o"
+    nm: "Miralrío"
   },
   {
     id: "19188",
@@ -12013,7 +12015,7 @@
   },
   {
     id: "19190",
-    nm: "Molina de AragÃ³n"
+    nm: "Molina de Aragón"
   },
   {
     id: "19191",
@@ -12021,11 +12023,11 @@
   },
   {
     id: "19192",
-    nm: "MondÃ©jar"
+    nm: "Mondéjar"
   },
   {
     id: "19193",
-    nm: "MontarrÃ³n"
+    nm: "Montarrón"
   },
   {
     id: "19194",
@@ -12073,7 +12075,7 @@
   },
   {
     id: "19208",
-    nm: "PÃ¡lmaces de Jadraque"
+    nm: "Pálmaces de Jadraque"
   },
   {
     id: "19209",
@@ -12081,7 +12083,7 @@
   },
   {
     id: "19210",
-    nm: "Paredes de SigÃ¼enza"
+    nm: "Paredes de Sigüenza"
   },
   {
     id: "19211",
@@ -12097,11 +12099,11 @@
   },
   {
     id: "19214",
-    nm: "PeÃ±alÃ©n"
+    nm: "Peñalén"
   },
   {
     id: "19215",
-    nm: "PeÃ±alver"
+    nm: "Peñalver"
   },
   {
     id: "19216",
@@ -12129,7 +12131,7 @@
   },
   {
     id: "19222",
-    nm: "Pobo de DueÃ±as, El"
+    nm: "Pobo de Dueñas, El"
   },
   {
     id: "19223",
@@ -12145,7 +12147,7 @@
   },
   {
     id: "19226",
-    nm: "PrÃ¡dena de Atienza"
+    nm: "Prádena de Atienza"
   },
   {
     id: "19227",
@@ -12153,7 +12155,7 @@
   },
   {
     id: "19228",
-    nm: "Puebla de BeleÃ±a"
+    nm: "Puebla de Beleña"
   },
   {
     id: "19229",
@@ -12189,7 +12191,7 @@
   },
   {
     id: "19238",
-    nm: "RiofrÃ­o del Llano"
+    nm: "Riofrío del Llano"
   },
   {
     id: "19239",
@@ -12217,7 +12219,7 @@
   },
   {
     id: "19245",
-    nm: "SacedÃ³n"
+    nm: "Sacedón"
   },
   {
     id: "19246",
@@ -12225,15 +12227,15 @@
   },
   {
     id: "19247",
-    nm: "SalmerÃ³n"
+    nm: "Salmerón"
   },
   {
     id: "19248",
-    nm: "San AndrÃ©s del Congosto"
+    nm: "San Andrés del Congosto"
   },
   {
     id: "19249",
-    nm: "San AndrÃ©s del Rey"
+    nm: "San Andrés del Rey"
   },
   {
     id: "19250",
@@ -12241,11 +12243,11 @@
   },
   {
     id: "19251",
-    nm: "SaÃºca"
+    nm: "Saúca"
   },
   {
     id: "19252",
-    nm: "SayatÃ³n"
+    nm: "Sayatón"
   },
   {
     id: "19254",
@@ -12265,7 +12267,7 @@
   },
   {
     id: "19257",
-    nm: "SigÃ¼enza"
+    nm: "Sigüenza"
   },
   {
     id: "19258",
@@ -12285,7 +12287,7 @@
   },
   {
     id: "19262",
-    nm: "TamajÃ³n"
+    nm: "Tamajón"
   },
   {
     id: "19263",
@@ -12321,7 +12323,7 @@
   },
   {
     id: "19270",
-    nm: "TordelrÃ¡bano"
+    nm: "Tordelrábano"
   },
   {
     id: "19272",
@@ -12345,7 +12347,7 @@
   },
   {
     id: "19280",
-    nm: "TorrejÃ³n del Rey"
+    nm: "Torrejón del Rey"
   },
   {
     id: "19281",
@@ -12369,7 +12371,7 @@
   },
   {
     id: "19286",
-    nm: "TÃ³rtola de Henares"
+    nm: "Tórtola de Henares"
   },
   {
     id: "19287",
@@ -12381,7 +12383,7 @@
   },
   {
     id: "19289",
-    nm: "TraÃ­d"
+    nm: "Traíd"
   },
   {
     id: "19290",
@@ -12433,11 +12435,11 @@
   },
   {
     id: "19304",
-    nm: "ValdenuÃ±o FernÃ¡ndez"
+    nm: "Valdenuño Fernández"
   },
   {
     id: "19305",
-    nm: "ValdepeÃ±as de la Sierra"
+    nm: "Valdepeñas de la Sierra"
   },
   {
     id: "19306",
@@ -12449,7 +12451,7 @@
   },
   {
     id: "19308",
-    nm: "Valfermoso de TajuÃ±a"
+    nm: "Valfermoso de Tajuña"
   },
   {
     id: "19309",
@@ -12457,7 +12459,7 @@
   },
   {
     id: "19310",
-    nm: "Valtablado del RÃ­o"
+    nm: "Valtablado del Río"
   },
   {
     id: "19311",
@@ -12469,7 +12471,7 @@
   },
   {
     id: "19317",
-    nm: "Villanueva de AlcorÃ³n"
+    nm: "Villanueva de Alcorón"
   },
   {
     id: "19318",
@@ -12497,7 +12499,7 @@
   },
   {
     id: "19325",
-    nm: "ViÃ±uelas"
+    nm: "Viñuelas"
   },
   {
     id: "19326",
@@ -12509,11 +12511,11 @@
   },
   {
     id: "19329",
-    nm: "YÃ©lamos de Abajo"
+    nm: "Yélamos de Abajo"
   },
   {
     id: "19330",
-    nm: "YÃ©lamos de Arriba"
+    nm: "Yélamos de Arriba"
   },
   {
     id: "19331",
@@ -12597,7 +12599,7 @@
   },
   {
     id: "20055",
-    nm: "Arrasate/MondragÃ³n"
+    nm: "Arrasate/Mondragón"
   },
   {
     id: "20014",
@@ -12657,7 +12659,7 @@
   },
   {
     id: "20069",
-    nm: "Donostia/San SebastiÃ¡n"
+    nm: "Donostia/San Sebastián"
   },
   {
     id: "20030",
@@ -12801,7 +12803,7 @@
   },
   {
     id: "20059",
-    nm: "OÃ±ati"
+    nm: "Oñati"
   },
   {
     id: "20076",
@@ -12889,7 +12891,7 @@
   },
   {
     id: "21001",
-    nm: "AlÃ¡jar"
+    nm: "Alájar"
   },
   {
     id: "21002",
@@ -12921,7 +12923,7 @@
   },
   {
     id: "21009",
-    nm: "Arroyomolinos de LeÃ³n"
+    nm: "Arroyomolinos de León"
   },
   {
     id: "21010",
@@ -12953,7 +12955,7 @@
   },
   {
     id: "21017",
-    nm: "CalaÃ±as"
+    nm: "Calañas"
   },
   {
     id: "21018",
@@ -12961,11 +12963,11 @@
   },
   {
     id: "21019",
-    nm: "CampofrÃ­o"
+    nm: "Campofrío"
   },
   {
     id: "21020",
-    nm: "CaÃ±averal de LeÃ³n"
+    nm: "Cañaveral de León"
   },
   {
     id: "21021",
@@ -12973,11 +12975,11 @@
   },
   {
     id: "21022",
-    nm: "CastaÃ±o del Robledo"
+    nm: "Castaño del Robledo"
   },
   {
     id: "21023",
-    nm: "Cerro de AndÃ©valo, El"
+    nm: "Cerro de Andévalo, El"
   },
   {
     id: "21030",
@@ -12985,7 +12987,7 @@
   },
   {
     id: "21024",
-    nm: "CorteconcepciÃ³n"
+    nm: "Corteconcepción"
   },
   {
     id: "21025",
@@ -13001,7 +13003,7 @@
   },
   {
     id: "21028",
-    nm: "Cumbres de San BartolomÃ©"
+    nm: "Cumbres de San Bartolomé"
   },
   {
     id: "21029",
@@ -13025,11 +13027,11 @@
   },
   {
     id: "21035",
-    nm: "GibraleÃ³n"
+    nm: "Gibraleón"
   },
   {
     id: "21036",
-    nm: "Granada de RÃ­o-Tinto, La"
+    nm: "Granada de Río-Tinto, La"
   },
   {
     id: "21037",
@@ -13117,7 +13119,7 @@
   },
   {
     id: "21058",
-    nm: "Puebla de GuzmÃ¡n"
+    nm: "Puebla de Guzmán"
   },
   {
     id: "21059",
@@ -13125,7 +13127,7 @@
   },
   {
     id: "21060",
-    nm: "Punta UmbrÃ­a"
+    nm: "Punta Umbría"
   },
   {
     id: "21061",
@@ -13137,7 +13139,7 @@
   },
   {
     id: "21063",
-    nm: "San BartolomÃ© de la Torre"
+    nm: "San Bartolomé de la Torre"
   },
   {
     id: "21064",
@@ -13145,11 +13147,11 @@
   },
   {
     id: "21066",
-    nm: "San Silvestre de GuzmÃ¡n"
+    nm: "San Silvestre de Guzmán"
   },
   {
     id: "21065",
-    nm: "SanlÃºcar de Guadiana"
+    nm: "Sanlúcar de Guadiana"
   },
   {
     id: "21067",
@@ -13157,7 +13159,7 @@
   },
   {
     id: "21068",
-    nm: "Santa BÃ¡rbara de Casa"
+    nm: "Santa Bárbara de Casa"
   },
   {
     id: "21069",
@@ -13217,11 +13219,11 @@
   },
   {
     id: "22004",
-    nm: "AgÃ¼ero"
+    nm: "Agüero"
   },
   {
     id: "22907",
-    nm: "AÃ­nsa-Sobrarbe"
+    nm: "Aínsa-Sobrarbe"
   },
   {
     id: "22006",
@@ -13253,11 +13255,11 @@
   },
   {
     id: "22014",
-    nm: "AlcalÃ¡ de Gurrea"
+    nm: "Alcalá de Gurrea"
   },
   {
     id: "22015",
-    nm: "AlcalÃ¡ del Obispo"
+    nm: "Alcalá del Obispo"
   },
   {
     id: "22016",
@@ -13277,11 +13279,11 @@
   },
   {
     id: "22020",
-    nm: "AlfÃ¡ntega"
+    nm: "Alfántega"
   },
   {
     id: "22021",
-    nm: "AlmudÃ©var"
+    nm: "Almudévar"
   },
   {
     id: "22022",
@@ -13293,31 +13295,31 @@
   },
   {
     id: "22024",
-    nm: "AlquÃ©zar"
+    nm: "Alquézar"
   },
   {
     id: "22025",
-    nm: "AltorricÃ³n"
+    nm: "Altorricón"
   },
   {
     id: "22027",
-    nm: "AngÃ¼Ã©s"
+    nm: "Angüés"
   },
   {
     id: "22028",
-    nm: "AnsÃ³"
+    nm: "Ansó"
   },
   {
     id: "22029",
-    nm: "AntillÃ³n"
+    nm: "Antillón"
   },
   {
     id: "22032",
-    nm: "AragÃ¼Ã©s del Puerto"
+    nm: "Aragüés del Puerto"
   },
   {
     id: "22035",
-    nm: "ArÃ©n"
+    nm: "Arén"
   },
   {
     id: "22036",
@@ -13345,7 +13347,7 @@
   },
   {
     id: "22043",
-    nm: "BaÃ©lls"
+    nm: "Baélls"
   },
   {
     id: "22044",
@@ -13361,7 +13363,7 @@
   },
   {
     id: "22047",
-    nm: "BanastÃ¡s"
+    nm: "Banastás"
   },
   {
     id: "22048",
@@ -13369,15 +13371,15 @@
   },
   {
     id: "22049",
-    nm: "BarbuÃ©s"
+    nm: "Barbués"
   },
   {
     id: "22050",
-    nm: "BarbuÃ±ales"
+    nm: "Barbuñales"
   },
   {
     id: "22051",
-    nm: "BÃ¡rcabo"
+    nm: "Bárcabo"
   },
   {
     id: "22052",
@@ -13417,7 +13419,7 @@
   },
   {
     id: "22061",
-    nm: "BinÃ©far"
+    nm: "Binéfar"
   },
   {
     id: "22062",
@@ -13425,7 +13427,7 @@
   },
   {
     id: "22063",
-    nm: "BiscarruÃ©s"
+    nm: "Biscarrués"
   },
   {
     id: "22064",
@@ -13433,7 +13435,7 @@
   },
   {
     id: "22066",
-    nm: "BoltaÃ±a"
+    nm: "Boltaña"
   },
   {
     id: "22067",
@@ -13457,11 +13459,11 @@
   },
   {
     id: "22075",
-    nm: "CamporrÃ©lls"
+    nm: "Camporrélls"
   },
   {
     id: "22076",
-    nm: "Canal de BerdÃºn"
+    nm: "Canal de Berdún"
   },
   {
     id: "22077",
@@ -13485,15 +13487,15 @@
   },
   {
     id: "22083",
-    nm: "CastejÃ³n de Monegros"
+    nm: "Castejón de Monegros"
   },
   {
     id: "22084",
-    nm: "CastejÃ³n de Sos"
+    nm: "Castejón de Sos"
   },
   {
     id: "22082",
-    nm: "CastejÃ³n del Puente"
+    nm: "Castejón del Puente"
   },
   {
     id: "22085",
@@ -13521,7 +13523,7 @@
   },
   {
     id: "22095",
-    nm: "ChÃ­a"
+    nm: "Chía"
   },
   {
     id: "22096",
@@ -13533,7 +13535,7 @@
   },
   {
     id: "22099",
-    nm: "EsplÃºs"
+    nm: "Esplús"
   },
   {
     id: "22102",
@@ -13545,7 +13547,7 @@
   },
   {
     id: "22105",
-    nm: "EstopiÃ±Ã¡n del Castillo"
+    nm: "Estopiñán del Castillo"
   },
   {
     id: "22106",
@@ -13577,7 +13579,7 @@
   },
   {
     id: "22114",
-    nm: "GistaÃ­n"
+    nm: "Gistaín"
   },
   {
     id: "22115",
@@ -13585,7 +13587,7 @@
   },
   {
     id: "22116",
-    nm: "GraÃ±Ã©n"
+    nm: "Grañén"
   },
   {
     id: "22117",
@@ -13593,7 +13595,7 @@
   },
   {
     id: "22119",
-    nm: "Gurrea de GÃ¡llego"
+    nm: "Gurrea de Gállego"
   },
   {
     id: "22122",
@@ -13617,7 +13619,7 @@
   },
   {
     id: "22127",
-    nm: "IgriÃ©s"
+    nm: "Igriés"
   },
   {
     id: "22128",
@@ -13625,7 +13627,7 @@
   },
   {
     id: "22129",
-    nm: "IsÃ¡bena"
+    nm: "Isábena"
   },
   {
     id: "22130",
@@ -13665,11 +13667,11 @@
   },
   {
     id: "22143",
-    nm: "LaspaÃºles"
+    nm: "Laspaúles"
   },
   {
     id: "22144",
-    nm: "LaspuÃ±a"
+    nm: "Laspuña"
   },
   {
     id: "22149",
@@ -13685,7 +13687,7 @@
   },
   {
     id: "22905",
-    nm: "LupiÃ±Ã©n-Ortilla"
+    nm: "Lupiñén-Ortilla"
   },
   {
     id: "22155",
@@ -13701,7 +13703,7 @@
   },
   {
     id: "22158",
-    nm: "MonzÃ³n"
+    nm: "Monzón"
   },
   {
     id: "22160",
@@ -13721,7 +13723,7 @@
   },
   {
     id: "22165",
-    nm: "OntiÃ±ena"
+    nm: "Ontiñena"
   },
   {
     id: "22167",
@@ -13737,11 +13739,11 @@
   },
   {
     id: "22172",
-    nm: "PeÃ±alba"
+    nm: "Peñalba"
   },
   {
     id: "22173",
-    nm: "PeÃ±as de Riglos, Las"
+    nm: "Peñas de Riglos, Las"
   },
   {
     id: "22174",
@@ -13757,7 +13759,7 @@
   },
   {
     id: "22177",
-    nm: "PerarrÃºa"
+    nm: "Perarrúa"
   },
   {
     id: "22178",
@@ -13765,7 +13767,7 @@
   },
   {
     id: "22181",
-    nm: "PiracÃ©s"
+    nm: "Piracés"
   },
   {
     id: "22182",
@@ -13773,11 +13775,11 @@
   },
   {
     id: "22184",
-    nm: "PoleÃ±ino"
+    nm: "Poleñino"
   },
   {
     id: "22186",
-    nm: "PozÃ¡n de Vero"
+    nm: "Pozán de Vero"
   },
   {
     id: "22187",
@@ -13785,7 +13787,7 @@
   },
   {
     id: "22188",
-    nm: "Puente de MontaÃ±ana"
+    nm: "Puente de Montañana"
   },
   {
     id: "22902",
@@ -13793,11 +13795,11 @@
   },
   {
     id: "22189",
-    nm: "PuÃ©rtolas"
+    nm: "Puértolas"
   },
   {
     id: "22190",
-    nm: "Pueyo de AraguÃ¡s, El"
+    nm: "Pueyo de Araguás, El"
   },
   {
     id: "22193",
@@ -13813,11 +13815,11 @@
   },
   {
     id: "22199",
-    nm: "SabiÃ±Ã¡nigo"
+    nm: "Sabiñánigo"
   },
   {
     id: "22200",
-    nm: "SahÃºn"
+    nm: "Sahún"
   },
   {
     id: "22201",
@@ -13833,7 +13835,7 @@
   },
   {
     id: "22204",
-    nm: "Sallent de GÃ¡llego"
+    nm: "Sallent de Gállego"
   },
   {
     id: "22205",
@@ -13849,7 +13851,7 @@
   },
   {
     id: "22206",
-    nm: "SangarrÃ©n"
+    nm: "Sangarrén"
   },
   {
     id: "22208",
@@ -13857,19 +13859,19 @@
   },
   {
     id: "22209",
-    nm: "Santa Cruz de la SerÃ³s"
+    nm: "Santa Cruz de la Serós"
   },
   {
     id: "22906",
-    nm: "Santa MarÃ­a de Dulcis"
+    nm: "Santa María de Dulcis"
   },
   {
     id: "22212",
-    nm: "Santaliestra y San QuÃ­lez"
+    nm: "Santaliestra y San Quílez"
   },
   {
     id: "22213",
-    nm: "SariÃ±ena"
+    nm: "Sariñena"
   },
   {
     id: "22214",
@@ -13885,7 +13887,7 @@
   },
   {
     id: "22218",
-    nm: "SenÃ©s de Alcubierre"
+    nm: "Senés de Alcubierre"
   },
   {
     id: "22220",
@@ -13893,11 +13895,11 @@
   },
   {
     id: "22221",
-    nm: "SesuÃ©"
+    nm: "Sesué"
   },
   {
     id: "22222",
-    nm: "SiÃ©tamo"
+    nm: "Siétamo"
   },
   {
     id: "22223",
@@ -13933,7 +13935,7 @@
   },
   {
     id: "22232",
-    nm: "Torralba de AragÃ³n"
+    nm: "Torralba de Aragón"
   },
   {
     id: "22233",
@@ -13949,7 +13951,7 @@
   },
   {
     id: "22236",
-    nm: "Torres de BarbuÃ©s"
+    nm: "Torres de Barbués"
   },
   {
     id: "22239",
@@ -13961,7 +13963,7 @@
   },
   {
     id: "22243",
-    nm: "Valle de BardajÃ­"
+    nm: "Valle de Bardají"
   },
   {
     id: "22901",
@@ -13977,7 +13979,7 @@
   },
   {
     id: "22909",
-    nm: "VencillÃ³n"
+    nm: "Vencillón"
   },
   {
     id: "22247",
@@ -13985,7 +13987,7 @@
   },
   {
     id: "22248",
-    nm: "ViciÃ©n"
+    nm: "Vicién"
   },
   {
     id: "22249",
@@ -13993,7 +13995,7 @@
   },
   {
     id: "22250",
-    nm: "VillanÃºa"
+    nm: "Villanúa"
   },
   {
     id: "22251",
@@ -14005,19 +14007,19 @@
   },
   {
     id: "22253",
-    nm: "YÃ©sero"
+    nm: "Yésero"
   },
   {
     id: "22254",
-    nm: "ZaidÃ­n"
+    nm: "Zaidín"
   },
   {
     id: "23001",
-    nm: "Albanchez de MÃ¡gina"
+    nm: "Albanchez de Mágina"
   },
   {
     id: "23002",
-    nm: "AlcalÃ¡ la Real"
+    nm: "Alcalá la Real"
   },
   {
     id: "23003",
@@ -14029,7 +14031,7 @@
   },
   {
     id: "23005",
-    nm: "AndÃºjar"
+    nm: "Andújar"
   },
   {
     id: "23006",
@@ -14053,11 +14055,11 @@
   },
   {
     id: "23010",
-    nm: "BailÃ©n"
+    nm: "Bailén"
   },
   {
     id: "23011",
-    nm: "BaÃ±os de la Encina"
+    nm: "Baños de la Encina"
   },
   {
     id: "23012",
@@ -14065,15 +14067,15 @@
   },
   {
     id: "23902",
-    nm: "Bedmar y GarcÃ­ez"
+    nm: "Bedmar y Garcíez"
   },
   {
     id: "23014",
-    nm: "BegÃ­jar"
+    nm: "Begíjar"
   },
   {
     id: "23015",
-    nm: "BÃ©lmez de la Moraleda"
+    nm: "Bélmez de la Moraleda"
   },
   {
     id: "23016",
@@ -14101,7 +14103,7 @@
   },
   {
     id: "23901",
-    nm: "CÃ¡rcheles"
+    nm: "Cárcheles"
   },
   {
     id: "23024",
@@ -14113,7 +14115,7 @@
   },
   {
     id: "23026",
-    nm: "Castillo de LocubÃ­n"
+    nm: "Castillo de Locubín"
   },
   {
     id: "23027",
@@ -14129,15 +14131,15 @@
   },
   {
     id: "23030",
-    nm: "ChilluÃ©var"
+    nm: "Chilluévar"
   },
   {
     id: "23031",
-    nm: "EscaÃ±uela"
+    nm: "Escañuela"
   },
   {
     id: "23032",
-    nm: "EspelÃºy"
+    nm: "Espelúy"
   },
   {
     id: "23033",
@@ -14153,15 +14155,15 @@
   },
   {
     id: "23037",
-    nm: "GÃ©nave"
+    nm: "Génave"
   },
   {
     id: "23038",
-    nm: "Guardia de JaÃ©n, La"
+    nm: "Guardia de Jaén, La"
   },
   {
     id: "23039",
-    nm: "GuarromÃ¡n"
+    nm: "Guarromán"
   },
   {
     id: "23041",
@@ -14201,7 +14203,7 @@
   },
   {
     id: "23050",
-    nm: "JaÃ©n"
+    nm: "Jaén"
   },
   {
     id: "23051",
@@ -14213,7 +14215,7 @@
   },
   {
     id: "23053",
-    nm: "JÃ³dar"
+    nm: "Jódar"
   },
   {
     id: "23040",
@@ -14233,7 +14235,7 @@
   },
   {
     id: "23057",
-    nm: "LupiÃ³n"
+    nm: "Lupión"
   },
   {
     id: "23058",
@@ -14249,11 +14251,11 @@
   },
   {
     id: "23061",
-    nm: "MengÃ­bar"
+    nm: "Mengíbar"
   },
   {
     id: "23062",
-    nm: "MontizÃ³n"
+    nm: "Montizón"
   },
   {
     id: "23063",
@@ -14281,11 +14283,11 @@
   },
   {
     id: "23070",
-    nm: "Pozo AlcÃ³n"
+    nm: "Pozo Alcón"
   },
   {
     id: "23071",
-    nm: "Puente de GÃ©nave"
+    nm: "Puente de Génave"
   },
   {
     id: "23072",
@@ -14321,7 +14323,7 @@
   },
   {
     id: "23080",
-    nm: "Santo TomÃ©"
+    nm: "Santo Tomé"
   },
   {
     id: "23081",
@@ -14357,15 +14359,15 @@
   },
   {
     id: "23091",
-    nm: "Torres de AlbÃ¡nchez"
+    nm: "Torres de Albánchez"
   },
   {
     id: "23092",
-    nm: "Ãšbeda"
+    nm: "�abeda"
   },
   {
     id: "23093",
-    nm: "ValdepeÃ±as de JaÃ©n"
+    nm: "Valdepeñas de Jaén"
   },
   {
     id: "23094",
@@ -14421,7 +14423,7 @@
   },
   {
     id: "24006",
-    nm: "ArdÃ³n"
+    nm: "Ardón"
   },
   {
     id: "24007",
@@ -14437,7 +14439,7 @@
   },
   {
     id: "24010",
-    nm: "BaÃ±eza, La"
+    nm: "Bañeza, La"
   },
   {
     id: "24011",
@@ -14461,7 +14463,7 @@
   },
   {
     id: "24017",
-    nm: "Bercianos del PÃ¡ramo"
+    nm: "Bercianos del Páramo"
   },
   {
     id: "24018",
@@ -14473,11 +14475,11 @@
   },
   {
     id: "24020",
-    nm: "Boca de HuÃ©rgano"
+    nm: "Boca de Huérgano"
   },
   {
     id: "24021",
-    nm: "BoÃ±ar"
+    nm: "Boñar"
   },
   {
     id: "24022",
@@ -14493,19 +14495,19 @@
   },
   {
     id: "24025",
-    nm: "BurÃ³n"
+    nm: "Burón"
   },
   {
     id: "24026",
-    nm: "Bustillo del PÃ¡ramo"
+    nm: "Bustillo del Páramo"
   },
   {
     id: "24027",
-    nm: "CabaÃ±as Raras"
+    nm: "Cabañas Raras"
   },
   {
     id: "24028",
-    nm: "Cabreros del RÃ­o"
+    nm: "Cabreros del Río"
   },
   {
     id: "24029",
@@ -14533,11 +14535,11 @@
   },
   {
     id: "24036",
-    nm: "CandÃ­n"
+    nm: "Candín"
   },
   {
     id: "24037",
-    nm: "CÃ¡rmenes"
+    nm: "Cármenes"
   },
   {
     id: "24038",
@@ -14557,7 +14559,7 @@
   },
   {
     id: "24042",
-    nm: "CastilfalÃ©"
+    nm: "Castilfalé"
   },
   {
     id: "24043",
@@ -14569,7 +14571,7 @@
   },
   {
     id: "24046",
-    nm: "CastrocalbÃ³n"
+    nm: "Castrocalbón"
   },
   {
     id: "24047",
@@ -14593,7 +14595,7 @@
   },
   {
     id: "24053",
-    nm: "Cebrones del RÃ­o"
+    nm: "Cebrones del Río"
   },
   {
     id: "24065",
@@ -14621,11 +14623,11 @@
   },
   {
     id: "24059",
-    nm: "CorullÃ³n"
+    nm: "Corullón"
   },
   {
     id: "24060",
-    nm: "CrÃ©menes"
+    nm: "Crémenes"
   },
   {
     id: "24061",
@@ -14677,7 +14679,7 @@
   },
   {
     id: "24076",
-    nm: "Garrafe de TorÃ­o"
+    nm: "Garrafe de Torío"
   },
   {
     id: "24077",
@@ -14701,11 +14703,11 @@
   },
   {
     id: "24082",
-    nm: "Hospital de Ã“rbigo"
+    nm: "Hospital de �rbigo"
   },
   {
     id: "24083",
-    nm: "IgÃ¼eÃ±a"
+    nm: "Igüeña"
   },
   {
     id: "24084",
@@ -14725,7 +14727,7 @@
   },
   {
     id: "24089",
-    nm: "LeÃ³n"
+    nm: "León"
   },
   {
     id: "24092",
@@ -14753,15 +14755,15 @@
   },
   {
     id: "24096",
-    nm: "MaraÃ±a"
+    nm: "Maraña"
   },
   {
     id: "24097",
-    nm: "MatadeÃ³n de los Oteros"
+    nm: "Matadeón de los Oteros"
   },
   {
     id: "24098",
-    nm: "Matallana de TorÃ­o"
+    nm: "Matallana de Torío"
   },
   {
     id: "24099",
@@ -14785,7 +14787,7 @@
   },
   {
     id: "24104",
-    nm: "OmaÃ±as, Las"
+    nm: "Omañas, Las"
   },
   {
     id: "24105",
@@ -14809,7 +14811,7 @@
   },
   {
     id: "24110",
-    nm: "PÃ¡ramo del Sil"
+    nm: "Páramo del Sil"
   },
   {
     id: "24112",
@@ -14817,11 +14819,11 @@
   },
   {
     id: "24113",
-    nm: "Pobladura de Pelayo GarcÃ­a"
+    nm: "Pobladura de Pelayo García"
   },
   {
     id: "24114",
-    nm: "Pola de GordÃ³n, La"
+    nm: "Pola de Gordón, La"
   },
   {
     id: "24115",
@@ -14829,15 +14831,15 @@
   },
   {
     id: "24116",
-    nm: "Posada de ValdeÃ³n"
+    nm: "Posada de Valdeón"
   },
   {
     id: "24117",
-    nm: "Pozuelo del PÃ¡ramo"
+    nm: "Pozuelo del Páramo"
   },
   {
     id: "24118",
-    nm: "Prado de la GuzpeÃ±a"
+    nm: "Prado de la Guzpeña"
   },
   {
     id: "24119",
@@ -14853,7 +14855,7 @@
   },
   {
     id: "24122",
-    nm: "Puente de Domingo FlÃ³rez"
+    nm: "Puente de Domingo Flórez"
   },
   {
     id: "24123",
@@ -14877,7 +14879,7 @@
   },
   {
     id: "24130",
-    nm: "RiaÃ±o"
+    nm: "Riaño"
   },
   {
     id: "24131",
@@ -14897,7 +14899,7 @@
   },
   {
     id: "24136",
-    nm: "Roperuelos del PÃ¡ramo"
+    nm: "Roperuelos del Páramo"
   },
   {
     id: "24137",
@@ -14905,19 +14907,19 @@
   },
   {
     id: "24139",
-    nm: "SahagÃºn"
+    nm: "Sahagún"
   },
   {
     id: "24141",
-    nm: "San AdriÃ¡n del Valle"
+    nm: "San Adrián del Valle"
   },
   {
     id: "24142",
-    nm: "San AndrÃ©s del Rabanedo"
+    nm: "San Andrés del Rabanedo"
   },
   {
     id: "24144",
-    nm: "San CristÃ³bal de la Polantera"
+    nm: "San Cristóbal de la Polantera"
   },
   {
     id: "24145",
@@ -14933,7 +14935,7 @@
   },
   {
     id: "24149",
-    nm: "San MillÃ¡n de los Caballeros"
+    nm: "San Millán de los Caballeros"
   },
   {
     id: "24150",
@@ -14945,7 +14947,7 @@
   },
   {
     id: "24151",
-    nm: "Santa Colomba de CurueÃ±o"
+    nm: "Santa Colomba de Curueño"
   },
   {
     id: "24152",
@@ -14961,19 +14963,19 @@
   },
   {
     id: "24155",
-    nm: "Santa MarÃ­a de la Isla"
+    nm: "Santa María de la Isla"
   },
   {
     id: "24158",
-    nm: "Santa MarÃ­a de OrdÃ¡s"
+    nm: "Santa María de Ordás"
   },
   {
     id: "24156",
-    nm: "Santa MarÃ­a del Monte de Cea"
+    nm: "Santa María del Monte de Cea"
   },
   {
     id: "24157",
-    nm: "Santa MarÃ­a del PÃ¡ramo"
+    nm: "Santa María del Páramo"
   },
   {
     id: "24159",
@@ -15009,7 +15011,7 @@
   },
   {
     id: "24167",
-    nm: "Soto y AmÃ­o"
+    nm: "Soto y Amío"
   },
   {
     id: "24168",
@@ -15041,7 +15043,7 @@
   },
   {
     id: "24174",
-    nm: "Urdiales del PÃ¡ramo"
+    nm: "Urdiales del Páramo"
   },
   {
     id: "24185",
@@ -15053,7 +15055,7 @@
   },
   {
     id: "24176",
-    nm: "Valdefuentes del PÃ¡ramo"
+    nm: "Valdefuentes del Páramo"
   },
   {
     id: "24177",
@@ -15065,7 +15067,7 @@
   },
   {
     id: "24179",
-    nm: "ValdepiÃ©lago"
+    nm: "Valdepiélago"
   },
   {
     id: "24180",
@@ -15145,7 +15147,7 @@
   },
   {
     id: "24205",
-    nm: "Villadangos del PÃ¡ramo"
+    nm: "Villadangos del Páramo"
   },
   {
     id: "24207",
@@ -15157,7 +15159,7 @@
   },
   {
     id: "24210",
-    nm: "VillagatÃ³n"
+    nm: "Villagatón"
   },
   {
     id: "24211",
@@ -15165,15 +15167,15 @@
   },
   {
     id: "24901",
-    nm: "VillamanÃ­n"
+    nm: "Villamanín"
   },
   {
     id: "24212",
-    nm: "VillamaÃ±Ã¡n"
+    nm: "Villamañán"
   },
   {
     id: "24213",
-    nm: "VillamartÃ­n de Don Sancho"
+    nm: "Villamartín de Don Sancho"
   },
   {
     id: "24214",
@@ -15185,7 +15187,7 @@
   },
   {
     id: "24216",
-    nm: "VillamontÃ¡n de la Valduerna"
+    nm: "Villamontán de la Valduerna"
   },
   {
     id: "24217",
@@ -15213,11 +15215,11 @@
   },
   {
     id: "24223",
-    nm: "Villarejo de Ã“rbigo"
+    nm: "Villarejo de �rbigo"
   },
   {
     id: "24224",
-    nm: "Villares de Ã“rbigo"
+    nm: "Villares de �rbigo"
   },
   {
     id: "24225",
@@ -15225,7 +15227,7 @@
   },
   {
     id: "24226",
-    nm: "VillaselÃ¡n"
+    nm: "Villaselán"
   },
   {
     id: "24227",
@@ -15241,7 +15243,7 @@
   },
   {
     id: "24230",
-    nm: "Zotes del PÃ¡ramo"
+    nm: "Zotes del Páramo"
   },
   {
     id: "25001",
@@ -15249,7 +15251,7 @@
   },
   {
     id: "25002",
-    nm: "Ã€ger"
+    nm: "ìger"
   },
   {
     id: "25003",
@@ -15261,19 +15263,19 @@
   },
   {
     id: "25004",
-    nm: "AlamÃºs, Els"
+    nm: "Alamús, Els"
   },
   {
     id: "25005",
-    nm: "AlÃ s i Cerc"
+    nm: "Alàs i Cerc"
   },
   {
     id: "25006",
-    nm: "AlbagÃ©s, L'"
+    nm: "Albagés, L'"
   },
   {
     id: "25007",
-    nm: "AlbatÃ rrec"
+    nm: "Albatàrrec"
   },
   {
     id: "25008",
@@ -15285,11 +15287,11 @@
   },
   {
     id: "25010",
-    nm: "AlcanÃ³"
+    nm: "Alcanó"
   },
   {
     id: "25011",
-    nm: "AlcarrÃ s"
+    nm: "Alcarràs"
   },
   {
     id: "25012",
@@ -15297,11 +15299,11 @@
   },
   {
     id: "25013",
-    nm: "AlfarrÃ s"
+    nm: "Alfarràs"
   },
   {
     id: "25014",
-    nm: "AlfÃ©s"
+    nm: "Alfés"
   },
   {
     id: "25015",
@@ -15329,7 +15331,7 @@
   },
   {
     id: "25022",
-    nm: "AlÃ²s de Balaguer"
+    nm: "Alòs de Balaguer"
   },
   {
     id: "25023",
@@ -15337,7 +15339,7 @@
   },
   {
     id: "25024",
-    nm: "Alt Ã€neu"
+    nm: "Alt ìneu"
   },
   {
     id: "25027",
@@ -15353,7 +15355,7 @@
   },
   {
     id: "25032",
-    nm: "ArsÃ¨guel"
+    nm: "Arsèguel"
   },
   {
     id: "25033",
@@ -15425,11 +15427,11 @@
   },
   {
     id: "25052",
-    nm: "BellvÃ­s"
+    nm: "Bellvís"
   },
   {
     id: "25053",
-    nm: "Benavent de SegriÃ "
+    nm: "Benavent de Segrià"
   },
   {
     id: "25055",
@@ -15437,7 +15439,7 @@
   },
   {
     id: "25057",
-    nm: "BÃ²rdes, Es"
+    nm: "Bòrdes, Es"
   },
   {
     id: "25058",
@@ -15445,7 +15447,7 @@
   },
   {
     id: "25059",
-    nm: "BossÃ²st"
+    nm: "Bossòst"
   },
   {
     id: "25056",
@@ -15457,7 +15459,7 @@
   },
   {
     id: "25061",
-    nm: "CabÃ³"
+    nm: "Cabó"
   },
   {
     id: "25062",
@@ -15485,11 +15487,11 @@
   },
   {
     id: "25069",
-    nm: "CastellÃ³ de Farfanya"
+    nm: "Castelló de Farfanya"
   },
   {
     id: "25070",
-    nm: "CastellserÃ "
+    nm: "Castellserà"
   },
   {
     id: "25071",
@@ -15501,7 +15503,7 @@
   },
   {
     id: "25073",
-    nm: "CerviÃ  de les Garrigues"
+    nm: "Cervià de les Garrigues"
   },
   {
     id: "25074",
@@ -15517,7 +15519,7 @@
   },
   {
     id: "25077",
-    nm: "Coll de NargÃ³"
+    nm: "Coll de Nargó"
   },
   {
     id: "25163",
@@ -15549,15 +15551,15 @@
   },
   {
     id: "25085",
-    nm: "EstarÃ s"
+    nm: "Estaràs"
   },
   {
     id: "25086",
-    nm: "Esterri d'Ã€neu"
+    nm: "Esterri d'ìneu"
   },
   {
     id: "25087",
-    nm: "Esterri de CardÃ³s"
+    nm: "Esterri de Cardós"
   },
   {
     id: "25089",
@@ -15565,7 +15567,7 @@
   },
   {
     id: "25908",
-    nm: "FÃ­gols i AlinyÃ "
+    nm: "Fígols i Alinyà"
   },
   {
     id: "25092",
@@ -15597,11 +15599,11 @@
   },
   {
     id: "25099",
-    nm: "GolmÃ©s"
+    nm: "Golmés"
   },
   {
     id: "25100",
-    nm: "GÃ³sol"
+    nm: "Gósol"
   },
   {
     id: "25101",
@@ -15625,11 +15627,11 @@
   },
   {
     id: "25109",
-    nm: "GuimerÃ "
+    nm: "Guimerà"
   },
   {
     id: "25903",
-    nm: "Guingueta d'Ã€neu, La"
+    nm: "Guingueta d'ìneu, La"
   },
   {
     id: "25110",
@@ -15641,7 +15643,7 @@
   },
   {
     id: "25115",
-    nm: "Isona i Conca DellÃ "
+    nm: "Isona i Conca Dellà"
   },
   {
     id: "25112",
@@ -15657,7 +15659,7 @@
   },
   {
     id: "25910",
-    nm: "Josa i TuixÃ©n"
+    nm: "Josa i Tuixén"
   },
   {
     id: "25118",
@@ -15689,7 +15691,7 @@
   },
   {
     id: "25126",
-    nm: "LlavorsÃ­"
+    nm: "Llavorsí"
   },
   {
     id: "25120",
@@ -15713,7 +15715,7 @@
   },
   {
     id: "25130",
-    nm: "MaldÃ "
+    nm: "Maldà"
   },
   {
     id: "25131",
@@ -15725,7 +15727,7 @@
   },
   {
     id: "25134",
-    nm: "MenÃ rguens"
+    nm: "Menàrguens"
   },
   {
     id: "25135",
@@ -15741,11 +15743,11 @@
   },
   {
     id: "25139",
-    nm: "MontellÃ  i Martinet"
+    nm: "Montellà i Martinet"
   },
   {
     id: "25140",
-    nm: "Montferrer i CastellbÃ²"
+    nm: "Montferrer i Castellbò"
   },
   {
     id: "25138",
@@ -15761,7 +15763,7 @@
   },
   {
     id: "25143",
-    nm: "MontornÃ¨s de Segarra"
+    nm: "Montornès de Segarra"
   },
   {
     id: "25145",
@@ -15773,11 +15775,11 @@
   },
   {
     id: "25146",
-    nm: "NavÃ¨s"
+    nm: "Navès"
   },
   {
     id: "25148",
-    nm: "OdÃ¨n"
+    nm: "Odèn"
   },
   {
     id: "25149",
@@ -15805,7 +15807,7 @@
   },
   {
     id: "25155",
-    nm: "OrganyÃ "
+    nm: "Organyà"
   },
   {
     id: "25156",
@@ -15813,7 +15815,7 @@
   },
   {
     id: "25157",
-    nm: "OssÃ³ de SiÃ³"
+    nm: "Ossó de Sió"
   },
   {
     id: "25158",
@@ -15829,15 +15831,15 @@
   },
   {
     id: "25166",
-    nm: "Pinell de SolsonÃ¨s"
+    nm: "Pinell de Solsonès"
   },
   {
     id: "25167",
-    nm: "PinÃ³s"
+    nm: "Pinós"
   },
   {
     id: "25911",
-    nm: "Plans de SiÃ³, Els"
+    nm: "Plans de Sió, Els"
   },
   {
     id: "25168",
@@ -15845,7 +15847,7 @@
   },
   {
     id: "25169",
-    nm: "Pobla de CÃ©rvoles, La"
+    nm: "Pobla de Cérvoles, La"
   },
   {
     id: "25171",
@@ -15885,7 +15887,7 @@
   },
   {
     id: "25180",
-    nm: "PuiggrÃ²s"
+    nm: "Puiggròs"
   },
   {
     id: "25181",
@@ -15917,15 +15919,15 @@
   },
   {
     id: "25189",
-    nm: "RossellÃ³"
+    nm: "Rosselló"
   },
   {
     id: "25190",
-    nm: "SalÃ s de Pallars"
+    nm: "Salàs de Pallars"
   },
   {
     id: "25191",
-    nm: "SanaÃ¼ja"
+    nm: "Sanaüja"
   },
   {
     id: "25196",
@@ -15941,11 +15943,11 @@
   },
   {
     id: "25193",
-    nm: "Sant LlorenÃ§ de Morunys"
+    nm: "Sant Llorenç de Morunys"
   },
   {
     id: "25902",
-    nm: "Sant MartÃ­ de Riucorb"
+    nm: "Sant Martí de Riucorb"
   },
   {
     id: "25194",
@@ -15965,11 +15967,11 @@
   },
   {
     id: "25035",
-    nm: "Sentiu de SiÃ³, La"
+    nm: "Sentiu de Sió, La"
   },
   {
     id: "25204",
-    nm: "SerÃ²s"
+    nm: "Seròs"
   },
   {
     id: "25203",
@@ -15981,7 +15983,7 @@
   },
   {
     id: "25206",
-    nm: "SolerÃ s, El"
+    nm: "Soleràs, El"
   },
   {
     id: "25207",
@@ -16017,11 +16019,11 @@
   },
   {
     id: "25217",
-    nm: "TÃ rrega"
+    nm: "Tàrrega"
   },
   {
     id: "25218",
-    nm: "TarrÃ©s"
+    nm: "Tarrés"
   },
   {
     id: "25219",
@@ -16029,11 +16031,11 @@
   },
   {
     id: "25220",
-    nm: "TÃ©rmens"
+    nm: "Térmens"
   },
   {
     id: "25221",
-    nm: "TÃ­rvia"
+    nm: "Tírvia"
   },
   {
     id: "25222",
@@ -16041,7 +16043,7 @@
   },
   {
     id: "25223",
-    nm: "TorÃ "
+    nm: "Torà"
   },
   {
     id: "25224",
@@ -16089,11 +16091,11 @@
   },
   {
     id: "25043",
-    nm: "Vall de BoÃ­, La"
+    nm: "Vall de Boí, La"
   },
   {
     id: "25901",
-    nm: "Vall de CardÃ³s"
+    nm: "Vall de Cardós"
   },
   {
     id: "25238",
@@ -16113,11 +16115,11 @@
   },
   {
     id: "25909",
-    nm: "Vansa i FÃ³rnols, La"
+    nm: "Vansa i Fórnols, La"
   },
   {
     id: "25242",
-    nm: "VerdÃº"
+    nm: "Verdú"
   },
   {
     id: "25243",
@@ -16133,7 +16135,7 @@
   },
   {
     id: "25247",
-    nm: "VilamÃ²s"
+    nm: "Vilamòs"
   },
   {
     id: "25248",
@@ -16149,11 +16151,11 @@
   },
   {
     id: "25250",
-    nm: "Vilanova de MeiÃ "
+    nm: "Vilanova de Meià"
   },
   {
     id: "25251",
-    nm: "Vilanova de SegriÃ "
+    nm: "Vilanova de Segrià"
   },
   {
     id: "25252",
@@ -16169,7 +16171,7 @@
   },
   {
     id: "26001",
-    nm: "Ãbalos"
+    nm: "Ábalos"
   },
   {
     id: "26002",
@@ -16177,7 +16179,7 @@
   },
   {
     id: "26003",
-    nm: "Aguilar del RÃ­o Alhama"
+    nm: "Aguilar del Río Alhama"
   },
   {
     id: "26004",
@@ -16205,7 +16207,7 @@
   },
   {
     id: "26010",
-    nm: "AlesÃ³n"
+    nm: "Alesón"
   },
   {
     id: "26011",
@@ -16241,7 +16243,7 @@
   },
   {
     id: "26019",
-    nm: "ArrÃºbal"
+    nm: "Arrúbal"
   },
   {
     id: "26020",
@@ -16257,19 +16259,19 @@
   },
   {
     id: "26023",
-    nm: "BadarÃ¡n"
+    nm: "Badarán"
   },
   {
     id: "26024",
-    nm: "BaÃ±ares"
+    nm: "Bañares"
   },
   {
     id: "26026",
-    nm: "BaÃ±os de RÃ­o TobÃ­a"
+    nm: "Baños de Río Tobía"
   },
   {
     id: "26025",
-    nm: "BaÃ±os de Rioja"
+    nm: "Baños de Rioja"
   },
   {
     id: "26027",
@@ -16297,7 +16299,7 @@
   },
   {
     id: "26033",
-    nm: "BriÃ±as"
+    nm: "Briñas"
   },
   {
     id: "26034",
@@ -16305,7 +16307,7 @@
   },
   {
     id: "26035",
-    nm: "CabezÃ³n de Cameros"
+    nm: "Cabezón de Cameros"
   },
   {
     id: "26036",
@@ -16313,7 +16315,7 @@
   },
   {
     id: "26037",
-    nm: "CamprovÃ­n"
+    nm: "Camprovín"
   },
   {
     id: "26038",
@@ -16321,15 +16323,15 @@
   },
   {
     id: "26039",
-    nm: "Canillas de RÃ­o Tuerto"
+    nm: "Canillas de Río Tuerto"
   },
   {
     id: "26040",
-    nm: "CaÃ±as"
+    nm: "Cañas"
   },
   {
     id: "26041",
-    nm: "CÃ¡rdenas"
+    nm: "Cárdenas"
   },
   {
     id: "26042",
@@ -16337,7 +16339,7 @@
   },
   {
     id: "26043",
-    nm: "CastaÃ±ares de Rioja"
+    nm: "Castañares de Rioja"
   },
   {
     id: "26044",
@@ -16353,11 +16355,11 @@
   },
   {
     id: "26047",
-    nm: "Cervera del RÃ­o Alhama"
+    nm: "Cervera del Río Alhama"
   },
   {
     id: "26048",
-    nm: "CidamÃ³n"
+    nm: "Cidamón"
   },
   {
     id: "26049",
@@ -16365,7 +16367,7 @@
   },
   {
     id: "26050",
-    nm: "CirueÃ±a"
+    nm: "Cirueña"
   },
   {
     id: "26051",
@@ -16373,7 +16375,7 @@
   },
   {
     id: "26052",
-    nm: "CordovÃ­n"
+    nm: "Cordovín"
   },
   {
     id: "26053",
@@ -16389,7 +16391,7 @@
   },
   {
     id: "26056",
-    nm: "Cuzcurrita de RÃ­o TirÃ³n"
+    nm: "Cuzcurrita de Río Tirón"
   },
   {
     id: "26057",
@@ -16425,7 +16427,7 @@
   },
   {
     id: "26065",
-    nm: "GalbÃ¡rruli"
+    nm: "Galbárruli"
   },
   {
     id: "26066",
@@ -16441,11 +16443,11 @@
   },
   {
     id: "26069",
-    nm: "GraÃ±Ã³n"
+    nm: "Grañón"
   },
   {
     id: "26070",
-    nm: "GrÃ¡valos"
+    nm: "Grávalos"
   },
   {
     id: "26071",
@@ -16457,11 +16459,11 @@
   },
   {
     id: "26073",
-    nm: "HerramÃ©lluri"
+    nm: "Herramélluri"
   },
   {
     id: "26074",
-    nm: "HervÃ­as"
+    nm: "Hervías"
   },
   {
     id: "26075",
@@ -16481,7 +16483,7 @@
   },
   {
     id: "26079",
-    nm: "HuÃ©rcanos"
+    nm: "Huércanos"
   },
   {
     id: "26080",
@@ -16489,7 +16491,7 @@
   },
   {
     id: "26081",
-    nm: "JalÃ³n de Cameros"
+    nm: "Jalón de Cameros"
   },
   {
     id: "26082",
@@ -16513,11 +16515,11 @@
   },
   {
     id: "26088",
-    nm: "Leza de RÃ­o Leza"
+    nm: "Leza de Río Leza"
   },
   {
     id: "26089",
-    nm: "LogroÃ±o"
+    nm: "Logroño"
   },
   {
     id: "26091",
@@ -16525,7 +16527,7 @@
   },
   {
     id: "26092",
-    nm: "ManjarrÃ©s"
+    nm: "Manjarrés"
   },
   {
     id: "26093",
@@ -16549,7 +16551,7 @@
   },
   {
     id: "26099",
-    nm: "Murillo de RÃ­o Leza"
+    nm: "Murillo de Río Leza"
   },
   {
     id: "26100",
@@ -16561,7 +16563,7 @@
   },
   {
     id: "26102",
-    nm: "NÃ¡jera"
+    nm: "Nájera"
   },
   {
     id: "26103",
@@ -16569,7 +16571,7 @@
   },
   {
     id: "26104",
-    nm: "NavajÃºn"
+    nm: "Navajún"
   },
   {
     id: "26105",
@@ -16585,11 +16587,11 @@
   },
   {
     id: "26109",
-    nm: "OchÃ¡nduri"
+    nm: "Ochánduri"
   },
   {
     id: "26108",
-    nm: "OcÃ³n"
+    nm: "Ocón"
   },
   {
     id: "26110",
@@ -16617,7 +16619,7 @@
   },
   {
     id: "26117",
-    nm: "PradejÃ³n"
+    nm: "Pradejón"
   },
   {
     id: "26118",
@@ -16625,7 +16627,7 @@
   },
   {
     id: "26119",
-    nm: "PrÃ©jano"
+    nm: "Préjano"
   },
   {
     id: "26120",
@@ -16649,7 +16651,7 @@
   },
   {
     id: "26125",
-    nm: "RincÃ³n de Soto"
+    nm: "Rincón de Soto"
   },
   {
     id: "26126",
@@ -16669,15 +16671,15 @@
   },
   {
     id: "26130",
-    nm: "San MillÃ¡n de la Cogolla"
+    nm: "San Millán de la Cogolla"
   },
   {
     id: "26131",
-    nm: "San MillÃ¡n de YÃ©cora"
+    nm: "San Millán de Yécora"
   },
   {
     id: "26132",
-    nm: "San RomÃ¡n de Cameros"
+    nm: "San Román de Cameros"
   },
   {
     id: "26139",
@@ -16721,7 +16723,7 @@
   },
   {
     id: "26145",
-    nm: "SotÃ©s"
+    nm: "Sotés"
   },
   {
     id: "26146",
@@ -16737,7 +16739,7 @@
   },
   {
     id: "26149",
-    nm: "TobÃ­a"
+    nm: "Tobía"
   },
   {
     id: "26150",
@@ -16773,7 +16775,7 @@
   },
   {
     id: "26160",
-    nm: "UruÃ±uela"
+    nm: "Uruñuela"
   },
   {
     id: "26161",
@@ -16781,7 +16783,7 @@
   },
   {
     id: "26162",
-    nm: "ValgaÃ±Ã³n"
+    nm: "Valgañón"
   },
   {
     id: "26163",
@@ -16853,7 +16855,7 @@
   },
   {
     id: "26180",
-    nm: "ZarratÃ³n"
+    nm: "Zarratón"
   },
   {
     id: "26181",
@@ -16861,11 +16863,11 @@
   },
   {
     id: "26183",
-    nm: "ZorraquÃ­n"
+    nm: "Zorraquín"
   },
   {
     id: "27001",
-    nm: "AbadÃ­n"
+    nm: "Abadín"
   },
   {
     id: "27002",
@@ -16889,7 +16891,7 @@
   },
   {
     id: "27006",
-    nm: "BecerreÃ¡"
+    nm: "Becerreá"
   },
   {
     id: "27007",
@@ -16897,7 +16899,7 @@
   },
   {
     id: "27008",
-    nm: "BÃ³veda"
+    nm: "Bóveda"
   },
   {
     id: "27902",
@@ -16957,7 +16959,7 @@
   },
   {
     id: "27023",
-    nm: "GuntÃ­n"
+    nm: "Guntín"
   },
   {
     id: "27024",
@@ -16965,11 +16967,11 @@
   },
   {
     id: "27026",
-    nm: "LÃ¡ncara"
+    nm: "Láncara"
   },
   {
     id: "27027",
-    nm: "LourenzÃ¡"
+    nm: "Lourenzá"
   },
   {
     id: "27028",
@@ -16981,7 +16983,7 @@
   },
   {
     id: "27030",
-    nm: "MondoÃ±edo"
+    nm: "Mondoñedo"
   },
   {
     id: "27031",
@@ -17001,7 +17003,7 @@
   },
   {
     id: "27035",
-    nm: "Negueira de MuÃ±iz"
+    nm: "Negueira de Muñiz"
   },
   {
     id: "27037",
@@ -17021,7 +17023,7 @@
   },
   {
     id: "27041",
-    nm: "PantÃ³n"
+    nm: "Pantón"
   },
   {
     id: "27042",
@@ -17029,7 +17031,7 @@
   },
   {
     id: "27043",
-    nm: "PÃ¡ramo, O"
+    nm: "Páramo, O"
   },
   {
     id: "27044",
@@ -17041,7 +17043,7 @@
   },
   {
     id: "27047",
-    nm: "Pobra do BrollÃ³n, A"
+    nm: "Pobra do Brollón, A"
   },
   {
     id: "27046",
@@ -17053,7 +17055,7 @@
   },
   {
     id: "27049",
-    nm: "PortomarÃ­n"
+    nm: "Portomarín"
   },
   {
     id: "27050",
@@ -17061,7 +17063,7 @@
   },
   {
     id: "27056",
-    nm: "RÃ¡bade"
+    nm: "Rábade"
   },
   {
     id: "27051",
@@ -17073,7 +17075,7 @@
   },
   {
     id: "27053",
-    nm: "Ribeira de PiquÃ­n"
+    nm: "Ribeira de Piquín"
   },
   {
     id: "27054",
@@ -17089,7 +17091,7 @@
   },
   {
     id: "27058",
-    nm: "SaviÃ±ao, O"
+    nm: "Saviñao, O"
   },
   {
     id: "27059",
@@ -17145,11 +17147,11 @@
   },
   {
     id: "28004",
-    nm: "Ãlamo, El"
+    nm: "Álamo, El"
   },
   {
     id: "28005",
-    nm: "AlcalÃ¡ de Henares"
+    nm: "Alcalá de Henares"
   },
   {
     id: "28006",
@@ -17157,7 +17159,7 @@
   },
   {
     id: "28007",
-    nm: "AlcorcÃ³n"
+    nm: "Alcorcón"
   },
   {
     id: "28008",
@@ -17269,7 +17271,7 @@
   },
   {
     id: "28035",
-    nm: "CarabaÃ±a"
+    nm: "Carabaña"
   },
   {
     id: "28036",
@@ -17289,11 +17291,11 @@
   },
   {
     id: "28051",
-    nm: "ChapinerÃ­a"
+    nm: "Chapinería"
   },
   {
     id: "28052",
-    nm: "ChinchÃ³n"
+    nm: "Chinchón"
   },
   {
     id: "28040",
@@ -17301,7 +17303,7 @@
   },
   {
     id: "28041",
-    nm: "CobeÃ±a"
+    nm: "Cobeña"
   },
   {
     id: "28046",
@@ -17369,7 +17371,7 @@
   },
   {
     id: "28060",
-    nm: "FuentidueÃ±a de Tajo"
+    nm: "Fuentidueña de Tajo"
   },
   {
     id: "28061",
@@ -17393,7 +17395,7 @@
   },
   {
     id: "28066",
-    nm: "GriÃ±Ã³n"
+    nm: "Griñón"
   },
   {
     id: "28067",
@@ -17425,7 +17427,7 @@
   },
   {
     id: "28074",
-    nm: "LeganÃ©s"
+    nm: "Leganés"
   },
   {
     id: "28075",
@@ -17489,11 +17491,11 @@
   },
   {
     id: "28091",
-    nm: "Morata de TajuÃ±a"
+    nm: "Morata de Tajuña"
   },
   {
     id: "28092",
-    nm: "MÃ³stoles"
+    nm: "Móstoles"
   },
   {
     id: "28093",
@@ -17513,7 +17515,7 @@
   },
   {
     id: "28097",
-    nm: "Navarredonda y San MamÃ©s"
+    nm: "Navarredonda y San Mamés"
   },
   {
     id: "28099",
@@ -17521,7 +17523,7 @@
   },
   {
     id: "28100",
-    nm: "Nuevo BaztÃ¡n"
+    nm: "Nuevo Baztán"
   },
   {
     id: "28101",
@@ -17529,7 +17531,7 @@
   },
   {
     id: "28102",
-    nm: "Orusco de TajuÃ±a"
+    nm: "Orusco de Tajuña"
   },
   {
     id: "28104",
@@ -17553,7 +17555,7 @@
   },
   {
     id: "28110",
-    nm: "Perales de TajuÃ±a"
+    nm: "Perales de Tajuña"
   },
   {
     id: "28111",
@@ -17569,11 +17571,11 @@
   },
   {
     id: "28114",
-    nm: "PiÃ±uÃ©car-Gandullas"
+    nm: "Piñuécar-Gandullas"
   },
   {
     id: "28115",
-    nm: "Pozuelo de AlarcÃ³n"
+    nm: "Pozuelo de Alarcón"
   },
   {
     id: "28116",
@@ -17581,7 +17583,7 @@
   },
   {
     id: "28117",
-    nm: "PrÃ¡dena del RincÃ³n"
+    nm: "Prádena del Rincón"
   },
   {
     id: "28118",
@@ -17597,11 +17599,11 @@
   },
   {
     id: "28120",
-    nm: "RascafrÃ­a"
+    nm: "Rascafría"
   },
   {
     id: "28121",
-    nm: "RedueÃ±a"
+    nm: "Redueña"
   },
   {
     id: "28122",
@@ -17633,7 +17635,7 @@
   },
   {
     id: "28129",
-    nm: "San AgustÃ­n del Guadalix"
+    nm: "San Agustín del Guadalix"
   },
   {
     id: "28130",
@@ -17645,19 +17647,19 @@
   },
   {
     id: "28132",
-    nm: "San MartÃ­n de la Vega"
+    nm: "San Martín de la Vega"
   },
   {
     id: "28133",
-    nm: "San MartÃ­n de Valdeiglesias"
+    nm: "San Martín de Valdeiglesias"
   },
   {
     id: "28134",
-    nm: "San SebastiÃ¡n de los Reyes"
+    nm: "San Sebastián de los Reyes"
   },
   {
     id: "28135",
-    nm: "Santa MarÃ­a de la Alameda"
+    nm: "Santa María de la Alameda"
   },
   {
     id: "28136",
@@ -17701,15 +17703,15 @@
   },
   {
     id: "28148",
-    nm: "TorrejÃ³n de Ardoz"
+    nm: "Torrejón de Ardoz"
   },
   {
     id: "28149",
-    nm: "TorrejÃ³n de la Calzada"
+    nm: "Torrejón de la Calzada"
   },
   {
     id: "28150",
-    nm: "TorrejÃ³n de Velasco"
+    nm: "Torrejón de Velasco"
   },
   {
     id: "28151",
@@ -17765,7 +17767,7 @@
   },
   {
     id: "28163",
-    nm: "ValdepiÃ©lagos"
+    nm: "Valdepiélagos"
   },
   {
     id: "28164",
@@ -17777,7 +17779,7 @@
   },
   {
     id: "28166",
-    nm: "Valverde de AlcalÃ¡"
+    nm: "Valverde de Alcalá"
   },
   {
     id: "28167",
@@ -17785,7 +17787,7 @@
   },
   {
     id: "28168",
-    nm: "VellÃ³n, El"
+    nm: "Vellón, El"
   },
   {
     id: "28169",
@@ -17817,7 +17819,7 @@
   },
   {
     id: "28176",
-    nm: "Villanueva de la CaÃ±ada"
+    nm: "Villanueva de la Cañada"
   },
   {
     id: "28178",
@@ -17833,11 +17835,11 @@
   },
   {
     id: "28180",
-    nm: "Villarejo de SalvanÃ©s"
+    nm: "Villarejo de Salvanés"
   },
   {
     id: "28181",
-    nm: "Villaviciosa de OdÃ³n"
+    nm: "Villaviciosa de Odón"
   },
   {
     id: "28182",
@@ -17853,7 +17855,7 @@
   },
   {
     id: "29002",
-    nm: "AlcaucÃ­n"
+    nm: "Alcaucín"
   },
   {
     id: "29003",
@@ -17869,19 +17871,19 @@
   },
   {
     id: "29006",
-    nm: "AlgatocÃ­n"
+    nm: "Algatocín"
   },
   {
     id: "29007",
-    nm: "AlhaurÃ­n de la Torre"
+    nm: "Alhaurín de la Torre"
   },
   {
     id: "29008",
-    nm: "AlhaurÃ­n el Grande"
+    nm: "Alhaurín el Grande"
   },
   {
     id: "29009",
-    nm: "AlmÃ¡char"
+    nm: "Almáchar"
   },
   {
     id: "29010",
@@ -17889,11 +17891,11 @@
   },
   {
     id: "29011",
-    nm: "AlmogÃ­a"
+    nm: "Almogía"
   },
   {
     id: "29012",
-    nm: "Ãlora"
+    nm: "Álora"
   },
   {
     id: "29013",
@@ -17909,7 +17911,7 @@
   },
   {
     id: "29016",
-    nm: "Ãrchez"
+    nm: "Árchez"
   },
   {
     id: "29017",
@@ -17937,15 +17939,15 @@
   },
   {
     id: "29023",
-    nm: "BenahavÃ­s"
+    nm: "Benahavís"
   },
   {
     id: "29024",
-    nm: "BenalaurÃ­a"
+    nm: "Benalauría"
   },
   {
     id: "29025",
-    nm: "BenalmÃ¡dena"
+    nm: "Benalmádena"
   },
   {
     id: "29026",
@@ -17957,11 +17959,11 @@
   },
   {
     id: "29028",
-    nm: "BenaojÃ¡n"
+    nm: "Benaoján"
   },
   {
     id: "29029",
-    nm: "BenarrabÃ¡"
+    nm: "Benarrabá"
   },
   {
     id: "29030",
@@ -17985,7 +17987,7 @@
   },
   {
     id: "29035",
-    nm: "CaÃ±ete la Real"
+    nm: "Cañete la Real"
   },
   {
     id: "29036",
@@ -17997,7 +17999,7 @@
   },
   {
     id: "29038",
-    nm: "CÃ¡rtama"
+    nm: "Cártama"
   },
   {
     id: "29039",
@@ -18013,7 +18015,7 @@
   },
   {
     id: "29042",
-    nm: "CoÃ­n"
+    nm: "Coín"
   },
   {
     id: "29043",
@@ -18025,7 +18027,7 @@
   },
   {
     id: "29045",
-    nm: "CÃ³mpeta"
+    nm: "Cómpeta"
   },
   {
     id: "29046",
@@ -18045,7 +18047,7 @@
   },
   {
     id: "29050",
-    nm: "CÃºtar"
+    nm: "Cútar"
   },
   {
     id: "29051",
@@ -18053,7 +18055,7 @@
   },
   {
     id: "29052",
-    nm: "FarajÃ¡n"
+    nm: "Faraján"
   },
   {
     id: "29053",
@@ -18069,7 +18071,7 @@
   },
   {
     id: "29056",
-    nm: "GaucÃ­n"
+    nm: "Gaucín"
   },
   {
     id: "29057",
@@ -18089,7 +18091,7 @@
   },
   {
     id: "29061",
-    nm: "IstÃ¡n"
+    nm: "Istán"
   },
   {
     id: "29062",
@@ -18097,7 +18099,7 @@
   },
   {
     id: "29063",
-    nm: "Jimera de LÃ­bar"
+    nm: "Jimera de Líbar"
   },
   {
     id: "29064",
@@ -18105,7 +18107,7 @@
   },
   {
     id: "29065",
-    nm: "JÃºzcar"
+    nm: "Júzcar"
   },
   {
     id: "29066",
@@ -18113,7 +18115,7 @@
   },
   {
     id: "29067",
-    nm: "MÃ¡laga"
+    nm: "Málaga"
   },
   {
     id: "29068",
@@ -18153,7 +18155,7 @@
   },
   {
     id: "29076",
-    nm: "OjÃ©n"
+    nm: "Ojén"
   },
   {
     id: "29077",
@@ -18173,7 +18175,7 @@
   },
   {
     id: "29082",
-    nm: "RincÃ³n de la Victoria"
+    nm: "Rincón de la Victoria"
   },
   {
     id: "29083",
@@ -18221,15 +18223,15 @@
   },
   {
     id: "29092",
-    nm: "TotalÃ¡n"
+    nm: "Totalán"
   },
   {
     id: "29093",
-    nm: "Valle de AbdalajÃ­s"
+    nm: "Valle de Abdalajís"
   },
   {
     id: "29094",
-    nm: "VÃ©lez-MÃ¡laga"
+    nm: "Vélez-Málaga"
   },
   {
     id: "29095",
@@ -18237,7 +18239,7 @@
   },
   {
     id: "29902",
-    nm: "Villanueva de la ConcepciÃ³n"
+    nm: "Villanueva de la Concepción"
   },
   {
     id: "29098",
@@ -18253,7 +18255,7 @@
   },
   {
     id: "29099",
-    nm: "ViÃ±uela"
+    nm: "Viñuela"
   },
   {
     id: "29100",
@@ -18265,11 +18267,11 @@
   },
   {
     id: "30002",
-    nm: "AbarÃ¡n"
+    nm: "Abarán"
   },
   {
     id: "30003",
-    nm: "Ãguilas"
+    nm: "Águilas"
   },
   {
     id: "30004",
@@ -18281,7 +18283,7 @@
   },
   {
     id: "30902",
-    nm: "AlcÃ¡zares, Los"
+    nm: "Alcázares, Los"
   },
   {
     id: "30006",
@@ -18317,7 +18319,7 @@
   },
   {
     id: "30014",
-    nm: "Campos del RÃ­o"
+    nm: "Campos del Río"
   },
   {
     id: "30015",
@@ -18329,11 +18331,11 @@
   },
   {
     id: "30017",
-    nm: "CehegÃ­n"
+    nm: "Cehegín"
   },
   {
     id: "30018",
-    nm: "CeutÃ­"
+    nm: "Ceutí"
   },
   {
     id: "30019",
@@ -18345,7 +18347,7 @@
   },
   {
     id: "30021",
-    nm: "Fuente Ãlamo de Murcia"
+    nm: "Fuente Álamo de Murcia"
   },
   {
     id: "30022",
@@ -18361,11 +18363,11 @@
   },
   {
     id: "30025",
-    nm: "LorquÃ­"
+    nm: "Lorquí"
   },
   {
     id: "30026",
-    nm: "MazarrÃ³n"
+    nm: "Mazarrón"
   },
   {
     id: "30027",
@@ -18385,7 +18387,7 @@
   },
   {
     id: "30031",
-    nm: "OjÃ³s"
+    nm: "Ojós"
   },
   {
     id: "30032",
@@ -18429,11 +18431,11 @@
   },
   {
     id: "30041",
-    nm: "UniÃ³n, La"
+    nm: "Unión, La"
   },
   {
     id: "30042",
-    nm: "Villanueva del RÃ­o Segura"
+    nm: "Villanueva del Río Segura"
   },
   {
     id: "30043",
@@ -18441,11 +18443,11 @@
   },
   {
     id: "31001",
-    nm: "AbÃ¡igar"
+    nm: "Abáigar"
   },
   {
     id: "31002",
-    nm: "AbÃ¡rzuza/Abartzuza"
+    nm: "Abárzuza/Abartzuza"
   },
   {
     id: "31003",
@@ -18465,11 +18467,11 @@
   },
   {
     id: "31007",
-    nm: "AdiÃ³s"
+    nm: "Adiós"
   },
   {
     id: "31008",
-    nm: "Aguilar de CodÃ©s"
+    nm: "Aguilar de Codés"
   },
   {
     id: "31009",
@@ -18477,7 +18479,7 @@
   },
   {
     id: "31011",
-    nm: "AllÃ­n/Allin"
+    nm: "Allín/Allin"
   },
   {
     id: "31012",
@@ -18489,11 +18491,11 @@
   },
   {
     id: "31013",
-    nm: "AmÃ©scoa Baja"
+    nm: "Améscoa Baja"
   },
   {
     id: "31014",
-    nm: "AncÃ­n/Antzin"
+    nm: "Ancín/Antzin"
   },
   {
     id: "31015",
@@ -18501,7 +18503,7 @@
   },
   {
     id: "31016",
-    nm: "AnsoÃ¡in/Antsoain"
+    nm: "Ansoáin/Antsoain"
   },
   {
     id: "31017",
@@ -18509,7 +18511,7 @@
   },
   {
     id: "31018",
-    nm: "AÃ±orbe"
+    nm: "Añorbe"
   },
   {
     id: "31019",
@@ -18577,11 +18579,11 @@
   },
   {
     id: "31035",
-    nm: "ArmaÃ±anzas"
+    nm: "Armañanzas"
   },
   {
     id: "31036",
-    nm: "ArrÃ³niz"
+    nm: "Arróniz"
   },
   {
     id: "31037",
@@ -18621,11 +18623,11 @@
   },
   {
     id: "31901",
-    nm: "BaraÃ±ain"
+    nm: "Barañain"
   },
   {
     id: "31045",
-    nm: "BarÃ¡soain"
+    nm: "Barásoain"
   },
   {
     id: "31046",
@@ -18657,7 +18659,7 @@
   },
   {
     id: "31052",
-    nm: "BelascoÃ¡in"
+    nm: "Belascoáin"
   },
   {
     id: "31250",
@@ -18669,7 +18671,7 @@
   },
   {
     id: "31905",
-    nm: "BeriÃ¡in"
+    nm: "Beriáin"
   },
   {
     id: "31902",
@@ -18697,7 +18699,7 @@
   },
   {
     id: "31057",
-    nm: "BuÃ±uel"
+    nm: "Buñuel"
   },
   {
     id: "31059",
@@ -18729,7 +18731,7 @@
   },
   {
     id: "31066",
-    nm: "CÃ¡rcar"
+    nm: "Cárcar"
   },
   {
     id: "31067",
@@ -18741,11 +18743,11 @@
   },
   {
     id: "31069",
-    nm: "CÃ¡seda"
+    nm: "Cáseda"
   },
   {
     id: "31070",
-    nm: "CastejÃ³n"
+    nm: "Castejón"
   },
   {
     id: "31071",
@@ -18757,7 +18759,7 @@
   },
   {
     id: "31072",
-    nm: "CintruÃ©nigo"
+    nm: "Cintruénigo"
   },
   {
     id: "31074",
@@ -18805,7 +18807,7 @@
   },
   {
     id: "31089",
-    nm: "EnÃ©riz/Eneritz"
+    nm: "Enériz/Eneritz"
   },
   {
     id: "31090",
@@ -18865,7 +18867,7 @@
   },
   {
     id: "31093",
-    nm: "EzcÃ¡roz/Ezkaroze"
+    nm: "Ezcároz/Ezkaroze"
   },
   {
     id: "31102",
@@ -18893,7 +18895,7 @@
   },
   {
     id: "31108",
-    nm: "FustiÃ±ana"
+    nm: "Fustiñana"
   },
   {
     id: "31109",
@@ -18905,7 +18907,7 @@
   },
   {
     id: "31111",
-    nm: "GalluÃ©s/Galoze"
+    nm: "Gallués/Galoze"
   },
   {
     id: "31112",
@@ -18917,7 +18919,7 @@
   },
   {
     id: "31114",
-    nm: "GarÃ­noain"
+    nm: "Garínoain"
   },
   {
     id: "31115",
@@ -18933,15 +18935,15 @@
   },
   {
     id: "31118",
-    nm: "GoÃ±i"
+    nm: "Goñi"
   },
   {
     id: "31119",
-    nm: "GÃ¼esa/Gorza"
+    nm: "Güesa/Gorza"
   },
   {
     id: "31120",
-    nm: "GuesÃ¡laz/Gesalatz"
+    nm: "Guesálaz/Gesalatz"
   },
   {
     id: "31121",
@@ -18965,7 +18967,7 @@
   },
   {
     id: "31125",
-    nm: "IgÃºzquiza"
+    nm: "Igúzquiza"
   },
   {
     id: "31126",
@@ -18973,7 +18975,7 @@
   },
   {
     id: "31127",
-    nm: "IraÃ±eta"
+    nm: "Irañeta"
   },
   {
     id: "31904",
@@ -19013,7 +19015,7 @@
   },
   {
     id: "31136",
-    nm: "JuslapeÃ±a"
+    nm: "Juslapeña"
   },
   {
     id: "31138",
@@ -19029,7 +19031,7 @@
   },
   {
     id: "31141",
-    nm: "LapoblaciÃ³n"
+    nm: "Lapoblación"
   },
   {
     id: "31142",
@@ -19045,7 +19047,7 @@
   },
   {
     id: "31145",
-    nm: "LazagurrÃ­a"
+    nm: "Lazagurría"
   },
   {
     id: "31146",
@@ -19077,7 +19079,7 @@
   },
   {
     id: "31152",
-    nm: "LerÃ­n"
+    nm: "Lerín"
   },
   {
     id: "31153",
@@ -19085,15 +19087,15 @@
   },
   {
     id: "31154",
-    nm: "LezÃ¡un"
+    nm: "Lezáun"
   },
   {
     id: "31155",
-    nm: "LiÃ©dena"
+    nm: "Liédena"
   },
   {
     id: "31156",
-    nm: "LizoÃ¡in-Arriasgoiti"
+    nm: "Lizoáin-Arriasgoiti"
   },
   {
     id: "31157",
@@ -19101,7 +19103,7 @@
   },
   {
     id: "31158",
-    nm: "LÃ³nguida/Longida"
+    nm: "Lónguida/Longida"
   },
   {
     id: "31159",
@@ -19117,11 +19119,11 @@
   },
   {
     id: "31161",
-    nm: "MaÃ±eru"
+    nm: "Mañeru"
   },
   {
     id: "31162",
-    nm: "MaraÃ±Ã³n"
+    nm: "Marañón"
   },
   {
     id: "31163",
@@ -19129,7 +19131,7 @@
   },
   {
     id: "31164",
-    nm: "MÃ©lida"
+    nm: "Mélida"
   },
   {
     id: "31165",
@@ -19141,7 +19143,7 @@
   },
   {
     id: "31167",
-    nm: "MendigorrÃ­a"
+    nm: "Mendigorría"
   },
   {
     id: "31168",
@@ -19193,11 +19195,11 @@
   },
   {
     id: "31180",
-    nm: "MuruzÃ¡bal"
+    nm: "Muruzábal"
   },
   {
     id: "31181",
-    nm: "NavascuÃ©s/Nabaskoze"
+    nm: "Navascués/Nabaskoze"
   },
   {
     id: "31182",
@@ -19205,7 +19207,7 @@
   },
   {
     id: "31088",
-    nm: "NoÃ¡in (Valle de Elorz)/Noain (Elortzibar)"
+    nm: "Noáin (Valle de Elorz)/Noain (Elortzibar)"
   },
   {
     id: "31183",
@@ -19213,7 +19215,7 @@
   },
   {
     id: "31185",
-    nm: "OchagavÃ­a/Otsagabia"
+    nm: "Ochagavía/Otsagabia"
   },
   {
     id: "31184",
@@ -19233,7 +19235,7 @@
   },
   {
     id: "31189",
-    nm: "Olazti/OlazagutÃ­a"
+    nm: "Olazti/Olazagutía"
   },
   {
     id: "31190",
@@ -19249,7 +19251,7 @@
   },
   {
     id: "31192",
-    nm: "OlÃ³riz/Oloritz"
+    nm: "Olóriz/Oloritz"
   },
   {
     id: "31195",
@@ -19261,7 +19263,7 @@
   },
   {
     id: "31197",
-    nm: "OrÃ­soain"
+    nm: "Orísoain"
   },
   {
     id: "31906",
@@ -19285,7 +19287,7 @@
   },
   {
     id: "31201",
-    nm: "Pamplona/IruÃ±a"
+    nm: "Pamplona/Iruña"
   },
   {
     id: "31202",
@@ -19293,7 +19295,7 @@
   },
   {
     id: "31203",
-    nm: "Petilla de AragÃ³n"
+    nm: "Petilla de Aragón"
   },
   {
     id: "31204",
@@ -19329,7 +19331,7 @@
   },
   {
     id: "31213",
-    nm: "SaldÃ­as"
+    nm: "Saldías"
   },
   {
     id: "31214",
@@ -19337,15 +19339,15 @@
   },
   {
     id: "31215",
-    nm: "San AdriÃ¡n"
+    nm: "San Adrián"
   },
   {
     id: "31217",
-    nm: "San MartÃ­n de Unx"
+    nm: "San Martín de Unx"
   },
   {
     id: "31216",
-    nm: "SangÃ¼esa/Zangoza"
+    nm: "Sangüesa/Zangoza"
   },
   {
     id: "31219",
@@ -19357,7 +19359,7 @@
   },
   {
     id: "31222",
-    nm: "SarriÃ©s/Sartze"
+    nm: "Sarriés/Sartze"
   },
   {
     id: "31223",
@@ -19389,11 +19391,11 @@
   },
   {
     id: "31230",
-    nm: "Torralba del RÃ­o"
+    nm: "Torralba del Río"
   },
   {
     id: "31231",
-    nm: "Torres del RÃ­o"
+    nm: "Torres del Río"
   },
   {
     id: "31232",
@@ -19413,7 +19415,7 @@
   },
   {
     id: "31235",
-    nm: "UjuÃ©"
+    nm: "Ujué"
   },
   {
     id: "31236",
@@ -19425,7 +19427,7 @@
   },
   {
     id: "31238",
-    nm: "UnzuÃ©/Untzue"
+    nm: "Unzué/Untzue"
   },
   {
     id: "31239",
@@ -19461,11 +19463,11 @@
   },
   {
     id: "31247",
-    nm: "UztÃ¡rroz/Uztarroze"
+    nm: "Uztárroz/Uztarroze"
   },
   {
     id: "31086",
-    nm: "Valle de EgÃ¼Ã©s/Eguesibar"
+    nm: "Valle de Egüés/Eguesibar"
   },
   {
     id: "31260",
@@ -19481,7 +19483,7 @@
   },
   {
     id: "31252",
-    nm: "VidÃ¡ngoz/Bidankoze"
+    nm: "Vidángoz/Bidankoze"
   },
   {
     id: "31254",
@@ -19489,7 +19491,7 @@
   },
   {
     id: "31255",
-    nm: "Villamayor de MonjardÃ­n"
+    nm: "Villamayor de Monjardín"
   },
   {
     id: "31257",
@@ -19525,7 +19527,7 @@
   },
   {
     id: "31265",
-    nm: "ZÃºÃ±iga"
+    nm: "Zúñiga"
   },
   {
     id: "32001",
@@ -19541,7 +19543,7 @@
   },
   {
     id: "32004",
-    nm: "AviÃ³n"
+    nm: "Avión"
   },
   {
     id: "32005",
@@ -19553,11 +19555,11 @@
   },
   {
     id: "32007",
-    nm: "BaÃ±os de Molgas"
+    nm: "Baños de Molgas"
   },
   {
     id: "32008",
-    nm: "BarbadÃ¡s"
+    nm: "Barbadás"
   },
   {
     id: "32009",
@@ -19577,7 +19579,7 @@
   },
   {
     id: "32013",
-    nm: "BoborÃ¡s"
+    nm: "Boborás"
   },
   {
     id: "32014",
@@ -19589,7 +19591,7 @@
   },
   {
     id: "32016",
-    nm: "Calvos de RandÃ­n"
+    nm: "Calvos de Randín"
   },
   {
     id: "32018",
@@ -19601,7 +19603,7 @@
   },
   {
     id: "32019",
-    nm: "CarballiÃ±o, O"
+    nm: "Carballiño, O"
   },
   {
     id: "32020",
@@ -19609,7 +19611,7 @@
   },
   {
     id: "32022",
-    nm: "Castrelo de MiÃ±o"
+    nm: "Castrelo de Miño"
   },
   {
     id: "32021",
@@ -19657,7 +19659,7 @@
   },
   {
     id: "32034",
-    nm: "GudiÃ±a, A"
+    nm: "Gudiña, A"
   },
   {
     id: "32035",
@@ -19697,7 +19699,7 @@
   },
   {
     id: "32046",
-    nm: "MelÃ³n"
+    nm: "Melón"
   },
   {
     id: "32047",
@@ -19717,15 +19719,15 @@
   },
   {
     id: "32051",
-    nm: "MuÃ­Ã±os"
+    nm: "Muíños"
   },
   {
     id: "32052",
-    nm: "Nogueira de RamuÃ­n"
+    nm: "Nogueira de Ramuín"
   },
   {
     id: "32053",
-    nm: "OÃ­mbra"
+    nm: "Oímbra"
   },
   {
     id: "32054",
@@ -19753,11 +19755,11 @@
   },
   {
     id: "32060",
-    nm: "PetÃ­n"
+    nm: "Petín"
   },
   {
     id: "32061",
-    nm: "PiÃ±or"
+    nm: "Piñor"
   },
   {
     id: "32063",
@@ -19773,7 +19775,7 @@
   },
   {
     id: "32065",
-    nm: "PunxÃ­n"
+    nm: "Punxín"
   },
   {
     id: "32066",
@@ -19785,7 +19787,7 @@
   },
   {
     id: "32068",
-    nm: "RamirÃ¡s"
+    nm: "Ramirás"
   },
   {
     id: "32069",
@@ -19793,15 +19795,15 @@
   },
   {
     id: "32071",
-    nm: "RiÃ³s"
+    nm: "Riós"
   },
   {
     id: "32072",
-    nm: "RÃºa, A"
+    nm: "Rúa, A"
   },
   {
     id: "32073",
-    nm: "RubiÃ¡"
+    nm: "Rubiá"
   },
   {
     id: "32074",
@@ -19809,7 +19811,7 @@
   },
   {
     id: "32075",
-    nm: "San Cibrao das ViÃ±as"
+    nm: "San Cibrao das Viñas"
   },
   {
     id: "32076",
@@ -19817,11 +19819,11 @@
   },
   {
     id: "32070",
-    nm: "San XoÃ¡n de RÃ­o"
+    nm: "San Xoán de Río"
   },
   {
     id: "32077",
-    nm: "SandiÃ¡s"
+    nm: "Sandiás"
   },
   {
     id: "32078",
@@ -19837,7 +19839,7 @@
   },
   {
     id: "32081",
-    nm: "ToÃ©n"
+    nm: "Toén"
   },
   {
     id: "32082",
@@ -19853,7 +19855,7 @@
   },
   {
     id: "32085",
-    nm: "VerÃ­n"
+    nm: "Verín"
   },
   {
     id: "32086",
@@ -19861,11 +19863,11 @@
   },
   {
     id: "32087",
-    nm: "VilamarÃ­n"
+    nm: "Vilamarín"
   },
   {
     id: "32088",
-    nm: "VilamartÃ­n de Valdeorras"
+    nm: "Vilamartín de Valdeorras"
   },
   {
     id: "32089",
@@ -19877,11 +19879,11 @@
   },
   {
     id: "32091",
-    nm: "VilardevÃ³s"
+    nm: "Vilardevós"
   },
   {
     id: "32092",
-    nm: "VilariÃ±o de Conso"
+    nm: "Vilariño de Conso"
   },
   {
     id: "32032",
@@ -19889,7 +19891,7 @@
   },
   {
     id: "32036",
-    nm: "Xunqueira de AmbÃ­a"
+    nm: "Xunqueira de Ambía"
   },
   {
     id: "32037",
@@ -19909,7 +19911,7 @@
   },
   {
     id: "33004",
-    nm: "AvilÃ©s"
+    nm: "Avilés"
   },
   {
     id: "33005",
@@ -19937,7 +19939,7 @@
   },
   {
     id: "33012",
-    nm: "Cangas de OnÃ­s"
+    nm: "Cangas de Onís"
   },
   {
     id: "33011",
@@ -19949,7 +19951,7 @@
   },
   {
     id: "33014",
-    nm: "CarreÃ±o"
+    nm: "Carreño"
   },
   {
     id: "33015",
@@ -19957,7 +19959,7 @@
   },
   {
     id: "33016",
-    nm: "CastrillÃ³n"
+    nm: "Castrillón"
   },
   {
     id: "33017",
@@ -19965,7 +19967,7 @@
   },
   {
     id: "33018",
-    nm: "CoaÃ±a"
+    nm: "Coaña"
   },
   {
     id: "33019",
@@ -19981,7 +19983,7 @@
   },
   {
     id: "33022",
-    nm: "DegaÃ±a"
+    nm: "Degaña"
   },
   {
     id: "33023",
@@ -19989,11 +19991,11 @@
   },
   {
     id: "33024",
-    nm: "GijÃ³n"
+    nm: "Gijón"
   },
   {
     id: "33025",
-    nm: "GozÃ³n"
+    nm: "Gozón"
   },
   {
     id: "33026",
@@ -20041,11 +20043,11 @@
   },
   {
     id: "33038",
-    nm: "MorcÃ­n"
+    nm: "Morcín"
   },
   {
     id: "33039",
-    nm: "Muros de NalÃ³n"
+    nm: "Muros de Nalón"
   },
   {
     id: "33040",
@@ -20057,11 +20059,11 @@
   },
   {
     id: "33042",
-    nm: "NoreÃ±a"
+    nm: "Noreña"
   },
   {
     id: "33043",
-    nm: "OnÃ­s"
+    nm: "Onís"
   },
   {
     id: "33044",
@@ -20073,11 +20075,11 @@
   },
   {
     id: "33046",
-    nm: "PeÃ±amellera Alta"
+    nm: "Peñamellera Alta"
   },
   {
     id: "33047",
-    nm: "PeÃ±amellera Baja"
+    nm: "Peñamellera Baja"
   },
   {
     id: "33048",
@@ -20085,7 +20087,7 @@
   },
   {
     id: "33049",
-    nm: "PiloÃ±a"
+    nm: "Piloña"
   },
   {
     id: "33050",
@@ -20101,7 +20103,7 @@
   },
   {
     id: "33053",
-    nm: "QuirÃ³s"
+    nm: "Quirós"
   },
   {
     id: "33054",
@@ -20129,11 +20131,11 @@
   },
   {
     id: "33061",
-    nm: "San MartÃ­n de Oscos"
+    nm: "San Martín de Oscos"
   },
   {
     id: "33060",
-    nm: "San MartÃ­n del Rey Aurelio"
+    nm: "San Martín del Rey Aurelio"
   },
   {
     id: "33063",
@@ -20185,7 +20187,7 @@
   },
   {
     id: "33034",
-    nm: "ValdÃ©s"
+    nm: "Valdés"
   },
   {
     id: "33074",
@@ -20201,7 +20203,7 @@
   },
   {
     id: "33077",
-    nm: "VillayÃ³n"
+    nm: "Villayón"
   },
   {
     id: "33078",
@@ -20241,7 +20243,7 @@
   },
   {
     id: "34012",
-    nm: "AntigÃ¼edad"
+    nm: "Antigüedad"
   },
   {
     id: "34015",
@@ -20265,23 +20267,23 @@
   },
   {
     id: "34022",
-    nm: "BaltanÃ¡s"
+    nm: "Baltanás"
   },
   {
     id: "34024",
-    nm: "BaquerÃ­n de Campos"
+    nm: "Baquerín de Campos"
   },
   {
     id: "34025",
-    nm: "BÃ¡rcena de Campos"
+    nm: "Bárcena de Campos"
   },
   {
     id: "34027",
-    nm: "Barruelo de SantullÃ¡n"
+    nm: "Barruelo de Santullán"
   },
   {
     id: "34028",
-    nm: "BÃ¡scones de Ojeda"
+    nm: "Báscones de Ojeda"
   },
   {
     id: "34029",
@@ -20309,7 +20311,7 @@
   },
   {
     id: "34036",
-    nm: "BraÃ±osera"
+    nm: "Brañosera"
   },
   {
     id: "34037",
@@ -20321,7 +20323,7 @@
   },
   {
     id: "34039",
-    nm: "Bustillo del PÃ¡ramo de CarriÃ³n"
+    nm: "Bustillo del Páramo de Carrión"
   },
   {
     id: "34041",
@@ -20337,11 +20339,11 @@
   },
   {
     id: "34046",
-    nm: "CardeÃ±osa de Volpejera"
+    nm: "Cardeñosa de Volpejera"
   },
   {
     id: "34047",
-    nm: "CarriÃ³n de los Condes"
+    nm: "Carrión de los Condes"
   },
   {
     id: "34048",
@@ -20349,7 +20351,7 @@
   },
   {
     id: "34049",
-    nm: "CastrejÃ³n de la PeÃ±a"
+    nm: "Castrejón de la Peña"
   },
   {
     id: "34050",
@@ -20417,7 +20419,7 @@
   },
   {
     id: "34069",
-    nm: "DueÃ±as"
+    nm: "Dueñas"
   },
   {
     id: "34070",
@@ -20433,11 +20435,11 @@
   },
   {
     id: "34073",
-    nm: "Fresno del RÃ­o"
+    nm: "Fresno del Río"
   },
   {
     id: "34074",
-    nm: "FrÃ³mista"
+    nm: "Frómista"
   },
   {
     id: "34076",
@@ -20461,7 +20463,7 @@
   },
   {
     id: "34082",
-    nm: "HÃ©rmedes de Cerrato"
+    nm: "Hérmedes de Cerrato"
   },
   {
     id: "34083",
@@ -20469,7 +20471,7 @@
   },
   {
     id: "34084",
-    nm: "Herrera de ValdecaÃ±as"
+    nm: "Herrera de Valdecañas"
   },
   {
     id: "34086",
@@ -20545,7 +20547,7 @@
   },
   {
     id: "34108",
-    nm: "MonzÃ³n de Campos"
+    nm: "Monzón de Campos"
   },
   {
     id: "34109",
@@ -20553,7 +20555,7 @@
   },
   {
     id: "34110",
-    nm: "MudÃ¡"
+    nm: "Mudá"
   },
   {
     id: "34112",
@@ -20585,7 +20587,7 @@
   },
   {
     id: "34122",
-    nm: "PÃ¡ramo de Boedo"
+    nm: "Páramo de Boedo"
   },
   {
     id: "34123",
@@ -20609,27 +20611,27 @@
   },
   {
     id: "34904",
-    nm: "PernÃ­a, La"
+    nm: "Pernía, La"
   },
   {
     id: "34129",
-    nm: "Pino del RÃ­o"
+    nm: "Pino del Río"
   },
   {
     id: "34130",
-    nm: "PiÃ±a de Campos"
+    nm: "Piña de Campos"
   },
   {
     id: "34131",
-    nm: "PoblaciÃ³n de Arroyo"
+    nm: "Población de Arroyo"
   },
   {
     id: "34132",
-    nm: "PoblaciÃ³n de Campos"
+    nm: "Población de Campos"
   },
   {
     id: "34133",
-    nm: "PoblaciÃ³n de Cerrato"
+    nm: "Población de Cerrato"
   },
   {
     id: "34134",
@@ -20649,7 +20651,7 @@
   },
   {
     id: "34139",
-    nm: "PrÃ¡danos de Ojeda"
+    nm: "Prádanos de Ojeda"
   },
   {
     id: "34140",
@@ -20661,7 +20663,7 @@
   },
   {
     id: "34143",
-    nm: "Quintanilla de OnsoÃ±a"
+    nm: "Quintanilla de Onsoña"
   },
   {
     id: "34146",
@@ -20677,7 +20679,7 @@
   },
   {
     id: "34151",
-    nm: "Respenda de la PeÃ±a"
+    nm: "Respenda de la Peña"
   },
   {
     id: "34152",
@@ -20697,7 +20699,7 @@
   },
   {
     id: "34157",
-    nm: "SaldaÃ±a"
+    nm: "Saldaña"
   },
   {
     id: "34158",
@@ -20705,23 +20707,23 @@
   },
   {
     id: "34159",
-    nm: "San CebriÃ¡n de Campos"
+    nm: "San Cebrián de Campos"
   },
   {
     id: "34160",
-    nm: "San CebriÃ¡n de MudÃ¡"
+    nm: "San Cebrián de Mudá"
   },
   {
     id: "34161",
-    nm: "San CristÃ³bal de Boedo"
+    nm: "San Cristóbal de Boedo"
   },
   {
     id: "34163",
-    nm: "San MamÃ©s de Campos"
+    nm: "San Mamés de Campos"
   },
   {
     id: "34165",
-    nm: "San RomÃ¡n de la Cuba"
+    nm: "San Román de la Cuba"
   },
   {
     id: "34167",
@@ -20733,15 +20735,15 @@
   },
   {
     id: "34169",
-    nm: "SantervÃ¡s de la Vega"
+    nm: "Santervás de la Vega"
   },
   {
     id: "34170",
-    nm: "SantibÃ¡Ã±ez de Ecla"
+    nm: "Santibáñez de Ecla"
   },
   {
     id: "34171",
-    nm: "SantibÃ¡Ã±ez de la PeÃ±a"
+    nm: "Santibáñez de la Peña"
   },
   {
     id: "34174",
@@ -20757,7 +20759,7 @@
   },
   {
     id: "34176",
-    nm: "SotobaÃ±ado y Priorato"
+    nm: "Sotobañado y Priorato"
   },
   {
     id: "34178",
@@ -20769,7 +20771,7 @@
   },
   {
     id: "34180",
-    nm: "TÃ¡mara de Campos"
+    nm: "Támara de Campos"
   },
   {
     id: "34181",
@@ -20781,7 +20783,7 @@
   },
   {
     id: "34184",
-    nm: "TorremormojÃ³n"
+    nm: "Torremormojón"
   },
   {
     id: "34185",
@@ -20797,7 +20799,7 @@
   },
   {
     id: "34190",
-    nm: "ValderrÃ¡bano"
+    nm: "Valderrábano"
   },
   {
     id: "34192",
@@ -20813,11 +20815,11 @@
   },
   {
     id: "34199",
-    nm: "Velilla del RÃ­o CarriÃ³n"
+    nm: "Velilla del Río Carrión"
   },
   {
     id: "34023",
-    nm: "Venta de BaÃ±os"
+    nm: "Venta de Baños"
   },
   {
     id: "34201",
@@ -20849,7 +20851,7 @@
   },
   {
     id: "34210",
-    nm: "VillahÃ¡n"
+    nm: "Villahán"
   },
   {
     id: "34211",
@@ -20865,15 +20867,15 @@
   },
   {
     id: "34215",
-    nm: "VillalcÃ¡zar de Sirga"
+    nm: "Villalcázar de Sirga"
   },
   {
     id: "34216",
-    nm: "VillalcÃ³n"
+    nm: "Villalcón"
   },
   {
     id: "34217",
-    nm: "VillalobÃ³n"
+    nm: "Villalobón"
   },
   {
     id: "34218",
@@ -20881,7 +20883,7 @@
   },
   {
     id: "34220",
-    nm: "VillamartÃ­n de Campos"
+    nm: "Villamartín de Campos"
   },
   {
     id: "34221",
@@ -20909,7 +20911,7 @@
   },
   {
     id: "34228",
-    nm: "VillanuÃ±o de Valdavia"
+    nm: "Villanuño de Valdavia"
   },
   {
     id: "34229",
@@ -20921,7 +20923,7 @@
   },
   {
     id: "34231",
-    nm: "VillarrabÃ©"
+    nm: "Villarrabé"
   },
   {
     id: "34232",
@@ -20949,7 +20951,7 @@
   },
   {
     id: "34240",
-    nm: "VillerÃ­as de Campos"
+    nm: "Villerías de Campos"
   },
   {
     id: "34241",
@@ -20965,7 +20967,7 @@
   },
   {
     id: "34245",
-    nm: "Villota del PÃ¡ramo"
+    nm: "Villota del Páramo"
   },
   {
     id: "34246",
@@ -20977,11 +20979,11 @@
   },
   {
     id: "35002",
-    nm: "AgÃ¼imes"
+    nm: "Agüimes"
   },
   {
     id: "35020",
-    nm: "Aldea de San NicolÃ¡s, La"
+    nm: "Aldea de San Nicolás, La"
   },
   {
     id: "35003",
@@ -21009,11 +21011,11 @@
   },
   {
     id: "35009",
-    nm: "GÃ¡ldar"
+    nm: "Gáldar"
   },
   {
     id: "35010",
-    nm: "HarÃ­a"
+    nm: "Haría"
   },
   {
     id: "35011",
@@ -21021,7 +21023,7 @@
   },
   {
     id: "35012",
-    nm: "MogÃ¡n"
+    nm: "Mogán"
   },
   {
     id: "35013",
@@ -21033,7 +21035,7 @@
   },
   {
     id: "35015",
-    nm: "PÃ¡jara"
+    nm: "Pájara"
   },
   {
     id: "35016",
@@ -21045,23 +21047,23 @@
   },
   {
     id: "35018",
-    nm: "San BartolomÃ©"
+    nm: "San Bartolomé"
   },
   {
     id: "35019",
-    nm: "San BartolomÃ© de Tirajana"
+    nm: "San Bartolomé de Tirajana"
   },
   {
     id: "35021",
-    nm: "Santa BrÃ­gida"
+    nm: "Santa Brígida"
   },
   {
     id: "35022",
-    nm: "Santa LucÃ­a de Tirajana"
+    nm: "Santa Lucía de Tirajana"
   },
   {
     id: "35023",
-    nm: "Santa MarÃ­a de GuÃ­a de Gran Canaria"
+    nm: "Santa María de Guía de Gran Canaria"
   },
   {
     id: "35024",
@@ -21081,7 +21083,7 @@
   },
   {
     id: "35028",
-    nm: "TÃ­as"
+    nm: "Tías"
   },
   {
     id: "35029",
@@ -21145,7 +21147,7 @@
   },
   {
     id: "36009",
-    nm: "CaÃ±iza, A"
+    nm: "Cañiza, A"
   },
   {
     id: "36010",
@@ -21173,7 +21175,7 @@
   },
   {
     id: "36016",
-    nm: "DozÃ³n"
+    nm: "Dozón"
   },
   {
     id: "36017",
@@ -21205,7 +21207,7 @@
   },
   {
     id: "36024",
-    nm: "LalÃ­n"
+    nm: "Lalín"
   },
   {
     id: "36025",
@@ -21213,11 +21215,11 @@
   },
   {
     id: "36026",
-    nm: "MarÃ­n"
+    nm: "Marín"
   },
   {
     id: "36027",
-    nm: "MeaÃ±o"
+    nm: "Meaño"
   },
   {
     id: "36028",
@@ -21225,7 +21227,7 @@
   },
   {
     id: "36029",
-    nm: "MoaÃ±a"
+    nm: "Moaña"
   },
   {
     id: "36030",
@@ -21237,7 +21239,7 @@
   },
   {
     id: "36032",
-    nm: "MoraÃ±a"
+    nm: "Moraña"
   },
   {
     id: "36033",
@@ -21249,7 +21251,7 @@
   },
   {
     id: "36035",
-    nm: "NigrÃ¡n"
+    nm: "Nigrán"
   },
   {
     id: "36036",
@@ -21257,7 +21259,7 @@
   },
   {
     id: "36037",
-    nm: "Pazos de BorbÃ©n"
+    nm: "Pazos de Borbén"
   },
   {
     id: "36041",
@@ -21281,7 +21283,7 @@
   },
   {
     id: "36039",
-    nm: "PorriÃ±o, O"
+    nm: "Porriño, O"
   },
   {
     id: "36040",
@@ -21309,7 +21311,7 @@
   },
   {
     id: "36050",
-    nm: "Salvaterra de MiÃ±o"
+    nm: "Salvaterra de Miño"
   },
   {
     id: "36051",
@@ -21325,7 +21327,7 @@
   },
   {
     id: "36054",
-    nm: "TomiÃ±o"
+    nm: "Tomiño"
   },
   {
     id: "36055",
@@ -21349,7 +21351,7 @@
   },
   {
     id: "36060",
-    nm: "VilagarcÃ­a de Arousa"
+    nm: "Vilagarcía de Arousa"
   },
   {
     id: "36061",
@@ -21373,7 +21375,7 @@
   },
   {
     id: "37005",
-    nm: "Alameda de GardÃ³n, La"
+    nm: "Alameda de Gardón, La"
   },
   {
     id: "37006",
@@ -21397,7 +21399,7 @@
   },
   {
     id: "37011",
-    nm: "AlberguerÃ­a de ArgaÃ±Ã¡n, La"
+    nm: "Alberguería de Argañán, La"
   },
   {
     id: "37012",
@@ -21413,7 +21415,7 @@
   },
   {
     id: "37014",
-    nm: "AldeadÃ¡vila de la Ribera"
+    nm: "Aldeadávila de la Ribera"
   },
   {
     id: "37016",
@@ -21453,7 +21455,7 @@
   },
   {
     id: "37025",
-    nm: "Aldehuela de la BÃ³veda"
+    nm: "Aldehuela de la Bóveda"
   },
   {
     id: "37026",
@@ -21473,11 +21475,11 @@
   },
   {
     id: "37030",
-    nm: "AÃ±over de Tormes"
+    nm: "Añover de Tormes"
   },
   {
     id: "37031",
-    nm: "Arabayona de MÃ³gica"
+    nm: "Arabayona de Mógica"
   },
   {
     id: "37032",
@@ -21505,7 +21507,7 @@
   },
   {
     id: "37039",
-    nm: "BaÃ±obÃ¡rez"
+    nm: "Bañobárez"
   },
   {
     id: "37040",
@@ -21529,11 +21531,11 @@
   },
   {
     id: "37046",
-    nm: "BÃ©jar"
+    nm: "Béjar"
   },
   {
     id: "37047",
-    nm: "BeleÃ±a"
+    nm: "Beleña"
   },
   {
     id: "37049",
@@ -21553,7 +21555,7 @@
   },
   {
     id: "37054",
-    nm: "BodÃ³n, El"
+    nm: "Bodón, El"
   },
   {
     id: "37055",
@@ -21565,7 +21567,7 @@
   },
   {
     id: "37057",
-    nm: "BÃ³veda del RÃ­o Almar"
+    nm: "Bóveda del Río Almar"
   },
   {
     id: "37058",
@@ -21585,7 +21587,7 @@
   },
   {
     id: "37063",
-    nm: "Cabeza de BÃ©jar, La"
+    nm: "Cabeza de Béjar, La"
   },
   {
     id: "37065",
@@ -21613,7 +21615,7 @@
   },
   {
     id: "37071",
-    nm: "Calzada de BÃ©jar, La"
+    nm: "Calzada de Béjar, La"
   },
   {
     id: "37072",
@@ -21629,7 +21631,7 @@
   },
   {
     id: "37077",
-    nm: "Campo de PeÃ±aranda, El"
+    nm: "Campo de Peñaranda, El"
   },
   {
     id: "37078",
@@ -21693,7 +21695,7 @@
   },
   {
     id: "37096",
-    nm: "Castillejo de MartÃ­n Viejo"
+    nm: "Castillejo de Martín Viejo"
   },
   {
     id: "37097",
@@ -21709,7 +21711,7 @@
   },
   {
     id: "37100",
-    nm: "Cerezal de PeÃ±ahorcada"
+    nm: "Cerezal de Peñahorcada"
   },
   {
     id: "37101",
@@ -21725,7 +21727,7 @@
   },
   {
     id: "37114",
-    nm: "ChagarcÃ­a Medianero"
+    nm: "Chagarcía Medianero"
   },
   {
     id: "37104",
@@ -21733,7 +21735,7 @@
   },
   {
     id: "37106",
-    nm: "CipÃ©rez"
+    nm: "Cipérez"
   },
   {
     id: "37107",
@@ -21753,7 +21755,7 @@
   },
   {
     id: "37112",
-    nm: "CristÃ³bal"
+    nm: "Cristóbal"
   },
   {
     id: "37113",
@@ -21765,11 +21767,11 @@
   },
   {
     id: "37116",
-    nm: "DoÃ±inos de Ledesma"
+    nm: "Doñinos de Ledesma"
   },
   {
     id: "37117",
-    nm: "DoÃ±inos de Salamanca"
+    nm: "Doñinos de Salamanca"
   },
   {
     id: "37118",
@@ -21805,7 +21807,7 @@
   },
   {
     id: "37126",
-    nm: "EspadaÃ±a"
+    nm: "Espadaña"
   },
   {
     id: "37127",
@@ -21817,7 +21819,7 @@
   },
   {
     id: "37129",
-    nm: "Florida de LiÃ©bana"
+    nm: "Florida de Liébana"
   },
   {
     id: "37130",
@@ -21837,7 +21839,7 @@
   },
   {
     id: "37134",
-    nm: "Fresno AlhÃ¡ndiga"
+    nm: "Fresno Alhándiga"
   },
   {
     id: "37135",
@@ -21857,11 +21859,11 @@
   },
   {
     id: "37139",
-    nm: "Fuentes de BÃ©jar"
+    nm: "Fuentes de Béjar"
   },
   {
     id: "37140",
-    nm: "Fuentes de OÃ±oro"
+    nm: "Fuentes de Oñoro"
   },
   {
     id: "37141",
@@ -21881,11 +21883,11 @@
   },
   {
     id: "37145",
-    nm: "Gallegos de ArgaÃ±Ã¡n"
+    nm: "Gallegos de Argañán"
   },
   {
     id: "37146",
-    nm: "Gallegos de SolmirÃ³n"
+    nm: "Gallegos de Solmirón"
   },
   {
     id: "37147",
@@ -21893,7 +21895,7 @@
   },
   {
     id: "37148",
-    nm: "GarcihernÃ¡ndez"
+    nm: "Garcihernández"
   },
   {
     id: "37149",
@@ -21917,7 +21919,7 @@
   },
   {
     id: "37155",
-    nm: "Guijo de Ãvila"
+    nm: "Guijo de Ávila"
   },
   {
     id: "37156",
@@ -21985,7 +21987,7 @@
   },
   {
     id: "37172",
-    nm: "Linares de RiofrÃ­o"
+    nm: "Linares de Riofrío"
   },
   {
     id: "37173",
@@ -21993,7 +21995,7 @@
   },
   {
     id: "37175",
-    nm: "MachacÃ³n"
+    nm: "Machacón"
   },
   {
     id: "37174",
@@ -22001,11 +22003,11 @@
   },
   {
     id: "37176",
-    nm: "MadroÃ±al"
+    nm: "Madroñal"
   },
   {
     id: "37177",
-    nm: "MaÃ­llo, El"
+    nm: "Maíllo, El"
   },
   {
     id: "37178",
@@ -22025,7 +22027,7 @@
   },
   {
     id: "37183",
-    nm: "MartÃ­n de Yeltes"
+    nm: "Martín de Yeltes"
   },
   {
     id: "37182",
@@ -22041,7 +22043,7 @@
   },
   {
     id: "37187",
-    nm: "Matilla de los CaÃ±os del RÃ­o"
+    nm: "Matilla de los Caños del Río"
   },
   {
     id: "37188",
@@ -22061,11 +22063,11 @@
   },
   {
     id: "37192",
-    nm: "Miranda de AzÃ¡n"
+    nm: "Miranda de Azán"
   },
   {
     id: "37193",
-    nm: "Miranda del CastaÃ±ar"
+    nm: "Miranda del Castañar"
   },
   {
     id: "37194",
@@ -22081,7 +22083,7 @@
   },
   {
     id: "37197",
-    nm: "MonleÃ³n"
+    nm: "Monleón"
   },
   {
     id: "37198",
@@ -22097,11 +22099,11 @@
   },
   {
     id: "37201",
-    nm: "Montemayor del RÃ­o"
+    nm: "Montemayor del Río"
   },
   {
     id: "37202",
-    nm: "Monterrubio de ArmuÃ±a"
+    nm: "Monterrubio de Armuña"
   },
   {
     id: "37203",
@@ -22117,7 +22119,7 @@
   },
   {
     id: "37206",
-    nm: "MorÃ­Ã±igo"
+    nm: "Moríñigo"
   },
   {
     id: "37207",
@@ -22129,7 +22131,7 @@
   },
   {
     id: "37209",
-    nm: "MozÃ¡rbez"
+    nm: "Mozárbez"
   },
   {
     id: "37211",
@@ -22137,7 +22139,7 @@
   },
   {
     id: "37213",
-    nm: "Nava de BÃ©jar"
+    nm: "Nava de Béjar"
   },
   {
     id: "37214",
@@ -22157,7 +22159,7 @@
   },
   {
     id: "37217",
-    nm: "Navalmoral de BÃ©jar"
+    nm: "Navalmoral de Béjar"
   },
   {
     id: "37218",
@@ -22169,7 +22171,7 @@
   },
   {
     id: "37221",
-    nm: "NavasfrÃ­as"
+    nm: "Navasfrías"
   },
   {
     id: "37222",
@@ -22237,7 +22239,7 @@
   },
   {
     id: "37239",
-    nm: "Pedroso de la ArmuÃ±a, El"
+    nm: "Pedroso de la Armuña, El"
   },
   {
     id: "37240",
@@ -22245,7 +22247,7 @@
   },
   {
     id: "37241",
-    nm: "PelarrodrÃ­guez"
+    nm: "Pelarrodríguez"
   },
   {
     id: "37242",
@@ -22253,23 +22255,23 @@
   },
   {
     id: "37243",
-    nm: "PeÃ±a, La"
+    nm: "Peña, La"
   },
   {
     id: "37244",
-    nm: "PeÃ±acaballera"
+    nm: "Peñacaballera"
   },
   {
     id: "37245",
-    nm: "PeÃ±aparda"
+    nm: "Peñaparda"
   },
   {
     id: "37246",
-    nm: "PeÃ±aranda de Bracamonte"
+    nm: "Peñaranda de Bracamonte"
   },
   {
     id: "37247",
-    nm: "PeÃ±arandilla"
+    nm: "Peñarandilla"
   },
   {
     id: "37248",
@@ -22281,7 +22283,7 @@
   },
   {
     id: "37250",
-    nm: "PereÃ±a de la Ribera"
+    nm: "Pereña de la Ribera"
   },
   {
     id: "37251",
@@ -22333,7 +22335,7 @@
   },
   {
     id: "37263",
-    nm: "Puerto de BÃ©jar"
+    nm: "Puerto de Béjar"
   },
   {
     id: "37264",
@@ -22341,7 +22343,7 @@
   },
   {
     id: "37265",
-    nm: "RÃ¡gama"
+    nm: "Rágama"
   },
   {
     id: "37266",
@@ -22365,7 +22367,7 @@
   },
   {
     id: "37271",
-    nm: "RollÃ¡n"
+    nm: "Rollán"
   },
   {
     id: "37272",
@@ -22397,7 +22399,7 @@
   },
   {
     id: "37278",
-    nm: "San CristÃ³bal de la Cuesta"
+    nm: "San Cristóbal de la Cuesta"
   },
   {
     id: "37284",
@@ -22409,7 +22411,7 @@
   },
   {
     id: "37286",
-    nm: "San MartÃ­n del CastaÃ±ar"
+    nm: "San Martín del Castañar"
   },
   {
     id: "37287",
@@ -22425,7 +22427,7 @@
   },
   {
     id: "37289",
-    nm: "San MuÃ±oz"
+    nm: "San Muñoz"
   },
   {
     id: "37291",
@@ -22437,15 +22439,15 @@
   },
   {
     id: "37292",
-    nm: "San Pelayo de GuareÃ±a"
+    nm: "San Pelayo de Guareña"
   },
   {
     id: "37280",
-    nm: "SanchÃ³n de la Ribera"
+    nm: "Sanchón de la Ribera"
   },
   {
     id: "37281",
-    nm: "SanchÃ³n de la Sagrada"
+    nm: "Sanchón de la Sagrada"
   },
   {
     id: "37282",
@@ -22453,7 +22455,7 @@
   },
   {
     id: "37279",
-    nm: "Sancti-SpÃ­ritus"
+    nm: "Sancti-Spíritus"
   },
   {
     id: "37283",
@@ -22461,7 +22463,7 @@
   },
   {
     id: "37293",
-    nm: "Santa MarÃ­a de Sando"
+    nm: "Santa María de Sando"
   },
   {
     id: "37294",
@@ -22473,11 +22475,11 @@
   },
   {
     id: "37297",
-    nm: "SantibÃ¡Ã±ez de BÃ©jar"
+    nm: "Santibáñez de Béjar"
   },
   {
     id: "37298",
-    nm: "SantibÃ¡Ã±ez de la Sierra"
+    nm: "Santibáñez de la Sierra"
   },
   {
     id: "37299",
@@ -22489,7 +22491,7 @@
   },
   {
     id: "37301",
-    nm: "SardÃ³n de los Frailes"
+    nm: "Sardón de los Frailes"
   },
   {
     id: "37302",
@@ -22545,11 +22547,11 @@
   },
   {
     id: "37317",
-    nm: "Tarazona de GuareÃ±a"
+    nm: "Tarazona de Guareña"
   },
   {
     id: "37318",
-    nm: "TardÃ¡guila"
+    nm: "Tardáguila"
   },
   {
     id: "37319",
@@ -22561,7 +22563,7 @@
   },
   {
     id: "37321",
-    nm: "TenebrÃ³n"
+    nm: "Tenebrón"
   },
   {
     id: "37322",
@@ -22597,7 +22599,7 @@
   },
   {
     id: "37331",
-    nm: "Valdefuentes de SangusÃ­n"
+    nm: "Valdefuentes de Sangusín"
   },
   {
     id: "37332",
@@ -22633,7 +22635,7 @@
   },
   {
     id: "37343",
-    nm: "Vallejera de RiofrÃ­o"
+    nm: "Vallejera de Riofrío"
   },
   {
     id: "37340",
@@ -22645,7 +22647,7 @@
   },
   {
     id: "37342",
-    nm: "ValverdÃ³n"
+    nm: "Valverdón"
   },
   {
     id: "37344",
@@ -22661,15 +22663,15 @@
   },
   {
     id: "37347",
-    nm: "VellÃ©s, La"
+    nm: "Vellés, La"
   },
   {
     id: "37348",
-    nm: "Ventosa del RÃ­o Almar"
+    nm: "Ventosa del Río Almar"
   },
   {
     id: "37349",
-    nm: "VÃ­dola, La"
+    nm: "Vídola, La"
   },
   {
     id: "37351",
@@ -22693,7 +22695,7 @@
   },
   {
     id: "37356",
-    nm: "Villar de ArgaÃ±Ã¡n"
+    nm: "Villar de Argañán"
   },
   {
     id: "37357",
@@ -22757,7 +22759,7 @@
   },
   {
     id: "37372",
-    nm: "Villaverde de GuareÃ±a"
+    nm: "Villaverde de Guareña"
   },
   {
     id: "37373",
@@ -22789,7 +22791,7 @@
   },
   {
     id: "37379",
-    nm: "ZamayÃ³n"
+    nm: "Zamayón"
   },
   {
     id: "37380",
@@ -22813,7 +22815,7 @@
   },
   {
     id: "38003",
-    nm: "AlajerÃ³"
+    nm: "Alajeró"
   },
   {
     id: "38004",
@@ -22833,11 +22835,11 @@
   },
   {
     id: "38008",
-    nm: "BreÃ±a Alta"
+    nm: "Breña Alta"
   },
   {
     id: "38009",
-    nm: "BreÃ±a Baja"
+    nm: "Breña Baja"
   },
   {
     id: "38010",
@@ -22865,7 +22867,7 @@
   },
   {
     id: "38016",
-    nm: "GarafÃ­a"
+    nm: "Garafía"
   },
   {
     id: "38017",
@@ -22877,11 +22879,11 @@
   },
   {
     id: "38019",
-    nm: "GuÃ­a de Isora"
+    nm: "Guía de Isora"
   },
   {
     id: "38020",
-    nm: "GÃ¼Ã­mar"
+    nm: "Güímar"
   },
   {
     id: "38021",
@@ -22933,11 +22935,11 @@
   },
   {
     id: "38033",
-    nm: "San AndrÃ©s y Sauces"
+    nm: "San Andrés y Sauces"
   },
   {
     id: "38023",
-    nm: "San CristÃ³bal de La Laguna"
+    nm: "San Cristóbal de La Laguna"
   },
   {
     id: "38034",
@@ -22949,7 +22951,7 @@
   },
   {
     id: "38036",
-    nm: "San SebastiÃ¡n de la Gomera"
+    nm: "San Sebastián de la Gomera"
   },
   {
     id: "38037",
@@ -22961,7 +22963,7 @@
   },
   {
     id: "38039",
-    nm: "Santa Ãšrsula"
+    nm: "Santa �arsula"
   },
   {
     id: "38040",
@@ -23033,11 +23035,11 @@
   },
   {
     id: "39004",
-    nm: "Arenas de IguÃ±a"
+    nm: "Arenas de Iguña"
   },
   {
     id: "39005",
-    nm: "ArgoÃ±os"
+    nm: "Argoños"
   },
   {
     id: "39006",
@@ -23053,11 +23055,11 @@
   },
   {
     id: "39009",
-    nm: "BÃ¡rcena de Cicero"
+    nm: "Bárcena de Cicero"
   },
   {
     id: "39010",
-    nm: "BÃ¡rcena de Pie de Concha"
+    nm: "Bárcena de Pie de Concha"
   },
   {
     id: "39011",
@@ -23065,19 +23067,19 @@
   },
   {
     id: "39012",
-    nm: "CabezÃ³n de la Sal"
+    nm: "Cabezón de la Sal"
   },
   {
     id: "39013",
-    nm: "CabezÃ³n de LiÃ©bana"
+    nm: "Cabezón de Liébana"
   },
   {
     id: "39014",
-    nm: "CabuÃ©rniga"
+    nm: "Cabuérniga"
   },
   {
     id: "39015",
-    nm: "CamaleÃ±o"
+    nm: "Camaleño"
   },
   {
     id: "39016",
@@ -23097,7 +23099,7 @@
   },
   {
     id: "39019",
-    nm: "CastaÃ±eda"
+    nm: "Castañeda"
   },
   {
     id: "39020",
@@ -23109,7 +23111,7 @@
   },
   {
     id: "39022",
-    nm: "Cillorigo de LiÃ©bana"
+    nm: "Cillorigo de Liébana"
   },
   {
     id: "39023",
@@ -23149,11 +23151,11 @@
   },
   {
     id: "39033",
-    nm: "HerrerÃ­as"
+    nm: "Herrerías"
   },
   {
     id: "39034",
-    nm: "LamasÃ³n"
+    nm: "Lamasón"
   },
   {
     id: "39035",
@@ -23165,7 +23167,7 @@
   },
   {
     id: "39037",
-    nm: "LiÃ©rganes"
+    nm: "Liérganes"
   },
   {
     id: "39038",
@@ -23213,7 +23215,7 @@
   },
   {
     id: "39049",
-    nm: "PeÃ±arrubia"
+    nm: "Peñarrubia"
   },
   {
     id: "39050",
@@ -23225,7 +23227,7 @@
   },
   {
     id: "39052",
-    nm: "PiÃ©lagos"
+    nm: "Piélagos"
   },
   {
     id: "39053",
@@ -23257,15 +23259,15 @@
   },
   {
     id: "39060",
-    nm: "ReocÃ­n"
+    nm: "Reocín"
   },
   {
     id: "39061",
-    nm: "RibamontÃ¡n al Mar"
+    nm: "Ribamontán al Mar"
   },
   {
     id: "39062",
-    nm: "RibamontÃ¡n al Monte"
+    nm: "Ribamontán al Monte"
   },
   {
     id: "39063",
@@ -23317,7 +23319,7 @@
   },
   {
     id: "39074",
-    nm: "Santa MarÃ­a de CayÃ³n"
+    nm: "Santa María de Cayón"
   },
   {
     id: "39075",
@@ -23337,7 +23339,7 @@
   },
   {
     id: "39079",
-    nm: "SantoÃ±a"
+    nm: "Santoña"
   },
   {
     id: "39081",
@@ -23353,7 +23355,7 @@
   },
   {
     id: "39084",
-    nm: "SolÃ³rzano"
+    nm: "Solórzano"
   },
   {
     id: "39085",
@@ -23377,7 +23379,7 @@
   },
   {
     id: "39090",
-    nm: "UdÃ­as"
+    nm: "Udías"
   },
   {
     id: "39095",
@@ -23385,7 +23387,7 @@
   },
   {
     id: "39091",
-    nm: "ValdÃ¡liga"
+    nm: "Valdáliga"
   },
   {
     id: "39092",
@@ -23393,7 +23395,7 @@
   },
   {
     id: "39093",
-    nm: "Valdeprado del RÃ­o"
+    nm: "Valdeprado del Río"
   },
   {
     id: "39094",
@@ -23405,7 +23407,7 @@
   },
   {
     id: "39096",
-    nm: "Vega de LiÃ©bana"
+    nm: "Vega de Liébana"
   },
   {
     id: "39097",
@@ -23433,7 +23435,7 @@
   },
   {
     id: "40002",
-    nm: "Adrada de PirÃ³n"
+    nm: "Adrada de Pirón"
   },
   {
     id: "40003",
@@ -23461,7 +23463,7 @@
   },
   {
     id: "40008",
-    nm: "Aldealengua de Santa MarÃ­a"
+    nm: "Aldealengua de Santa María"
   },
   {
     id: "40009",
@@ -23473,7 +23475,7 @@
   },
   {
     id: "40013",
-    nm: "AldeasoÃ±a"
+    nm: "Aldeasoña"
   },
   {
     id: "40014",
@@ -23493,7 +23495,7 @@
   },
   {
     id: "40018",
-    nm: "AÃ±e"
+    nm: "Añe"
   },
   {
     id: "40019",
@@ -23509,11 +23511,11 @@
   },
   {
     id: "40022",
-    nm: "ArmuÃ±a"
+    nm: "Armuña"
   },
   {
     id: "40024",
-    nm: "AyllÃ³n"
+    nm: "Ayllón"
   },
   {
     id: "40025",
@@ -23553,7 +23555,7 @@
   },
   {
     id: "40035",
-    nm: "CabaÃ±as de Polendos"
+    nm: "Cabañas de Polendos"
   },
   {
     id: "40036",
@@ -23561,7 +23563,7 @@
   },
   {
     id: "40037",
-    nm: "Calabazas de FuentidueÃ±a"
+    nm: "Calabazas de Fuentidueña"
   },
   {
     id: "40039",
@@ -23581,7 +23583,7 @@
   },
   {
     id: "40044",
-    nm: "Carrascal del RÃ­o"
+    nm: "Carrascal del Río"
   },
   {
     id: "40045",
@@ -23589,11 +23591,11 @@
   },
   {
     id: "40046",
-    nm: "Castillejo de MesleÃ³n"
+    nm: "Castillejo de Mesleón"
   },
   {
     id: "40047",
-    nm: "Castro de FuentidueÃ±a"
+    nm: "Castro de Fuentidueña"
   },
   {
     id: "40048",
@@ -23605,7 +23607,7 @@
   },
   {
     id: "40051",
-    nm: "CastroserracÃ­n"
+    nm: "Castroserracín"
   },
   {
     id: "40052",
@@ -23621,15 +23623,15 @@
   },
   {
     id: "40065",
-    nm: "ChaÃ±e"
+    nm: "Chañe"
   },
   {
     id: "40055",
-    nm: "Cilleruelo de San MamÃ©s"
+    nm: "Cilleruelo de San Mamés"
   },
   {
     id: "40056",
-    nm: "Cobos de FuentidueÃ±a"
+    nm: "Cobos de Fuentidueña"
   },
   {
     id: "40057",
@@ -23649,11 +23651,11 @@
   },
   {
     id: "40061",
-    nm: "Corral de AyllÃ³n"
+    nm: "Corral de Ayllón"
   },
   {
     id: "40902",
-    nm: "Cozuelos de FuentidueÃ±a"
+    nm: "Cozuelos de Fuentidueña"
   },
   {
     id: "40062",
@@ -23661,7 +23663,7 @@
   },
   {
     id: "40063",
-    nm: "CuÃ©llar"
+    nm: "Cuéllar"
   },
   {
     id: "40905",
@@ -23669,7 +23671,7 @@
   },
   {
     id: "40068",
-    nm: "Domingo GarcÃ­a"
+    nm: "Domingo García"
   },
   {
     id: "40069",
@@ -23709,7 +23711,7 @@
   },
   {
     id: "40078",
-    nm: "Fresneda de CuÃ©llar"
+    nm: "Fresneda de Cuéllar"
   },
   {
     id: "40079",
@@ -23729,11 +23731,11 @@
   },
   {
     id: "40083",
-    nm: "Fuente el Olmo de FuentidueÃ±a"
+    nm: "Fuente el Olmo de Fuentidueña"
   },
   {
     id: "40084",
-    nm: "Fuente el Olmo de Ãscar"
+    nm: "Fuente el Olmo de Íscar"
   },
   {
     id: "40086",
@@ -23741,7 +23743,7 @@
   },
   {
     id: "40087",
-    nm: "FuentepiÃ±el"
+    nm: "Fuentepiñel"
   },
   {
     id: "40088",
@@ -23749,7 +23751,7 @@
   },
   {
     id: "40089",
-    nm: "FuentesaÃºco de FuentidueÃ±a"
+    nm: "Fuentesaúco de Fuentidueña"
   },
   {
     id: "40091",
@@ -23757,7 +23759,7 @@
   },
   {
     id: "40092",
-    nm: "FuentidueÃ±a"
+    nm: "Fuentidueña"
   },
   {
     id: "40093",
@@ -23765,11 +23767,11 @@
   },
   {
     id: "40094",
-    nm: "GarcillÃ¡n"
+    nm: "Garcillán"
   },
   {
     id: "40095",
-    nm: "GomezserracÃ­n"
+    nm: "Gomezserracín"
   },
   {
     id: "40097",
@@ -23817,7 +23819,7 @@
   },
   {
     id: "40110",
-    nm: "Lastras de CuÃ©llar"
+    nm: "Lastras de Cuéllar"
   },
   {
     id: "40111",
@@ -23845,23 +23847,23 @@
   },
   {
     id: "40119",
-    nm: "MartÃ­n Miguel"
+    nm: "Martín Miguel"
   },
   {
     id: "40120",
-    nm: "MartÃ­n MuÃ±oz de la Dehesa"
+    nm: "Martín Muñoz de la Dehesa"
   },
   {
     id: "40121",
-    nm: "MartÃ­n MuÃ±oz de las Posadas"
+    nm: "Martín Muñoz de las Posadas"
   },
   {
     id: "40122",
-    nm: "MarugÃ¡n"
+    nm: "Marugán"
   },
   {
     id: "40124",
-    nm: "Mata de CuÃ©llar"
+    nm: "Mata de Cuéllar"
   },
   {
     id: "40123",
@@ -23881,11 +23883,11 @@
   },
   {
     id: "40128",
-    nm: "MiguelÃ¡Ã±ez"
+    nm: "Migueláñez"
   },
   {
     id: "40129",
-    nm: "Montejo de ArÃ©valo"
+    nm: "Montejo de Arévalo"
   },
   {
     id: "40130",
@@ -23905,19 +23907,19 @@
   },
   {
     id: "40135",
-    nm: "MuÃ±opedro"
+    nm: "Muñopedro"
   },
   {
     id: "40136",
-    nm: "MuÃ±overos"
+    nm: "Muñoveros"
   },
   {
     id: "40138",
-    nm: "Nava de la AsunciÃ³n"
+    nm: "Nava de la Asunción"
   },
   {
     id: "40139",
-    nm: "NavafrÃ­a"
+    nm: "Navafría"
   },
   {
     id: "40140",
@@ -23945,7 +23947,7 @@
   },
   {
     id: "40904",
-    nm: "Navas de RiofrÃ­o"
+    nm: "Navas de Riofrío"
   },
   {
     id: "40146",
@@ -23965,7 +23967,7 @@
   },
   {
     id: "40151",
-    nm: "Ortigosa de PestaÃ±o"
+    nm: "Ortigosa de Pestaño"
   },
   {
     id: "40901",
@@ -24009,7 +24011,7 @@
   },
   {
     id: "40162",
-    nm: "PrÃ¡dena"
+    nm: "Prádena"
   },
   {
     id: "40163",
@@ -24033,7 +24035,7 @@
   },
   {
     id: "40168",
-    nm: "Riaguas de San BartolomÃ©"
+    nm: "Riaguas de San Bartolomé"
   },
   {
     id: "40170",
@@ -24045,7 +24047,7 @@
   },
   {
     id: "40172",
-    nm: "RiofrÃ­o de Riaza"
+    nm: "Riofrío de Riaza"
   },
   {
     id: "40173",
@@ -24061,19 +24063,19 @@
   },
   {
     id: "40177",
-    nm: "San CristÃ³bal de CuÃ©llar"
+    nm: "San Cristóbal de Cuéllar"
   },
   {
     id: "40178",
-    nm: "San CristÃ³bal de la Vega"
+    nm: "San Cristóbal de la Vega"
   },
   {
     id: "40906",
-    nm: "San CristÃ³bal de Segovia"
+    nm: "San Cristóbal de Segovia"
   },
   {
     id: "40182",
-    nm: "San MartÃ­n y MudriÃ¡n"
+    nm: "San Martín y Mudrián"
   },
   {
     id: "40183",
@@ -24081,19 +24083,19 @@
   },
   {
     id: "40184",
-    nm: "San Pedro de GaÃ­llos"
+    nm: "San Pedro de Gaíllos"
   },
   {
     id: "40179",
-    nm: "SanchonuÃ±o"
+    nm: "Sanchonuño"
   },
   {
     id: "40180",
-    nm: "SangarcÃ­a"
+    nm: "Sangarcía"
   },
   {
     id: "40185",
-    nm: "Santa MarÃ­a la Real de Nieva"
+    nm: "Santa María la Real de Nieva"
   },
   {
     id: "40186",
@@ -24109,11 +24111,11 @@
   },
   {
     id: "40190",
-    nm: "Santo Domingo de PirÃ³n"
+    nm: "Santo Domingo de Pirón"
   },
   {
     id: "40191",
-    nm: "Santo TomÃ© del Puerto"
+    nm: "Santo Tomé del Puerto"
   },
   {
     id: "40192",
@@ -24121,7 +24123,7 @@
   },
   {
     id: "40193",
-    nm: "SebÃºlcor"
+    nm: "Sebúlcor"
   },
   {
     id: "40194",
@@ -24129,7 +24131,7 @@
   },
   {
     id: "40195",
-    nm: "SepÃºlveda"
+    nm: "Sepúlveda"
   },
   {
     id: "40196",
@@ -24177,11 +24179,11 @@
   },
   {
     id: "40208",
-    nm: "TurÃ©gano"
+    nm: "Turégano"
   },
   {
     id: "40210",
-    nm: "UrueÃ±as"
+    nm: "Urueñas"
   },
   {
     id: "40211",
@@ -24209,7 +24211,7 @@
   },
   {
     id: "40221",
-    nm: "Valleruela de SepÃºlveda"
+    nm: "Valleruela de Sepúlveda"
   },
   {
     id: "40214",
@@ -24237,11 +24239,11 @@
   },
   {
     id: "40225",
-    nm: "VillacastÃ­n"
+    nm: "Villacastín"
   },
   {
     id: "40228",
-    nm: "Villaverde de Ãscar"
+    nm: "Villaverde de Íscar"
   },
   {
     id: "40229",
@@ -24269,7 +24271,7 @@
   },
   {
     id: "41002",
-    nm: "AlanÃ­s"
+    nm: "Alanís"
   },
   {
     id: "41003",
@@ -24277,15 +24279,15 @@
   },
   {
     id: "41004",
-    nm: "AlcalÃ¡ de GuadaÃ­ra"
+    nm: "Alcalá de Guadaíra"
   },
   {
     id: "41005",
-    nm: "AlcalÃ¡ del RÃ­o"
+    nm: "Alcalá del Río"
   },
   {
     id: "41006",
-    nm: "Alcolea del RÃ­o"
+    nm: "Alcolea del Río"
   },
   {
     id: "41007",
@@ -24293,11 +24295,11 @@
   },
   {
     id: "41008",
-    nm: "AlgÃ¡mitas"
+    nm: "Algámitas"
   },
   {
     id: "41009",
-    nm: "AlmadÃ©n de la Plata"
+    nm: "Almadén de la Plata"
   },
   {
     id: "41010",
@@ -24309,11 +24311,11 @@
   },
   {
     id: "41012",
-    nm: "AznalcÃ¡zar"
+    nm: "Aznalcázar"
   },
   {
     id: "41013",
-    nm: "AznalcÃ³llar"
+    nm: "Aznalcóllar"
   },
   {
     id: "41014",
@@ -24321,11 +24323,11 @@
   },
   {
     id: "41015",
-    nm: "BenacazÃ³n"
+    nm: "Benacazón"
   },
   {
     id: "41016",
-    nm: "Bollullos de la MitaciÃ³n"
+    nm: "Bollullos de la Mitación"
   },
   {
     id: "41017",
@@ -24357,7 +24359,7 @@
   },
   {
     id: "41901",
-    nm: "CaÃ±ada Rosal"
+    nm: "Cañada Rosal"
   },
   {
     id: "41024",
@@ -24365,7 +24367,7 @@
   },
   {
     id: "41025",
-    nm: "CarriÃ³n de los CÃ©spedes"
+    nm: "Carrión de los Céspedes"
   },
   {
     id: "41026",
@@ -24377,7 +24379,7 @@
   },
   {
     id: "41028",
-    nm: "Castilleja de GuzmÃ¡n"
+    nm: "Castilleja de Guzmán"
   },
   {
     id: "41029",
@@ -24401,7 +24403,7 @@
   },
   {
     id: "41034",
-    nm: "Coria del RÃ­o"
+    nm: "Coria del Río"
   },
   {
     id: "41035",
@@ -24425,7 +24427,7 @@
   },
   {
     id: "41039",
-    nm: "Ã‰cija"
+    nm: "�0cija"
   },
   {
     id: "41040",
@@ -24437,7 +24439,7 @@
   },
   {
     id: "41042",
-    nm: "Fuentes de AndalucÃ­a"
+    nm: "Fuentes de Andalucía"
   },
   {
     id: "41043",
@@ -24473,7 +24475,7 @@
   },
   {
     id: "41051",
-    nm: "HuÃ©var del Aljarafe"
+    nm: "Huévar del Aljarafe"
   },
   {
     id: "41902",
@@ -24493,7 +24495,7 @@
   },
   {
     id: "41055",
-    nm: "Lora del RÃ­o"
+    nm: "Lora del Río"
   },
   {
     id: "41056",
@@ -24501,7 +24503,7 @@
   },
   {
     id: "41057",
-    nm: "MadroÃ±o, El"
+    nm: "Madroño, El"
   },
   {
     id: "41058",
@@ -24521,7 +24523,7 @@
   },
   {
     id: "41062",
-    nm: "MartÃ­n de la Jara"
+    nm: "Martín de la Jara"
   },
   {
     id: "41063",
@@ -24533,11 +24535,11 @@
   },
   {
     id: "41065",
-    nm: "MorÃ³n de la Frontera"
+    nm: "Morón de la Frontera"
   },
   {
     id: "41066",
-    nm: "Navas de la ConcepciÃ³n, Las"
+    nm: "Navas de la Concepción, Las"
   },
   {
     id: "41067",
@@ -24553,7 +24555,7 @@
   },
   {
     id: "41070",
-    nm: "Palomares del RÃ­o"
+    nm: "Palomares del Río"
   },
   {
     id: "41071",
@@ -24569,7 +24571,7 @@
   },
   {
     id: "41074",
-    nm: "PeÃ±aflor"
+    nm: "Peñaflor"
   },
   {
     id: "41075",
@@ -24589,7 +24591,7 @@
   },
   {
     id: "41079",
-    nm: "Puebla del RÃ­o, La"
+    nm: "Puebla del Río, La"
   },
   {
     id: "41080",
@@ -24601,7 +24603,7 @@
   },
   {
     id: "41082",
-    nm: "Roda de AndalucÃ­a, La"
+    nm: "Roda de Andalucía, La"
   },
   {
     id: "41083",
@@ -24621,11 +24623,11 @@
   },
   {
     id: "41088",
-    nm: "San NicolÃ¡s del Puerto"
+    nm: "San Nicolás del Puerto"
   },
   {
     id: "41087",
-    nm: "SanlÃºcar la Mayor"
+    nm: "Sanlúcar la Mayor"
   },
   {
     id: "41089",
@@ -24657,7 +24659,7 @@
   },
   {
     id: "41096",
-    nm: "Valencina de la ConcepciÃ³n"
+    nm: "Valencina de la Concepción"
   },
   {
     id: "41097",
@@ -24673,11 +24675,11 @@
   },
   {
     id: "41099",
-    nm: "Villanueva del RÃ­o y Minas"
+    nm: "Villanueva del Río y Minas"
   },
   {
     id: "41101",
-    nm: "Villaverde del RÃ­o"
+    nm: "Villaverde del Río"
   },
   {
     id: "41102",
@@ -24693,7 +24695,7 @@
   },
   {
     id: "42004",
-    nm: "Ãgreda"
+    nm: "Ágreda"
   },
   {
     id: "42006",
@@ -24705,7 +24707,7 @@
   },
   {
     id: "42008",
-    nm: "Alcubilla de las PeÃ±as"
+    nm: "Alcubilla de las Peñas"
   },
   {
     id: "42009",
@@ -24721,11 +24723,11 @@
   },
   {
     id: "42012",
-    nm: "AldealseÃ±or"
+    nm: "Aldealseñor"
   },
   {
     id: "42013",
-    nm: "Aldehuela de PeriÃ¡Ã±ez"
+    nm: "Aldehuela de Periáñez"
   },
   {
     id: "42014",
@@ -24753,7 +24755,7 @@
   },
   {
     id: "42020",
-    nm: "AlmazÃ¡n"
+    nm: "Almazán"
   },
   {
     id: "42021",
@@ -24769,11 +24771,11 @@
   },
   {
     id: "42024",
-    nm: "ArancÃ³n"
+    nm: "Arancón"
   },
   {
     id: "42025",
-    nm: "Arcos de JalÃ³n"
+    nm: "Arcos de Jalón"
   },
   {
     id: "42026",
@@ -24781,7 +24783,7 @@
   },
   {
     id: "42027",
-    nm: "ArÃ©valo de la Sierra"
+    nm: "Arévalo de la Sierra"
   },
   {
     id: "42028",
@@ -24809,7 +24811,7 @@
   },
   {
     id: "42034",
-    nm: "BeratÃ³n"
+    nm: "Beratón"
   },
   {
     id: "42035",
@@ -24853,7 +24855,7 @@
   },
   {
     id: "42046",
-    nm: "CalataÃ±azor"
+    nm: "Calatañazor"
   },
   {
     id: "42048",
@@ -24865,7 +24867,7 @@
   },
   {
     id: "42050",
-    nm: "CaÃ±amaque"
+    nm: "Cañamaque"
   },
   {
     id: "42051",
@@ -24889,7 +24891,7 @@
   },
   {
     id: "42056",
-    nm: "CastilfrÃ­o de la Sierra"
+    nm: "Castilfrío de la Sierra"
   },
   {
     id: "42058",
@@ -24905,7 +24907,7 @@
   },
   {
     id: "42060",
-    nm: "CerbÃ³n"
+    nm: "Cerbón"
   },
   {
     id: "42061",
@@ -24925,7 +24927,7 @@
   },
   {
     id: "42065",
-    nm: "Cirujales del RÃ­o"
+    nm: "Cirujales del Río"
   },
   {
     id: "42068",
@@ -24945,11 +24947,11 @@
   },
   {
     id: "42073",
-    nm: "Cueva de Ãgreda"
+    nm: "Cueva de Ágreda"
   },
   {
     id: "42075",
-    nm: "DÃ©vanos"
+    nm: "Dévanos"
   },
   {
     id: "42076",
@@ -24961,7 +24963,7 @@
   },
   {
     id: "42079",
-    nm: "Escobosa de AlmazÃ¡n"
+    nm: "Escobosa de Almazán"
   },
   {
     id: "42080",
@@ -24969,7 +24971,7 @@
   },
   {
     id: "42081",
-    nm: "EspejÃ³n"
+    nm: "Espejón"
   },
   {
     id: "42082",
@@ -24977,7 +24979,7 @@
   },
   {
     id: "42083",
-    nm: "Frechilla de AlmazÃ¡n"
+    nm: "Frechilla de Almazán"
   },
   {
     id: "42084",
@@ -24989,7 +24991,7 @@
   },
   {
     id: "42086",
-    nm: "FuentecambrÃ³n"
+    nm: "Fuentecambrón"
   },
   {
     id: "42087",
@@ -25009,11 +25011,11 @@
   },
   {
     id: "42092",
-    nm: "Fuentes de MagaÃ±a"
+    nm: "Fuentes de Magaña"
   },
   {
     id: "42093",
-    nm: "FuentestrÃºn"
+    nm: "Fuentestrún"
   },
   {
     id: "42094",
@@ -25025,7 +25027,7 @@
   },
   {
     id: "42096",
-    nm: "GÃ³mara"
+    nm: "Gómara"
   },
   {
     id: "42097",
@@ -25053,11 +25055,11 @@
   },
   {
     id: "42107",
-    nm: "MagaÃ±a"
+    nm: "Magaña"
   },
   {
     id: "42108",
-    nm: "MajÃ¡n"
+    nm: "Maján"
   },
   {
     id: "42110",
@@ -25065,7 +25067,7 @@
   },
   {
     id: "42111",
-    nm: "Matamala de AlmazÃ¡n"
+    nm: "Matamala de Almazán"
   },
   {
     id: "42113",
@@ -25073,11 +25075,11 @@
   },
   {
     id: "42115",
-    nm: "MiÃ±o de Medinaceli"
+    nm: "Miño de Medinaceli"
   },
   {
     id: "42116",
-    nm: "MiÃ±o de San Esteban"
+    nm: "Miño de San Esteban"
   },
   {
     id: "42117",
@@ -25089,7 +25091,7 @@
   },
   {
     id: "42119",
-    nm: "Monteagudo de las VicarÃ­as"
+    nm: "Monteagudo de las Vicarías"
   },
   {
     id: "42120",
@@ -25101,7 +25103,7 @@
   },
   {
     id: "42123",
-    nm: "MorÃ³n de AlmazÃ¡n"
+    nm: "Morón de Almazán"
   },
   {
     id: "42124",
@@ -25113,7 +25115,7 @@
   },
   {
     id: "42127",
-    nm: "NafrÃ­a de Ucero"
+    nm: "Nafría de Ucero"
   },
   {
     id: "42128",
@@ -25137,7 +25139,7 @@
   },
   {
     id: "42134",
-    nm: "Ã“lvega"
+    nm: "�lvega"
   },
   {
     id: "42135",
@@ -25153,7 +25155,7 @@
   },
   {
     id: "42141",
-    nm: "PÃ³veda de Soria, La"
+    nm: "Póveda de Soria, La"
   },
   {
     id: "42142",
@@ -25169,11 +25171,11 @@
   },
   {
     id: "42148",
-    nm: "QuiÃ±onerÃ­a"
+    nm: "Quiñonería"
   },
   {
     id: "42149",
-    nm: "RÃ¡banos, Los"
+    nm: "Rábanos, Los"
   },
   {
     id: "42151",
@@ -25229,7 +25231,7 @@
   },
   {
     id: "42164",
-    nm: "San Leonardo de YagÃ¼e"
+    nm: "San Leonardo de Yagüe"
   },
   {
     id: "42165",
@@ -25241,15 +25243,15 @@
   },
   {
     id: "42167",
-    nm: "Santa MarÃ­a de Huerta"
+    nm: "Santa María de Huerta"
   },
   {
     id: "42168",
-    nm: "Santa MarÃ­a de las Hoyas"
+    nm: "Santa María de las Hoyas"
   },
   {
     id: "42171",
-    nm: "SerÃ³n de NÃ¡gima"
+    nm: "Serón de Nágima"
   },
   {
     id: "42172",
@@ -25261,7 +25263,7 @@
   },
   {
     id: "42174",
-    nm: "Sotillo del RincÃ³n"
+    nm: "Sotillo del Rincón"
   },
   {
     id: "42175",
@@ -25305,7 +25307,7 @@
   },
   {
     id: "42188",
-    nm: "TrÃ©vago"
+    nm: "Trévago"
   },
   {
     id: "42189",
@@ -25321,7 +25323,7 @@
   },
   {
     id: "42192",
-    nm: "ValdegeÃ±a"
+    nm: "Valdegeña"
   },
   {
     id: "42193",
@@ -25349,7 +25351,7 @@
   },
   {
     id: "42200",
-    nm: "VelamazÃ¡n"
+    nm: "Velamazán"
   },
   {
     id: "42201",
@@ -25381,7 +25383,7 @@
   },
   {
     id: "42209",
-    nm: "Villar del RÃ­o"
+    nm: "Villar del Río"
   },
   {
     id: "42211",
@@ -25417,7 +25419,7 @@
   },
   {
     id: "43001",
-    nm: "AiguamÃºrcia"
+    nm: "Aiguamúrcia"
   },
   {
     id: "43002",
@@ -25457,7 +25459,7 @@
   },
   {
     id: "43010",
-    nm: "AliÃ³"
+    nm: "Alió"
   },
   {
     id: "43011",
@@ -25481,11 +25483,11 @@
   },
   {
     id: "43016",
-    nm: "ArboÃ§, L'"
+    nm: "Arboç, L'"
   },
   {
     id: "43015",
-    nm: "ArbolÃ­"
+    nm: "Arbolí"
   },
   {
     id: "43017",
@@ -25497,15 +25499,15 @@
   },
   {
     id: "43019",
-    nm: "AscÃ³"
+    nm: "Ascó"
   },
   {
     id: "43020",
-    nm: "Banyeres del PenedÃ¨s"
+    nm: "Banyeres del Penedès"
   },
   {
     id: "43021",
-    nm: "BarberÃ  de la Conca"
+    nm: "Barberà de la Conca"
   },
   {
     id: "43022",
@@ -25533,7 +25535,7 @@
   },
   {
     id: "43028",
-    nm: "Bisbal del PenedÃ¨s, La"
+    nm: "Bisbal del Penedès, La"
   },
   {
     id: "43029",
@@ -25557,11 +25559,11 @@
   },
   {
     id: "43034",
-    nm: "BrÃ fim"
+    nm: "Bràfim"
   },
   {
     id: "43035",
-    nm: "CabacÃ©s"
+    nm: "Cabacés"
   },
   {
     id: "43036",
@@ -25589,7 +25591,7 @@
   },
   {
     id: "43040",
-    nm: "CapÃ§anes"
+    nm: "Capçanes"
   },
   {
     id: "43041",
@@ -25613,7 +25615,7 @@
   },
   {
     id: "43047",
-    nm: "ConstantÃ­"
+    nm: "Constantí"
   },
   {
     id: "43048",
@@ -25637,11 +25639,11 @@
   },
   {
     id: "43053",
-    nm: "DuesaigÃ¼es"
+    nm: "Duesaigües"
   },
   {
     id: "43054",
-    nm: "Espluga de FrancolÃ­, L'"
+    nm: "Espluga de Francolí, L'"
   },
   {
     id: "43055",
@@ -25653,7 +25655,7 @@
   },
   {
     id: "43057",
-    nm: "FebrÃ³, La"
+    nm: "Febró, La"
   },
   {
     id: "43058",
@@ -25669,7 +25671,7 @@
   },
   {
     id: "43061",
-    nm: "ForÃ¨s"
+    nm: "Forès"
   },
   {
     id: "43062",
@@ -25721,11 +25723,11 @@
   },
   {
     id: "43074",
-    nm: "LlorenÃ§ del PenedÃ¨s"
+    nm: "Llorenç del Penedès"
   },
   {
     id: "43076",
-    nm: "MarÃ§Ã "
+    nm: "Marçà"
   },
   {
     id: "43075",
@@ -25741,11 +25743,11 @@
   },
   {
     id: "43079",
-    nm: "MasllorenÃ§"
+    nm: "Masllorenç"
   },
   {
     id: "43080",
-    nm: "MasÃ³, La"
+    nm: "Masó, La"
   },
   {
     id: "43081",
@@ -25757,7 +25759,7 @@
   },
   {
     id: "43083",
-    nm: "MilÃ , El"
+    nm: "Milà, El"
   },
   {
     id: "43084",
@@ -25773,7 +25775,7 @@
   },
   {
     id: "43088",
-    nm: "MontbriÃ³ del Camp"
+    nm: "Montbrió del Camp"
   },
   {
     id: "43089",
@@ -25793,11 +25795,11 @@
   },
   {
     id: "43093",
-    nm: "MÃ³ra d'Ebre"
+    nm: "Móra d'Ebre"
   },
   {
     id: "43094",
-    nm: "MÃ³ra la Nova"
+    nm: "Móra la Nova"
   },
   {
     id: "43095",
@@ -25809,7 +25811,7 @@
   },
   {
     id: "43097",
-    nm: "Nou de GaiÃ , La"
+    nm: "Nou de Gaià, La"
   },
   {
     id: "43098",
@@ -25829,7 +25831,7 @@
   },
   {
     id: "43102",
-    nm: "PaÃ¼ls"
+    nm: "Paüls"
   },
   {
     id: "43103",
@@ -25837,7 +25839,7 @@
   },
   {
     id: "43104",
-    nm: "PerellÃ³, El"
+    nm: "Perelló, El"
   },
   {
     id: "43105",
@@ -25865,7 +25867,7 @@
   },
   {
     id: "43111",
-    nm: "Pobla de MontornÃ¨s, La"
+    nm: "Pobla de Montornès, La"
   },
   {
     id: "43112",
@@ -25929,7 +25931,7 @@
   },
   {
     id: "43126",
-    nm: "Riera de GaiÃ , La"
+    nm: "Riera de Gaià, La"
   },
   {
     id: "43127",
@@ -25949,11 +25951,11 @@
   },
   {
     id: "43131",
-    nm: "Roda de BerÃ "
+    nm: "Roda de Berà"
   },
   {
     id: "43132",
-    nm: "RodonyÃ "
+    nm: "Rodonyà"
   },
   {
     id: "43133",
@@ -25965,7 +25967,7 @@
   },
   {
     id: "43135",
-    nm: "SalomÃ³"
+    nm: "Salomó"
   },
   {
     id: "43905",
@@ -25973,7 +25975,7 @@
   },
   {
     id: "43136",
-    nm: "Sant Carles de la RÃ pita"
+    nm: "Sant Carles de la Ràpita"
   },
   {
     id: "43137",
@@ -25985,7 +25987,7 @@
   },
   {
     id: "43138",
-    nm: "Santa BÃ rbara"
+    nm: "Santa Bàrbara"
   },
   {
     id: "43139",
@@ -26001,7 +26003,7 @@
   },
   {
     id: "43143",
-    nm: "SavallÃ  del Comtat"
+    nm: "Savallà del Comtat"
   },
   {
     id: "43144",
@@ -26017,7 +26019,7 @@
   },
   {
     id: "43044",
-    nm: "SÃ©nia, La"
+    nm: "Sénia, La"
   },
   {
     id: "43147",
@@ -26081,7 +26083,7 @@
   },
   {
     id: "43162",
-    nm: "VandellÃ²s i l'Hospitalet de l'Infant"
+    nm: "Vandellòs i l'Hospitalet de l'Infant"
   },
   {
     id: "43163",
@@ -26089,7 +26091,7 @@
   },
   {
     id: "43164",
-    nm: "Vespella de GaiÃ "
+    nm: "Vespella de Gaià"
   },
   {
     id: "43165",
@@ -26137,7 +26139,7 @@
   },
   {
     id: "43176",
-    nm: "VimbodÃ­ i Poblet"
+    nm: "Vimbodí i Poblet"
   },
   {
     id: "43177",
@@ -26161,7 +26163,7 @@
   },
   {
     id: "44003",
-    nm: "AguatÃ³n"
+    nm: "Aguatón"
   },
   {
     id: "44004",
@@ -26173,7 +26175,7 @@
   },
   {
     id: "44006",
-    nm: "AlacÃ³n"
+    nm: "Alacón"
   },
   {
     id: "44007",
@@ -26185,7 +26187,7 @@
   },
   {
     id: "44009",
-    nm: "AlbarracÃ­n"
+    nm: "Albarracín"
   },
   {
     id: "44010",
@@ -26197,11 +26199,11 @@
   },
   {
     id: "44012",
-    nm: "AlcalÃ¡ de la Selva"
+    nm: "Alcalá de la Selva"
   },
   {
     id: "44013",
-    nm: "AlcaÃ±iz"
+    nm: "Alcañiz"
   },
   {
     id: "44014",
@@ -26237,11 +26239,11 @@
   },
   {
     id: "44020",
-    nm: "AlpeÃ±Ã©s"
+    nm: "Alpeñés"
   },
   {
     id: "44024",
-    nm: "AnadÃ³n"
+    nm: "Anadón"
   },
   {
     id: "44025",
@@ -26253,7 +26255,7 @@
   },
   {
     id: "44027",
-    nm: "Arens de LledÃ³"
+    nm: "Arens de Lledó"
   },
   {
     id: "44028",
@@ -26261,7 +26263,7 @@
   },
   {
     id: "44029",
-    nm: "AriÃ±o"
+    nm: "Ariño"
   },
   {
     id: "44031",
@@ -26269,15 +26271,15 @@
   },
   {
     id: "44032",
-    nm: "BÃ¡denas"
+    nm: "Bádenas"
   },
   {
     id: "44033",
-    nm: "BÃ¡guena"
+    nm: "Báguena"
   },
   {
     id: "44034",
-    nm: "BaÃ±Ã³n"
+    nm: "Bañón"
   },
   {
     id: "44035",
@@ -26297,7 +26299,7 @@
   },
   {
     id: "44038",
-    nm: "Belmonte de San JosÃ©"
+    nm: "Belmonte de San José"
   },
   {
     id: "44040",
@@ -26317,7 +26319,7 @@
   },
   {
     id: "44044",
-    nm: "BordÃ³n"
+    nm: "Bordón"
   },
   {
     id: "44045",
@@ -26325,11 +26327,11 @@
   },
   {
     id: "44046",
-    nm: "BueÃ±a"
+    nm: "Bueña"
   },
   {
     id: "44047",
-    nm: "BurbÃ¡guena"
+    nm: "Burbáguena"
   },
   {
     id: "44048",
@@ -26353,7 +26355,7 @@
   },
   {
     id: "44053",
-    nm: "CamaÃ±as"
+    nm: "Camañas"
   },
   {
     id: "44054",
@@ -26373,27 +26375,27 @@
   },
   {
     id: "44060",
-    nm: "CaÃ±ada de Benatanduz"
+    nm: "Cañada de Benatanduz"
   },
   {
     id: "44061",
-    nm: "CaÃ±ada de Verich, La"
+    nm: "Cañada de Verich, La"
   },
   {
     id: "44062",
-    nm: "CaÃ±ada Vellida"
+    nm: "Cañada Vellida"
   },
   {
     id: "44063",
-    nm: "CaÃ±izar del Olivar"
+    nm: "Cañizar del Olivar"
   },
   {
     id: "44064",
-    nm: "Cascante del RÃ­o"
+    nm: "Cascante del Río"
   },
   {
     id: "44065",
-    nm: "CastejÃ³n de Tornos"
+    nm: "Castejón de Tornos"
   },
   {
     id: "44066",
@@ -26413,7 +26415,7 @@
   },
   {
     id: "44068",
-    nm: "CastelserÃ¡s"
+    nm: "Castelserás"
   },
   {
     id: "44074",
@@ -26433,15 +26435,15 @@
   },
   {
     id: "44080",
-    nm: "CodoÃ±era, La"
+    nm: "Codoñera, La"
   },
   {
     id: "44082",
-    nm: "CorbalÃ¡n"
+    nm: "Corbalán"
   },
   {
     id: "44084",
-    nm: "Cortes de AragÃ³n"
+    nm: "Cortes de Aragón"
   },
   {
     id: "44085",
@@ -26453,7 +26455,7 @@
   },
   {
     id: "44087",
-    nm: "CrivillÃ©n"
+    nm: "Crivillén"
   },
   {
     id: "44088",
@@ -26465,7 +26467,7 @@
   },
   {
     id: "44090",
-    nm: "CucalÃ³n"
+    nm: "Cucalón"
   },
   {
     id: "44092",
@@ -26473,7 +26475,7 @@
   },
   {
     id: "44093",
-    nm: "Cuevas de AlmudÃ©n"
+    nm: "Cuevas de Almudén"
   },
   {
     id: "44094",
@@ -26501,7 +26503,7 @@
   },
   {
     id: "44102",
-    nm: "FonfrÃ­a"
+    nm: "Fonfría"
   },
   {
     id: "44103",
@@ -26509,7 +26511,7 @@
   },
   {
     id: "44105",
-    nm: "FÃ³rnoles"
+    nm: "Fórnoles"
   },
   {
     id: "44106",
@@ -26525,7 +26527,7 @@
   },
   {
     id: "44109",
-    nm: "FrÃ­as de AlbarracÃ­n"
+    nm: "Frías de Albarracín"
   },
   {
     id: "44110",
@@ -26557,7 +26559,7 @@
   },
   {
     id: "44117",
-    nm: "Gea de AlbarracÃ­n"
+    nm: "Gea de Albarracín"
   },
   {
     id: "44118",
@@ -26573,11 +26575,11 @@
   },
   {
     id: "44121",
-    nm: "GÃºdar"
+    nm: "Gúdar"
   },
   {
     id: "44122",
-    nm: "HÃ­jar"
+    nm: "Híjar"
   },
   {
     id: "44123",
@@ -26589,7 +26591,7 @@
   },
   {
     id: "44125",
-    nm: "Huesa del ComÃºn"
+    nm: "Huesa del Común"
   },
   {
     id: "44126",
@@ -26629,7 +26631,7 @@
   },
   {
     id: "44136",
-    nm: "LidÃ³n"
+    nm: "Lidón"
   },
   {
     id: "44137",
@@ -26637,7 +26639,7 @@
   },
   {
     id: "44141",
-    nm: "LledÃ³"
+    nm: "Lledó"
   },
   {
     id: "44138",
@@ -26653,7 +26655,7 @@
   },
   {
     id: "44144",
-    nm: "MartÃ­n del RÃ­o"
+    nm: "Martín del Río"
   },
   {
     id: "44145",
@@ -26665,7 +26667,7 @@
   },
   {
     id: "44147",
-    nm: "MazaleÃ³n"
+    nm: "Mazaleón"
   },
   {
     id: "44148",
@@ -26697,7 +26699,7 @@
   },
   {
     id: "44155",
-    nm: "MontalbÃ¡n"
+    nm: "Montalbán"
   },
   {
     id: "44156",
@@ -26705,7 +26707,7 @@
   },
   {
     id: "44157",
-    nm: "Monterde de AlbarracÃ­n"
+    nm: "Monterde de Albarracín"
   },
   {
     id: "44158",
@@ -26713,7 +26715,7 @@
   },
   {
     id: "44159",
-    nm: "MoscardÃ³n"
+    nm: "Moscardón"
   },
   {
     id: "44160",
@@ -26725,7 +26727,7 @@
   },
   {
     id: "44163",
-    nm: "Noguera de AlbarracÃ­n"
+    nm: "Noguera de Albarracín"
   },
   {
     id: "44164",
@@ -26737,11 +26739,11 @@
   },
   {
     id: "44167",
-    nm: "ObÃ³n"
+    nm: "Obón"
   },
   {
     id: "44168",
-    nm: "OdÃ³n"
+    nm: "Odón"
   },
   {
     id: "44169",
@@ -26781,7 +26783,7 @@
   },
   {
     id: "44179",
-    nm: "PeÃ±arroya de Tastavins"
+    nm: "Peñarroya de Tastavins"
   },
   {
     id: "44180",
@@ -26813,7 +26815,7 @@
   },
   {
     id: "44189",
-    nm: "PozondÃ³n"
+    nm: "Pozondón"
   },
   {
     id: "44190",
@@ -26821,7 +26823,7 @@
   },
   {
     id: "44191",
-    nm: "Puebla de HÃ­jar, La"
+    nm: "Puebla de Híjar, La"
   },
   {
     id: "44192",
@@ -26833,7 +26835,7 @@
   },
   {
     id: "44194",
-    nm: "RÃ¡fales"
+    nm: "Ráfales"
   },
   {
     id: "44195",
@@ -26845,7 +26847,7 @@
   },
   {
     id: "44197",
-    nm: "RÃ³denas"
+    nm: "Ródenas"
   },
   {
     id: "44198",
@@ -26857,7 +26859,7 @@
   },
   {
     id: "44200",
-    nm: "Rubielos de la CÃ©rida"
+    nm: "Rubielos de la Cérida"
   },
   {
     id: "44201",
@@ -26869,7 +26871,7 @@
   },
   {
     id: "44204",
-    nm: "SaldÃ³n"
+    nm: "Saldón"
   },
   {
     id: "44205",
@@ -26877,11 +26879,11 @@
   },
   {
     id: "44206",
-    nm: "San AgustÃ­n"
+    nm: "San Agustín"
   },
   {
     id: "44207",
-    nm: "San MartÃ­n del RÃ­o"
+    nm: "San Martín del Río"
   },
   {
     id: "44208",
@@ -26893,11 +26895,11 @@
   },
   {
     id: "44210",
-    nm: "SarriÃ³n"
+    nm: "Sarrión"
   },
   {
     id: "44211",
-    nm: "Segura de los BaÃ±os"
+    nm: "Segura de los Baños"
   },
   {
     id: "44212",
@@ -26921,7 +26923,7 @@
   },
   {
     id: "44218",
-    nm: "TormÃ³n"
+    nm: "Tormón"
   },
   {
     id: "44219",
@@ -26949,7 +26951,7 @@
   },
   {
     id: "44221",
-    nm: "Torrecilla de AlcaÃ±iz"
+    nm: "Torrecilla de Alcañiz"
   },
   {
     id: "44222",
@@ -26957,7 +26959,7 @@
   },
   {
     id: "44226",
-    nm: "TorrelacÃ¡rcel"
+    nm: "Torrelacárcel"
   },
   {
     id: "44228",
@@ -26965,7 +26967,7 @@
   },
   {
     id: "44229",
-    nm: "Torres de AlbarracÃ­n"
+    nm: "Torres de Albarracín"
   },
   {
     id: "44230",
@@ -26989,11 +26991,11 @@
   },
   {
     id: "44236",
-    nm: "TronchÃ³n"
+    nm: "Tronchón"
   },
   {
     id: "44237",
-    nm: "Urrea de GaÃ©n"
+    nm: "Urrea de Gaén"
   },
   {
     id: "44238",
@@ -27089,7 +27091,7 @@
   },
   {
     id: "44267",
-    nm: "Vivel del RÃ­o MartÃ­n"
+    nm: "Vivel del Río Martín"
   },
   {
     id: "44268",
@@ -27097,7 +27099,7 @@
   },
   {
     id: "45001",
-    nm: "AjofrÃ­n"
+    nm: "Ajofrín"
   },
   {
     id: "45002",
@@ -27109,11 +27111,11 @@
   },
   {
     id: "45004",
-    nm: "AlcabÃ³n"
+    nm: "Alcabón"
   },
   {
     id: "45005",
-    nm: "AlcaÃ±izo"
+    nm: "Alcañizo"
   },
   {
     id: "45006",
@@ -27133,11 +27135,11 @@
   },
   {
     id: "45010",
-    nm: "Aldeanueva de San BartolomÃ©"
+    nm: "Aldeanueva de San Bartolomé"
   },
   {
     id: "45011",
-    nm: "Almendral de la CaÃ±ada"
+    nm: "Almendral de la Cañada"
   },
   {
     id: "45012",
@@ -27149,19 +27151,19 @@
   },
   {
     id: "45014",
-    nm: "AÃ±over de Tajo"
+    nm: "Añover de Tajo"
   },
   {
     id: "45015",
-    nm: "ArcicÃ³llar"
+    nm: "Arcicóllar"
   },
   {
     id: "45016",
-    nm: "ArgÃ©s"
+    nm: "Argés"
   },
   {
     id: "45017",
-    nm: "AzutÃ¡n"
+    nm: "Azután"
   },
   {
     id: "45018",
@@ -27173,7 +27175,7 @@
   },
   {
     id: "45020",
-    nm: "BelvÃ­s de la Jara"
+    nm: "Belvís de la Jara"
   },
   {
     id: "45021",
@@ -27189,15 +27191,15 @@
   },
   {
     id: "45024",
-    nm: "BurujÃ³n"
+    nm: "Burujón"
   },
   {
     id: "45025",
-    nm: "CabaÃ±as de la Sagra"
+    nm: "Cabañas de la Sagra"
   },
   {
     id: "45026",
-    nm: "CabaÃ±as de Yepes"
+    nm: "Cabañas de Yepes"
   },
   {
     id: "45027",
@@ -27229,7 +27231,7 @@
   },
   {
     id: "45034",
-    nm: "CamuÃ±as"
+    nm: "Camuñas"
   },
   {
     id: "45035",
@@ -27321,7 +27323,7 @@
   },
   {
     id: "45058",
-    nm: "Domingo PÃ©rez"
+    nm: "Domingo Pérez"
   },
   {
     id: "45059",
@@ -27357,7 +27359,7 @@
   },
   {
     id: "45067",
-    nm: "GÃ¡lvez"
+    nm: "Gálvez"
   },
   {
     id: "45068",
@@ -27401,7 +27403,7 @@
   },
   {
     id: "45078",
-    nm: "Huerta de ValdecarÃ¡banos"
+    nm: "Huerta de Valdecarábanos"
   },
   {
     id: "45079",
@@ -27409,7 +27411,7 @@
   },
   {
     id: "45080",
-    nm: "IllÃ¡n de Vacas"
+    nm: "Illán de Vacas"
   },
   {
     id: "45081",
@@ -27441,7 +27443,7 @@
   },
   {
     id: "45088",
-    nm: "MagÃ¡n"
+    nm: "Magán"
   },
   {
     id: "45089",
@@ -27485,7 +27487,7 @@
   },
   {
     id: "45099",
-    nm: "MÃ©ntrida"
+    nm: "Méntrida"
   },
   {
     id: "45100",
@@ -27497,7 +27499,7 @@
   },
   {
     id: "45102",
-    nm: "MocejÃ³n"
+    nm: "Mocejón"
   },
   {
     id: "45103",
@@ -27505,7 +27507,7 @@
   },
   {
     id: "45104",
-    nm: "MontearagÃ³n"
+    nm: "Montearagón"
   },
   {
     id: "45105",
@@ -27529,7 +27531,7 @@
   },
   {
     id: "45110",
-    nm: "NavalcÃ¡n"
+    nm: "Navalcán"
   },
   {
     id: "45111",
@@ -27561,7 +27563,7 @@
   },
   {
     id: "45118",
-    nm: "NovÃ©s"
+    nm: "Novés"
   },
   {
     id: "45119",
@@ -27569,19 +27571,19 @@
   },
   {
     id: "45120",
-    nm: "NuÃ±o GÃ³mez"
+    nm: "Nuño Gómez"
   },
   {
     id: "45121",
-    nm: "OcaÃ±a"
+    nm: "Ocaña"
   },
   {
     id: "45122",
-    nm: "OlÃ­as del Rey"
+    nm: "Olías del Rey"
   },
   {
     id: "45123",
-    nm: "OntÃ­gola"
+    nm: "Ontígola"
   },
   {
     id: "45124",
@@ -27613,7 +27615,7 @@
   },
   {
     id: "45131",
-    nm: "PelahustÃ¡n"
+    nm: "Pelahustán"
   },
   {
     id: "45132",
@@ -27621,7 +27623,7 @@
   },
   {
     id: "45133",
-    nm: "PolÃ¡n"
+    nm: "Polán"
   },
   {
     id: "45134",
@@ -27633,7 +27635,7 @@
   },
   {
     id: "45136",
-    nm: "Puebla de MontalbÃ¡n, La"
+    nm: "Puebla de Montalbán, La"
   },
   {
     id: "45137",
@@ -27689,15 +27691,15 @@
   },
   {
     id: "45150",
-    nm: "San BartolomÃ© de las Abiertas"
+    nm: "San Bartolomé de las Abiertas"
   },
   {
     id: "45151",
-    nm: "San MartÃ­n de MontalbÃ¡n"
+    nm: "San Martín de Montalbán"
   },
   {
     id: "45152",
-    nm: "San MartÃ­n de Pusa"
+    nm: "San Martín de Pusa"
   },
   {
     id: "45153",
@@ -27705,7 +27707,7 @@
   },
   {
     id: "45154",
-    nm: "San RomÃ¡n de los Montes"
+    nm: "San Román de los Montes"
   },
   {
     id: "45155",
@@ -27737,7 +27739,7 @@
   },
   {
     id: "45161",
-    nm: "SeseÃ±a"
+    nm: "Seseña"
   },
   {
     id: "45162",
@@ -27773,7 +27775,7 @@
   },
   {
     id: "45171",
-    nm: "Torre de Esteban HambrÃ¡n, La"
+    nm: "Torre de Esteban Hambrán, La"
   },
   {
     id: "45170",
@@ -27789,7 +27791,7 @@
   },
   {
     id: "45174",
-    nm: "TotanÃ©s"
+    nm: "Totanés"
   },
   {
     id: "45175",
@@ -27817,7 +27819,7 @@
   },
   {
     id: "45182",
-    nm: "Ventas con PeÃ±a Aguilera, Las"
+    nm: "Ventas con Peña Aguilera, Las"
   },
   {
     id: "45183",
@@ -27825,7 +27827,7 @@
   },
   {
     id: "45184",
-    nm: "Ventas de San JuliÃ¡n, Las"
+    nm: "Ventas de San Julián, Las"
   },
   {
     id: "45186",
@@ -27833,7 +27835,7 @@
   },
   {
     id: "45185",
-    nm: "VillacaÃ±as"
+    nm: "Villacañas"
   },
   {
     id: "45187",
@@ -27865,7 +27867,7 @@
   },
   {
     id: "45194",
-    nm: "Villarejo de MontalbÃ¡n"
+    nm: "Villarejo de Montalbán"
   },
   {
     id: "45195",
@@ -27889,7 +27891,7 @@
   },
   {
     id: "45200",
-    nm: "YÃ©benes, Los"
+    nm: "Yébenes, Los"
   },
   {
     id: "45201",
@@ -27933,7 +27935,7 @@
   },
   {
     id: "46005",
-    nm: "AlaquÃ s"
+    nm: "Alaquàs"
   },
   {
     id: "46006",
@@ -27973,11 +27975,11 @@
   },
   {
     id: "46016",
-    nm: "AlcÃ ntera de XÃºquer"
+    nm: "Alcàntera de Xúquer"
   },
   {
     id: "46015",
-    nm: "AlcÃ sser"
+    nm: "Alcàsser"
   },
   {
     id: "46018",
@@ -27985,11 +27987,11 @@
   },
   {
     id: "46020",
-    nm: "AlcÃºdia de Crespins, l'"
+    nm: "Alcúdia de Crespins, l'"
   },
   {
     id: "46019",
-    nm: "AlcÃºdia, l'"
+    nm: "Alcúdia, l'"
   },
   {
     id: "46021",
@@ -28013,7 +28015,7 @@
   },
   {
     id: "46027",
-    nm: "AlfarrasÃ­"
+    nm: "Alfarrasí"
   },
   {
     id: "46023",
@@ -28025,7 +28027,7 @@
   },
   {
     id: "46029",
-    nm: "AlgemesÃ­"
+    nm: "Algemesí"
   },
   {
     id: "46030",
@@ -28037,11 +28039,11 @@
   },
   {
     id: "46032",
-    nm: "AlmÃ ssera"
+    nm: "Almàssera"
   },
   {
     id: "46033",
-    nm: "AlmiserÃ "
+    nm: "Almiserà"
   },
   {
     id: "46034",
@@ -28097,7 +28099,7 @@
   },
   {
     id: "46047",
-    nm: "BÃ¨lgida"
+    nm: "Bèlgida"
   },
   {
     id: "46048",
@@ -28105,11 +28107,11 @@
   },
   {
     id: "46049",
-    nm: "BellÃºs"
+    nm: "Bellús"
   },
   {
     id: "46050",
-    nm: "BenagÃ©ber"
+    nm: "Benagéber"
   },
   {
     id: "46051",
@@ -28125,11 +28127,11 @@
   },
   {
     id: "46054",
-    nm: "BenetÃºsser"
+    nm: "Benetússer"
   },
   {
     id: "46055",
-    nm: "BeniarjÃ³"
+    nm: "Beniarjó"
   },
   {
     id: "46056",
@@ -28141,27 +28143,27 @@
   },
   {
     id: "46904",
-    nm: "Benicull de XÃºquer"
+    nm: "Benicull de Xúquer"
   },
   {
     id: "46060",
-    nm: "BenifaiÃ³"
+    nm: "Benifaió"
   },
   {
     id: "46059",
-    nm: "BenifairÃ³ de la Valldigna"
+    nm: "Benifairó de la Valldigna"
   },
   {
     id: "46058",
-    nm: "BenifairÃ³ de les Valls"
+    nm: "Benifairó de les Valls"
   },
   {
     id: "46061",
-    nm: "BeniflÃ¡"
+    nm: "Beniflá"
   },
   {
     id: "46062",
-    nm: "BenigÃ nim"
+    nm: "Benigànim"
   },
   {
     id: "46063",
@@ -28177,11 +28179,11 @@
   },
   {
     id: "46066",
-    nm: "BenirredrÃ "
+    nm: "Benirredrà"
   },
   {
     id: "46067",
-    nm: "BenisanÃ³"
+    nm: "Benisanó"
   },
   {
     id: "46068",
@@ -28193,7 +28195,7 @@
   },
   {
     id: "46070",
-    nm: "BÃ©tera"
+    nm: "Bétera"
   },
   {
     id: "46071",
@@ -28209,7 +28211,7 @@
   },
   {
     id: "46074",
-    nm: "BonrepÃ²s i Mirambell"
+    nm: "Bonrepòs i Mirambell"
   },
   {
     id: "46075",
@@ -28221,7 +28223,7 @@
   },
   {
     id: "46077",
-    nm: "BuÃ±ol"
+    nm: "Buñol"
   },
   {
     id: "46078",
@@ -28249,7 +28251,7 @@
   },
   {
     id: "46084",
-    nm: "CÃ rcer"
+    nm: "Càrcer"
   },
   {
     id: "46085",
@@ -28257,7 +28259,7 @@
   },
   {
     id: "46086",
-    nm: "CarrÃ­cola"
+    nm: "Carrícola"
   },
   {
     id: "46087",
@@ -28273,7 +28275,7 @@
   },
   {
     id: "46090",
-    nm: "CastellÃ³ de Rugat"
+    nm: "Castelló de Rugat"
   },
   {
     id: "46091",
@@ -28297,7 +28299,7 @@
   },
   {
     id: "46096",
-    nm: "CerdÃ "
+    nm: "Cerdà"
   },
   {
     id: "46107",
@@ -28333,7 +28335,7 @@
   },
   {
     id: "46099",
-    nm: "Cortes de PallÃ¡s"
+    nm: "Cortes de Pallás"
   },
   {
     id: "46100",
@@ -28345,11 +28347,11 @@
   },
   {
     id: "46113",
-    nm: "DaimÃºs"
+    nm: "Daimús"
   },
   {
     id: "46114",
-    nm: "DomeÃ±o"
+    nm: "Domeño"
   },
   {
     id: "46115",
@@ -28369,7 +28371,7 @@
   },
   {
     id: "46119",
-    nm: "Ãˆnova, l'"
+    nm: "��nova, l'"
   },
   {
     id: "46120",
@@ -28397,7 +28399,7 @@
   },
   {
     id: "46127",
-    nm: "Font d'En CarrÃ²s, la"
+    nm: "Font d'En Carròs, la"
   },
   {
     id: "46124",
@@ -28417,7 +28419,7 @@
   },
   {
     id: "46902",
-    nm: "GÃ¡tova"
+    nm: "Gátova"
   },
   {
     id: "46130",
@@ -28425,7 +28427,7 @@
   },
   {
     id: "46132",
-    nm: "GenovÃ©s"
+    nm: "Genovés"
   },
   {
     id: "46133",
@@ -28449,7 +28451,7 @@
   },
   {
     id: "46138",
-    nm: "GuadassÃ©quies"
+    nm: "Guadasséquies"
   },
   {
     id: "46139",
@@ -28477,11 +28479,11 @@
   },
   {
     id: "46155",
-    nm: "LlaurÃ­"
+    nm: "Llaurí"
   },
   {
     id: "46147",
-    nm: "LlÃ­ria"
+    nm: "Llíria"
   },
   {
     id: "46152",
@@ -28533,7 +28535,7 @@
   },
   {
     id: "46162",
-    nm: "MassalavÃ©s"
+    nm: "Massalavés"
   },
   {
     id: "46163",
@@ -28597,15 +28599,15 @@
   },
   {
     id: "46178",
-    nm: "NÃ¡quera"
+    nm: "Náquera"
   },
   {
     id: "46179",
-    nm: "NavarrÃ©s"
+    nm: "Navarrés"
   },
   {
     id: "46180",
-    nm: "NovelÃ©/NovetlÃ¨"
+    nm: "Novelé/Novetlè"
   },
   {
     id: "46181",
@@ -28633,7 +28635,7 @@
   },
   {
     id: "46187",
-    nm: "Palma de GandÃ­a"
+    nm: "Palma de Gandía"
   },
   {
     id: "46188",
@@ -28653,7 +28655,7 @@
   },
   {
     id: "46192",
-    nm: "PetrÃ©s"
+    nm: "Petrés"
   },
   {
     id: "46193",
@@ -28689,7 +28691,7 @@
   },
   {
     id: "46197",
-    nm: "PolinyÃ  de XÃºquer"
+    nm: "Polinyà de Xúquer"
   },
   {
     id: "46198",
@@ -28697,7 +28699,7 @@
   },
   {
     id: "46205",
-    nm: "PuÃ§ol"
+    nm: "Puçol"
   },
   {
     id: "46201",
@@ -28741,7 +28743,7 @@
   },
   {
     id: "46210",
-    nm: "RÃ¡fol de Salem"
+    nm: "Ráfol de Salem"
   },
   {
     id: "46212",
@@ -28749,7 +28751,7 @@
   },
   {
     id: "46211",
-    nm: "Real de GandÃ­a"
+    nm: "Real de Gandía"
   },
   {
     id: "46213",
@@ -28757,7 +28759,7 @@
   },
   {
     id: "46214",
-    nm: "Riba-roja de TÃºria"
+    nm: "Riba-roja de Túria"
   },
   {
     id: "46215",
@@ -28769,11 +28771,11 @@
   },
   {
     id: "46217",
-    nm: "RotglÃ  i CorberÃ "
+    nm: "Rotglà i Corberà"
   },
   {
     id: "46218",
-    nm: "RÃ³tova"
+    nm: "Rótova"
   },
   {
     id: "46219",
@@ -28789,7 +28791,7 @@
   },
   {
     id: "46903",
-    nm: "San Antonio de BenagÃ©ber"
+    nm: "San Antonio de Benagéber"
   },
   {
     id: "46222",
@@ -28797,7 +28799,7 @@
   },
   {
     id: "46223",
-    nm: "SedavÃ­"
+    nm: "Sedaví"
   },
   {
     id: "46224",
@@ -28849,7 +28851,7 @@
   },
   {
     id: "46236",
-    nm: "SumacÃ rcer"
+    nm: "Sumacàrcer"
   },
   {
     id: "46237",
@@ -28893,11 +28895,11 @@
   },
   {
     id: "46247",
-    nm: "TuÃ©jar"
+    nm: "Tuéjar"
   },
   {
     id: "46248",
-    nm: "TurÃ­s"
+    nm: "Turís"
   },
   {
     id: "46249",
@@ -28917,7 +28919,7 @@
   },
   {
     id: "46253",
-    nm: "VallÃ©s"
+    nm: "Vallés"
   },
   {
     id: "46254",
@@ -28933,7 +28935,7 @@
   },
   {
     id: "46257",
-    nm: "Villanueva de CastellÃ³n"
+    nm: "Villanueva de Castellón"
   },
   {
     id: "46258",
@@ -28949,7 +28951,7 @@
   },
   {
     id: "46145",
-    nm: "XÃ tiva"
+    nm: "Xàtiva"
   },
   {
     id: "46143",
@@ -28965,7 +28967,7 @@
   },
   {
     id: "46261",
-    nm: "YÃ¡tova"
+    nm: "Yátova"
   },
   {
     id: "46262",
@@ -28993,7 +28995,7 @@
   },
   {
     id: "47005",
-    nm: "AlcazarÃ©n"
+    nm: "Alcazarén"
   },
   {
     id: "47006",
@@ -29001,7 +29003,7 @@
   },
   {
     id: "47007",
-    nm: "Aldeamayor de San MartÃ­n"
+    nm: "Aldeamayor de San Martín"
   },
   {
     id: "47008",
@@ -29021,7 +29023,7 @@
   },
   {
     id: "47012",
-    nm: "BahabÃ³n"
+    nm: "Bahabón"
   },
   {
     id: "47013",
@@ -29069,7 +29071,7 @@
   },
   {
     id: "47024",
-    nm: "BolaÃ±os de Campos"
+    nm: "Bolaños de Campos"
   },
   {
     id: "47025",
@@ -29081,11 +29083,11 @@
   },
   {
     id: "47027",
-    nm: "CabezÃ³n de Pisuerga"
+    nm: "Cabezón de Pisuerga"
   },
   {
     id: "47028",
-    nm: "CabezÃ³n de Valderaduey"
+    nm: "Cabezón de Valderaduey"
   },
   {
     id: "47029",
@@ -29105,7 +29107,7 @@
   },
   {
     id: "47033",
-    nm: "Canalejas de PeÃ±afiel"
+    nm: "Canalejas de Peñafiel"
   },
   {
     id: "47034",
@@ -29117,11 +29119,11 @@
   },
   {
     id: "47036",
-    nm: "Casasola de AriÃ³n"
+    nm: "Casasola de Arión"
   },
   {
     id: "47037",
-    nm: "CastrejÃ³n de Trabancos"
+    nm: "Castrejón de Trabancos"
   },
   {
     id: "47038",
@@ -29153,7 +29155,7 @@
   },
   {
     id: "47045",
-    nm: "CastronuÃ±o"
+    nm: "Castronuño"
   },
   {
     id: "47046",
@@ -29177,15 +29179,15 @@
   },
   {
     id: "47051",
-    nm: "CiguÃ±uela"
+    nm: "Ciguñuela"
   },
   {
     id: "47052",
-    nm: "CistÃ©rniga"
+    nm: "Cistérniga"
   },
   {
     id: "47053",
-    nm: "Cogeces de Ãscar"
+    nm: "Cogeces de Íscar"
   },
   {
     id: "47054",
@@ -29237,7 +29239,7 @@
   },
   {
     id: "47066",
-    nm: "FuensaldaÃ±a"
+    nm: "Fuensaldaña"
   },
   {
     id: "47067",
@@ -29253,7 +29255,7 @@
   },
   {
     id: "47070",
-    nm: "GatÃ³n de Campos"
+    nm: "Gatón de Campos"
   },
   {
     id: "47071",
@@ -29261,7 +29263,7 @@
   },
   {
     id: "47073",
-    nm: "HerrÃ­n de Campos"
+    nm: "Herrín de Campos"
   },
   {
     id: "47074",
@@ -29269,7 +29271,7 @@
   },
   {
     id: "47075",
-    nm: "Ãscar"
+    nm: "Íscar"
   },
   {
     id: "47076",
@@ -29301,7 +29303,7 @@
   },
   {
     id: "47083",
-    nm: "Matilla de los CaÃ±os"
+    nm: "Matilla de los Caños"
   },
   {
     id: "47084",
@@ -29357,7 +29359,7 @@
   },
   {
     id: "47097",
-    nm: "Mota del MarquÃ©s"
+    nm: "Mota del Marqués"
   },
   {
     id: "47098",
@@ -29393,7 +29395,7 @@
   },
   {
     id: "47106",
-    nm: "Olmos de PeÃ±afiel"
+    nm: "Olmos de Peñafiel"
   },
   {
     id: "47109",
@@ -29417,11 +29419,11 @@
   },
   {
     id: "47114",
-    nm: "PeÃ±afiel"
+    nm: "Peñafiel"
   },
   {
     id: "47115",
-    nm: "PeÃ±aflor de Hornija"
+    nm: "Peñaflor de Hornija"
   },
   {
     id: "47116",
@@ -29429,15 +29431,15 @@
   },
   {
     id: "47117",
-    nm: "PiÃ±a de Esgueva"
+    nm: "Piña de Esgueva"
   },
   {
     id: "47118",
-    nm: "PiÃ±el de Abajo"
+    nm: "Piñel de Abajo"
   },
   {
     id: "47119",
-    nm: "PiÃ±el de Arriba"
+    nm: "Piñel de Arriba"
   },
   {
     id: "47121",
@@ -29469,7 +29471,7 @@
   },
   {
     id: "47129",
-    nm: "Quintanilla de OnÃ©simo"
+    nm: "Quintanilla de Onésimo"
   },
   {
     id: "47130",
@@ -29481,7 +29483,7 @@
   },
   {
     id: "47131",
-    nm: "RÃ¡bano"
+    nm: "Rábano"
   },
   {
     id: "47132",
@@ -29505,7 +29507,7 @@
   },
   {
     id: "47138",
-    nm: "RubÃ­ de Bracamonte"
+    nm: "Rubí de Bracamonte"
   },
   {
     id: "47139",
@@ -29521,7 +29523,7 @@
   },
   {
     id: "47142",
-    nm: "San CebriÃ¡n de Mazote"
+    nm: "San Cebrián de Mazote"
   },
   {
     id: "47143",
@@ -29529,7 +29531,7 @@
   },
   {
     id: "47144",
-    nm: "San MartÃ­n de ValvenÃ­"
+    nm: "San Martín de Valvení"
   },
   {
     id: "47145",
@@ -29553,7 +29555,7 @@
   },
   {
     id: "47150",
-    nm: "San RomÃ¡n de Hornija"
+    nm: "San Román de Hornija"
   },
   {
     id: "47151",
@@ -29569,11 +29571,11 @@
   },
   {
     id: "47153",
-    nm: "SantervÃ¡s de Campos"
+    nm: "Santervás de Campos"
   },
   {
     id: "47154",
-    nm: "SantibÃ¡Ã±ez de Valcorba"
+    nm: "Santibáñez de Valcorba"
   },
   {
     id: "47155",
@@ -29581,7 +29583,7 @@
   },
   {
     id: "47157",
-    nm: "SardÃ³n de Duero"
+    nm: "Sardón de Duero"
   },
   {
     id: "47158",
@@ -29621,7 +29623,7 @@
   },
   {
     id: "47170",
-    nm: "Torre de PeÃ±afiel"
+    nm: "Torre de Peñafiel"
   },
   {
     id: "47166",
@@ -29637,11 +29639,11 @@
   },
   {
     id: "47171",
-    nm: "TorrelobatÃ³n"
+    nm: "Torrelobatón"
   },
   {
     id: "47172",
-    nm: "TorrescÃ¡rcela"
+    nm: "Torrescárcela"
   },
   {
     id: "47173",
@@ -29657,7 +29659,7 @@
   },
   {
     id: "47176",
-    nm: "UniÃ³n de Campos, La"
+    nm: "Unión de Campos, La"
   },
   {
     id: "47177",
@@ -29665,7 +29667,7 @@
   },
   {
     id: "47178",
-    nm: "UrueÃ±a"
+    nm: "Urueña"
   },
   {
     id: "47179",
@@ -29709,7 +29711,7 @@
   },
   {
     id: "47189",
-    nm: "VelascÃ¡lvaro"
+    nm: "Velascálvaro"
   },
   {
     id: "47190",
@@ -29729,7 +29731,7 @@
   },
   {
     id: "47195",
-    nm: "VillabÃ¡Ã±ez"
+    nm: "Villabáñez"
   },
   {
     id: "47196",
@@ -29737,11 +29739,11 @@
   },
   {
     id: "47197",
-    nm: "VillabrÃ¡gima"
+    nm: "Villabrágima"
   },
   {
     id: "47198",
-    nm: "VillacarralÃ³n"
+    nm: "Villacarralón"
   },
   {
     id: "47199",
@@ -29761,7 +29763,7 @@
   },
   {
     id: "47205",
-    nm: "VillafrechÃ³s"
+    nm: "Villafrechós"
   },
   {
     id: "47206",
@@ -29769,15 +29771,15 @@
   },
   {
     id: "47207",
-    nm: "VillagarcÃ­a de Campos"
+    nm: "Villagarcía de Campos"
   },
   {
     id: "47208",
-    nm: "VillagÃ³mez la Nueva"
+    nm: "Villagómez la Nueva"
   },
   {
     id: "47209",
-    nm: "VillalÃ¡n de Campos"
+    nm: "Villalán de Campos"
   },
   {
     id: "47210",
@@ -29797,7 +29799,7 @@
   },
   {
     id: "47214",
-    nm: "VillalÃ³n de Campos"
+    nm: "Villalón de Campos"
   },
   {
     id: "47215",
@@ -29805,7 +29807,7 @@
   },
   {
     id: "47216",
-    nm: "VillÃ¡n de Tordesillas"
+    nm: "Villán de Tordesillas"
   },
   {
     id: "47217",
@@ -29845,7 +29847,7 @@
   },
   {
     id: "47226",
-    nm: "VillavaquerÃ­n"
+    nm: "Villavaquerín"
   },
   {
     id: "47227",
@@ -29869,7 +29871,7 @@
   },
   {
     id: "47231",
-    nm: "ZaratÃ¡n"
+    nm: "Zaratán"
   },
   {
     id: "47232",
@@ -29877,11 +29879,11 @@
   },
   {
     id: "48001",
-    nm: "AbadiÃ±o"
+    nm: "Abadiño"
   },
   {
     id: "48002",
-    nm: "Abanto y CiÃ©rvana-Abanto Zierbena"
+    nm: "Abanto y Ciérvana-Abanto Zierbena"
   },
   {
     id: "48911",
@@ -30021,7 +30023,7 @@
   },
   {
     id: "48033",
-    nm: "EreÃ±o"
+    nm: "Ereño"
   },
   {
     id: "48034",
@@ -30093,7 +30095,7 @@
   },
   {
     id: "48045",
-    nm: "GÃ¼eÃ±es"
+    nm: "Güeñes"
   },
   {
     id: "48048",
@@ -30165,7 +30167,7 @@
   },
   {
     id: "48059",
-    nm: "MaÃ±aria"
+    nm: "Mañaria"
   },
   {
     id: "48060",
@@ -30185,7 +30187,7 @@
   },
   {
     id: "48064",
-    nm: "MeÃ±aka"
+    nm: "Meñaka"
   },
   {
     id: "48066",
@@ -30285,11 +30287,11 @@
   },
   {
     id: "48074",
-    nm: "UrduÃ±a/OrduÃ±a"
+    nm: "Urduña/Orduña"
   },
   {
     id: "48080",
-    nm: "Valle de TrÃ¡paga-Trapagaran"
+    nm: "Valle de Trápaga-Trapagaran"
   },
   {
     id: "48095",
@@ -30329,7 +30331,7 @@
   },
   {
     id: "49003",
-    nm: "AlcaÃ±ices"
+    nm: "Alcañices"
   },
   {
     id: "49004",
@@ -30353,7 +30355,7 @@
   },
   {
     id: "49009",
-    nm: "AndavÃ­as"
+    nm: "Andavías"
   },
   {
     id: "49010",
@@ -30365,7 +30367,7 @@
   },
   {
     id: "49012",
-    nm: "ArgaÃ±Ã­n"
+    nm: "Argañín"
   },
   {
     id: "49013",
@@ -30389,7 +30391,7 @@
   },
   {
     id: "49018",
-    nm: "AyoÃ³ de Vidriales"
+    nm: "Ayoó de Vidriales"
   },
   {
     id: "49019",
@@ -30413,11 +30415,11 @@
   },
   {
     id: "49024",
-    nm: "BÃ³veda de Toro, La"
+    nm: "Bóveda de Toro, La"
   },
   {
     id: "49025",
-    nm: "BretÃ³"
+    nm: "Bretó"
   },
   {
     id: "49026",
@@ -30441,7 +30443,7 @@
   },
   {
     id: "49031",
-    nm: "CabaÃ±as de Sayago"
+    nm: "Cabañas de Sayago"
   },
   {
     id: "49032",
@@ -30453,11 +30455,11 @@
   },
   {
     id: "49034",
-    nm: "CaÃ±izal"
+    nm: "Cañizal"
   },
   {
     id: "49035",
-    nm: "CaÃ±izo"
+    nm: "Cañizo"
   },
   {
     id: "49036",
@@ -30469,7 +30471,7 @@
   },
   {
     id: "49038",
-    nm: "Casaseca de CampeÃ¡n"
+    nm: "Casaseca de Campeán"
   },
   {
     id: "49039",
@@ -30477,7 +30479,7 @@
   },
   {
     id: "49040",
-    nm: "Castrillo de la GuareÃ±a"
+    nm: "Castrillo de la Guareña"
   },
   {
     id: "49041",
@@ -30549,11 +30551,11 @@
   },
   {
     id: "49062",
-    nm: "EspadaÃ±edo"
+    nm: "Espadañedo"
   },
   {
     id: "49063",
-    nm: "Faramontanos de TÃ¡bara"
+    nm: "Faramontanos de Tábara"
   },
   {
     id: "49064",
@@ -30581,7 +30583,7 @@
   },
   {
     id: "49071",
-    nm: "FonfrÃ­a"
+    nm: "Fonfría"
   },
   {
     id: "49075",
@@ -30605,7 +30607,7 @@
   },
   {
     id: "49080",
-    nm: "FuentelapeÃ±a"
+    nm: "Fuentelapeña"
   },
   {
     id: "49082",
@@ -30613,7 +30615,7 @@
   },
   {
     id: "49081",
-    nm: "FuentesaÃºco"
+    nm: "Fuentesaúco"
   },
   {
     id: "49083",
@@ -30633,7 +30635,7 @@
   },
   {
     id: "49087",
-    nm: "Gallegos del RÃ­o"
+    nm: "Gallegos del Río"
   },
   {
     id: "49088",
@@ -30681,7 +30683,7 @@
   },
   {
     id: "49100",
-    nm: "LubiÃ¡n"
+    nm: "Lubián"
   },
   {
     id: "49101",
@@ -30729,7 +30731,7 @@
   },
   {
     id: "49113",
-    nm: "Matilla de ArzÃ³n"
+    nm: "Matilla de Arzón"
   },
   {
     id: "49114",
@@ -30809,7 +30811,7 @@
   },
   {
     id: "49133",
-    nm: "Moreruela de TÃ¡bara"
+    nm: "Moreruela de Tábara"
   },
   {
     id: "49134",
@@ -30849,7 +30851,7 @@
   },
   {
     id: "49145",
-    nm: "Pedralba de la PraderÃ­a"
+    nm: "Pedralba de la Pradería"
   },
   {
     id: "49146",
@@ -30865,7 +30867,7 @@
   },
   {
     id: "49149",
-    nm: "PeÃ±ausende"
+    nm: "Peñausende"
   },
   {
     id: "49150",
@@ -30873,7 +30875,7 @@
   },
   {
     id: "49151",
-    nm: "PerdigÃ³n, El"
+    nm: "Perdigón, El"
   },
   {
     id: "49152",
@@ -30885,7 +30887,7 @@
   },
   {
     id: "49154",
-    nm: "PÃ­as"
+    nm: "Pías"
   },
   {
     id: "49155",
@@ -30901,7 +30903,7 @@
   },
   {
     id: "49158",
-    nm: "PiÃ±ero, El"
+    nm: "Piñero, El"
   },
   {
     id: "49160",
@@ -30921,7 +30923,7 @@
   },
   {
     id: "49164",
-    nm: "Pozuelo de TÃ¡bara"
+    nm: "Pozuelo de Tábara"
   },
   {
     id: "49165",
@@ -30957,7 +30959,7 @@
   },
   {
     id: "49173",
-    nm: "RÃ¡bano de Aliste"
+    nm: "Rábano de Aliste"
   },
   {
     id: "49174",
@@ -30969,7 +30971,7 @@
   },
   {
     id: "49176",
-    nm: "RiofrÃ­o de Aliste"
+    nm: "Riofrío de Aliste"
   },
   {
     id: "49177",
@@ -30997,19 +30999,19 @@
   },
   {
     id: "49184",
-    nm: "Samir de los CaÃ±os"
+    nm: "Samir de los Caños"
   },
   {
     id: "49185",
-    nm: "San AgustÃ­n del Pozo"
+    nm: "San Agustín del Pozo"
   },
   {
     id: "49186",
-    nm: "San CebriÃ¡n de Castro"
+    nm: "San Cebrián de Castro"
   },
   {
     id: "49187",
-    nm: "San CristÃ³bal de EntreviÃ±as"
+    nm: "San Cristóbal de Entreviñas"
   },
   {
     id: "49188",
@@ -31021,7 +31023,7 @@
   },
   {
     id: "49190",
-    nm: "San MartÃ­n de Valderaduey"
+    nm: "San Martín de Valderaduey"
   },
   {
     id: "49191",
@@ -31069,19 +31071,19 @@
   },
   {
     id: "49203",
-    nm: "Santa MarÃ­a de la Vega"
+    nm: "Santa María de la Vega"
   },
   {
     id: "49204",
-    nm: "Santa MarÃ­a de Valverde"
+    nm: "Santa María de Valverde"
   },
   {
     id: "49205",
-    nm: "SantibÃ¡Ã±ez de Tera"
+    nm: "Santibáñez de Tera"
   },
   {
     id: "49206",
-    nm: "SantibÃ¡Ã±ez de Vidriales"
+    nm: "Santibáñez de Vidriales"
   },
   {
     id: "49207",
@@ -31093,7 +31095,7 @@
   },
   {
     id: "49214",
-    nm: "TÃ¡bara"
+    nm: "Tábara"
   },
   {
     id: "49216",
@@ -31125,11 +31127,11 @@
   },
   {
     id: "49225",
-    nm: "UÃ±a de Quintana"
+    nm: "Uña de Quintana"
   },
   {
     id: "49226",
-    nm: "Vadillo de la GuareÃ±a"
+    nm: "Vadillo de la Guareña"
   },
   {
     id: "49227",
@@ -31145,7 +31147,7 @@
   },
   {
     id: "49230",
-    nm: "Vallesa de la GuareÃ±a"
+    nm: "Vallesa de la Guareña"
   },
   {
     id: "49231",
@@ -31165,7 +31167,7 @@
   },
   {
     id: "49235",
-    nm: "VezdemarbÃ¡n"
+    nm: "Vezdemarbán"
   },
   {
     id: "49236",
@@ -31177,7 +31179,7 @@
   },
   {
     id: "49238",
-    nm: "VillabrÃ¡zaro"
+    nm: "Villabrázaro"
   },
   {
     id: "49239",
@@ -31193,11 +31195,11 @@
   },
   {
     id: "49242",
-    nm: "VillafÃ¡fila"
+    nm: "Villafáfila"
   },
   {
     id: "49243",
-    nm: "VillaferrueÃ±a"
+    nm: "Villaferrueña"
   },
   {
     id: "49244",
@@ -31205,7 +31207,7 @@
   },
   {
     id: "49245",
-    nm: "VillalazÃ¡n"
+    nm: "Villalazán"
   },
   {
     id: "49246",
@@ -31241,7 +31243,7 @@
   },
   {
     id: "49256",
-    nm: "VillanÃ¡zar"
+    nm: "Villanázar"
   },
   {
     id: "49257",
@@ -31249,7 +31251,7 @@
   },
   {
     id: "49258",
-    nm: "Villanueva de CampeÃ¡n"
+    nm: "Villanueva de Campeán"
   },
   {
     id: "49259",
@@ -31281,7 +31283,7 @@
   },
   {
     id: "49266",
-    nm: "VillÃ¡rdiga"
+    nm: "Villárdiga"
   },
   {
     id: "49267",
@@ -31289,7 +31291,7 @@
   },
   {
     id: "49268",
-    nm: "VillarrÃ­n de Campos"
+    nm: "Villarrín de Campos"
   },
   {
     id: "49269",
@@ -31309,7 +31311,7 @@
   },
   {
     id: "49273",
-    nm: "ViÃ±as"
+    nm: "Viñas"
   },
   {
     id: "49275",
@@ -31325,27 +31327,27 @@
   },
   {
     id: "50003",
-    nm: "AgÃ³n"
+    nm: "Agón"
   },
   {
     id: "50004",
-    nm: "AguarÃ³n"
+    nm: "Aguarón"
   },
   {
     id: "50005",
-    nm: "AguilÃ³n"
+    nm: "Aguilón"
   },
   {
     id: "50006",
-    nm: "AinzÃ³n"
+    nm: "Ainzón"
   },
   {
     id: "50007",
-    nm: "AladrÃ©n"
+    nm: "Aladrén"
   },
   {
     id: "50008",
-    nm: "AlagÃ³n"
+    nm: "Alagón"
   },
   {
     id: "50009",
@@ -31365,11 +31367,11 @@
   },
   {
     id: "50013",
-    nm: "AlcalÃ¡ de Ebro"
+    nm: "Alcalá de Ebro"
   },
   {
     id: "50014",
-    nm: "AlcalÃ¡ de Moncayo"
+    nm: "Alcalá de Moncayo"
   },
   {
     id: "50015",
@@ -31381,11 +31383,11 @@
   },
   {
     id: "50017",
-    nm: "AlfajarÃ­n"
+    nm: "Alfajarín"
   },
   {
     id: "50018",
-    nm: "AlfamÃ©n"
+    nm: "Alfamén"
   },
   {
     id: "50019",
@@ -31393,7 +31395,7 @@
   },
   {
     id: "50020",
-    nm: "Alhama de AragÃ³n"
+    nm: "Alhama de Aragón"
   },
   {
     id: "50021",
@@ -31413,7 +31415,7 @@
   },
   {
     id: "50025",
-    nm: "Almunia de DoÃ±a Godina, La"
+    nm: "Almunia de Doña Godina, La"
   },
   {
     id: "50026",
@@ -31429,11 +31431,11 @@
   },
   {
     id: "50029",
-    nm: "AniÃ±Ã³n"
+    nm: "Aniñón"
   },
   {
     id: "50030",
-    nm: "AÃ±Ã³n de Moncayo"
+    nm: "Añón de Moncayo"
   },
   {
     id: "50031",
@@ -31441,7 +31443,7 @@
   },
   {
     id: "50032",
-    nm: "ArÃ¡ndiga"
+    nm: "Arándiga"
   },
   {
     id: "50033",
@@ -31457,7 +31459,7 @@
   },
   {
     id: "50036",
-    nm: "AsÃ­n"
+    nm: "Asín"
   },
   {
     id: "50037",
@@ -31477,15 +31479,15 @@
   },
   {
     id: "50041",
-    nm: "BagÃ¼Ã©s"
+    nm: "Bagüés"
   },
   {
     id: "50042",
-    nm: "BalconchÃ¡n"
+    nm: "Balconchán"
   },
   {
     id: "50043",
-    nm: "BÃ¡rboles"
+    nm: "Bárboles"
   },
   {
     id: "50044",
@@ -31497,7 +31499,7 @@
   },
   {
     id: "50046",
-    nm: "Belmonte de GraciÃ¡n"
+    nm: "Belmonte de Gracián"
   },
   {
     id: "50047",
@@ -31525,7 +31527,7 @@
   },
   {
     id: "50053",
-    nm: "BoquiÃ±eni"
+    nm: "Boquiñeni"
   },
   {
     id: "50054",
@@ -31541,7 +31543,7 @@
   },
   {
     id: "50057",
-    nm: "Brea de AragÃ³n"
+    nm: "Brea de Aragón"
   },
   {
     id: "50058",
@@ -31569,7 +31571,7 @@
   },
   {
     id: "50064",
-    nm: "CabaÃ±as de Ebro"
+    nm: "Cabañas de Ebro"
   },
   {
     id: "50065",
@@ -31597,7 +31599,7 @@
   },
   {
     id: "50071",
-    nm: "Campillo de AragÃ³n"
+    nm: "Campillo de Aragón"
   },
   {
     id: "50072",
@@ -31605,7 +31607,7 @@
   },
   {
     id: "50073",
-    nm: "CariÃ±ena"
+    nm: "Cariñena"
   },
   {
     id: "50074",
@@ -31613,15 +31615,15 @@
   },
   {
     id: "50075",
-    nm: "CastejÃ³n de Alarba"
+    nm: "Castejón de Alarba"
   },
   {
     id: "50076",
-    nm: "CastejÃ³n de las Armas"
+    nm: "Castejón de las Armas"
   },
   {
     id: "50077",
-    nm: "CastejÃ³n de Valdejasa"
+    nm: "Castejón de Valdejasa"
   },
   {
     id: "50078",
@@ -31629,7 +31631,7 @@
   },
   {
     id: "50079",
-    nm: "Cervera de la CaÃ±ada"
+    nm: "Cervera de la Cañada"
   },
   {
     id: "50080",
@@ -31657,7 +31659,7 @@
   },
   {
     id: "50084",
-    nm: "ClarÃ©s de Ribota"
+    nm: "Clarés de Ribota"
   },
   {
     id: "50085",
@@ -31705,7 +31707,7 @@
   },
   {
     id: "50099",
-    nm: "Ã‰pila"
+    nm: "�0pila"
   },
   {
     id: "50100",
@@ -31713,7 +31715,7 @@
   },
   {
     id: "50101",
-    nm: "EscatrÃ³n"
+    nm: "Escatrón"
   },
   {
     id: "50102",
@@ -31725,7 +31727,7 @@
   },
   {
     id: "50105",
-    nm: "FayÃ³n"
+    nm: "Fayón"
   },
   {
     id: "50106",
@@ -31749,11 +31751,11 @@
   },
   {
     id: "50111",
-    nm: "FrÃ©scano"
+    nm: "Fréscano"
   },
   {
     id: "50113",
-    nm: "FuendejalÃ³n"
+    nm: "Fuendejalón"
   },
   {
     id: "50114",
@@ -31793,7 +31795,7 @@
   },
   {
     id: "50123",
-    nm: "GrisÃ©n"
+    nm: "Grisén"
   },
   {
     id: "50124",
@@ -31821,7 +31823,7 @@
   },
   {
     id: "50131",
-    nm: "JaulÃ­n"
+    nm: "Jaulín"
   },
   {
     id: "50132",
@@ -31841,15 +31843,15 @@
   },
   {
     id: "50136",
-    nm: "LÃ©cera"
+    nm: "Lécera"
   },
   {
     id: "50138",
-    nm: "LechÃ³n"
+    nm: "Lechón"
   },
   {
     id: "50137",
-    nm: "LeciÃ±ena"
+    nm: "Leciñena"
   },
   {
     id: "50139",
@@ -31861,7 +31863,7 @@
   },
   {
     id: "50141",
-    nm: "LituÃ©nigo"
+    nm: "Lituénigo"
   },
   {
     id: "50142",
@@ -31873,11 +31875,11 @@
   },
   {
     id: "50144",
-    nm: "LongÃ¡s"
+    nm: "Longás"
   },
   {
     id: "50146",
-    nm: "Lucena de JalÃ³n"
+    nm: "Lucena de Jalón"
   },
   {
     id: "50147",
@@ -31905,7 +31907,7 @@
   },
   {
     id: "50153",
-    nm: "MagallÃ³n"
+    nm: "Magallón"
   },
   {
     id: "50154",
@@ -31917,15 +31919,15 @@
   },
   {
     id: "50156",
-    nm: "MalejÃ¡n"
+    nm: "Maleján"
   },
   {
     id: "50160",
-    nm: "MallÃ©n"
+    nm: "Mallén"
   },
   {
     id: "50157",
-    nm: "MalÃ³n"
+    nm: "Malón"
   },
   {
     id: "50159",
@@ -31941,7 +31943,7 @@
   },
   {
     id: "50163",
-    nm: "MarÃ­a de Huerva"
+    nm: "María de Huerva"
   },
   {
     id: "50902",
@@ -31949,7 +31951,7 @@
   },
   {
     id: "50164",
-    nm: "Mediana de AragÃ³n"
+    nm: "Mediana de Aragón"
   },
   {
     id: "50165",
@@ -31969,7 +31971,7 @@
   },
   {
     id: "50169",
-    nm: "Miedes de AragÃ³n"
+    nm: "Miedes de Aragón"
   },
   {
     id: "50170",
@@ -31989,11 +31991,11 @@
   },
   {
     id: "50174",
-    nm: "MontÃ³n"
+    nm: "Montón"
   },
   {
     id: "50175",
-    nm: "Morata de JalÃ³n"
+    nm: "Morata de Jalón"
   },
   {
     id: "50176",
@@ -32001,7 +32003,7 @@
   },
   {
     id: "50177",
-    nm: "MorÃ©s"
+    nm: "Morés"
   },
   {
     id: "50178",
@@ -32025,7 +32027,7 @@
   },
   {
     id: "50183",
-    nm: "MunÃ©brega"
+    nm: "Munébrega"
   },
   {
     id: "50184",
@@ -32033,15 +32035,15 @@
   },
   {
     id: "50185",
-    nm: "Murillo de GÃ¡llego"
+    nm: "Murillo de Gállego"
   },
   {
     id: "50186",
-    nm: "NavardÃºn"
+    nm: "Navardún"
   },
   {
     id: "50187",
-    nm: "NigÃ¼ella"
+    nm: "Nigüella"
   },
   {
     id: "50188",
@@ -32061,7 +32063,7 @@
   },
   {
     id: "50192",
-    nm: "NuÃ©valos"
+    nm: "Nuévalos"
   },
   {
     id: "50193",
@@ -32069,7 +32071,7 @@
   },
   {
     id: "50194",
-    nm: "OlvÃ©s"
+    nm: "Olvés"
   },
   {
     id: "50195",
@@ -32081,7 +32083,7 @@
   },
   {
     id: "50197",
-    nm: "OrÃ©s"
+    nm: "Orés"
   },
   {
     id: "50198",
@@ -32137,7 +32139,7 @@
   },
   {
     id: "50211",
-    nm: "Plasencia de JalÃ³n"
+    nm: "Plasencia de Jalón"
   },
   {
     id: "50212",
@@ -32157,7 +32159,7 @@
   },
   {
     id: "50216",
-    nm: "Pozuelo de AragÃ³n"
+    nm: "Pozuelo de Aragón"
   },
   {
     id: "50217",
@@ -32165,11 +32167,11 @@
   },
   {
     id: "50218",
-    nm: "Puebla de AlbortÃ³n"
+    nm: "Puebla de Albortón"
   },
   {
     id: "50219",
-    nm: "Puebla de AlfindÃ©n, La"
+    nm: "Puebla de Alfindén, La"
   },
   {
     id: "50220",
@@ -32189,7 +32191,7 @@
   },
   {
     id: "50224",
-    nm: "RetascÃ³n"
+    nm: "Retascón"
   },
   {
     id: "50225",
@@ -32201,7 +32203,7 @@
   },
   {
     id: "50228",
-    nm: "Rueda de JalÃ³n"
+    nm: "Rueda de Jalón"
   },
   {
     id: "50229",
@@ -32209,15 +32211,15 @@
   },
   {
     id: "50241",
-    nm: "SabiÃ±Ã¡n"
+    nm: "Sabiñán"
   },
   {
     id: "50230",
-    nm: "SÃ¡daba"
+    nm: "Sádaba"
   },
   {
     id: "50231",
-    nm: "Salillas de JalÃ³n"
+    nm: "Salillas de Jalón"
   },
   {
     id: "50232",
@@ -32229,15 +32231,15 @@
   },
   {
     id: "50234",
-    nm: "San MartÃ­n de la Virgen de Moncayo"
+    nm: "San Martín de la Virgen de Moncayo"
   },
   {
     id: "50235",
-    nm: "San Mateo de GÃ¡llego"
+    nm: "San Mateo de Gállego"
   },
   {
     id: "50236",
-    nm: "Santa Cruz de GrÃ­o"
+    nm: "Santa Cruz de Grío"
   },
   {
     id: "50237",
@@ -32245,7 +32247,7 @@
   },
   {
     id: "50238",
-    nm: "Santa Eulalia de GÃ¡llego"
+    nm: "Santa Eulalia de Gállego"
   },
   {
     id: "50239",
@@ -32253,7 +32255,7 @@
   },
   {
     id: "50240",
-    nm: "SÃ¡stago"
+    nm: "Sástago"
   },
   {
     id: "50242",
@@ -32269,11 +32271,11 @@
   },
   {
     id: "50245",
-    nm: "SigÃ¼Ã©s"
+    nm: "Sigüés"
   },
   {
     id: "50246",
-    nm: "SisamÃ³n"
+    nm: "Sisamón"
   },
   {
     id: "50247",
@@ -32281,7 +32283,7 @@
   },
   {
     id: "50248",
-    nm: "Sos del Rey CatÃ³lico"
+    nm: "Sos del Rey Católico"
   },
   {
     id: "50249",
@@ -32337,11 +32339,11 @@
   },
   {
     id: "50262",
-    nm: "Torres de BerrellÃ©n"
+    nm: "Torres de Berrellén"
   },
   {
     id: "50263",
-    nm: "Torrijo de la CaÃ±ada"
+    nm: "Torrijo de la Cañada"
   },
   {
     id: "50264",
@@ -32361,15 +32363,15 @@
   },
   {
     id: "50268",
-    nm: "UnduÃ©s de Lerda"
+    nm: "Undués de Lerda"
   },
   {
     id: "50269",
-    nm: "Urrea de JalÃ³n"
+    nm: "Urrea de Jalón"
   },
   {
     id: "50270",
-    nm: "UrriÃ©s"
+    nm: "Urriés"
   },
   {
     id: "50271",
@@ -32381,7 +32383,7 @@
   },
   {
     id: "50274",
-    nm: "Val de San MartÃ­n"
+    nm: "Val de San Martín"
   },
   {
     id: "50273",
@@ -32437,11 +32439,11 @@
   },
   {
     id: "50903",
-    nm: "Villamayor de GÃ¡llego"
+    nm: "Villamayor de Gállego"
   },
   {
     id: "50288",
-    nm: "Villanueva de GÃ¡llego"
+    nm: "Villanueva de Gállego"
   },
   {
     id: "50290",
@@ -32469,7 +32471,7 @@
   },
   {
     id: "50282",
-    nm: "VilueÃ±a, La"
+    nm: "Vilueña, La"
   },
   {
     id: "50295",

@@ -1,0 +1,121 @@
+<app-shell>
+ <app-menuprocedimiento></app-menuprocedimiento>
+ <div class="page-panel">
+ <ul class="nav nav-tabs nav-tabs-iflow" id="myTab" role="tablist">
+ <li class="nav-item" role="presentation">
+ <button (click)="cambiamosDOM()" aria-controls="datosProcedi" aria-selected="true" class="nav-link active"
+ data-bs-target="#datosProcedi" data-bs-toggle="tab" id="datosProcedi-tab" role="tab" type="button">
+ Editar procedimiento
+ </button>
+ </li>
+ <li class="nav-item" id="idtarea" role="presentation">
+ <button aria-controls="tareaProcedi" aria-selected="false" class="nav-link" data-bs-target="#tareaProcedi"
+ data-bs-toggle="tab" id="tareaProcedi-tab" role="tab" type="button">
+ Tareas del procedimiento
+ </button>
+ </li>
+ </ul>
+
+ <div class="tab-content" id="myTabContent">
+ <div aria-labelledby="datosProcedi-tab" class="tab-pane fade show active" id="datosProcedi" role="tabpanel">
+ <div class="form-section">
+ <form (ngSubmit)="editaProcedi(procedimiento.id)">
+ <div class="row g-3">
+ <div class="col-sm-4">
+ <div class="form-floating">
+ <input [(ngModel)]="editarprocedi.descripcion" class="form-control" id="descripcion"
+ name="descripcion" type="text" value="{{procedimiento.descripcion}}" placeholder=" ">
+ <label for="descripcion">Descripción</label>
+ </div>
+ </div>
+
+ <div class="col-sm-4">
+ <div class="form-floating">
+ <input [(ngModel)]="procedimiento.departamento.desEleme" class="form-control" id="departamento"
+ name="departamento" readonly type="text" placeholder=" ">
+ <label for="departamento">Departamento</label>
+ </div>
+ </div>
+
+ <div class="col-sm-4">
+ <div class="form-floating">
+ <input [(ngModel)]="editarprocedi.codigoSia" class="form-control" id="codigoSIA" name="codigoSIA"
+ type="text" value="{{procedimiento.codigoSia}}" placeholder=" ">
+ <label for="codigoSIA">Código SIA</label>
+ </div>
+ </div>
+ </div>
+
+ <div class="form-actions">
+ <button [routerLink]="['/procedimientos']" class="btn-iflow btn-iflow--secondary" name="buttom"
+ type="button">
+ Cancelar
+ </button>
+ <button class="btn-iflow btn-iflow--primary" type="submit">Modificar</button>
+ </div>
+ </form>
+ </div>
+ </div>
+
+ <div aria-labelledby="permiProcedi-tab" class="tab-pane fade" id="permiProcedi" role="tabpanel">
+ <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+ <h5 class="section-subtitle mb-0">Procedimiento: {{ procedimiento.descripcion }}</h5>
+ <div class="acciones-botones-container">
+ <button class="btn-iflow btn-iflow--icon" data-bs-target="#staticBackdrop" data-bs-toggle="modal"
+ type="button" aria-label="Nuevo permiso" title="Nuevo permiso">
+ <i class="bi bi-plus-lg" aria-hidden="true"></i>
+ </button>
+ <button (click)="deletePermisoProcedimiento()" *ngIf="edicion==true" class="btn-iflow btn-iflow--icon"
+ type="button" aria-label="Eliminar permiso" title="Eliminar permiso">
+ <i class="bi bi-trash" aria-hidden="true"></i>
+ </button>
+ </div>
+ </div>
+
+ <div class="grid-container" id="columnsPermi">
+ <app-iflow-grid #grid (rowClick)="idpermisosPermi($event)"
+ [columns]="columnsPermi" [localization]="localizationObject" [pagesize]="5" [source]="sourcePermi" id="grid">
+      </app-iflow-grid>
+ </div>
+ <p class="text-secondary small mt-2 mb-0">* Pulsa sobre el usuario para ver la descripción</p>
+
+ <!-- Modal staticBackdrop -->
+<app-modal-shell
+ modalId="staticBackdrop"
+ title="Tareas"
+ titleId="tareasModalLabel"
+ dialogClass="modal-xl"
+ [showFooter]="false"
+>
+ <form modalBody (ngSubmit)="createPermisoProcedi()">
+<div class="mb-3">
+ <div class="form-floating">
+ <select [(ngModel)]="creapermisoprocedi.usuario" class="form-select" id="usuarioPermiso"
+ name="plantilladefecto">
+ <option *ngFor="let procedipermisos of procedipermiso" name="usuario"
+ value="{{procedipermisos.usuario}}">
+ {{ procedipermisos.usuario }}
+ </option>
+ </select>
+ <label for="usuarioPermiso">Usuario</label>
+ </div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn-iflow btn-iflow--secondary modal-footer__btn" data-bs-dismiss="modal"
+ type="button">
+ Cancelar
+ </button>
+ <button class="btn-iflow btn-iflow--primary modal-footer__btn" data-bs-dismiss="modal"
+ role="button">
+ Guardar
+ </button>
+ </div>
+ </form>
+</app-modal-shell>
+
+ </div>
+
+ <app-edita-procedimiento-tareas></app-edita-procedimiento-tareas>
+ </div>
+ </div>
+</app-shell>

@@ -1,0 +1,17 @@
+<app-shell contentId="hanging-icons">
+  <app-access-denied
+    *ngIf="!session.canManageSolicitudes"
+    title="Acceso denegado"
+    message="Este usuario no tiene permisos de acceso a solicitudes.">
+  </app-access-denied>
+
+  <ng-container *ngIf="session.canManageSolicitudes">
+    <div class="page-panel solicitudes-page" id="solicitudeslist">
+      <app-solicitudes-header></app-solicitudes-header>
+      <app-solicitudes-workspace></app-solicitudes-workspace>
+    </div>
+    <app-solicitudes-modals-alta></app-solicitudes-modals-alta>
+    <app-solicitudes-modals-edicion></app-solicitudes-modals-edicion>
+    <app-solicitudes-modals-acciones></app-solicitudes-modals-acciones>
+  </ng-container>
+</app-shell>

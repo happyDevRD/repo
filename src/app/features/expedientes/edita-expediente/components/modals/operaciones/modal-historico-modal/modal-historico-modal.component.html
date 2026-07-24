@@ -1,0 +1,17 @@
+<app-modal-shell modalId="HistoricoModal" title="Histórico" titleId="HistoricoModalLabel"
+     dialogClass="modal-xl modal-dialog-centered modal-dialog-scrollable" [showFooter]="false">
+     <form modalBody (ngSubmit)="edita.vacio()">
+          <div *ngIf="edita.vertramite" class="px-3">
+               <br>
+               <app-iflow-grid #grid (rowClick)="edita.descargaficheroHistorico($event)"
+                    (rowDoubleClick)="edita.marcaHistorico($event)" [columns]="edita.columnsHistorico"
+                    [localization]="edita.localizationObject" [source]="edita.sourceHistorico">
+               </app-iflow-grid>
+               <br>
+          </div>
+          <div class="modal-footer">
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" type="button"
+                    data-bs-dismiss="modal">Cerrar</button>
+          </div>
+     </form>
+</app-modal-shell>

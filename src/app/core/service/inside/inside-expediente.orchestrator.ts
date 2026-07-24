@@ -3,8 +3,10 @@ import { Injectable, inject } from '@angular/core';
 import { forkJoin, from, map, Observable, of, switchMap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { InsideSoapResponse } from '../../models/inside';
-import { ExpedientesService } from '../../../expedientes/expedientes.service';
-import { TareaTramiteExpporExpedi, VerMetadatos } from '../../../expedientes/expedientes';
+import { ExpedienteApiService } from '../expediente/expediente-api.service';
+import { TareaTramiteExpedienteApiService } from '../tarea-tramite/tarea-tramite-expediente-api.service';
+import { RdDocumentoApiService } from '../documento/rd-documento-api.service';
+import { TareaTramiteExpporExpedi, VerMetadatos } from '../../models/expediente-domain.model';
 import {
   AtributoExpedienteDto,
   IndiceEniDto,
@@ -33,7 +35,9 @@ import { validarExpedienteParaInside } from './inside-validation.helper';
 })
 export class InsideExpedienteOrchestrator {
   private readonly http = inject(HttpClient);
-  private readonly expedientesService = inject(ExpedientesService);
+  private readonly expedienteApi = inject(ExpedienteApiService);
+  private readonly tareaTramiteApi = inject(TareaTramiteExpedienteApiService);
+  private readonly rdDocumentoApi = inject(RdDocumentoApiService);
   private readonly insideService = inject(InsideService);
   private readonly soapClient = inject(InsideSoapClient);
   private readonly prepareApiService = inject(InsidePrepareApiService);
@@ -60,9 +64,9 @@ export class InsideExpedienteOrchestrator {
 
   cargarContexto(expedienteId: number): Observable<InsideIflowContext> {
     return forkJoin({
-      expediente: this.expedientesService.getExpediente(expedienteId),
-      tareas: this.expedientesService.getTareaTramiteExpeporExpe(expedienteId),
-      interesados: this.expedientesService.getInteresadoListar(expedienteId),
+      expediente: this.expedienteApi.getExpediente(expedienteId),
+      tareas: this.tareaTramiteApi.listarPorExpediente(expedienteId),
+      interesados: this.expedienteApi.getInteresadoListar(expedienteId),
       indiceEni: this.obtenerIndiceEni(expedienteId),
       atributos: this.obtenerAtributosExpediente(expedienteId),
     });
@@ -365,7 +369,7 @@ export class InsideExpedienteOrchestrator {
       return of(undefined);
     }
 
-    return this.expedientesService.getMetadatosVer(Number(codArchi)).pipe(
+    return this.rdDocumentoApi.getMetadatosVer(Number(codArchi)).pipe(
       catchError(() => of(undefined)),
     );
   }

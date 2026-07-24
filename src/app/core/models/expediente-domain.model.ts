@@ -1,3 +1,5 @@
+import { PersonaEntidadDto } from './expediente.dto'
+
 export class Expedientes {
 }
 
@@ -377,6 +379,8 @@ export class NuevoExpediente {
   procedimiento!: string;
   usuario!: string;
   ejercicio!: any;
+  /** Devuelto por expediente/crear tras el alta. */
+  numero!: number;
   email!: string;
   formaNotifi!: number;
   idsolicitud!: number;
@@ -711,28 +715,6 @@ export class InsertaBolsaCrear {
   dictamen!: string
 }
 
-// export class TareaTramiteExpedienteVer{
-//     id!: number;
-//     descripcion!: string;
-//     fecFin!: string;
-//     fecInicio!: string;
-//     firmante!: any;
-//     numRegis!:string;
-//     numero!: number;
-//     visible!: boolean;
-//     archivo!: any;
-//     tareaProcedimiento!: number;
-//     tramite!: number;
-//     usuario!: string;
-//     propuestaResolucion!: any;
-//     id_His_Docum!: number;
-//     idDocum!: number;
-//     tramitador!: number;
-//     usuContr!: string;
-//     fecContr!: Date;
-//
-//
-// }
 
 export class CrearTareaTramiteExp {
   descripcion!: any;
@@ -826,144 +808,39 @@ export class RepresentanteExpLIstar {
   dirPosta!: string;
   municipio!: string;
   provincia!: string
-
-
 }
 
 
-export class CrearMensaje {
-  fecEnvio!: Date;
-  idOrgUsuar!: number;
-  descripcion!: string;
-  fecLectura!: string;
-  fecTramitacion!: string;
-  fecRechazo!: string;
-  remitente!: string;
-  destinatario!: string;
-  EstadoMensaje!: string;
-  informativo!: boolean;
-  descripcionRechazo!: string;
-  posesion!: any;
-  idtarea!: any;
-  idExpediente!: any
-
-}
-
-
-export class EditarMensaje {
-  id!: number;
-  idTarea!: number;
-  fecEnvio!: string;
-  descripcion!: string;
-  fecLectura!: Date;
-  fecTramitacion!: Date;
-  fecRechazo!: Date;
-  remitente!: string;
-  nomRemit!: string;
-  nomDesti!: string;
-  estado!: string;
-  destinatario!: string;
-  EstadoMensaje!: string;
-  informativo!: boolean;
-  descripcionRechazo!: string
-}
-
-
-export class RechazarMensaje {
-  fecEnvio!: Date;
-  idOrgUsuar!: number;
-  descripcion!: string;
-  fecLectura!: Date;
-  fecTramitacion!: string;
-  fecRechazo!: Date;
-  remitente!: string;
-  destinatario!: string;
-  EstadoMensaje!: string;
-  informativo!: boolean;
-  descripcionRechazo!: string;
-  estado!: string
-
-}
-
-export class LeeMensaje {
-  id!: number;
-  idTarea!: number;
-  fecEnvio!: string;
-  descripcion!: string;
-  fecLectura!: Date;
-  fecTramitacion!: Date;
-  fecRechazo!: Date;
-  remitente!: string;
-  nomRemit!: string;
-  nomDesti!: string;
-  estado!: string;
-  destinatario!: string;
-  EstadoMensaje!: string;
-  informativo!: boolean;
-  descripcionRechazo!: string
-
-}
-
-export class LeerMensajeRecibidos {
-  id!: number;
-  idTarea!: number;
-  fecEnvio!: string;
-  descripcion!: string;
-  fecLectura!: string;
-  fecTramitacion!: Date;
-  fecRechazo!: Date;
-  remitente!: string;
-  nomRemit!: string;
-  nomDesti!: string;
-  estado!: string;
-
-  destinatario!: string;
-  EstadoMensaje!: string;
-  informativo!: boolean;
-  descripcionRechazo!: string
-
-}
-
-export class LeerMensajeEnviados {
-  id!: number;
-  idTarea!: number;
-  fecEnvio!: string;
-  descripcion!: string;
-  fecLectura!: string;
-  fecTramitacion!: Date;
-  fecRechazo!: Date;
-  remitente!: string;
-  nomRemit!: string;
-  nomDesti!: string;
-  estado!: string;
-
-  destinatario!: string;
-  EstadoMensaje!: string;
-  informativo!: boolean;
-  descripcionRechazo!: string
-
-}
+/** @deprecated Preferir `core/models/mensaje-domain.model` */
+export {
+  CrearMensaje,
+  EditarMensaje,
+  RechazarMensaje,
+  LeeMensaje,
+  LeerMensajeRecibidos,
+  LeerMensajeEnviados,
+} from './mensaje-domain.model'
 
 export class CrearNotificacion {
   id!: number;
   idNotif!: number;
-  personaEntidad!: any;
+  personaEntidad!: PersonaEntidadDto | null;
   desNotificador!: string;
   desMotNotif!: string;
   desSituacion!: string;
   ejeNotif!: number;
   numNotif!: number;
-  fecNotif!: Date;
-  fecRecNotif!: Date | null;
+  fecNotif!: Date | string;
+  fecRecNotif!: Date | string | null;
   idHisPerso!: number;
   idPerso!: number;
   situacion!: number;
   motNotif!: string;
   receptor!: number;
   numBop!: number;
-  bop: any;
-  fecEmiBop!: Date | null;
-  fecPubBop!: Date | null;
+  bop: number | null = null;
+  fecEmiBop!: Date | string | null;
+  fecPubBop!: Date | string | null;
   notificador!: number;
   notificador2!: number;
   codProvi!: number;
@@ -981,18 +858,18 @@ export class CrearNotificacion {
   localidad!: string;
   domicilio!: string;
   codPosta!: number;
-  fecArchi!: Date;
+  fecArchi!: Date | string | null;
   ejeExped!: number;
   numExped!: number;
   observacion!: string;
-  fecRegistSalid!: Date | null;
+  fecRegistSalid!: Date | string | null;
   numRegisSalid!: number;
-  fecEnvio!: Date | null;
+  fecEnvio!: Date | string | null;
   forNotif!: number;
-  fecCaduc!: Date | null;
-  numEnvioTeu!: any;
-  codArchi!: any;
-  codArchiAcuse!: any;
+  fecCaduc!: Date | string | null;
+  numEnvioTeu!: number | string | null;
+  codArchi!: number | string | null;
+  codArchiAcuse!: number | string | null;
   usuContr!: string;
   dni!: string;
 
@@ -1031,39 +908,22 @@ export class LeerNotificacion {
   idNotif!: number;
   ejeNotif!: number;
   numNotif!: number;
-  fecNotif!: Date;
-  fecRecNotif!: Date;
+  fecNotif!: Date | string;
+  fecRecNotif!: Date | string | null;
   idHisPerso!: number;
   idPerso!: number;
-  personaEntidad: any = [{
-    idPerso: "",
-    idHisPerso: "",
-    numDocum: "",
-    tipPerso: "",
-    nombre: "",
-    particula1: "",
-    apellido1: "",
-    particula2: "",
-    apellido2: "",
-    razSocia: "",
-    razSocReduc: "",
-    desPerEntid: "",
-    localidad: "",
-    codPosta: "",
-    dirPosta: "",
-    municipio: "",
-    provincia: ""
-  }];
+  personaEntidad!: PersonaEntidadDto | null;
   situacion!: number;
   desSituacion!: string;
-  motNotif!: any;
-  desMotNotif!: string
-  receptor!: number;
+  motNotif!: number | null;
+  desMotNotif!: string;
+  receptor!: number | null;
+  desReceptor?: string;
   numBop!: number;
   bop!: number;
-  fecEmiBop!: Date;
-  fecPubBop!: Date;
-  notificador!: Date;
+  fecEmiBop!: Date | string | null;
+  fecPubBop!: Date | string | null;
+  notificador!: number | null;
   desNotificador!: string;
   codProvi!: number;
   desProvi!: string;
@@ -1072,30 +932,29 @@ export class LeerNotificacion {
   tipVial!: string;
   desVial!: string;
   numInfer!: number;
-  letInfer!: number;
+  letInfer!: string;
   numSuper!: number;
-  bloque!: number;
-  portal!: number;
-  escalera!: any;
-  planta!: any;
-  puerta!: any;
-  localidad: string;
+  bloque!: string;
+  portal!: string;
+  escalera!: string;
+  planta!: string;
+  puerta!: string;
+  localidad!: string;
   domicilio!: string;
   codPosta!: number;
-  fecArchi!: Date;
+  fecArchi!: Date | string | null;
   ejeExped!: number;
-  numExped: number;
-  observacion!: string
-  fecRegistSalid!: Date;
-  numRegisSalid!: Date;
-  fecEnvio!: Date;
+  numExped!: number | string;
+  observacion!: string;
+  fecRegistSalid!: Date | string | null;
+  numRegisSalid!: number | null;
+  fecEnvio!: Date | string | null;
   forNotif!: number;
-  fecCaduc!: Date;
-  numEnvioTeu: number;
-  codArchi!: any;
-  codArchiAcuse!: any;
-  usuContr!: any;
-
+  fecCaduc!: Date | string | null;
+  numEnvioTeu!: number | null;
+  codArchi!: number | null;
+  codArchiAcuse!: number | null;
+  usuContr!: string | null;
 }
 
 export class EditarNotificacion {

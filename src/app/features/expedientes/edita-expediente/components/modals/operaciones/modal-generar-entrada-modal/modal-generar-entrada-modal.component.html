@@ -1,0 +1,9 @@
+<app-modal-shell modalId="GenerarEntradaModal" title="Generar Entrada" titleId="GenerarEntradaModalLabel"
+     dialogClass="modal-lg" headingLevel="h5" [staticBackdrop]="true" [keyboard]="false" [showFooter]="false"
+     (closed)="edita.closeGenerarEntradaModal()">
+     <div modalBody>
+          <app-generar-entrada *ngIf="edita.showGenerarEntrada" [verExpediente]="edita.verExpediente"
+               [numeroArchivo]="edita.numeroArchivo" [idTarea]="edita.idTarea" [idExped]="edita.idExpediente"
+               (modalClosed)="edita.closeGenerarEntradaModal()"></app-generar-entrada>
+     </div>
+</app-modal-shell>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LeerMensajeRecibidos } from '../../expedientes/expedientes';
+import { LeerMensajeRecibidos } from '../../features/mensajes/models';
 import { UserSessionService } from '../../core/service/user-session.service';
-import { countMensajesByEstado } from '../../mensajes/helpers/mensajes-count.helper';
-import { MensajesService } from '../../mensajes/services/mensajes.service';
+import { countMensajesByEstado } from '../../features/mensajes/helpers/mensajes-count.helper';
+import { MensajesService } from '../../features/mensajes/mensajes.service';
 
 export interface NavMensajesHost {
   leermensajerecibido: LeerMensajeRecibidos[];

@@ -1,0 +1,27 @@
+<div
+  class="iflow-grid__inner"
+  [class.grid-container]="withContainer">
+  <jqxGrid
+    #innerGrid
+    [width]="width"
+    [height]="$any(safeHeight)"
+    [autoheight]="autoheight"
+    [altrows]="altrows"
+    [filterable]="filterable"
+    [sortable]="sortable"
+    [pageable]="pageable"
+    [pagesize]="pagesize"
+    [pagesizeoptions]="safePageSizeOptions"
+    [columnsautoresize]="columnsautoresize"
+    [columnsresize]="columnsresize"
+    [columns]="$any(columns)"
+    [source]="$any(source)"
+    [localization]="$any(resolvedLocalization)"
+    [selectionmode]="resolvedSelectionMode"
+    [editmode]="editmode"
+    [autoloadstate]="autoloadstate"
+    (onRowclick)="handleRowClick($any($event))"
+    (onRowdoubleclick)="handleRowDoubleClick($any($event))"
+    (onBindingcomplete)="bindingComplete.emit($event)">
+  </jqxGrid>
+</div>

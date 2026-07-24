@@ -1,16 +1,18 @@
-﻿export const PROVIN = [
+﻿import { ProvinciaIne } from '../models/ine-catalogo.model'
+
+export const PROVIN: ProvinciaIne[] = [
 
   {
     id: "04",
-    nm: "AlmerÃ­a"
+    nm: "Almería"
   },
   {
     id: "11",
-    nm: "CÃ¡diz"
+    nm: "Cádiz"
   },
   {
     id: "14",
-    nm: "CÃ³rdoba"
+    nm: "Córdoba"
   },
   {
     id: "18",
@@ -22,11 +24,11 @@
   },
   {
     id: "23",
-    nm: "JaÃ©n"
+    nm: "Jaén"
   },
   {
     id: "29",
-    nm: "MÃ¡laga"
+    nm: "Málaga"
   },
   {
     id: "41",
@@ -66,7 +68,7 @@
   },
   {
     id: "05",
-    nm: "Ãvila"
+    nm: "Ávila"
   },
   {
     id: "09",
@@ -74,7 +76,7 @@
   },
   {
     id: "24",
-    nm: "LeÃ³n"
+    nm: "León"
   },
   {
     id: "34",
@@ -142,11 +144,11 @@
   },
   {
     id: "12",
-    nm: "CastellÃ³n/CastellÃ³"
+    nm: "Castellón/Castelló"
   },
   {
     id: "46",
-    nm: "Valencia/ValÃ¨ncia"
+    nm: "Valencia/València"
   },
   {
     id: "06",
@@ -154,11 +156,11 @@
   },
   {
     id: "10",
-    nm: "CÃ¡ceres"
+    nm: "Cáceres"
   },
   {
     id: "15",
-    nm: "CoruÃ±a, A"
+    nm: "Coruña, A"
   },
   {
     id: "27",
@@ -186,7 +188,7 @@
   },
   {
     id: "01",
-    nm: "Araba/Ãlava"
+    nm: "Araba/Álava"
   },
   {
     id: "48",
@@ -208,5 +210,4 @@
     id: "52",
     nm: "Melilla"
   }
-];
-
+]

@@ -1,0 +1,90 @@
+<section class="soli-panel soli-panel--documentos" aria-labelledby="soli-docs-title">
+  <header class="soli-panel__head">
+    <div>
+      <h3 id="soli-docs-title" class="soli-panel__title">Documentos</h3>
+      <p class="soli-panel__desc">
+        Adjuntos de esta solicitud. Pulse un archivo para abrirlo.
+      </p>
+    </div>
+    <div class="soli-panel__actions">
+      <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm" (click)="handleNuevoDocumento()">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i> Añadir documento
+      </button>
+    </div>
+  </header>
+
+  <div class="soli-docs-body" *ngIf="!s.documentosCargando; else docsLoading">
+    <ul class="soli-docs-list" *ngIf="s.documentosSolicitud?.length; else docsEmpty" role="list">
+      <li
+        *ngFor="let doc of s.documentosSolicitud; trackBy: trackByDocId"
+        class="soli-doc"
+        [class.soli-doc--activo]="s.iddocumento === doc.id"
+      >
+        <button
+          type="button"
+          class="soli-doc__main"
+          (click)="handleAbrirDocumento(doc)"
+          [attr.aria-label]="'Abrir ' + (doc.nombreArchivo || doc.descripcion || 'documento')"
+        >
+          <span class="soli-doc__icon" aria-hidden="true">
+            <i class="bi" [ngClass]="iconoDocumento(doc.nombreArchivo)"></i>
+          </span>
+          <span class="soli-doc__text">
+            <span class="soli-doc__name">{{ doc.descripcion || doc.nombreArchivo || 'Sin descripción' }}</span>
+            <span class="soli-doc__meta">
+              <span *ngIf="doc.nombreArchivo">{{ doc.nombreArchivo }}</span>
+              <span *ngIf="doc.nombreArchivo && doc.fechaSubida" class="soli-doc__dot" aria-hidden="true">·</span>
+              <span *ngIf="doc.fechaSubida">{{ formatearFecha(doc.fechaSubida) }}</span>
+            </span>
+          </span>
+        </button>
+        <div class="soli-doc__actions">
+          <button
+            type="button"
+            class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+            title="Abrir"
+            (click)="handleAbrirDocumento(doc)"
+          >
+            <i class="bi bi-eye" aria-hidden="true"></i>
+            <span class="visually-hidden">Abrir</span>
+          </button>
+          <button
+            type="button"
+            class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+            title="Descargar"
+            (click)="handleDescargarDocumento(doc)"
+          >
+            <i class="bi bi-download" aria-hidden="true"></i>
+            <span class="visually-hidden">Descargar</span>
+          </button>
+          <button
+            type="button"
+            class="btn-iflow btn-iflow--danger btn-iflow--sm"
+            title="Eliminar"
+            (click)="handleEliminarDocumento(doc)"
+          >
+            <i class="bi bi-trash" aria-hidden="true"></i>
+            <span class="visually-hidden">Eliminar</span>
+          </button>
+        </div>
+      </li>
+    </ul>
+
+    <ng-template #docsEmpty>
+      <div class="soli-empty-state soli-empty-state--docs" role="status">
+        <i class="bi bi-folder2-open soli-empty-state__icon" aria-hidden="true"></i>
+        <p class="soli-empty-state__title">Sin documentos</p>
+        <p class="soli-empty-state__desc">
+          Esta solicitud aún no tiene archivos. Use «Añadir documento» para subir el primero.
+        </p>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #docsLoading>
+    <div class="soli-docs-loading" role="status">
+      <div class="spinner-border spinner-border-sm text-secondary" aria-hidden="true"></div>
+      <span>Cargando documentos…</span>
+    </div>
+  </ng-template>
+</section>

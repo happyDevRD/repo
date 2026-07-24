@@ -27,6 +27,11 @@ export const environment = {
   procedimientos: 'procedimientos.svg',
   salir: 'Salida.svg',
 
+  /**
+   * INSIDE producción: dryRun=false cuando haya REDSARA.
+   * Mantener dryRun=true en builds de presentación sin red SARA.
+   * Checklist cutover: INSIDE_CUTOVER_REDSARA_STEPS (inside-simulacion.constants.ts)
+   */
   inside: {
     insideWsUrl: 'https://se-e-inside.redsara.es/inside/services/InsideWSService',
     gInsideWsUrl: 'https://se-e-inside.redsara.es/inside/services/GInsideWSService',

@@ -1,0 +1,89 @@
+<section class="msg-detail" aria-label="Detalle del mensaje" *ngIf="m.hasSeleccion; else emptyDetail">
+  <header class="msg-detail__head">
+    <div class="msg-detail__kicker">
+      <span *ngIf="m.direccionLabel" class="msg-badge msg-badge--default">{{ m.direccionLabel }}</span>
+      <span class="msg-badge" [ngClass]="m.estadoBadgeClass">{{ m.estadoMensajeLabel }}</span>
+    </div>
+    <div class="msg-detail__actions" *ngIf="m.accionesEnDetalle">
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+        [disabled]="!m.canRechazar"
+        (click)="handleRechazar()"
+      >
+        <i class="bi bi-envelope-x" aria-hidden="true"></i> Rechazar
+      </button>
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--primary btn-iflow--sm"
+        [disabled]="!m.canTramitar"
+        (click)="handleTramitar()"
+      >
+        <i class="bi bi-arrow-left-right" aria-hidden="true"></i> Tramitar
+      </button>
+    </div>
+  </header>
+
+  <h3 class="msg-detail__title">{{ m.mensajeDescrip || 'Sin descripción' }}</h3>
+
+  <dl class="msg-detail__facts">
+    <div class="msg-fact">
+      <dt>Emisión</dt>
+      <dd>{{ m.mensajeFechaInicio || '—' }}</dd>
+    </div>
+    <div class="msg-fact">
+      <dt>Remitente</dt>
+      <dd>{{ m.mensajeRemitente || '—' }}</dd>
+    </div>
+    <div class="msg-fact">
+      <dt>Destinatario</dt>
+      <dd>{{ m.mensajeDestinatario || '—' }}</dd>
+    </div>
+    <div class="msg-fact" *ngIf="m.mensajeExpediente">
+      <dt>Expediente</dt>
+      <dd>{{ m.mensajeExpediente }}</dd>
+    </div>
+  </dl>
+
+  <section class="msg-detail__card" aria-labelledby="msg-detail-content-title">
+    <h4 id="msg-detail-content-title" class="msg-detail__section-title">Contenido del mensaje</h4>
+    <p class="msg-detail__body">{{ m.mensajeDescrip || 'Sin descripción' }}</p>
+  </section>
+
+  <section
+    class="msg-detail__card msg-detail__card--warn"
+    *ngIf="m.mensajeDescripcionRechazo?.trim()"
+    aria-labelledby="msg-detail-reject-title"
+  >
+    <h4 id="msg-detail-reject-title" class="msg-detail__section-title">Motivo de rechazo</h4>
+    <p class="msg-detail__body">{{ m.mensajeDescripcionRechazo }}</p>
+  </section>
+
+  <section class="msg-detail__card" aria-labelledby="msg-detail-dates-title">
+    <h4 id="msg-detail-dates-title" class="msg-detail__section-title">Seguimiento</h4>
+    <dl class="msg-detail__timeline">
+      <div>
+        <dt>Lectura</dt>
+        <dd>{{ m.mensajeFechaLectura || 'Pendiente' }}</dd>
+      </div>
+      <div>
+        <dt>Tramitación</dt>
+        <dd>{{ m.mensajeFechaTramitacion || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Rechazo</dt>
+        <dd>{{ m.mensajeFechaRechazo.trim() || '—' }}</dd>
+      </div>
+    </dl>
+  </section>
+</section>
+
+<ng-template #emptyDetail>
+  <div class="msg-empty-state msg-empty-state--detail" role="status">
+    <i class="bi bi-envelope-open msg-empty-state__icon" aria-hidden="true"></i>
+    <p class="msg-empty-state__title">Selecciona un mensaje</p>
+    <p class="msg-empty-state__desc">
+      El detalle aparece aquí al elegir un elemento de la bandeja.
+    </p>
+  </div>
+</ng-template>

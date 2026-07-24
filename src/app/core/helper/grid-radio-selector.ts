@@ -61,8 +61,12 @@ export class GridRadioSelector {
    * @param gridName Nombre del grid
    * @param callback Función a ejecutar después de actualizar el radio button
    */
-  static handleRowClick(event: any, gridName: string, callback?: (rowData: any) => void): void {
-    const target = event.originalEvent?.target as HTMLElement;
+  static handleRowClick<T = any>(
+    event: { args: { rowindex: number; row: { bounddata: T } }; originalEvent?: Event },
+    gridName: string,
+    callback?: (rowData: T) => void,
+  ): void {
+    const target = event.originalEvent?.target as HTMLElement | undefined;
     if (target && target.closest('input[type="radio"]')) {
       return; // Evitar conflicto si se hace click directamente en el radio button
     }

@@ -1,0 +1,22 @@
+<!-- Título dinámico y botones -->
+<header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
+     <div>
+          <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Trámite</p>
+          <h2 class="h4 fw-bold mb-0">
+               <span *ngIf="vertramite && botonVerNotifi">Listado de Trámites</span>
+               <span *ngIf="veonotificaciones">Listado de Notificaciones</span>
+               <span *ngIf="veoTramitadores">Listado de Tramitadores</span>
+          </h2>
+     </div>
+     <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="toolbarActions"
+          (action)="handleAction($event)">
+     </app-modal-action-bar>
+</header>
+
+<!-- Grid de Trámites -->
+<div *ngIf="vertramite" class="grid-container">
+     <app-iflow-grid #grid id="gridTramites" selectionMode="radio" radioName="Tramite"
+          (rowClick)="handleRowClick($event)" (rowDoubleClick)="handleRowDoubleClick($event)" [columns]="columns"
+          [localization]="localization" [source]="source">
+     </app-iflow-grid>
+</div>

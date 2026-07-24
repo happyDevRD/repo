@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PersonaEntidad } from '../../core/models/personaentidad.model';
 import { MUNICIO, PROVIN } from '../../core/constants/datos';
-import { ExpedientesService } from '../../expedientes/expedientes.service';
+import { PersonaEntidadApiService } from '../../core/service/persona/persona-entidad-api.service';
 import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
@@ -18,7 +18,7 @@ export class ModificarDatosPersonaComponent implements OnInit {
   public municipioFiltro: any[] = [];  // Lista filtrada de municipios para la provincia seleccionada.
 
   constructor(
-    private expedientesService: ExpedientesService,
+    private personaEntidadApi: PersonaEntidadApiService,
     private notificationService: NotificationService
   ) {}
 
@@ -32,14 +32,14 @@ export class ModificarDatosPersonaComponent implements OnInit {
    * Filtra la lista de municipios en base al código de provincia.
    */
   filterMunicipios(): void {
-    const provId = this.persona.codProvi.padStart(2, '0');
+    const provId = (this.persona.codProvi ?? '').padStart(2, '0');
 
     // Filtramos los municipios que comienzan con el código de la provincia.
     this.municipioFiltro = this.municipio.filter(municipio =>
       municipio.id.startsWith(provId)
     );
 
-    let municId: string = this.persona.codMunic;
+    let municId: string = this.persona.codMunic ?? '';
     if (municId.length !== 5) {
       municId = provId + municId.padStart(3, '0');
     }
@@ -79,8 +79,8 @@ export class ModificarDatosPersonaComponent implements OnInit {
 
     const { provincia, municipio, ...payload } = {
       ...this.persona,
-      codProvi: this.persona.codProvi.toString(),
-      codMunic: this.persona.codMunic.toString()
+      codProvi: (this.persona.codProvi ?? '').toString(),
+      codMunic: (this.persona.codMunic ?? '').toString()
     };
 
     // eliminamos los dos primeros o el código de la provincia
@@ -88,7 +88,7 @@ export class ModificarDatosPersonaComponent implements OnInit {
       payload.codMunic = payload.codMunic.substring(2);
     }
 
-    this.expedientesService.modificaPersonaEntidad(payload as any).subscribe({
+    this.personaEntidadApi.modificaPersonaEntidad(payload as any).subscribe({
       next: (respuesta) => {
         this.notificationService.success({ title: 'Datos Modificados' }).then(r => r);
         this.persona = { ...respuesta };

@@ -1,0 +1,83 @@
+      <!-- Row 4: Sanción y Descripción Sanción -->
+      <div class="row g-3 mt-1">
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text"
+                 id="sancion"
+                 class="form-control"
+                 [(ngModel)]="lf.liquidacion.impSanci"
+                 name="sancion"
+                 (ngModelChange)="lf.calculaTotal()"
+                 placeholder=" "
+                 currencyMask [options]="lf.currencyOptions"
+                 required>
+          <label for="sancion">Sanción (€)</label>
+        </div></div>
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text" id="desSanci" class="form-control" [(ngModel)]="lf.liquidacion.desSanci" name="desSanci" maxlength="50" placeholder=" ">
+          <label for="desSanci">Descripción Sanción</label>
+        </div></div>
+      </div>
+
+      <!-- Row 5: Demora y Descripción Demora -->
+      <div class="row g-3 mt-1">
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text"
+                 id="demora"
+                 class="form-control"
+                 [(ngModel)]="lf.liquidacion.intDemor"
+                 name="demora"
+                 (ngModelChange)="lf.calculaTotal()"
+                 placeholder=" "
+                 currencyMask [options]="lf.currencyOptions"
+                 required>
+          <label for="demora">Demora (€)</label>
+        </div></div>
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text" id="desIntDemor" class="form-control" [(ngModel)]="lf.liquidacion.desIntDemor" name="desIntDemor" maxlength="50" placeholder=" ">
+          <label for="desIntDemor">Descripción Demora</label>
+        </div></div>
+      </div>
+
+      <!-- Row 6: Recargo y Descripción Recargo -->
+      <div class="row g-3 mt-1">
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text"
+                 id="recargo"
+                 class="form-control"
+                 [(ngModel)]="lf.liquidacion.impVario"
+                 name="recargo"
+                 (ngModelChange)="lf.calculaTotal()"
+                 placeholder=" "
+                 currencyMask [options]="lf.currencyOptions"
+                 required>
+          <label for="recargo">Recargo (€)</label>
+        </div></div>
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text" id="desRecargo" class="form-control" [(ngModel)]="lf.liquidacion.desVario" name="desRecargo" maxlength="50" placeholder=" ">
+          <label for="desRecargo">Descripción Recargo</label>
+        </div></div>
+      </div>
+
+      <!-- Row 7: Observaciones y Total Liquidación -->
+      <div class="row g-3 mt-1">
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text" id="observaciones" class="form-control" [(ngModel)]="lf.liquidacion.observaciones" name="observaciones" maxlength="50" placeholder=" ">
+          <label for="observaciones">Observaciones</label>
+        </div></div>
+        <div class="col-md-6"><div class="form-floating">
+          <input type="text"
+                 id="totalLiquidacion"
+                 class="form-control"
+                 [(ngModel)]="lf.liquidacion.totLiqui"
+                 name="totalLiquidacion"
+                 placeholder=" "
+                 currencyMask [options]="lf.currencyOptions"
+                 readonly>
+          <label for="totalLiquidacion">Total Liquidación (€)</label>
+        </div></div>
+      </div>
+
+      <!-- Botón de envío -->
+      <div class="mt-3">
+        <button type="submit" class="btn-iflow btn-iflow--primary btn-iflow--block">Generar Liquidación</button>
+      </div>

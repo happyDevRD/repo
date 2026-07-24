@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { LeerMensajeRecibidos } from '../expedientes/expedientes';
+import { LeerMensajeRecibidos } from '../features/mensajes/models';
 import { NavUiService } from './nav-ui.service';
 import { UserSessionService } from '../core/service/user-session.service';
 import { NavMensajesFacade } from './services/nav-mensajes.facade';
