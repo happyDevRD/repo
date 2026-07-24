@@ -22,7 +22,7 @@
 
                               <option value="" disabled selected>Seleccione un interesado</option>
                               <option *ngFor="let listarinteresado of edita.listarinteresadosdto; trackBy: trackById"
-                                   name="notificadorNotifi" value={{ listarinteresado.numDocumInter }}> {{
+                                   name="notificadorNotifi" value="{{ listarinteresado.numDocumInter }}"> {{
                                    listarinteresado.numDocumInter }}
                                    - {{ listarinteresado.nomInter }}
                               </option>
@@ -49,7 +49,7 @@
                               <option value="" disabled selected>Seleccione un notificador</option>
                               <option
                                    *ngFor="let notificalistar of notif.notificadorlistar; trackBy: trackByNotificador"
-                                   name="notificadorNotifi" value={{ notificalistar.notificador }}> {{
+                                   name="notificadorNotifi" value="{{ notificalistar.notificador }}"> {{
                                    notificalistar.descripcion }}
                               </option>
                          </select>

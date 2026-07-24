@@ -1,17 +1,23 @@
 <!-- Botones de acciones de notificaciones -->
-<div *ngIf="showToolbar" class="acciones-botones-container d-flex flex-wrap align-items-center gap-2">
-  <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsBeforeNotifica"
-    (action)="handleAction($event)">
-  </app-modal-action-bar>
+<div *ngIf="veonotificaciones" class="acciones-botones-container d-flex flex-wrap align-items-center gap-2">
+  <p class="expediente-toolbar__empty mb-0" *ngIf="!showToolbar">
+    Seleccione una notificación en la tabla para ver sus acciones disponibles.
+  </p>
 
-  <app-notificaciones-notifica-panel [veoEnviarNotifica]="veoEnviarNotifica"
-    [veoSincronizarNotifica]="veoSincronizarNotifica" [envioNotifica]="envioNotifica"
-    (enviar)="handleEnviarANotificaPlataforma()" (sincronizar)="handleSincronizarConNotificaPlataforma()">
-  </app-notificaciones-notifica-panel>
+  <ng-container *ngIf="showToolbar">
+    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsBeforeNotifica"
+      (action)="handleAction($event)">
+    </app-modal-action-bar>
 
-  <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsAfterNotifica"
-    (action)="handleAction($event)">
-  </app-modal-action-bar>
+    <app-notificaciones-notifica-panel [veoEnviarNotifica]="veoEnviarNotifica"
+      [veoSincronizarNotifica]="veoSincronizarNotifica" [envioNotifica]="envioNotifica"
+      (enviar)="handleEnviarANotificaPlataforma()" (sincronizar)="handleSincronizarConNotificaPlataforma()">
+    </app-notificaciones-notifica-panel>
+
+    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsAfterNotifica"
+      (action)="handleAction($event)">
+    </app-modal-action-bar>
+  </ng-container>
 </div>
 
 <!-- Grid de Notificaciones -->

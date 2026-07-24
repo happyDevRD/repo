@@ -16,7 +16,7 @@
                               id="desMotNotif" name="desMotNotif" required>
                               <option
                                    *ngFor="let motivosnotificacioneslistar of notif.motivonotificacioneslistar; trackBy: trackByMotNotif"
-                                   name="descripcionMotivo" value={{ motivosnotificacioneslistar.motNotif }}> {{
+                                   name="descripcionMotivo" value="{{ motivosnotificacioneslistar.motNotif }}"> {{
                                    motivosnotificacioneslistar.descripcion }}
                               </option>
                          </select>
@@ -29,7 +29,7 @@
                               id="notificador" name="notificador" required>
                               <option
                                    *ngFor="let notificalistar of notif.notificadorlistar; trackBy: trackByNotificador"
-                                   name="notificadorNotifi" value={{ notificalistar.notificador }}> {{
+                                   name="notificadorNotifi" value="{{ notificalistar.notificador }}"> {{
                                    notificalistar.descripcion }}
                               </option>
                          </select>
@@ -41,8 +41,7 @@
           <div class="modal-footer">
                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
                     type="button">Cancelar</button>
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    role="button">Guardar</button>
+               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
           </div>
      </form>
 </app-modal-shell>

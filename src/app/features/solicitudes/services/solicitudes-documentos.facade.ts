@@ -100,7 +100,6 @@ export class SolicitudesDocumentosFacade {
     }
 
     host.subidaArchivo = true
-    this.fileUploadService.showUploadProgress(host.selectedFile.name)
 
     const uploadData = {
       descripcion: host.descripcionArchivo,
@@ -137,7 +136,10 @@ export class SolicitudesDocumentosFacade {
       },
       error: (error) => {
         host.subidaArchivo = false
-        this.fileUploadService.showUploadError(error.error || 'Error al subir el archivo')
+        const backendMessage = typeof error?.error === 'string'
+          ? error.error
+          : error?.error?.message
+        this.fileUploadService.showUploadError(backendMessage || 'Error al subir el archivo')
       },
     })
   }

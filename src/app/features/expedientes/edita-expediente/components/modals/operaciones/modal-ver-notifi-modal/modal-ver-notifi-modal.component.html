@@ -1,4 +1,4 @@
-<app-modal-shell modalId="verNotifiModal" title="" titleId="editarNotificacionModalLabel" dialogClass="modal-xl"
+<app-modal-shell modalId="verNotifiModal" title="" titleId="editarNotificacionModalLabel" dialogClass="modal-xl modal-dialog-scrollable"
      [staticBackdrop]="true" [showFooter]="false">
      <ng-container modalTitle><i class="bi" [class.bi-pencil-square]="!notif.modoVerNotificacion"
                [class.bi-eye]="notif.modoVerNotificacion"></i>
@@ -103,7 +103,7 @@
                               [disabled]="notif.modoVerNotificacion">
                               <option
                                    *ngFor="let notificalistar of notif.notificadorlistar; trackBy: trackByNotificador"
-                                   name="notificadorNotifi" value={{ notificalistar.notificador }}> {{
+                                   name="notificadorNotifi" value="{{ notificalistar.notificador }}"> {{
                                    notificalistar.descripcion }}
                               </option>
 
@@ -143,7 +143,7 @@
                               <option value="">Seleccione un receptor</option>
                               <option
                                    *ngFor="let receptornotifislistar of notif.receptornotifilistar; trackBy: trackByReceptor"
-                                   name="receptorNotifi" value={{ receptornotifislistar.receptor }}> {{
+                                   name="receptorNotifi" value="{{ receptornotifislistar.receptor }}"> {{
                                    receptornotifislistar.descripcion }}
                               </option>
                          </select>
@@ -161,7 +161,7 @@
                               <option value="">Seleccione un motivo</option>
                               <option
                                    *ngFor="let motivosnotificacioneslistar of notif.motivonotificacioneslistar; trackBy: trackByMotNotif"
-                                   name="descripcionMotivo" value={{ motivosnotificacioneslistar.motNotif }}> {{
+                                   name="descripcionMotivo" value="{{ motivosnotificacioneslistar.motNotif }}"> {{
                                    motivosnotificacioneslistar.descripcion }}
                               </option>
 

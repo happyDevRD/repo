@@ -9,6 +9,7 @@ export const IFLOW_GRID_DEFAULTS = {
   pageable: true,
   sortable: true,
   filterable: true,
+  showfilterrow: false,
   altrows: true,
   autoheight: true,
   columnsautoresize: true,

@@ -42,6 +42,8 @@ export class IflowGridComponent implements OnInit {
   @Input() pageable = IFLOW_GRID_DEFAULTS.pageable
   @Input() sortable = IFLOW_GRID_DEFAULTS.sortable
   @Input() filterable = IFLOW_GRID_DEFAULTS.filterable
+  /** Fila de filtrado rápido bajo la cabecera (jqxGrid showfilterrow). */
+  @Input() showfilterrow = IFLOW_GRID_DEFAULTS.showfilterrow
   @Input() altrows = IFLOW_GRID_DEFAULTS.altrows
   @Input() autoheight = IFLOW_GRID_DEFAULTS.autoheight
   @Input() columnsautoresize = IFLOW_GRID_DEFAULTS.columnsautoresize

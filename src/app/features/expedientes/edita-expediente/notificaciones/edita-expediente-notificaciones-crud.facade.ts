@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { CrearNotificacion, LeerNotificacion } from '../../expedientes'
 import { InteresadoListarDto } from '../../../../core/models/interesado.dto'
 import { NotificationService } from '../../../../core/service/notification.service'
+import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { NotificacionesService } from '../../services/notificaciones.service'
 import {
   aplicarNotificacionVer,
@@ -56,6 +57,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
   private readonly destroyRef = inject(DestroyRef)
   private readonly notificacionesService = inject(NotificacionesService)
   private readonly notificationService = inject(NotificationService)
+  private readonly modalManagerService = inject(ModalManagerService)
 
   private getState: () => NotificacionDominioState = () => {
     throw new Error('CRUD state no enlazado')
@@ -278,6 +280,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
         this.notificationService.close();
         host.refresSourceListarNotifi();
         host.quitabotonesNotifi();
+        this.modalManagerService.closeModal('EnvioNotifi');
         this.notificationService.success({ title: 'Notificación enviada' });
       },
       error: () => {
@@ -363,6 +366,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
         this.notificationService.success({ title: 'Notificacion Publicada!' });
         host.borrarDatosPublicacion();
         host.quitabotonesNotifi();
+        this.modalManagerService.closeModal('PubliNotifModal');
       },
       error: () => {
         this.notificationService.error({
@@ -402,6 +406,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
           this.refrescarBotonesTrasAccion(host);
         });
         host.quitabotonesNotifi();
+        this.modalManagerService.closeModal('RecepNotifi');
         this.notificationService.success({
           text: `La notificación ${this.state.ejerNotifi}/${this.state.numeroNotifi} ha sido recepcionada correctamente.`,
           timer: 2000,
@@ -451,6 +456,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
           this.refrescarBotonesTrasAccion(host);
         });
         host.quitabotonesNotifi();
+        this.modalManagerService.closeModal('DevolverNotifi');
         this.notificationService.success({
           text: `La notificación ${this.state.ejerNotifi}/${this.state.numeroNotifi} ha sido devuelta correctamente.`,
           timer: 2000,

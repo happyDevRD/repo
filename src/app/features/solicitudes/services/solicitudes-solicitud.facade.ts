@@ -422,17 +422,19 @@ export class SolicitudesSolicitudFacade {
     host.idRepre = rowData.idRepre;
     host.idHisRepre = rowData.idHisRepre;
     host.NumeroRegistroSolicitud = rowData.ejeNumRegis;
-    host.personaFacade.InteresadoSolicitud = rowData.personaEntidad.desPerEntid;
-    host.personaFacade.dirPosta = rowData.personaEntidad.dirPosta;
-    host.personaFacade.codPosta = rowData.personaEntidad.codPosta;
-    host.personaFacade.provincia = rowData.personaEntidad.provincia;
-    host.personaFacade.Municipio = rowData.personaEntidad.municipio;
+    // rowData.personaEntidad puede venir null cuando la solicitud aún no tiene interesado asociado.
+    const personaEntidad = rowData.personaEntidad ?? {};
+    host.personaFacade.InteresadoSolicitud = personaEntidad.desPerEntid;
+    host.personaFacade.dirPosta = personaEntidad.dirPosta;
+    host.personaFacade.codPosta = personaEntidad.codPosta;
+    host.personaFacade.provincia = personaEntidad.provincia;
+    host.personaFacade.Municipio = personaEntidad.municipio;
     host.usuarioSolicitud = rowData.usuario;
     host.asuntoSolicitud = rowData.asunto;
     host.personaFacade.representanteSolicitud = rowData.nomRepre;
-    host.persoEntiDocu = rowData.personaEntidad.numDocum;
+    host.persoEntiDocu = personaEntidad.numDocum;
 
-    host.editasolicitud.dni = rowData.personaEntidad.numDocum;
+    host.editasolicitud.dni = personaEntidad.numDocum;
     host.editasolicitud.asunto = rowData.asunto;
     host.editasolicitud.fecInicio = rowData.fecInicio;
     host.editasolicitud.estado = rowData.estado;

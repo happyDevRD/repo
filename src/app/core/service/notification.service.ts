@@ -324,8 +324,21 @@ export class NotificationService {
 
   private fire(options: SweetAlertOptions): Promise<SweetAlertResult> {
     const userDidOpen = options.didOpen
+
+    // Varios métodos de este servicio (success/warning/custom) siempre incluyen la
+    // clave `position` en el objeto que arman, aunque el llamador no la especifique
+    // (queda como `position: undefined`). SweetAlert2 combina esos parámetros con
+    // sus valores por defecto igual que Object.assign: una clave presente con valor
+    // `undefined` PISA el default `position: 'center'` dejándolo en `undefined`, y
+    // el popup pierde la clase `swal2-center` — termina renderizado en la esquina
+    // superior izquierda en vez de centrado. Se filtran las claves `undefined` para
+    // que SweetAlert2 aplique sus propios valores por defecto en esos casos.
+    const cleanedOptions = Object.fromEntries(
+      Object.entries(options).filter(([, value]) => value !== undefined),
+    ) as SweetAlertOptions
+
     return Swal.fire({
-      ...options,
+      ...cleanedOptions,
       didOpen: (popup) => {
         const container = document.querySelector('.swal2-container') as HTMLElement | null
         if (container) {

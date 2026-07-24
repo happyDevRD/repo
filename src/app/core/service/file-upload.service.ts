@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, Subject, throwError, timer } from 'rxjs';
-import { catchError, timeout, retry, finalize } from 'rxjs/operators';
+import { Observable, Subject, Subscription, throwError, timer } from 'rxjs';
+import { catchError, timeout, retry, finalize, takeWhile } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { UserSessionService } from './user-session.service';
 import { NotificationService } from './notification.service';
@@ -44,6 +44,9 @@ export class FileUploadService {
   public uploadStatus$ = this.uploadStatusSubject.asObservable();
 
   private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+  /** Suscripciones del modal de progreso actualmente abierto (evita fugas entre subidas). */
+  private progressSubscriptions: Subscription[] = [];
 
   constructor(
     private http: HttpClient,
@@ -288,13 +291,16 @@ export class FileUploadService {
    * Muestra una notificación de progreso
    */
   showUploadProgress(fileName: string): void {
+    // Evita acumular suscripciones de una subida anterior que nunca se cerró.
+    this.clearProgressSubscriptions();
+
     this.notificationService.custom({
       title: 'Subiendo archivo',
       html: `
         <div class="text-center">
           <p>Subiendo: <strong>${fileName}</strong></p>
           <div class="progress mt-3">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+            <div class="progress-bar progress-bar-striped progress-bar-animated"
                  role="progressbar" style="width: 0%"></div>
           </div>
         </div>
@@ -303,28 +309,36 @@ export class FileUploadService {
       allowEscapeKey: false,
       showConfirmButton: false,
       didOpen: () => {
-        // Suscribirse al progreso
-        this.uploadProgress$.subscribe(progress => {
-          const progressBar = document.querySelector('.progress-bar') as HTMLElement;
-          if (progressBar) {
-            progressBar.style.width = `${progress.percentage}%`;
-            progressBar.textContent = `${Math.round(progress.percentage)}%`;
-          }
-        });
-
-        // Suscribirse al estado
-        this.uploadStatus$.subscribe(status => {
-          if (status === 'Completado') {
-            this.notificationService.close();
-          } else if (status.startsWith('Error:')) {
-            this.notificationService.error({
-              title: 'Error al subir archivo',
-              text: status.replace('Error: ', '')
-            });
-          }
-        });
+        this.progressSubscriptions.push(
+          this.uploadProgress$.subscribe(progress => {
+            const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+            if (progressBar) {
+              progressBar.style.width = `${progress.percentage}%`;
+              progressBar.textContent = `${Math.round(progress.percentage)}%`;
+            }
+          }),
+          // Se desuscribe automáticamente en cuanto llega el estado final, para no
+          // quedar escuchando (y disparando Swal.fire de nuevo) en subidas futuras.
+          this.uploadStatus$.pipe(
+            takeWhile(status => status !== 'Completado' && !status.startsWith('Error:'), true),
+          ).subscribe(status => {
+            if (status === 'Completado') {
+              this.notificationService.close();
+            } else if (status.startsWith('Error:')) {
+              this.notificationService.error({
+                title: 'Error al subir archivo',
+                text: status.replace('Error: ', '')
+              });
+            }
+          }),
+        );
       }
     });
+  }
+
+  private clearProgressSubscriptions(): void {
+    this.progressSubscriptions.forEach(sub => sub.unsubscribe());
+    this.progressSubscriptions = [];
   }
 
   /**
