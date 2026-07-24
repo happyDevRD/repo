@@ -1,11 +1,9 @@
 <section class="expediente-workspace" aria-label="Acciones del expediente">
-  <div class="expediente-toolbar" *ngIf="!e.editExpedientes">
-    <p class="expediente-toolbar__empty mb-0">
-      Seleccione un expediente en la tabla
+  <div class="expediente-toolbar">
+    <p class="expediente-toolbar__empty mb-0" *ngIf="!e.editExpedientes">
+      Seleccione un expediente en la tabla para habilitar las acciones.
     </p>
-  </div>
 
-  <div class="expediente-toolbar" *ngIf="e.editExpedientes">
     <ul class="nav nav-tabs expediente-flujo-tabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button type="button"
@@ -31,113 +29,15 @@
     </ul>
 
     <nav class="expediente-acciones" aria-label="Barra de acciones">
-      <div class="expediente-acciones__fila" *ngIf="e.pestanaFlujo === 'tramitacion'" role="tabpanel">
-        <button *ngIf="e.accionExpediente(e.cerrarexp)"
-                class="btn-iflow btn-iflow--primary btn-iflow--sm"
-                type="button" title="Tramitar expediente"
-                (click)="e.reenvioEditar()">
-          <i class="bi bi-journal-check" aria-hidden="true"></i> Tramitar
-        </button>
-        <button *ngIf="e.accionExpediente(e.cerrarexp && e.veoInteresado)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Interesados"
-                (click)="e.reenvioInteresados()">
-          <i class="bi bi-people" aria-hidden="true"></i> Interesados
-        </button>
-        <button *ngIf="e.accionExpediente(e.VeoRegDoc)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Registro de entrada"
-                (click)="e.CargoRegistroDocu()">
-          <i class="bi bi-file-earmark-text" aria-hidden="true"></i> Registro
-        </button>
-        <button *ngIf="e.accionExpediente(e.cerrarexp && e.veoAsignoTramitador)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Asignar tramitador"
-                (click)="e.abrirModal('AsigfnarTramitadorModal')">
-          <i class="bi bi-person-plus" aria-hidden="true"></i> Tramitador
-        </button>
-        <button *ngIf="e.accionExpediente(e.cerrarexp && e.veoAsignoTramitador)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Tareas del expediente"
-                (click)="e.abrirModalTareasExpediente()">
-          <i class="bi bi-list-task" aria-hidden="true"></i> Tareas
-        </button>
-        <button *ngIf="e.accionExpediente(e.veoAtributos)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Atributos"
-                (click)="e.abrirModalAtributos()">
-          <i class="bi bi-node-plus" aria-hidden="true"></i> Atributo
-        </button>
-        <button *ngIf="e.accionExpediente(e.cerrarexp && e.verDevolver)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Devolver expediente"
-                (click)="e.DevolverExpe()">
-          <i class="bi bi-arrow-return-left" aria-hidden="true"></i> Devolver
-        </button>
-        <button *ngIf="e.accionExpediente(e.cerrarexp && e.veoCerrar)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Cerrar expediente"
-                (click)="e.abrirModal('cerrarExpModal')">
-          <i class="bi bi-lock" aria-hidden="true"></i> Cerrar
-        </button>
-        <button *ngIf="e.accionExpediente(e.cancelarexp && e.veoCancelar)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Cancelar expediente"
-                (click)="e.abrirModal('cancelarExpModal')">
-          <i class="bi bi-x-circle" aria-hidden="true"></i> Cancelar
-        </button>
-        <button *ngIf="e.accionExpediente(e.verAbrirExpediente && e.veoAbrir)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Abrir expediente"
-                (click)="e.AbrirExpediente()">
-          <i class="bi bi-unlock" aria-hidden="true"></i> Abrir
-        </button>
-        <button *ngIf="e.accionExpediente(e.verArchivar && e.veoArchiva)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Archivar expediente"
-                (click)="e.ArchivaExp()">
-          <i class="bi bi-archive" aria-hidden="true"></i> Archivar
-        </button>
-        <button *ngIf="e.accionExpediente(e.verArchivar && e.veoArchiva)"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button" title="Índice ENI"
-                (click)="e.abrirModal('IndiceExpedienteModal')">
-          <i class="bi bi-folder-check" aria-hidden="true"></i> Índice ENI
-        </button>
-      </div>
+      <app-modal-action-bar *ngIf="e.pestanaFlujo === 'tramitacion'"
+        containerClass="expediente-acciones__fila" size="sm"
+        [actions]="actionsTramitacion" (action)="handleAccionTramitacion($event)">
+      </app-modal-action-bar>
 
-      <div class="expediente-acciones__fila" *ngIf="e.pestanaFlujo === 'inside'" role="tabpanel">
-        <button *ngIf="e.editExpedientes"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button"
-                title="Validar expediente INSIDE"
-                [disabled]="e.insideEnviando"
-                (click)="e.handleValidarInsideDesdeListado()">
-          <i class="bi bi-shield-check" aria-hidden="true"></i> Validar
-        </button>
-        <button *ngIf="e.editExpedientes"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button"
-                title="Historial de envíos INSIDE"
-                (click)="e.handleHistorialInsideDesdeListado()">
-          <i class="bi bi-clock-history" aria-hidden="true"></i> Historial
-        </button>
-        <button *ngIf="e.accionExpediente(e.puedeEnviarInside())"
-                class="btn-iflow btn-iflow--primary btn-iflow--sm"
-                type="button"
-                title="Enviar alta XML a INSIDE"
-                [disabled]="e.insideEnviando"
-                (click)="e.handleEnviarInsideDesdeListado()">
-          <i class="bi bi-cloud-upload" aria-hidden="true"></i> Alta XML
-        </button>
-        <button *ngIf="e.editExpedientes"
-                class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                type="button"
-                title="Abrir tramitación con acciones INSIDE completas"
-                (click)="e.reenvioEditar()">
-          <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Más INSIDE
-        </button>
-      </div>
+      <app-modal-action-bar *ngIf="e.pestanaFlujo === 'inside'"
+        containerClass="expediente-acciones__fila" size="sm"
+        [actions]="actionsInside" (action)="handleAccionInside($event)">
+      </app-modal-action-bar>
     </nav>
   </div>
 </section>

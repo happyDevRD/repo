@@ -11,7 +11,7 @@
               class="btn-iflow btn-iflow--secondary btn-iflow--sm"
               title="Volver"
               (click)="handleVolverListadoExpedientes()">
-        <i class="bi bi-x-lg" aria-hidden="true"></i> Salir
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
       </button>
     </div>
   </nav>
@@ -98,7 +98,7 @@
         <i class="bi bi-cloud-upload" aria-hidden="true"></i> INSIDE Expediente
       </button>
       <button type="button"
-              class="btn-iflow btn-iflow--primary btn-iflow--sm"
+              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
               title="Alta XML Expediente"
               [disabled]="insideEnviando"
               (click)="handleAltaExpedienteEniXmlInside()">

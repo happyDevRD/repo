@@ -9,14 +9,25 @@ import { visibleActions } from '../../modals/modal-actions.util'
 })
 export class ModalActionBarComponent {
   @Input() actions: ModalAction[] = []
-  /** Clase del contenedor (toolbar de panel o footer de modal). */
-  @Input() containerClass = 'acciones-botones-container'
+  /** Clase del contenedor. Si no se especifica, se calcula a partir de `layout`. */
+  @Input() containerClass?: string
   @Input() buttonClass = 'btn-iflow'
+  /** 'toolbar' = barra de acciones de panel/listado; 'footer' = footer de modal. */
+  @Input() layout: 'toolbar' | 'footer' = 'toolbar'
+  /** Tamaño de todos los botones de la barra (ver criterio en styles.css). */
+  @Input() size: 'default' | 'sm' = 'default'
 
   @Output() action = new EventEmitter<ModalActionEvent>()
 
   get visible(): ModalAction[] {
     return visibleActions(this.actions)
+  }
+
+  get resolvedContainerClass(): string {
+    if (this.containerClass) {
+      return this.containerClass
+    }
+    return this.layout === 'footer' ? 'modal-footer' : 'acciones-botones-container'
   }
 
   handleClick(id: string): void {
@@ -25,6 +36,7 @@ export class ModalActionBarComponent {
 
   toneClass(action: ModalAction): string {
     const tone = action.tone ?? 'primary'
-    return `${this.buttonClass} ${this.buttonClass}--${tone}`
+    const sizeClass = this.size === 'sm' ? ` ${this.buttonClass}--sm` : ''
+    return `${this.buttonClass} ${this.buttonClass}--${tone}${sizeClass}`
   }
 }

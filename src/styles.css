@@ -220,6 +220,23 @@ html body .modal-header .modal-title {
 
 /* ================================
    SISTEMA DE BOTONES IFLOW
+
+   Criterio (ver plan de rediseño, Wave 0):
+   - Tono es semántico, no decorativo:
+     --primary   -> única acción recomendada del contexto (máx. 1 por barra/footer)
+     --secondary -> cualquier otra acción no destructiva
+     --danger    -> solo acciones destructivas/irreversibles
+   - Tamaño lo determina la densidad del contenedor, no el gusto de cada feature:
+     (sin modificador) -> footers de modal y CTAs de página
+     --sm              -> barras de acciones densas dentro de listados/grids
+     --icon            -> solo acciones repetidas por fila en grid/tabla
+   - Icono+texto es el default en cualquier barra de acciones. Icono-solo solo
+     para acciones repetidas por fila o el botón "Volver" (ver back-button.component).
+     Texto-solo solo para Cancelar/Cerrar en footers de modal.
+   - Cierre/cancelar/salir: "Cerrar"/"Cancelar" + bi-x-lg en footers; el X de
+     cabecera de modal (.btn-close) es el único cierre "icono-solo" permitido;
+     "Volver"/bi-arrow-left es exclusivo del back-button de navegación entre
+     pantallas, nunca un botón de footer de modal.
    ================================ */
 .btn-iflow {
   display: inline-flex;
@@ -289,17 +306,6 @@ html body .modal-header .modal-title {
   color: var(--iflow-primary);
   border-color: var(--iflow-primary);
   transform: none;
-}
-
-.btn-iflow--ghost {
-  background: transparent;
-  color: var(--iflow-primary);
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.btn-iflow--ghost:hover:not(:disabled) {
-  background: rgba(105, 120, 255, 0.08);
 }
 
 .btn-iflow--danger,
@@ -416,11 +422,11 @@ html body .modal-header .modal-title {
 }
 
 div[id^="columntablejqxWidget"] {
-  background: var(--iflow-gradient) !important;
+  background: var(--iflow-primary) !important;
 }
 
 .jqx-grid-pager {
-  background: var(--iflow-gradient) !important;
+  background: var(--iflow-primary) !important;
   color: white;
 }
 

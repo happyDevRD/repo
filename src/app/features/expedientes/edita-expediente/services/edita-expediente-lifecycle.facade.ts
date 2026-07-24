@@ -23,6 +23,7 @@ import { ExpedientesService } from '../../expedientes.service'
 import { NotificacionesService } from '../../services/notificaciones.service'
 import { TramitesService } from '../../tramites.service'
 import { NotificationService } from '../../../../core/service/notification.service'
+import { NavigationService } from '../../../../core/service/navigation.service'
 import { Pais } from '../edita-expediente.models'
 import {
   buildEditaExpedienteWorkspaceGrids,
@@ -113,6 +114,7 @@ export class EditaExpedienteLifecycleFacade {
     private readonly notifUiFacade: EditaExpedienteNotificacionesUiFacade,
     private readonly router: Router,
     private readonly notificationService: NotificationService,
+    private readonly navigationService: NavigationService,
   ) {}
 
   // --- Init ---
@@ -226,11 +228,8 @@ export class EditaExpedienteLifecycleFacade {
   }
 
   volverListadoExpedientes(host?: { idExpediente?: number }): void {
-    if (host?.idExpediente) {
-      this.router.navigate(['/expedientes', host.idExpediente])
-      return
-    }
-    this.router.navigate(['/expedientes'])
+    const fallback = host?.idExpediente ? ['/expedientes', host.idExpediente] : ['/expedientes']
+    this.navigationService.goBack(fallback)
   }
 
   // --- Grids ---
