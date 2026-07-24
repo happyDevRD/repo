@@ -414,14 +414,6 @@ export class ExpedientesComponent {// pruebas de formularios
     this.pestanaFlujo = pestana
   }
 
-  public handleValidarInsideDesdeListado(): void {
-    this.insideFacade.handleValidarDesdeListado(this.insideListHost())
-  }
-
-  public handleHistorialInsideDesdeListado(): void {
-    this.insideFacade.handleHistorialDesdeListado(this.insideListHost())
-  }
-
   public veoTablaExp: boolean = true;
 
   public veoAsignarTramitador() {
@@ -607,8 +599,12 @@ export class ExpedientesComponent {// pruebas de formularios
     return this.insideFacade.puedeEnviarInside(this.insideListHost());
   }
 
-  public handleEnviarInsideDesdeListado(): void {
-    this.insideFacade.handleEnviarDesdeListado(this.insideListHost());
+  public idExpedienteParaInside: number | null = null;
+
+  public abrirModalInsideDesdeListado(idexpediente: number): void {
+    this.idExpedienteParaInside = idexpediente;
+    this.cdr.detectChanges();
+    this.modalManagerService.openModal('insideAccionesModal');
   }
 
   public toggleFiltroInsidePendientes(): void {
@@ -626,8 +622,12 @@ export class ExpedientesComponent {// pruebas de formularios
     this.router.navigate(['/expedientes', this.idexpediente, 'tramitar'])
   }
 
-  public reenvioInteresados() {
-    this.router.navigate(['/interesado/interesado/' + this.idexpediente])
+  public idExpedienteParaInteresados: number | null = null;
+
+  public abrirModalInteresadosDesdeListado(idexpediente: number): void {
+    this.idExpedienteParaInteresados = idexpediente;
+    this.cdr.detectChanges();
+    this.modalManagerService.openModal('interesadosExpedienteModal');
   }
 
 

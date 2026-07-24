@@ -1,0 +1,57 @@
+<app-modal-shell [modalId]="modalId" title="Acciones INSIDE" titleId="insideAccionesModalLabel"
+     dialogClass="modal-lg modal-dialog-scrollable" [staticBackdrop]="true" [keyboard]="false"
+     [showFooter]="false">
+     <div modalBody>
+          <p class="text-secondary mb-3" *ngIf="insideDryRun">
+               <span class="badge bg-info text-dark">simulación</span>
+               Las operaciones INSIDE se están ejecutando en modo simulación (dry-run).
+          </p>
+
+          <div class="expediente-acciones__fila">
+               <button type="button"
+                       class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                       title="Historial de envíos INSIDE"
+                       [disabled]="insideEnviando"
+                       (click)="handleVerHistorialEnvios()">
+                    <i class="bi bi-clock-history" aria-hidden="true"></i> Historial
+               </button>
+               <button type="button"
+                       class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                       title="Validar expediente"
+                       [disabled]="insideEnviando"
+                       (click)="handleValidarExpediente()">
+                    <i class="bi bi-shield-check" aria-hidden="true"></i> Validar
+               </button>
+               <button type="button"
+                       class="btn-iflow btn-iflow--primary btn-iflow--sm"
+                       title="INSIDE Expediente"
+                       [disabled]="insideEnviando"
+                       (click)="handleEnviarExpedienteCompleto()">
+                    <i class="bi bi-cloud-upload" aria-hidden="true"></i> INSIDE Expediente
+               </button>
+               <button type="button"
+                       class="btn-iflow btn-iflow--primary btn-iflow--sm"
+                       title="Alta XML Expediente"
+                       [disabled]="insideEnviando"
+                       (click)="handleAltaExpedienteEniXml()">
+                    <i class="bi bi-file-earmark-code" aria-hidden="true"></i> Alta XML
+               </button>
+               <button type="button"
+                       class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                       title="INSIDE Documentos"
+                       [disabled]="insideEnviando"
+                       (click)="handleEnviarDocumentosExpediente()">
+                    <i class="bi bi-files" aria-hidden="true"></i> Documentos
+               </button>
+               <button type="button"
+                       class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+                       title="Remisión a Justicia"
+                       [disabled]="insideEnviando"
+                       (click)="handleAbrirModalRemisionJusticia()">
+                    <i class="bi bi-bank" aria-hidden="true"></i> Remisión Justicia
+               </button>
+          </div>
+     </div>
+</app-modal-shell>
+
+<app-edita-modal-inside-remision-justicia-modal [host]="this"></app-edita-modal-inside-remision-justicia-modal>

@@ -14,19 +14,13 @@ import { InteresadoListarDto } from '../../../../core/models/interesado.dto'
 import { NotificationService } from '../../../../core/service/notification.service'
 import { ExpedientesService } from '../../expedientes.service'
 import { EditaExpedienteTareasFacade } from '../tareas/edita-expediente-tareas.facade'
-import { environment } from 'src/environments/environment'
-import { InsideExpedienteOrchestrator } from '../../../../core/service/inside/inside-expediente.orchestrator'
-import { InsideService } from '../../../../core/service/inside/inside.service'
 import {
-  buildIdentificadorExpedienteEni,
-  resolverOrganoDesdeExpediente,
-} from '../../../../core/service/inside/inside-iflow.mapper'
-import { InsideEnvioRegistroService } from '../../../../core/service/inside/inside-envio-registro.service'
-import { InsidePrepareApiService } from '../../../../core/service/inside/inside-prepare-api.service'
-import { formatearValidacionHtml } from '../../../../core/service/inside/inside-validation.helper'
-import { InsideEnvioRegistro } from '../../../../core/models/inside/inside-envio.models'
-import { InsideSoapResponse } from '../../../../core/models/inside'
-import { etiquetaInsideDryRunHtml } from '../../../../core/constants/inside-simulacion.constants'
+  EditaExpedienteInsideHost,
+  InsideAccionesFacade,
+  InsideRemisionForm,
+} from '../../../../core/service/inside/inside-acciones.facade'
+
+export type { EditaExpedienteInsideHost, InsideRemisionForm }
 
 export interface EditaExpedienteBolsaHost {
   insertabolsacrear: InsertaBolsaCrear
@@ -80,46 +74,10 @@ export interface EditaExpedienteInteresadosHost {
   recargarpagina(): void;
 }
 
-export interface InsideRemisionForm {
-  idexpEni: string;
-  dir3Juzgado: string;
-  dir3Remitente: string;
-  nig: string;
-  claseProcedimiento: string;
-  anyoProcedimiento: string;
-  numeroProcedimiento: string;
-  descripcion: string;
-  codigoEnvioATEA: string;
-}
-
-export interface EditaExpedienteInsideHost {
-  idExpediente: number;
-  idTarea: number;
-  numeroArchivo: number;
-  verExpediente: VerExpediente;
-  verAbreArchivo: boolean;
-  insideEnviando: boolean;
-  insideDryRun: boolean;
-  insideRemision: InsideRemisionForm;
-  insideUltimaRespuesta: InsideSoapResponse | null;
-  insideUltimoEnvio: InsideEnvioRegistro | null;
-  abrirModal(modalId: string): void;
-  cerrarModal(modalId: string): void;
-}
-
-const crearRemisionVacia = (): InsideRemisionForm => ({
-  idexpEni: '',
-  dir3Juzgado: '',
-  dir3Remitente: '',
-  nig: '',
-  claseProcedimiento: '',
-  anyoProcedimiento: '',
-  numeroProcedimiento: '',
-  descripcion: '',
-  codigoEnvioATEA: '',
-});
-
-/** Facade unificado de operaciones (bolsa + salida + interesados + inside). */
+/** Facade unificado de operaciones (bolsa + salida + interesados). Las acciones
+ * INSIDE/ENI viven en `InsideAccionesFacade` (core/service/inside) — aquí solo
+ * se delega, para que ningún consumidor existente (vista de edición) tenga que
+ * cambiar la forma en que las invoca. */
 @Injectable()
 export class EditaExpedienteOperacionesFacade {
   private readonly destroyRef = inject(DestroyRef)
@@ -129,10 +87,7 @@ export class EditaExpedienteOperacionesFacade {
     private readonly notificationService: NotificationService,
     private readonly tareasFacade: EditaExpedienteTareasFacade,
     private readonly router: Router,
-    private readonly insideOrchestrator: InsideExpedienteOrchestrator,
-    private readonly insideService: InsideService,
-    private readonly envioRegistroService: InsideEnvioRegistroService,
-    private readonly prepareApiService: InsidePrepareApiService,
+    private readonly insideAcciones: InsideAccionesFacade,
   ) {}
 
   // --- Bolsa / propuesta de resolución ---
@@ -366,342 +321,53 @@ export class EditaExpedienteOperacionesFacade {
     host.idInteresado = idInteresado;
   }
 
-  // --- Inside / ENI ---
+  // --- Inside / ENI (delegado a InsideAccionesFacade) ---
   inicializarRemision(host: EditaExpedienteInsideHost): void {
-    const organo = resolverOrganoDesdeExpediente(host.verExpediente);
-    host.insideRemision = {
-      ...crearRemisionVacia(),
-      idexpEni: buildIdentificadorExpedienteEni(
-        organo,
-        host.verExpediente.ejercicio,
-        host.verExpediente.numero,
-      ),
-      dir3Remitente: organo,
-      anyoProcedimiento: String(host.verExpediente.ejercicio ?? new Date().getFullYear()),
-    };
+    this.insideAcciones.inicializarRemision(host);
   }
 
   abrirModalRemisionJusticia(host: EditaExpedienteInsideHost): void {
-    this.inicializarRemision(host);
-    host.abrirModal('insideRemisionJusticiaModal');
+    this.insideAcciones.abrirModalRemisionJusticia(host);
   }
 
   cargarEstadoEnvio(expedienteId: number, host: EditaExpedienteInsideHost): void {
-    this.envioRegistroService.obtenerUltimo(expedienteId).pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (ultimo) => {
-        host.insideUltimoEnvio = ultimo;
-      },
-    });
+    this.insideAcciones.cargarEstadoEnvio(expedienteId, host);
   }
 
   handleVerHistorialEnvios(host: EditaExpedienteInsideHost): void {
-    this.envioRegistroService.listarPorExpediente(host.idExpediente).pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (envios) => {
-        if (!envios.length) {
-          this.notificationService.info({ title: 'INSIDE', text: 'No hay envíos registrados para este expediente.' });
-          return;
-        }
-
-        const filas = envios.map((envio) => `
-          <tr>
-            <td>${envio.operacion}</td>
-            <td>${envio.estadoEnvio ?? '-'}</td>
-            <td>${envio.identificador ?? '-'}</td>
-            <td>${envio.csv ?? '-'}</td>
-          </tr>
-        `).join('');
-
-        this.notificationService.custom({
-          title: 'Historial INSIDE',
-          html: `
-            <table class="table table-sm table-bordered text-start">
-              <thead><tr><th>Operación</th><th>Estado</th><th>ID ENI</th><th>CSV</th></tr></thead>
-              <tbody>${filas}</tbody>
-            </table>
-          `,
-          width: '48rem',
-          icon: 'info',
-        });
-      },
-    });
+    this.insideAcciones.handleVerHistorialEnvios(host);
   }
 
   handleValidarExpediente(host: EditaExpedienteInsideHost): void {
-    host.insideEnviando = true;
-    this.insideOrchestrator.validarExpediente(host.idExpediente).pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (preparacion) => {
-        host.insideEnviando = false;
-        this.notificationService.custom({
-          title: preparacion.validacion.valido ? 'Expediente listo para INSIDE' : 'Validación INSIDE',
-          html: `${this.etiquetaDryRun(preparacion.modoDryRun)}${formatearValidacionHtml(preparacion.validacion)}`,
-          icon: preparacion.validacion.valido ? 'success' : 'warning',
-        });
-      },
-      error: (error) => this.mostrarError(host, error),
-    });
+    this.insideAcciones.handleValidarExpediente(host);
   }
 
   handleEnviarDocumentoTarea(host: EditaExpedienteInsideHost): void {
-    if (!host.numeroArchivo || !host.idTarea) {
-      this.notificationService.warning({ title: 'INSIDE', text: 'Seleccione una tarea con documento asociado.' });
-      return;
-    }
-
-    this.notificationService.confirm({
-      title: 'Enviar documento a INSIDE',
-      html: `${this.etiquetaDryRun(host.insideDryRun)}Se convertirá el documento de la tarea seleccionada al formato ENI de INSIDE.`,
-      confirmButtonText: 'Enviar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        return;
-      }
-
-      host.insideEnviando = true;
-      this.insideOrchestrator.convertirDocumentoTarea(host.idExpediente, host.idTarea).pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe({
-        next: (respuesta) => this.mostrarExito(host, 'Documento enviado a INSIDE', respuesta, 'convertirDocumentoAEni', host.idTarea),
-        error: (error) => this.mostrarError(host, error),
-      });
-    });
+    this.insideAcciones.handleEnviarDocumentoTarea(host);
   }
 
   handleAltaDocumentoEniXml(host: EditaExpedienteInsideHost): void {
-    if (!host.numeroArchivo || !host.idTarea) {
-      this.notificationService.warning({ title: 'INSIDE', text: 'Seleccione una tarea con documento asociado.' });
-      return;
-    }
-
-    this.notificationService.confirm({
-      title: 'Alta documento ENI XML',
-      html: `${this.etiquetaDryRun(host.insideDryRun)}Se enviará el XML ENI ya generado en disco para la tarea seleccionada.`,
-      confirmButtonText: 'Enviar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        return;
-      }
-
-      host.insideEnviando = true;
-      this.insideOrchestrator.altaDocumentoEniXmlDesdeTarea(host.idExpediente, host.idTarea).pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe({
-        next: (respuesta) => this.mostrarExito(host, 'Alta documento ENI XML', respuesta, 'altaDocumentoEniXml', host.idTarea),
-        error: (error) => this.mostrarError(host, error),
-      });
-    });
+    this.insideAcciones.handleAltaDocumentoEniXml(host);
   }
 
   handleEnviarExpedienteCompleto(host: EditaExpedienteInsideHost): void {
-    this.notificationService.confirm({
-      title: 'Enviar expediente a INSIDE',
-      html: `${this.etiquetaDryRun(host.insideDryRun)}Se convertirá el expediente completo con todos sus documentos.`,
-      confirmButtonText: 'Enviar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        return;
-      }
-
-      host.insideEnviando = true;
-      this.insideOrchestrator.convertirExpedienteCompleto(host.idExpediente).pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe({
-        next: (respuesta) => this.mostrarExito(host, 'Expediente enviado a INSIDE', respuesta, 'convertirExpedienteAEni'),
-        error: (error) => this.mostrarError(host, error),
-      });
-    });
+    this.insideAcciones.handleEnviarExpedienteCompleto(host);
   }
 
   handleAltaExpedienteEniXml(host: EditaExpedienteInsideHost): void {
-    this.notificationService.confirm({
-      title: 'Alta expediente ENI XML',
-      html: `${this.etiquetaDryRun(host.insideDryRun)}Se enviará el XML ENI del expediente cerrado y los XML de sus documentos.`,
-      confirmButtonText: 'Enviar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        return;
-      }
-
-      host.insideEnviando = true;
-      this.insideOrchestrator.altaExpedienteEniXmlDesdeExpediente(host.idExpediente).pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe({
-        next: (respuesta) => this.mostrarExito(host, 'Alta expediente ENI XML', respuesta, 'altaExpedienteEniXml'),
-        error: (error) => this.mostrarError(host, error),
-      });
-    });
+    this.insideAcciones.handleAltaExpedienteEniXml(host);
   }
 
   handleEnviarDocumentosExpediente(host: EditaExpedienteInsideHost): void {
-    this.notificationService.confirm({
-      title: 'Convertir documentos en INSIDE',
-      html: `${this.etiquetaDryRun(host.insideDryRun)}Se enviarán todos los documentos del expediente de forma individual.`,
-      confirmButtonText: 'Enviar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        return;
-      }
-
-      host.insideEnviando = true;
-      this.insideOrchestrator.convertirDocumentosExpediente(host.idExpediente).pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe({
-        next: (respuestas) => {
-          host.insideEnviando = false;
-          const ultima = respuestas[respuestas.length - 1] ?? null;
-          host.insideUltimaRespuesta = ultima;
-          if (ultima) {
-            this.registrarEnvio(host.idExpediente, 'convertirDocumentosExpediente', ultima);
-          }
-          this.notificationService.success({
-            title: 'INSIDE',
-            text: `Se procesaron ${respuestas.length} documento(s) correctamente.${host.insideDryRun ? ' (simulación)' : ''}`,
-          });
-        },
-        error: (error) => this.mostrarError(host, error),
-      });
-    });
+    this.insideAcciones.handleEnviarDocumentosExpediente(host);
   }
 
   handleRemisionAJusticia(host: EditaExpedienteInsideHost): void {
-    const form = host.insideRemision;
-    if (!form.idexpEni || !form.dir3Juzgado || !form.dir3Remitente || !form.nig) {
-      this.notificationService.warning({ title: 'INSIDE', text: 'Complete los campos obligatorios de la remisión.' });
-      return;
-    }
-
-    host.insideEnviando = true;
-    const peticionRemision = {
-      idexpEni: form.idexpEni,
-      dir3Juzgado: form.dir3Juzgado,
-      datosRemisionJusticia: {
-        dir3Remitente: form.dir3Remitente,
-        nig: form.nig,
-        claseProcedimiento: form.claseProcedimiento,
-        anyoProcedimiento: form.anyoProcedimiento,
-        numeroProcedimiento: form.numeroProcedimiento,
-        descripcion: form.descripcion,
-      },
-    };
-
-    const remision$ = environment.inside.useBackendProxy === true
-      ? this.prepareApiService.enviarRemisionAJusticia({
-          idExpediente: host.idExpediente,
-          ...peticionRemision,
-        })
-      : this.insideService.remisionAJusticia(peticionRemision);
-
-    remision$.pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (respuesta) => {
-        if (respuesta.codigoEnvioATEA) {
-          host.insideRemision.codigoEnvioATEA = respuesta.codigoEnvioATEA;
-        }
-        this.mostrarExito(host, 'Remisión a Justicia enviada', respuesta, 'remisionAJusticia');
-        host.cerrarModal('insideRemisionJusticiaModal');
-      },
-      error: (error) => this.mostrarError(host, error),
-    });
+    this.insideAcciones.handleRemisionAJusticia(host);
   }
 
   handleConsultarEstadoRemision(host: EditaExpedienteInsideHost): void {
-    const codigo = host.insideRemision.codigoEnvioATEA?.trim();
-    if (!codigo) {
-      this.notificationService.warning({ title: 'INSIDE', text: 'Indique el código de envío ATEA.' });
-      return;
-    }
-
-    host.insideEnviando = true;
-    const consulta$ = environment.inside.useBackendProxy === true
-      ? this.prepareApiService.consultarEstadoRemision({
-          idExpediente: host.idExpediente,
-          codigoEnvioATEA: codigo,
-        })
-      : this.insideService.consultaEstadoRemisionAJusticia({ codigoEnvioATEA: codigo });
-
-    consulta$.pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (respuesta) => {
-        host.insideEnviando = false;
-        host.insideUltimaRespuesta = respuesta;
-        this.notificationService.info({
-          title: 'Estado de remisión',
-          html: `
-            ${this.etiquetaDryRun(host.insideDryRun)}
-            <p><strong>Código ATEA:</strong> ${codigo}</p>
-            <p><strong>Estado:</strong> ${respuesta.estadoRemision ?? respuesta.descripcionRespuesta ?? 'Sin datos'}</p>
-            <p><strong>Código respuesta:</strong> ${respuesta.codigoRespuesta ?? '-'}</p>
-          `,
-        });
-      },
-      error: (error) => this.mostrarError(host, error),
-    });
-  }
-
-  private etiquetaDryRun(activo: boolean): string {
-    return etiquetaInsideDryRunHtml(activo);
-  }
-
-  private registrarEnvio(
-    expedienteId: number,
-    operacion: string,
-    respuesta: InsideSoapResponse,
-    options?: { idTarea?: number },
-  ): void {
-    this.envioRegistroService.registrarDesdeRespuesta(
-      expedienteId,
-      operacion,
-      respuesta,
-      {
-        idTarea: options?.idTarea,
-        dryRun: environment.inside.dryRun === true,
-      },
-    );
-  }
-
-  private actualizarEstadoEnvio(host: EditaExpedienteInsideHost): void {
-    this.cargarEstadoEnvio(host.idExpediente, host);
-  }
-
-  private mostrarExito(
-    host: EditaExpedienteInsideHost,
-    titulo: string,
-    respuesta: InsideSoapResponse,
-    operacion: string,
-    idTarea?: number,
-  ): void {
-    host.insideEnviando = false;
-    host.insideUltimaRespuesta = respuesta;
-    this.registrarEnvio(host.idExpediente, operacion, respuesta, { idTarea });
-    this.actualizarEstadoEnvio(host);
-    this.notificationService.success({
-      title: `${titulo}${host.insideDryRun ? ' (simulación)' : ''}`,
-      html: `
-        ${this.etiquetaDryRun(host.insideDryRun)}
-        <p><strong>Código:</strong> ${respuesta.codigoRespuesta ?? '-'}</p>
-        <p><strong>Descripción:</strong> ${respuesta.descripcionRespuesta ?? '-'}</p>
-        ${respuesta.identificador ? `<p><strong>Identificador:</strong> ${respuesta.identificador}</p>` : ''}
-        ${respuesta.csv ? `<p><strong>CSV:</strong> ${respuesta.csv}</p>` : ''}
-        ${respuesta.codigoEnvioATEA ? `<p><strong>ATEA:</strong> ${respuesta.codigoEnvioATEA}</p>` : ''}
-      `,
-    });
-  }
-
-  private mostrarError(host: EditaExpedienteInsideHost, error: Error): void {
-    host.insideEnviando = false;
-    this.notificationService.error({ title: 'Error INSIDE', text: error?.message ?? 'No se pudo completar la operación.' });
+    this.insideAcciones.handleConsultarEstadoRemision(host);
   }
 }
 

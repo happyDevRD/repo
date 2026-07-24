@@ -1,12 +1,31 @@
-<app-shell contentId="hanging-icons">
-  <app-access-denied
-    *ngIf="!session.canManageExpedientes"
-    title="Sin acceso a expedientes"
-    message="Este usuario no tiene permisos para gestionar interesados del expediente.">
-  </app-access-denied>
+<ng-container *ngIf="!modal">
+  <app-shell contentId="hanging-icons">
+    <app-access-denied
+      *ngIf="!session.canManageExpedientes"
+      title="Sin acceso a expedientes"
+      message="Este usuario no tiene permisos para gestionar interesados del expediente.">
+    </app-access-denied>
 
-  <ng-container *ngIf="session.canManageExpedientes">
-    <app-interesado-list></app-interesado-list>
-    <app-interesado-modals></app-interesado-modals>
-  </ng-container>
-</app-shell>
+    <ng-container *ngIf="session.canManageExpedientes">
+      <app-interesado-list></app-interesado-list>
+      <app-interesado-modals></app-interesado-modals>
+    </ng-container>
+  </app-shell>
+</ng-container>
+
+<ng-container *ngIf="modal">
+  <app-modal-shell modalId="interesadosExpedienteModal" title="Interesados del expediente"
+       titleId="interesadosExpedienteModalLabel" dialogClass="modal-xl modal-dialog-scrollable"
+       [staticBackdrop]="true" [showFooter]="false">
+    <div modalBody>
+      <app-access-denied
+        *ngIf="!session.canManageExpedientes"
+        title="Sin acceso a expedientes"
+        message="Este usuario no tiene permisos para gestionar interesados del expediente.">
+      </app-access-denied>
+
+      <app-interesado-list *ngIf="session.canManageExpedientes"></app-interesado-list>
+    </div>
+  </app-modal-shell>
+  <app-interesado-modals></app-interesado-modals>
+</ng-container>

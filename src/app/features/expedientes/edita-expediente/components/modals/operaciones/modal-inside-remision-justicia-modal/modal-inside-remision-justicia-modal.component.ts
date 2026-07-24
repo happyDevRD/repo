@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core'
-import { EditaExpedienteComponent } from '../../../../edita-expediente.component'
-import { EditaExpedienteOperacionesFacade } from '../../../../operaciones/edita-expediente-operaciones.facade'
+import { Component, Input, inject } from '@angular/core'
+import { EditaExpedienteInsideHost, InsideAccionesFacade } from '../../../../../../../core/service/inside/inside-acciones.facade'
 
 
 @Component({
@@ -8,6 +7,6 @@ import { EditaExpedienteOperacionesFacade } from '../../../../operaciones/edita-
   templateUrl: './modal-inside-remision-justicia-modal.component.html',
 })
 export class EditaModalInsideRemisionJusticiaModalComponent {
-  readonly edita = inject(EditaExpedienteComponent)
-  readonly ops = inject(EditaExpedienteOperacionesFacade)
+  @Input({ required: true }) host!: EditaExpedienteInsideHost
+  readonly ops = inject(InsideAccionesFacade)
 }

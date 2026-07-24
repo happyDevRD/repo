@@ -1,5 +1,5 @@
 <div class="page-panel">
-  <div class="expediente-header-container">
+  <div class="expediente-header-container" *ngIf="!i.modal">
     <div class="expediente-titulo-info">
       <h3 class="expediente-titulo">
         Expediente:
@@ -16,7 +16,8 @@
   <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
     <div>
       <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Expediente</p>
-      <h2 class="h4 fw-bold mb-0">Interesados del expediente</h2>
+      <h2 class="h4 fw-bold mb-0" *ngIf="!i.modal">Interesados del expediente</h2>
+      <span *ngIf="i.modal" class="expediente-numero">{{ i.verexpediente.ejercicio }}/{{ i.verexpediente.numero }}</span>
     </div>
     <div class="d-flex flex-wrap gap-2">
       <button type="button" class="btn-iflow btn-iflow--icon" title="Nuevo interesado" aria-label="Nuevo interesado"
@@ -38,6 +39,7 @@
       (rowClick)="i.clickInteresado($event)"
       (rowDoubleClick)="i.abrirModalVerInteresado($event)"
       [columns]="i.columnsInteresado"
+      [showfilterrow]="true"
       [localization]="i.localizationObject"
       [source]="i.sourceInteresado">
     </app-iflow-grid>

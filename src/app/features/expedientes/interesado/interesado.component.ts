@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -20,7 +20,7 @@ import { UserSessionService } from '../../../core/service/user-session.service';
   templateUrl: './interesado.component.html',
   styleUrls: ['./interesado.component.css']
 })
-export class InteresadoComponent {
+export class InteresadoComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef)
   public title = 'Expedientes';
   public relleno: string = 'Datos de prueba';
@@ -28,7 +28,11 @@ export class InteresadoComponent {
   public crearinteresado: CrearInteresado = new CrearInteresado();
   public representanteexplistar: RepresentanteExpLIstar = new RepresentanteExpLIstar();
   public consultadni: ConsultaDni = new ConsultaDni();
-  public idExpediente!: number;
+  /** Cuando se usa embebido como modal, el id llega por Input en vez de por la ruta. */
+  @Input() idExpediente!: number;
+  /** true cuando este componente se monta como modal (p.ej. desde el listado de expedientes)
+   *  en vez de como página propia en la ruta /interesado/interesado/:id. */
+  @Input() modal = false;
   public selected = new Date();
   public formanotificacion: boolean = false
   public dniok: boolean = false
@@ -458,67 +462,49 @@ export class InteresadoComponent {
 
   });
 
-
-
   async cargarexpediente() {
-
     this.activatedRoute.params.pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(params => {
-      let id = params['id'];
-      this.idExpediente = id;
-      //this.procediExp =this.verexpediente.procedimiento.descripcion;
+      const id = params['id'];
+      this.cargarPorId(id);
+    })
+  }
 
-      // console.log( `${environment.apiUrl}interesado/listar/${this.idExpediente}`)
-      this.sourceInteresado = ({
-        dataType: 'json',
-        dataFields: [
-          { name: 'nomInter', type: 'string' },
-          { name: 'numDocumInter', type: 'string' },
-          { name: 'principal', type: 'any' },
-          { name: "nomRepre", type: 'string' },
-          { name: "numDocumRepre", type: 'string' },
-          { name: 'id', type: 'any' },
-          { name: 'forNotif', type: 'any' },
-          { name: 'dirInter', type: 'any' },
-          { name: 'dirRepre', type: 'any' },
-          { name: 'desProviInter', type: 'any' },
-          { name: 'desProviRepre', type: 'any' },
-          { name: 'desMunicInter', type: 'any' },
-          { name: 'desMunicRepre', type: 'any' },
-          { name: 'emailNotif', type: 'any' },
+  /** Núcleo de carga (fuente del grid + datos del expediente), reutilizado tanto
+   *  por la ruta propia (id vía params) como por el uso embebido como modal (id vía Input). */
+  cargarPorId(id: number): void {
+    this.idExpediente = id;
 
+    this.sourceInteresado = ({
+      dataType: 'json',
+      dataFields: [
+        { name: 'nomInter', type: 'string' },
+        { name: 'numDocumInter', type: 'string' },
+        { name: 'principal', type: 'any' },
+        { name: "nomRepre", type: 'string' },
+        { name: "numDocumRepre", type: 'string' },
+        { name: 'id', type: 'any' },
+        { name: 'forNotif', type: 'any' },
+        { name: 'dirInter', type: 'any' },
+        { name: 'dirRepre', type: 'any' },
+        { name: 'desProviInter', type: 'any' },
+        { name: 'desProviRepre', type: 'any' },
+        { name: 'desMunicInter', type: 'any' },
+        { name: 'desMunicRepre', type: 'any' },
+        { name: 'emailNotif', type: 'any' },
+      ],
+      url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
+      id: 'id',
+    });
 
-
-        ],
-
-        //url: `${environment.apiUrl}interesado/listar/104}`,
-        url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
-        id: 'id',
-        // sortcolumn: 'id',
-        //  sortdirection: 'desc'
-
-      });
-
-
-
-
-
-      if (id) {
-        this.expedientesService.getExpediente(id).pipe(
-          takeUntilDestroyed(this.destroyRef),
-        ).subscribe(
-
-          (verexpediente) => this.verexpediente = verexpediente
-
-        );
-
-
-
-      }
-
+    if (id) {
+      this.expedientesService.getExpediente(id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe(
+        (verexpediente) => this.verexpediente = verexpediente
+      );
     }
-    )
   }
 
 
@@ -526,9 +512,12 @@ export class InteresadoComponent {
 
 
 
-
-  // Función para volver al listado de expedientes
+  // Función para volver al listado de expedientes (o cerrar el modal, si se abrió como tal)
   public volverListadoExpedientes(): void {
+    if (this.modal) {
+      this.cerrarModal('interesadosExpedienteModal');
+      return;
+    }
     this.router.navigate(['/expedientes']);
   }
 
@@ -558,7 +547,10 @@ export class InteresadoComponent {
   }
 
   ngOnInit() {
-
+    if (this.modal) {
+      this.cargarPorId(this.idExpediente);
+      return;
+    }
     this.cargarexpediente();
   }
 

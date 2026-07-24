@@ -1,53 +1,53 @@
 <app-modal-shell modalId="insideRemisionJusticiaModal" title="Remisión a Justicia (INSIDE)"
-     titleId="insideRemisionJusticiaModalLabel" dialogClass="modal-xl" [staticBackdrop]="true" [keyboard]="false"
+     titleId="insideRemisionJusticiaModalLabel" dialogClass="modal-xl modal-dialog-scrollable" [staticBackdrop]="true" [keyboard]="false"
      [showFooter]="false">
-     <form modalBody (ngSubmit)="ops.handleRemisionAJusticia(edita)">
+     <form modalBody (ngSubmit)="ops.handleRemisionAJusticia(host)">
           <div class="row g-3">
                <div class="col-md-6">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.idexpEni" class="form-control" id="insideIdexpEni"
+                         <input [(ngModel)]="host.insideRemision.idexpEni" class="form-control" id="insideIdexpEni"
                               name="insideIdexpEni" required type="text" placeholder=" ">
                          <label class="required-field" for="insideIdexpEni">Identificador expediente ENI</label>
                     </div>
                </div>
                <div class="col-md-6">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.dir3Juzgado" class="form-control"
+                         <input [(ngModel)]="host.insideRemision.dir3Juzgado" class="form-control"
                               id="insideDir3Juzgado" name="insideDir3Juzgado" required type="text" placeholder=" ">
                          <label class="required-field" for="insideDir3Juzgado">DIR3 Juzgado</label>
                     </div>
                </div>
                <div class="col-md-6">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.dir3Remitente" class="form-control"
+                         <input [(ngModel)]="host.insideRemision.dir3Remitente" class="form-control"
                               id="insideDir3Remitente" name="insideDir3Remitente" required type="text" placeholder=" ">
                          <label class="required-field" for="insideDir3Remitente">DIR3 Remitente</label>
                     </div>
                </div>
                <div class="col-md-6">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.nig" class="form-control" id="insideNig"
+                         <input [(ngModel)]="host.insideRemision.nig" class="form-control" id="insideNig"
                               name="insideNig" required type="text" placeholder=" ">
                          <label class="required-field" for="insideNig">NIG</label>
                     </div>
                </div>
                <div class="col-md-4">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.claseProcedimiento" class="form-control"
+                         <input [(ngModel)]="host.insideRemision.claseProcedimiento" class="form-control"
                               id="insideClaseProcedimiento" name="insideClaseProcedimiento" type="text" placeholder=" ">
                          <label for="insideClaseProcedimiento">Clase procedimiento</label>
                     </div>
                </div>
                <div class="col-md-4">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.anyoProcedimiento" class="form-control"
+                         <input [(ngModel)]="host.insideRemision.anyoProcedimiento" class="form-control"
                               id="insideAnyoProcedimiento" name="insideAnyoProcedimiento" type="text" placeholder=" ">
                          <label for="insideAnyoProcedimiento">Año procedimiento</label>
                     </div>
                </div>
                <div class="col-md-4">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.numeroProcedimiento" class="form-control"
+                         <input [(ngModel)]="host.insideRemision.numeroProcedimiento" class="form-control"
                               id="insideNumeroProcedimiento" name="insideNumeroProcedimiento" type="text"
                               placeholder=" ">
                          <label for="insideNumeroProcedimiento">Número procedimiento</label>
@@ -55,14 +55,14 @@
                </div>
                <div class="col-12">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.descripcion" class="form-control"
+                         <input [(ngModel)]="host.insideRemision.descripcion" class="form-control"
                               id="insideDescripcion" name="insideDescripcion" type="text" placeholder=" ">
                          <label for="insideDescripcion">Descripción</label>
                     </div>
                </div>
                <div class="col-md-6">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.insideRemision.codigoEnvioATEA" class="form-control"
+                         <input [(ngModel)]="host.insideRemision.codigoEnvioATEA" class="form-control"
                               id="insideCodigoEnvioATEA" name="insideCodigoEnvioATEA" type="text" placeholder=" ">
                          <label for="insideCodigoEnvioATEA">Código envío ATEA (consulta)</label>
                     </div>
@@ -72,11 +72,11 @@
           <div class="modal-footer">
                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
                     type="button">Cancelar</button>
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" [disabled]="edita.insideEnviando"
-                    type="button" (click)="ops.handleConsultarEstadoRemision(edita)">
+               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" [disabled]="host.insideEnviando"
+                    type="button" (click)="ops.handleConsultarEstadoRemision(host)">
                     Consultar estado
                </button>
-               <button class="btn-iflow modal-footer__btn btn-iflow--primary" [disabled]="edita.insideEnviando"
+               <button class="btn-iflow modal-footer__btn btn-iflow--primary" [disabled]="host.insideEnviando"
                     type="submit">
                     Enviar remisión
                </button>

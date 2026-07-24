@@ -14,6 +14,7 @@ import { ExpedientesAccionesComponent } from './components/expedientes-acciones/
 import { ExpedientesListComponent } from './components/expedientes-list/expedientes-list.component'
 import { ExpedientesModalsComponent } from './components/expedientes-modals/expedientes-modals.component'
 import { ExpedienteFichaComponent } from './expediente-ficha/expediente-ficha.component'
+import { ModalInsideAccionesComponent } from './components/modals/modal-inside-acciones/modal-inside-acciones.component'
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { ExpedienteFichaComponent } from './expediente-ficha/expediente-ficha.co
     ExpedientesAccionesComponent,
     ExpedientesListComponent,
     ExpedientesModalsComponent,
+    ModalInsideAccionesComponent,
   ],
   imports: [
     SharedModule,

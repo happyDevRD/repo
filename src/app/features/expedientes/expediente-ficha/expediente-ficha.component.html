@@ -20,10 +20,7 @@
               [title]="simulacionTitle">
           {{ simulacionBadge }}
         </span>
-        <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                (click)="ficha.handleIrListado()">
-          <i class="bi bi-arrow-left" aria-hidden="true"></i> Listado
-        </button>
+        <app-back-button [fallbackRoute]="'/expedientes'"></app-back-button>
       </div>
     </header>
 
@@ -33,9 +30,8 @@
           <button type="button" class="nav-link"
                   [class.active]="ficha.seccionActiva === 'tramitacion'"
                   (click)="ficha.handleIrTramitacion()"
-                  role="tab"
-                  title="Volver al listado de expedientes">
-            Listado
+                  role="tab">
+            Tramitación
           </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -131,20 +127,11 @@
           <span *ngIf="ficha.insideDryRun">Modo simulación (sin red SARA).</span>
         </p>
         <div class="expediente-ficha__acciones-fila">
-          <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-                  [disabled]="ficha.insideEnviando"
-                  (click)="ficha.handleValidarInside()">
-            <i class="bi bi-shield-check" aria-hidden="true"></i> Validar
-          </button>
           <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
-                  [disabled]="ficha.insideEnviando || !ficha.puedeEnviarInside()"
-                  (click)="ficha.handleEnviarAltaXml()">
-            <i class="bi bi-cloud-upload" aria-hidden="true"></i> Alta XML
+                  (click)="ficha.abrirModalInside()">
+            <i class="bi bi-cloud-upload" aria-hidden="true"></i> Acciones INSIDE
           </button>
         </div>
-        <p class="expediente-ficha__hint" *ngIf="!ficha.puedeEnviarInside()">
-          Alta XML cuando el expediente esté CERRADO o ARCHIVADO.
-        </p>
 
         <h4 class="expediente-ficha__subtitle">Historial</h4>
         <div *ngIf="!ficha.historialInside.length" class="expediente-ficha__empty">
@@ -168,4 +155,5 @@
       </section>
     </ng-container>
   </div>
+  <app-modal-inside-acciones *ngIf="ficha.resumen" [idExpediente]="ficha.resumen.id"></app-modal-inside-acciones>
 </app-shell>

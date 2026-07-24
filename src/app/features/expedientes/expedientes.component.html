@@ -12,5 +12,7 @@
       <app-expedientes-list></app-expedientes-list>
     </div>
     <app-expedientes-modals></app-expedientes-modals>
+    <app-modal-inside-acciones *ngIf="idExpedienteParaInside" [idExpediente]="idExpedienteParaInside"></app-modal-inside-acciones>
+    <app-interesado *ngIf="idExpedienteParaInteresados" [idExpediente]="idExpedienteParaInteresados" [modal]="true"></app-interesado>
   </ng-container>
 </app-shell>

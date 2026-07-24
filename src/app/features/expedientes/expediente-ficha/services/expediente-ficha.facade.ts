@@ -6,16 +6,13 @@ import { environment } from 'src/environments/environment'
 import { VerExpediente } from '../../expedientes'
 import { ExpedientesService } from '../../expedientes.service'
 import { NotificationService } from '../../../../core/service/notification.service'
+import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { InsideEnvioRegistroService } from '../../../../core/service/inside/inside-envio-registro.service'
-import { InsideExpedienteOrchestrator } from '../../../../core/service/inside/inside-expediente.orchestrator'
-import { formatearValidacionHtml } from '../../../../core/service/inside/inside-validation.helper'
 import { InsideEnvioRegistro } from '../../../../core/models/inside/inside-envio.models'
 import {
   etiquetaInsideDryRunHtml,
   isInsideDryRun,
-  tituloInsideConSimulacion,
 } from '../../../../core/constants/inside-simulacion.constants'
-import { InsideEnvioResultado } from '../../services/expedientes-inside.facade'
 
 export interface ExpedienteFichaResumen {
   id: number
@@ -39,7 +36,7 @@ export class ExpedienteFichaFacade {
   private readonly expedientesService = inject(ExpedientesService)
   private readonly notificationService = inject(NotificationService)
   private readonly envioRegistroService = inject(InsideEnvioRegistroService)
-  private readonly insideOrchestrator = inject(InsideExpedienteOrchestrator)
+  private readonly modalManagerService = inject(ModalManagerService)
   private readonly httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
 
   readonly insideDryRun = isInsideDryRun()
@@ -98,10 +95,6 @@ export class ExpedienteFichaFacade {
     })
   }
 
-  handleIrListado(): void {
-    this.router.navigate(['/expedientes'])
-  }
-
   handleTramitar(): void {
     const id = this.resumen?.id
     if (!id) {
@@ -114,9 +107,8 @@ export class ExpedienteFichaFacade {
     this.seccionActiva = 'inside'
   }
 
-  /** Vuelve al listado (pestaña Tramitación), no a un panel vacío de ficha. */
   handleIrTramitacion(): void {
-    this.router.navigate(['/expedientes'])
+    this.seccionActiva = 'tramitacion'
   }
 
   handleInteresados(): void {
@@ -150,119 +142,9 @@ export class ExpedienteFichaFacade {
     return this.puedeTramitar()
   }
 
-  handleValidarInside(): void {
-    const id = this.resumen?.id
-    if (!id) {
-      return
-    }
-
-    this.insideEnviando = true
-    this.insideOrchestrator.validarExpediente(id).pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (resultado) => {
-        this.insideEnviando = false
-        const validacion = resultado?.validacion
-        const html = `${etiquetaInsideDryRunHtml()}${validacion ? formatearValidacionHtml(validacion) : ''}`
-        if (validacion && !validacion.valido) {
-          this.notificationService.warning({
-            title: tituloInsideConSimulacion('Validación INSIDE'),
-            html,
-          })
-          return
-        }
-        this.notificationService.success({
-          title: tituloInsideConSimulacion('Validación INSIDE'),
-          html,
-        })
-      },
-      error: (err: Error) => {
-        this.insideEnviando = false
-        this.notificationService.error({
-          title: 'Validación INSIDE',
-          text: err?.message ?? 'No se pudo validar',
-        })
-      },
-    })
-  }
-
-  handleEnviarAltaXml(): void {
-    const id = this.resumen?.id
-    if (!id) {
-      return
-    }
-
-    if (!this.puedeEnviarInside()) {
-      this.notificationService.warning({
-        title: 'INSIDE',
-        text: 'El expediente debe estar cerrado o archivado para enviar a INSIDE.',
-      })
-      return
-    }
-
-    this.notificationService.confirm({
-      title: 'Enviar expediente a INSIDE',
-      html: `${etiquetaInsideDryRunHtml()}<p>Se enviará el XML ENI del expediente y sus documentos.</p>`,
-      confirmButtonText: 'Enviar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        return
-      }
-
-      this.insideEnviando = true
-      const url = `${environment.apiUrl}inside/expediente/${id}/enviar-alta-xml`
-      this.http.post<InsideEnvioResultado>(url, {}).pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe({
-        next: (respuesta) => {
-          this.insideEnviando = false
-          if (!respuesta.exito) {
-            this.notificationService.error({
-              title: 'Error INSIDE',
-              text: respuesta.mensajeError ?? 'No se pudo completar el envío.',
-            })
-            return
-          }
-
-          this.envioRegistroService.registrar({
-            expedienteId: id,
-            operacion: 'altaExpedienteEniXml',
-            estadoEnvio: respuesta.modoDryRun ? 'SIMULADO' : 'ENVIADO',
-            fecha: new Date().toISOString(),
-            codigoRespuesta: respuesta.codigoRespuesta,
-            descripcionRespuesta: respuesta.descripcionRespuesta,
-            identificador: respuesta.identificadorEni,
-            csv: respuesta.csv,
-            dryRun: respuesta.modoDryRun === true,
-          })
-
-          this.refrescarHistorial(id)
-          if (this.resumen) {
-            this.resumen = {
-              ...this.resumen,
-              insideEstado: respuesta.modoDryRun ? 'SIMULADO' : 'ENVIADO',
-            }
-          }
-
-          this.notificationService.success({
-            title: tituloInsideConSimulacion('INSIDE'),
-            html: `${etiquetaInsideDryRunHtml()}
-              <p><strong>Código:</strong> ${respuesta.codigoRespuesta ?? '-'}</p>
-              <p><strong>Identificador:</strong> ${respuesta.identificadorEni ?? '-'}</p>
-              ${respuesta.csv ? `<p><strong>CSV:</strong> ${respuesta.csv}</p>` : ''}
-            `,
-          })
-        },
-        error: (error: Error) => {
-          this.insideEnviando = false
-          this.notificationService.error({
-            title: 'Error INSIDE',
-            text: error?.message ?? 'No se pudo completar el envío.',
-          })
-        },
-      })
-    })
+  /** Abre el modal INSIDE consolidado (mismas 6 acciones que la vista de edición). */
+  abrirModalInside(): void {
+    this.modalManagerService.openModal('insideAccionesModal')
   }
 
   handleAbrirExpediente(): void {
