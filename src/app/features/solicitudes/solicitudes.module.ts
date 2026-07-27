@@ -14,10 +14,8 @@ import { SolicitudesAltaRepresentanteComponent } from './components/modals/solic
 import { SolicitudesModalsEdicionComponent } from './components/modals/solicitudes-modals-edicion/solicitudes-modals-edicion.component'
 import { SolicitudesModalsAccionesComponent } from './components/modals/solicitudes-modals-acciones/solicitudes-modals-acciones.component'
 import { SolicitudesModalAsignarComponent } from './components/modals/solicitudes-modals-acciones/modal-asignar/modal-asignar.component'
-import { SolicitudesModalAsignarInstructorComponent } from './components/modals/solicitudes-modals-acciones/modal-asignar-instructor/modal-asignar-instructor.component'
 import { SolicitudesModalDocumentoComponent } from './components/modals/solicitudes-modals-acciones/modal-documento/modal-documento.component'
 import { SolicitudesModalIniciarExpedienteComponent } from './components/modals/solicitudes-modals-acciones/modal-iniciar-expediente/modal-iniciar-expediente.component'
-import { SolicitudesModalDevolverComponent } from './components/modals/solicitudes-modals-acciones/modal-devolver/modal-devolver.component'
 import { SolicitudesModalVerPdfComponent } from './components/modals/solicitudes-modals-acciones/modal-ver-pdf/modal-ver-pdf.component'
 import { SolicitudesModalRechazarComponent } from './components/modals/solicitudes-modals-acciones/modal-rechazar/modal-rechazar.component'
 import { SolicitudesModalPendientesComponent } from './components/modals/solicitudes-modals-acciones/modal-pendientes/modal-pendientes.component'
@@ -37,10 +35,8 @@ import { SolicitudesModalPendientesComponent } from './components/modals/solicit
     SolicitudesModalsEdicionComponent,
     SolicitudesModalsAccionesComponent,
     SolicitudesModalAsignarComponent,
-    SolicitudesModalAsignarInstructorComponent,
     SolicitudesModalDocumentoComponent,
     SolicitudesModalIniciarExpedienteComponent,
-    SolicitudesModalDevolverComponent,
     SolicitudesModalVerPdfComponent,
     SolicitudesModalRechazarComponent,
     SolicitudesModalPendientesComponent,

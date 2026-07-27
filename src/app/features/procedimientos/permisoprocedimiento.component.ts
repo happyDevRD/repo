@@ -3,7 +3,6 @@ import { CrearProcedi, Procedimiento, EditarProcedi , CreaTareaProcedi,Plantilla
 import { ProcedimientoService } from './procedimiento.service';
 import {Router, ActivatedRoute} from '@angular/router'
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { FormnuevoprocediComponent } from './formnuevoprocedi.component';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
