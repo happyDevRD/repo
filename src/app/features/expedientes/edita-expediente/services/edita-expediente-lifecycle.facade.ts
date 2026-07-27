@@ -59,6 +59,9 @@ export interface EditaExpedienteCargaHost {
   getListarInteresado(idexp: number): void
   getListarTramites(id: number): void
   cargarEstadoInside?(idExpediente: number): void
+  /** Aplica la vista inicial (Notificaciones/Tramitadores) indicada por el query param `vista`. */
+  verNotificaciones?(): void
+  veotramitadores?(): void
 }
 
 export interface EditaExpedienteExpedienteHost {
@@ -179,6 +182,20 @@ export class EditaExpedienteLifecycleFacade {
           host.inicializarSourceListarNotifi()
           host.getListarInteresado(host.idExpediente)
           this.cargarLeerNotificaciones(host)
+
+          const vista = activatedRoute.snapshot.queryParamMap.get('vista')
+          if (vista === 'notificaciones' || vista === 'tramitadores') {
+            // Se difiere para que la carga inicial (grids, catálogos) estabilice antes de
+            // montar la vista vía *ngIf; aplicarla en el mismo tick cancela la petición
+            // AJAX propia del grid (jqxGrid no usa HttpClient) al recrearse el elemento.
+            setTimeout(() => {
+              if (vista === 'notificaciones') {
+                host.verNotificaciones?.()
+              } else {
+                host.veotramitadores?.()
+              }
+            }, 600)
+          }
         },
         error: (error) => {
           if (error.status === 0) {

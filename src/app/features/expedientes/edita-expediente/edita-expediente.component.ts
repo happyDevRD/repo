@@ -870,12 +870,14 @@ export class EditaExpedienteComponent
 
   public veotramitadores() {
     this.tramitesFacade.veotramitadores(this);
+    this.sincronizarVistaEnUrl('tramitadores');
   }
 
   public verNotificaciones() {
     this.tramitesFacade.verNotificaciones(this, (ejercicio, numero) =>
       this.notifUiFacade.createGridAdapter(ejercicio, numero),
     );
+    this.sincronizarVistaEnUrl('notificaciones');
   }
 
   public leoMetadatos(codfiche: number) {
@@ -884,6 +886,18 @@ export class EditaExpedienteComponent
 
   public noverNotificaciones() {
     this.tramitesFacade.noverNotificaciones(this);
+    this.sincronizarVistaEnUrl(null);
+  }
+
+  /** Refleja la vista activa (Notificaciones/Tramitadores) en el query param `vista`,
+   *  para que recargar la página o compartir el enlace mantenga la vista abierta. */
+  private sincronizarVistaEnUrl(vista: 'notificaciones' | 'tramitadores' | null): void {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { vista },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   // ----------------------------------
