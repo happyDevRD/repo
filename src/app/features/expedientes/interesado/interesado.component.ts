@@ -512,15 +512,6 @@ export class InteresadoComponent implements OnInit {
 
 
 
-  // Función para volver al listado de expedientes (o cerrar el modal, si se abrió como tal)
-  public volverListadoExpedientes(): void {
-    if (this.modal) {
-      this.cerrarModal('interesadosExpedienteModal');
-      return;
-    }
-    this.router.navigate(['/expedientes']);
-  }
-
   constructor(
     public expedientesService: ExpedientesService,
     public procedimientoService: ProcedimientoService,

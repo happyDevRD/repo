@@ -7,9 +7,7 @@
       </h3>
     </div>
     <div class="expediente-botones-navegacion">
-      <button type="button" class="btn-iflow btn-iflow--secondary" (click)="i.volverListadoExpedientes()">
-        Volver al listado
-      </button>
+      <app-back-button [fallbackRoute]="'/expedientes'"></app-back-button>
     </div>
   </div>
 
