@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { RechazarMensaje } from '../models'
 import { NotificationService } from '../../../core/service/notification.service'
+import { ModalManagerService } from '../../../core/service/modal-manager.service'
 import { MensajesService } from '../mensajes.service'
 
 export interface MensajesAccionesHost {
@@ -24,6 +25,7 @@ export class MensajesAccionesFacade {
   constructor(
     private readonly mensajesService: MensajesService,
     private readonly notificationService: NotificationService,
+    private readonly modalManagerService: ModalManagerService,
   ) {}
 
   tramitar(host: MensajesAccionesHost): void {
@@ -67,6 +69,7 @@ export class MensajesAccionesFacade {
     host.rechazamensaje.destinatario = host.mensajeRemitente
     this.mensajesService.rechazar(host.rechazamensaje, host.idMensajeRecibido).subscribe({
       next: () => {
+        this.modalManagerService.closeModal('DevolverMensajeModal')
         host.clearSeleccion()
         host.actualizarGrids()
         this.notificationService.success('El mensaje fue rechazado.')

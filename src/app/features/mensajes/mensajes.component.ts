@@ -165,7 +165,6 @@ export class MensajesComponent implements OnInit {
       return
     }
     this.rechazaMensaje()
-    this.cerrarModal('DevolverMensajeModal')
   }
 
   trackByMensajeKey(_index: number, item: MensajeInboxItem): string {

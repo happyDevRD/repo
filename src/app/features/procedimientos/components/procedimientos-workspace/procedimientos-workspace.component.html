@@ -9,9 +9,7 @@
                </p>
           </div>
           <div class="proc-workspace-header__actions">
-               <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm" (click)="p.volverAlListado()">
-                    <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al listado
-               </button>
+               <app-back-button [fallbackRoute]="'/procedimientos'"></app-back-button>
                <button type="button" class="btn-iflow btn-iflow--danger btn-iflow--sm"
                     (click)="p.deleteProcedimiento(p.idprocedi)">
                     <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
@@ -40,29 +38,37 @@
                </button>
           </div>
 
-          <nav class="proc-tabs" role="tablist" aria-label="Secciones del procedimiento">
-               <button type="button" class="proc-tabs__btn" role="tab" [class.active]="p.activeWorkspaceTab === 'datos'"
-                    [attr.aria-selected]="p.activeWorkspaceTab === 'datos'" (click)="p.setWorkspaceTab('datos')">
-                    <i class="bi bi-card-text" aria-hidden="true"></i> Datos
-               </button>
-               <button type="button" class="proc-tabs__btn" role="tab"
-                    [class.active]="p.activeWorkspaceTab === 'tareas'"
-                    [attr.aria-selected]="p.activeWorkspaceTab === 'tareas'" (click)="p.setWorkspaceTab('tareas')">
-                    <i class="bi bi-list-task" aria-hidden="true"></i> Tareas
-               </button>
-               <button type="button" class="proc-tabs__btn" role="tab"
-                    [class.active]="p.activeWorkspaceTab === 'permisos'"
-                    [attr.aria-selected]="p.activeWorkspaceTab === 'permisos'" (click)="p.setWorkspaceTab('permisos')">
-                    <i class="bi bi-shield-check" aria-hidden="true"></i> Permisos
-                    <span class="proc-tabs__badge" *ngIf="p.idverTarea">1</span>
-               </button>
-               <button type="button" class="proc-tabs__btn" role="tab"
-                    [class.active]="p.activeWorkspaceTab === 'atributos'"
-                    [attr.aria-selected]="p.activeWorkspaceTab === 'atributos'"
-                    (click)="p.setWorkspaceTab('atributos')">
-                    <i class="bi bi-tags" aria-hidden="true"></i> Atributos
-               </button>
-          </nav>
+          <ul class="nav nav-tabs expediente-flujo-tabs" role="tablist" aria-label="Secciones del procedimiento">
+               <li class="nav-item" role="presentation">
+                    <button type="button" class="nav-link" role="tab" [class.active]="p.activeWorkspaceTab === 'datos'"
+                         [attr.aria-selected]="p.activeWorkspaceTab === 'datos'" (click)="p.setWorkspaceTab('datos')">
+                         <i class="bi bi-card-text" aria-hidden="true"></i> Datos
+                    </button>
+               </li>
+               <li class="nav-item" role="presentation">
+                    <button type="button" class="nav-link" role="tab"
+                         [class.active]="p.activeWorkspaceTab === 'tareas'"
+                         [attr.aria-selected]="p.activeWorkspaceTab === 'tareas'" (click)="p.setWorkspaceTab('tareas')">
+                         <i class="bi bi-list-task" aria-hidden="true"></i> Tareas
+                    </button>
+               </li>
+               <li class="nav-item" role="presentation">
+                    <button type="button" class="nav-link" role="tab"
+                         [class.active]="p.activeWorkspaceTab === 'permisos'"
+                         [attr.aria-selected]="p.activeWorkspaceTab === 'permisos'" (click)="p.setWorkspaceTab('permisos')">
+                         <i class="bi bi-shield-check" aria-hidden="true"></i> Permisos
+                         <span class="badge bg-info text-dark ms-1" *ngIf="p.idverTarea">1</span>
+                    </button>
+               </li>
+               <li class="nav-item" role="presentation">
+                    <button type="button" class="nav-link" role="tab"
+                         [class.active]="p.activeWorkspaceTab === 'atributos'"
+                         [attr.aria-selected]="p.activeWorkspaceTab === 'atributos'"
+                         (click)="p.setWorkspaceTab('atributos')">
+                         <i class="bi bi-tags" aria-hidden="true"></i> Atributos
+                    </button>
+               </li>
+          </ul>
 
           <!-- workspace-datos -->
           <!-- Tab: Datos -->
