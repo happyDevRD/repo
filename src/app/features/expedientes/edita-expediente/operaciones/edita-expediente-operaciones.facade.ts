@@ -12,6 +12,7 @@ import {
 } from '../../expedientes'
 import { InteresadoListarDto } from '../../../../core/models/interesado.dto'
 import { NotificationService } from '../../../../core/service/notification.service'
+import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { ExpedientesService } from '../../expedientes.service'
 import { EditaExpedienteTareasFacade } from '../tareas/edita-expediente-tareas.facade'
 import {
@@ -88,6 +89,7 @@ export class EditaExpedienteOperacionesFacade {
     private readonly tareasFacade: EditaExpedienteTareasFacade,
     private readonly router: Router,
     private readonly insideAcciones: InsideAccionesFacade,
+    private readonly modalManagerService: ModalManagerService,
   ) {}
 
   // --- Bolsa / propuesta de resolución ---
@@ -156,6 +158,7 @@ export class EditaExpedienteOperacionesFacade {
             host.verTareasdelTramite = true
             host.verInsertarBolsa = false
             host.refrescoSourceTareasTramite(host.idTramite)
+            this.modalManagerService.closeModal('GenerarPropuestaResolucionModal')
           }
         },
         error: (response: HttpErrorResponse) => {
@@ -166,6 +169,7 @@ export class EditaExpedienteOperacionesFacade {
           }
           this.notificationService.saveSuccess('Propuesta de resolución')
           this.limpiarFormularioBolsa(host)
+          this.modalManagerService.closeModal('GenerarPropuestaResolucionModal')
         },
       })
   }
@@ -195,7 +199,12 @@ export class EditaExpedienteOperacionesFacade {
         text: '¿Quiere Generar uno nuevo?',
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Cancelar',
-      }).then(() => this.ejecutarCrearGenerarSalida(host))
+      }).then((result) => {
+        if (!result.isConfirmed) {
+          return
+        }
+        this.ejecutarCrearGenerarSalida(host)
+      })
       return
     }
 
@@ -227,6 +236,7 @@ export class EditaExpedienteOperacionesFacade {
                 sortColumn: 'numero',
                 sortDirection: 'desc',
               })
+              this.modalManagerService.closeModal('GenerarSalidaModal')
             }
           },
         })

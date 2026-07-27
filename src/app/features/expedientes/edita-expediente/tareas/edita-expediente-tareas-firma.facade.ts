@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { environment } from 'src/environments/environment'
 import { ArchivoFirmadoEF } from '../../expedientes'
 import { NotificationService } from '../../../../core/service/notification.service'
+import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { ExpedientesService } from '../../expedientes.service'
 
 export interface FirmaTareaHost {
@@ -26,6 +27,7 @@ export class EditaExpedienteTareasFirmaFacade {
   private readonly http = inject(HttpClient)
   private readonly expedientesService = inject(ExpedientesService)
   private readonly notificationService = inject(NotificationService)
+  private readonly modalManagerService = inject(ModalManagerService)
 
   private refrescarGridAdapter: (host: FirmaTareaHost) => void = () => undefined
 
@@ -85,6 +87,7 @@ export class EditaExpedienteTareasFirmaFacade {
                 this.limpiarArchivoFirmaEF(host)
                 this.refrescarGridAdapter(host)
                 host.spinnervisiblefirma = true
+                this.modalManagerService.closeModal('archifirmaef')
               },
               error: (err: HttpErrorResponse) => {
                 this.notificationService.warning({ title: err.error?.message })

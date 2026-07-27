@@ -327,6 +327,7 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
           this.refrescarGrid(host, host.idTramite);
           host.verListadoTareasModal();
           host.onTareaEditada?.();
+          this.modalManagerService.closeModal('EditarTareaTramiteModal');
         },
       });
   }
@@ -390,6 +391,7 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
         host.sourceTareasTramite = createTareaGridAdapter(host.idTramite);
         this.notificationService.success({ title: 'Enviado Tablón de anuncio' });
         host.creartablonanuncio = new CrearTablonAnuncio();
+        this.modalManagerService.closeModal('crearTablonAnunciosModal');
       },
       error: () => {
         this.notificationService.warning({ title: 'No se pudo crear el Tablón de anuncios' });
