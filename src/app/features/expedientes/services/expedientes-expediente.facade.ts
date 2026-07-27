@@ -535,6 +535,7 @@ export class ExpedientesExpedienteFacade {
   marcarExpedienteSeleccionado(host: ExpedientesSeleccionHost, rowData: any): void {
     host.idExpediente = rowData.id;
     host.idExpedienteString = rowData.id;
+    host.idexpediente = rowData.id;
     this.gridFacade.refrescarSourceAtributo(host);
 
     if (rowData.idHisDocum) {

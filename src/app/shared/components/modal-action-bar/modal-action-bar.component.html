@@ -1,6 +1,6 @@
 <div [class]="resolvedContainerClass" *ngIf="visible.length">
   <button
-    *ngFor="let item of visible"
+    *ngFor="let item of visible; trackBy: trackById"
     type="button"
     [class]="toneClass(item)"
     [class.btn-iflow--icon]="!!item.iconOnly"

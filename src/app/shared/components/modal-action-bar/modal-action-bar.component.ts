@@ -23,6 +23,10 @@ export class ModalActionBarComponent {
     return visibleActions(this.actions)
   }
 
+  trackById(_index: number, item: ModalAction): string {
+    return item.id
+  }
+
   get resolvedContainerClass(): string {
     if (this.containerClass) {
       return this.containerClass
