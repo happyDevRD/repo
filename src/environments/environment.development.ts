@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8091/api/gos/',
-  apiUrlhttps: 'http://localhost:8091/api/gos/',
+  apiUrl: 'http://localhost:8090/api/gos/',
+  apiUrlhttps: 'http://localhost:8090/api/gos/',
 
 
 

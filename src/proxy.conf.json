@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "http://localhost:8091/api/gos/",
+      "target": "http://localhost:8090/api/gos/",
       "secure": false,  
       "changeOrigin": true
     }
