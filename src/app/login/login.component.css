@@ -98,6 +98,7 @@
 .login-form .form-control {
   border-radius: 10px;
   border: 1px solid #dbe1f0;
+  background-color: #fff;
 }
 
 .btn-login {

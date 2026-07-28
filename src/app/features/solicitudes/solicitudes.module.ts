@@ -16,7 +16,6 @@ import { SolicitudesModalsAccionesComponent } from './components/modals/solicitu
 import { SolicitudesModalAsignarComponent } from './components/modals/solicitudes-modals-acciones/modal-asignar/modal-asignar.component'
 import { SolicitudesModalDocumentoComponent } from './components/modals/solicitudes-modals-acciones/modal-documento/modal-documento.component'
 import { SolicitudesModalIniciarExpedienteComponent } from './components/modals/solicitudes-modals-acciones/modal-iniciar-expediente/modal-iniciar-expediente.component'
-import { SolicitudesModalVerPdfComponent } from './components/modals/solicitudes-modals-acciones/modal-ver-pdf/modal-ver-pdf.component'
 import { SolicitudesModalRechazarComponent } from './components/modals/solicitudes-modals-acciones/modal-rechazar/modal-rechazar.component'
 import { SolicitudesModalPendientesComponent } from './components/modals/solicitudes-modals-acciones/modal-pendientes/modal-pendientes.component'
 
@@ -37,7 +36,6 @@ import { SolicitudesModalPendientesComponent } from './components/modals/solicit
     SolicitudesModalAsignarComponent,
     SolicitudesModalDocumentoComponent,
     SolicitudesModalIniciarExpedienteComponent,
-    SolicitudesModalVerPdfComponent,
     SolicitudesModalRechazarComponent,
     SolicitudesModalPendientesComponent,
   ],

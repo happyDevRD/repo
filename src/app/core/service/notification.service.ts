@@ -9,6 +9,7 @@ export interface NotificationOptions {
   icon?: 'success' | 'error' | 'warning' | 'info' | 'question'
   confirmButtonText?: string
   cancelButtonText?: string
+  confirmButtonColor?: string
   showCancelButton?: boolean
   showConfirmButton?: boolean
   showCloseButton?: boolean
@@ -155,10 +156,11 @@ export class NotificationService {
         text: options,
         icon: 'question',
         showCancelButton: true,
+        reverseButtons: true,
         confirmButtonText: 'Sí',
         cancelButtonText: 'No',
         confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#6c757d',
+        cancelButtonColor: '#ffffff',
       })
     }
 
@@ -168,10 +170,11 @@ export class NotificationService {
       html: options.html,
       icon: options.icon || 'question',
       showCancelButton: options.showCancelButton !== false,
+      reverseButtons: true,
       confirmButtonText: options.confirmButtonText || 'Sí',
       cancelButtonText: options.cancelButtonText || 'No',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#6c757d',
+      confirmButtonColor: options.confirmButtonColor || '#3085d6',
+      cancelButtonColor: '#ffffff',
       didOpen: options.didOpen,
     })
   }
@@ -315,10 +318,11 @@ export class NotificationService {
       text: message,
       icon: 'warning',
       showCancelButton: true,
+      reverseButtons: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#6c757d',
+      cancelButtonColor: '#ffffff',
     })
   }
 

@@ -1,42 +1,57 @@
 <app-modal-shell
- modalId="rechazaSoliModal"
- titleId="rechazaSoliModalLabel"
- dialogClass="modal-dialog-centered"
- [staticBackdrop]="true"
- [keyboard]="false"
- [showFooter]="false"
- (closed)="s.cerrarModal('rechazaSoliModal')"
+  modalId="rechazaSoliModal"
+  titleId="rechazaSoliModalLabel"
+  dialogClass="modal-dialog-centered"
+  [staticBackdrop]="true"
+  [keyboard]="false"
+  (closed)="s.cerrarModal('rechazaSoliModal')"
 >
- <span modalTitle><i class="fas fa-times-circle me-2 text-danger"></i>Rechazar Solicitud</span>
- <form modalBody #rechazarForm="ngForm" (ngSubmit)="s.onRechazarSubmit()">
- <div class="mb-3"><div class="form-floating">
- <input
- class="form-control"
- type="text"
- id="rechazo"
- name="rechazo"
- [(ngModel)]="s.editasolicitud.motivoRechazo"
- required
- [class.is-invalid]="s.isMotivoRechazoInvalid()"
- #motivoRechazoInput="ngModel" placeholder=" ">
- <label for="rechazo">Motivo Rechazo *</label>
- </div><div *ngIf="s.isMotivoRechazoInvalid()" class="invalid-feedback">
- Debe indicar un motivo para rechazar la solicitud
- </div></div>
- <div class="modal-footer">
- <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" (click)="s.cerrarModal('rechazaSoliModal')">
- <i class="fas fa-times me-1"></i>Cancelar
- </button>
- <button
- type="submit"
- class="btn-iflow modal-footer__btn btn-iflow--danger"
- [disabled]="s.isRechazando">
- <span *ngIf="s.isRechazando" class="spinner-border spinner-border-sm me-2" role="status"></span>
- <i *ngIf="!s.isRechazando" class="fas fa-save me-1"></i>
- {{s.isRechazando ? 'Rechazando...' : 'Rechazar'}}
- </button>
- </div>
- </form>
-</app-modal-shell>
+  <span modalTitle><i class="fas fa-times-circle me-2 text-danger"></i>Rechazar Solicitud</span>
+  <form
+    modalBody
+    id="formRechazarSolicitud"
+    #rechazarForm="ngForm"
+    (ngSubmit)="s.onRechazarSubmit()"
+  >
+    <div class="mb-3">
+      <div class="form-floating">
+        <input
+          class="form-control"
+          type="text"
+          id="rechazo"
+          name="rechazo"
+          [(ngModel)]="s.editasolicitud.motivoRechazo"
+          required
+          [class.is-invalid]="s.isMotivoRechazoInvalid()"
+          #motivoRechazoInput="ngModel"
+          placeholder=" "
+        >
+        <label for="rechazo">Motivo Rechazo *</label>
+      </div>
+      <div *ngIf="s.isMotivoRechazoInvalid()" class="invalid-feedback">
+        Debe indicar un motivo para rechazar la solicitud
+      </div>
+    </div>
+  </form>
 
-<!-- SOLICITUDES PENDIENTES -->
+  <div modalFooter class="modal-footer__actions">
+    <button
+      type="button"
+      class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      data-bs-dismiss="modal"
+      (click)="s.cerrarModal('rechazaSoliModal')"
+    >
+      <i class="fas fa-times me-1"></i>Cancelar
+    </button>
+    <button
+      type="submit"
+      form="formRechazarSolicitud"
+      class="btn-iflow modal-footer__btn btn-iflow--danger"
+      [disabled]="s.isRechazando"
+    >
+      <span *ngIf="s.isRechazando" class="spinner-border spinner-border-sm me-2" role="status"></span>
+      <i *ngIf="!s.isRechazando" class="fas fa-ban me-1"></i>
+      {{ s.isRechazando ? 'Rechazando...' : 'Rechazar' }}
+    </button>
+  </div>
+</app-modal-shell>

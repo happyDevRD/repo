@@ -1,0 +1,36 @@
+/* ================================
+   PESTAÑAS DE FORMULARIOS
+   ================================ */
+.nav-tabs-iflow {
+  border-bottom: 2px solid rgba(105, 120, 255, 0.15);
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.nav-tabs-iflow .nav-link {
+  border: none;
+  border-radius: 8px 8px 0 0;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs-iflow .nav-link:hover {
+  color: var(--iflow-primary);
+  background: rgba(105, 120, 255, 0.06);
+}
+
+.nav-tabs-iflow .nav-link.active {
+  color: var(--iflow-primary);
+  background: rgba(105, 120, 255, 0.1);
+  border-bottom: 2px solid var(--iflow-primary);
+  font-weight: 600;
+}
+
+.nav-tabs-iflow + .tab-content .card.bg-light {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}

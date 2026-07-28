@@ -15,6 +15,7 @@ export interface SolicitudesExpedienteHost extends SolicitudesGridHost {
   verexpediente: VerExpediente
   editexpediente: EditExpediente
   asuntoexpedi: string
+  asuntoSolicitud?: string
   idsolicitud: number
   iddocum: string
   idhisDocum: string
@@ -26,6 +27,8 @@ export interface SolicitudesExpedienteHost extends SolicitudesGridHost {
   fechanuevoExpedi: Date
   isIniciandoExpediente: boolean
   activainiciaExpedi: boolean
+  expsolicitud: string
+  veoIniciarExp: boolean
   recargarpagina(): void
   cerrarModal(modalId: string): void
 }
@@ -105,12 +108,23 @@ export class SolicitudesExpedienteFacade {
     ).subscribe({
       next: (response) => {
         host.isIniciandoExpediente = false;
+        const refExpediente = response?.ejercicio != null && response?.numero != null
+          ? `${response.ejercicio}/${response.numero}`
+          : '';
         host.cerrarModal('iniciarExpedieModal');
-        this.notificationService
-          .success(`Se ha creado el expediente: ${response.ejercicio}/${response.numero}`)
-          .then(() => {
-            host.recargarpagina();
-          });
+        host.expsolicitud = refExpediente;
+        host.veoIniciarExp = false;
+        const idExp = (response as NuevoExpediente & { id?: number; idExpediente?: number }).id
+          ?? (response as { idExpediente?: number }).idExpediente;
+        if (idExp != null) {
+          host.idexpedienteAsoc = Number(idExp);
+        }
+        this.gridFacade.refreshSolicitudesList(host, true);
+        this.notificationService.success(
+          refExpediente
+            ? `Se ha creado el expediente: ${refExpediente}`
+            : 'Se ha creado el expediente correctamente',
+        );
       },
       error: () => {
         host.isIniciandoExpediente = false;

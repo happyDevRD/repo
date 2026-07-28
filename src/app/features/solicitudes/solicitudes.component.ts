@@ -1,5 +1,4 @@
 import { Component, ElementRef } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router'
 import { Observable } from 'rxjs'
 import { SolicitudesService } from './solicitudes.service';
@@ -93,8 +92,6 @@ export class SolicitudesComponent {
   public statusGetSolicitudes!: number;
   public descargafichero!: any;
   public progreso: number = 0;
-  public pdfViewerUrl: string | null = null;
-  public pdfSafeUrl: SafeResourceUrl | null = null;
   public intervalo!: number;
   public page!: number;
   public npagina: number = 5;
@@ -106,6 +103,7 @@ export class SolicitudesComponent {
   public isRechazando: boolean = false;
   public isIniciandoExpediente: boolean = false;
   public isModificandoSolicitud: boolean = false;
+  public mostrarValidacionesNuevaSolicitud = false
   filtroasunto!: any;
   filtrointeresado!: any;
   filtrorepresentante!: any;
@@ -142,12 +140,6 @@ export class SolicitudesComponent {
     this.pageFacade.cargarPagina(this)
   }
 
-  public veoPdf(ruta: string): void {
-    this.pdfViewerUrl = ruta
-    this.pdfSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(ruta)
-    this.abrirModal('VerPdfModal')
-  }
-
   public updateProgressBar(): void {
     const bar = document.getElementById('barprogreso')
     if (!bar) { return }
@@ -156,7 +148,7 @@ export class SolicitudesComponent {
   }
 
   public abreArchivo(url: unknown): void {
-    const href = String(url ?? '').trim()
+    const href = String(url ?? this.descargafichero ?? '').trim()
     if (!href) {
       this.notificationService.warning({
         title: 'Sin archivo',
@@ -164,17 +156,11 @@ export class SolicitudesComponent {
       })
       return
     }
-    window.open(href, '_blank', 'noopener')
+    this.documentosFacade.abrirDocumentoSeleccionado(this, href, this.nombreArchivoSubido)
   }
 
   public verDocumentoSeleccionado(): void {
     this.documentosFacade.abrirDocumentoSeleccionado(this)
-  }
-
-  public cerrarModalPdf(): void {
-    this.pdfSafeUrl = null
-    this.pdfViewerUrl = null
-    this.cerrarModal('VerPdfModal')
   }
 
   selectedFile: File | null = null;
@@ -229,7 +215,6 @@ export class SolicitudesComponent {
     private notificationService: NotificationService,
     private modalManagerService: ModalManagerService,
     public session: UserSessionService,
-    private sanitizer: DomSanitizer,
     private gridFacade: SolicitudesGridFacade,
     private solicitudFacade: SolicitudesSolicitudFacade,
     private documentosFacade: SolicitudesDocumentosFacade,
@@ -313,13 +298,21 @@ export class SolicitudesComponent {
     if (modalId === 'asignarModal') {
       this.solicitudFacade.mostrarValidacionesAsignar = false;
     } else if (modalId === 'rechazaSoliModal') {
-      this.solicitudFacade.mostrarValidacionesRechazar = false;
+      this.limpiarDatosRechazar();
     } else if (modalId === 'iniciarExpedieModal') {
       this.expedienteFacade.mostrarValidacionesIniciarExpediente = false;
     } else if (modalId === 'edicionSolicitudModal') {
       this.solicitudFacade.mostrarValidacionesModificarSolicitud = false;
     }
     this.modalManagerService.closeModal(modalId);
+  }
+
+  public limpiarDatosRechazar(): void {
+    this.solicitudFacade.mostrarValidacionesRechazar = false;
+    this.isRechazando = false;
+    if (this.editasolicitud) {
+      this.editasolicitud.motivoRechazo = '';
+    }
   }
 
   /**
@@ -390,11 +383,23 @@ export class SolicitudesComponent {
   }
 
   public limpiadatosIniciarExpediente() {
-    this.nuevoexpediente = new NuevoExpediente();
-    // Reiniciar la forma de notificación
-    this.nuevoexpediente.formaNotifi = 0; // Correo postal por defecto
-
+    this.nuevoexpediente = new NuevoExpediente()
+    this.nuevoexpediente.procedimiento = ''
+    this.nuevoexpediente.formaNotifi = 0
+    this.expedienteFacade.mostrarValidacionesIniciarExpediente = false
+    this.isIniciandoExpediente = false
   }
+
+  public prepararIniciarExpediente(): void {
+    this.limpiadatosIniciarExpediente()
+    const titulo = this.asuntoSolicitud || this.versolicitud?.asunto || ''
+    this.nuevoexpediente.titulo = titulo
+    this.asuntoexpedi = titulo
+    this.FechaSistema = new Date().toLocaleDateString()
+    this.fechanuevoExpedi = new Date()
+    this.solicitudFacade.obtenerFormaNotificacionInteresado(this)
+  }
+
   public fecha: Date = new Date()
 
   public fecha2: any = new Date().toLocaleDateString()
@@ -429,10 +434,22 @@ export class SolicitudesComponent {
   public resultacrearsolici: string;
 
   public borraDatosSolicitud() {
-    this.creasolicitud = new CreaSolicitudNuevo();
-    this.personaFacade.resetWizardNuevaSolicitud();
-    this.FechaSolicitud();
+    this.creasolicitud = new CreaSolicitudNuevo()
+    this.crearpersonaentidad = new CrearPersonaEntidad()
+    this.representanteexplistar = new RepresentanteExpLIstar()
+    this.seleccionoRepre = ''
+    this.personaFacade.resetWizardNuevaSolicitud()
+    this.FechaSolicitud()
   }
+
+  /** Prepara el modal Nueva Solicitud: estado limpio + fecha de hoy (sin form.reset). */
+  public prepararNuevaSolicitud(): void {
+    this.mostrarValidacionesNuevaSolicitud = false
+    this.borraDatosSolicitud()
+    const form = document.getElementById('formNuevaSolicitud') as HTMLFormElement | null
+    form?.classList.remove('was-validated')
+  }
+
   public fsistema: any = new Date().toLocaleDateString()
   public fechaSistema!: any;
 
@@ -464,32 +481,59 @@ export class SolicitudesComponent {
   }
 
   public cambiamosRepre(): void {
-    this.personaFacade.cambiamosRepre();
+    this.personaFacade.cambiamosRepre()
+  }
+
+  public cancelarAltaRepresentante(): void {
+    this.personaFacade.cancelarAltaRepresentante(this)
+  }
+
+  public buscarInteresado(): void {
+    this.personaFacade.consultarInteresado(this, this.creasolicitud.numDocum)
+  }
+
+  public seleccionarRepresentanteLista(item: RepresentanteExpLIstar): void {
+    this.personaFacade.seleccionarRepresentanteLista(this, item)
   }
 
   public validateAndCreateSolicitud(event: Event): void {
-    event.preventDefault();
+    event.preventDefault()
 
-    // Validación usando Bootstrap nativo
-    const form = event.target as HTMLFormElement;
-    if (form && !form.checkValidity()) {
-      form.classList.add('was-validated');
-      this.notificationService.incompleteFields();
-      // Mantener el modal abierto
-      this.modalManagerService.keepModalOpen('nsolicitudModal');
-      return;
+    this.mostrarValidacionesNuevaSolicitud = true
+
+    const form = event.target as HTMLFormElement
+    const numDocum = String(this.creasolicitud.numDocum ?? '').trim()
+    const formInvalido = !!form && !form.checkValidity()
+    const dniVacio = !numDocum
+    const interesadoSinResolver =
+      !dniVacio &&
+      !this.personaFacade.dniok &&
+      !this.personaFacade.existepersonaentidad
+
+    if (formInvalido || dniVacio || interesadoSinResolver) {
+      form?.classList.add('was-validated')
+      if (dniVacio) {
+        this.notificationService.incompleteFields('El DNI del interesado es obligatorio')
+      } else if (interesadoSinResolver) {
+        this.notificationService.incompleteFields(
+          'Consulta el DNI del interesado (sal del campo) antes de guardar',
+        )
+      } else {
+        this.notificationService.incompleteFields()
+      }
+      this.modalManagerService.keepModalOpen('nsolicitudModal')
+      return
     }
 
-    // Si la validación pasa, proceder con la creación
-    this.creaSolicitud();
+    this.creaSolicitud()
+  }
+
+  public isDniNuevaInvalid(): boolean {
+    return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.numDocum ?? '').trim()
   }
 
   public limpiarErroresSolicitud(): void {
-    const form = document.getElementById('formNuevaSolicitud') as HTMLFormElement;
-    if (form) {
-      form.classList.remove('was-validated');
-      form.reset();
-    }
+    this.prepararNuevaSolicitud()
   }
 
   public creaSolicitud(): void {
@@ -564,6 +608,14 @@ export class SolicitudesComponent {
     this.personaFacade.consultarInteresado(this, dni);
   }
 
+  public selecrepresentante(event) {
+    const row = event?.args?.row?.bounddata
+    if (!row) {
+      return
+    }
+    this.personaFacade.seleccionarRepresentanteLista(this, row)
+  };
+
   public soliciUsuarioparaRepre(dni: string) {
     this.personaFacade.consultarRepresentante(this, dni);
   }
@@ -592,12 +644,6 @@ export class SolicitudesComponent {
   public idHisRepre!: string;
   public modificoSolicitud: boolean = true;
   public direccionRepresentante: string;
-
-  public selecrepresentante(event) {
-    this.creasolicitud.idHisRepre = event.args.row.bounddata.idHisPerso;
-    this.creasolicitud.idRepre = event.args.row.bounddata.idPerso;
-
-  };
 
   public VeoRegDoc: boolean = false;
   public CargoRegistroDocu() {
@@ -635,7 +681,7 @@ export class SolicitudesComponent {
     this.vermenu = true;
     this.edicion = true;
     this.idsolicitud = id;
-    this.expsolicitud = expedi;
+    this.expsolicitud = this.formatExpedienteRef(expedi);
     this.idexpedienteAsoc = idexpedienteA
 
     if (this.idexpedienteAsoc) {
@@ -647,6 +693,22 @@ export class SolicitudesComponent {
     this.versolici(id);
     this.getExpediente(idexpedienteA);
   };
+
+  private formatExpedienteRef(expediente: unknown): string {
+    if (!expediente) {
+      return ''
+    }
+    if (typeof expediente === 'string' || typeof expediente === 'number') {
+      return String(expediente)
+    }
+
+    const exp = expediente as { ejercicio?: string | number; numero?: string | number }
+    if (exp.ejercicio == null || exp.numero == null) {
+      return ''
+    }
+
+    return `${exp.ejercicio}/${exp.numero}`
+  }
 
   public getExpediente(id: number) {
     this.expedienteFacade.getExpediente(this)

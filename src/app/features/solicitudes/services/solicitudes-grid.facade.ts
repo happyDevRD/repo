@@ -36,6 +36,9 @@ export class SolicitudesGridFacade {
 
   refreshSolicitudesList(host: SolicitudesGridHost, sortById = false): void {
     host.sourceSolici = createSolicitudesListAdapter(host.idOrgEleme ?? '', { sortById });
+    const grid = host.myGrid as { setSource?: (value: unknown) => void; updatebounddata?: () => void } | undefined
+    grid?.setSource?.(host.sourceSolici)
+    refreshJqxGrid(host.myGrid)
   }
 
   assignDocumentosSource(host: SolicitudesGridHost, idsolicitud?: number): void {

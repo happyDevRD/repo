@@ -1,0 +1,283 @@
+/* ================================
+   PROCEDIMIENTOS — Listado y workspace
+   ================================ */
+.procedimientos-page {
+  padding-top: 0.5rem;
+}
+
+.procedimientos-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.procedimientos-header__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--iflow-primary);
+}
+
+.procedimientos-header__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.procedimientos-header__dept {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.proc-header-meta {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.proc-list-grid {
+  margin-top: 0.25rem;
+}
+
+.proc-workspace-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.proc-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--iflow-primary);
+  background: rgba(105, 120, 255, 0.1);
+  border: 1px solid rgba(105, 120, 255, 0.2);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.proc-workspace {
+  margin-bottom: 1.15rem;
+  padding: 0.85rem 1rem 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.proc-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  min-height: 1.75rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.proc-context__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.proc-context__value {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-right: 0.25rem;
+}
+
+.proc-context__sep {
+  width: 1px;
+  height: 1.1rem;
+  background: var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.proc-tarea-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.84rem;
+  color: var(--text-primary);
+  background: rgba(25, 135, 84, 0.06);
+  border: 1px solid rgba(25, 135, 84, 0.18);
+  border-radius: 8px;
+}
+
+.proc-tarea-context i {
+  color: #198754;
+  font-size: 0.95rem;
+}
+
+
+.proc-panel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.proc-panel__title {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.proc-panel__desc {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.proc-panel__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.proc-panel__body {
+  padding: 0;
+}
+
+.proc-panel__body--grid {
+  padding: 0;
+}
+
+.proc-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  min-height: 240px;
+}
+
+.proc-empty-state__icon {
+  font-size: 2.25rem;
+  color: rgba(105, 120, 255, 0.45);
+  margin-bottom: 0.75rem;
+}
+
+.proc-empty-state__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.proc-empty-state__text {
+  margin: 0 0 1.25rem;
+  max-width: 28rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.offcanvas-iflow {
+  --bs-offcanvas-width: min(540px, 94vw);
+}
+
+.offcanvas-iflow .offcanvas-header {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1rem 1.25rem;
+}
+
+.offcanvas-iflow .offcanvas-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.offcanvas-iflow .offcanvas-body {
+  padding: 1.25rem;
+}
+
+.offcanvas-iflow__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 768px) {
+  .expedientes-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expedientes-header .btn-iflow {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .expediente-acciones__fila {
+    gap: 0.4rem;
+  }
+
+  .exp-acciones__sep {
+    display: none;
+  }
+
+  .expediente-acciones__fila .btn-iflow--sm {
+    flex: 1 1 calc(50% - 0.4rem);
+    min-width: 0;
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .procedimientos-header,
+  .proc-workspace-header__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .procedimientos-header .btn-iflow,
+  .proc-workspace-header__actions .btn-iflow {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .proc-panel__actions {
+    width: 100%;
+  }
+
+  .proc-panel__actions .btn-iflow {
+    flex: 1;
+    justify-content: center;
+  }
+
+}

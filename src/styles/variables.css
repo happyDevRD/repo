@@ -1,0 +1,53 @@
+/* ================================
+   VARIABLES GLOBALES — Design Tokens
+   ================================ */
+:root {
+  /* Marca iFlow */
+  --iflow-primary: #6978FF;
+  --iflow-primary-dark: #5A69E0;
+  --iflow-primary-light: #69B5FF;
+  --iflow-gradient: linear-gradient(90deg, #69B5FF 0%, #6978FF 70%);
+  --iflow-gradient-vertical: linear-gradient(180deg, #1E3C72, #2A5298);
+
+  /* Sidebar y layout */
+  --sidebar-bg: var(--iflow-gradient-vertical);
+  --sidebar-width: 260px;
+  --sidebar-shadow: 2px 0 16px rgba(15, 23, 42, 0.12);
+  --layout-gutter: 1.25rem;
+  --topbar-height: 3.5rem;
+  --z-sidebar: 1000;
+  --z-topbar: 900;
+  --footer-bg: linear-gradient(180deg, #2A5298, #162447);
+
+  /* UI */
+  --toggle-color: var(--iflow-primary);
+  --toggle-hover: #ffffff;
+  --notification-badge-bg: #ff4757;
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --surface-card: #ffffff;
+  --border-radius: 12px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 25px 60px rgba(105, 120, 255, 0.15);
+  --transition-base: 0.3s ease;
+  --surface-overlay: rgba(248, 250, 252, 0.82);
+  --border-subtle: rgba(105, 120, 255, 0.12);
+  --focus-ring: 0 0 0 3px rgba(105, 120, 255, 0.25);
+
+  /* Botones */
+  --btn-radius: 10px;
+  --btn-height: 2.5rem;
+  --btn-height-sm: 2.125rem;
+  --btn-font-size: 0.875rem;
+  --btn-font-weight: 600;
+  --btn-shadow: 0 4px 12px rgba(105, 120, 255, 0.22);
+  --btn-shadow-hover: 0 6px 16px rgba(105, 120, 255, 0.32);
+
+  /* Modales */
+  --iflow-modal-z-base: 1055;
+  --iflow-modal-z-step: 20;
+
+  /* Formularios */
+  --form-control-readonly-bg: #e9ecef;
+}

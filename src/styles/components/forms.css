@@ -1,0 +1,393 @@
+/* form-floating → label fija encima del campo (sin muesca ni animación sobre el borde) */
+.form-floating {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3rem;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-select {
+  order: 1;
+  box-sizing: border-box;
+  width: 100%;
+  height: 2.375rem;
+  min-height: 2.375rem;
+  max-height: 2.375rem;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 2.25rem;
+  background-color: #fff;
+  box-shadow: none;
+}
+
+.form-floating > .form-select {
+  padding-right: 2.25rem;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+
+/*
+  Bootstrap fuerza padding-top asimétrico en .form-control con valor.
+  En <input> el truco padding:0 + line-height alto deja el texto abajo;
+  hace falta padding vertical simétrico. El <select> sí centra bien con line-height.
+*/
+.form-floating > input.form-control,
+.form-floating > input.form-control:focus,
+.form-floating > input.form-control:hover,
+.form-floating > input.form-control:not(:placeholder-shown),
+.form-floating > input.form-control:not(:-moz-placeholder-shown),
+.form-floating > input.form-control:-webkit-autofill,
+.form-floating > input.form-control[readonly],
+.form-floating > input.form-control:disabled,
+.form-floating > input.form-control[readonly]:focus,
+.form-floating > input.form-control:disabled:focus {
+  height: 2.375rem !important;
+  min-height: 2.375rem !important;
+  max-height: 2.375rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  line-height: 1.25 !important;
+}
+
+.form-floating > .form-select.form-select,
+.form-floating > .form-select.form-select:focus,
+.form-floating > .form-select.form-select:disabled {
+  height: 2.375rem;
+  min-height: 2.375rem;
+  max-height: 2.375rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0.75rem;
+  padding-right: 2.25rem;
+  line-height: 2.25rem;
+}
+
+.form-floating > textarea.form-control,
+.form-floating > textarea.form-control:focus,
+.form-floating > textarea.form-control:not(:placeholder-shown),
+.form-floating > textarea.form-control:not(:-moz-placeholder-shown) {
+  order: 1;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto !important;
+  min-height: 4.5rem !important;
+  max-height: none !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem;
+  line-height: 1.4 !important;
+  resize: vertical;
+  background-color: #fff;
+  box-shadow: none;
+}
+
+/* Date/time: centrado en Chromium/WebKit */
+.form-floating > .form-control[type='date'],
+.form-floating > .form-control[type='time'],
+.form-floating > .form-control[type='datetime-local'] {
+  line-height: 2.25rem !important;
+}
+
+.form-floating > .form-control[type='date']::-webkit-datetime-edit,
+.form-floating > .form-control[type='time']::-webkit-datetime-edit,
+.form-floating > .form-control[type='datetime-local']::-webkit-datetime-edit {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+  line-height: 2.25rem;
+}
+
+.form-floating > .form-control[type='date']::-webkit-datetime-edit-fields-wrapper,
+.form-floating > .form-control[type='time']::-webkit-datetime-edit-fields-wrapper,
+.form-floating > .form-control[type='datetime-local']::-webkit-datetime-edit-fields-wrapper {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  height: 100%;
+}
+
+.form-floating > .form-control[type='date']::-webkit-datetime-edit-text,
+.form-floating > .form-control[type='date']::-webkit-datetime-edit-month-field,
+.form-floating > .form-control[type='date']::-webkit-datetime-edit-day-field,
+.form-floating > .form-control[type='date']::-webkit-datetime-edit-year-field {
+  padding: 0;
+}
+
+.form-floating > .form-control[type='date']::-webkit-calendar-picker-indicator {
+  margin: 0;
+  padding: 0;
+  height: 1rem;
+  width: 1rem;
+}
+
+.form-floating > label,
+.form-floating > .form-label {
+  position: static;
+  order: -1;
+  z-index: auto;
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  border: 0;
+  transform: none;
+  transform-origin: unset;
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+  filter: none;
+  opacity: 1;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
+}
+
+/* Anula el float de Bootstrap en todos los estados */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-control:-webkit-autofill ~ label,
+.form-floating > textarea.form-control:focus ~ label,
+.form-floating > textarea.form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label,
+.form-floating > .form-control[readonly] ~ label,
+.form-floating > .form-control:disabled ~ label,
+.form-floating > .form-select:disabled ~ label,
+.form-floating > textarea.form-control[readonly] ~ label,
+.form-floating > textarea.form-control:disabled ~ label {
+  position: static;
+  transform: none;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  background: transparent;
+  background-image: none;
+  color: var(--text-secondary);
+}
+
+.form-floating:has(> .form-control:focus) > label,
+.form-floating:has(> .form-select:focus) > label,
+.form-floating:has(> textarea.form-control:focus) > label {
+  color: var(--iflow-primary);
+}
+
+.form-floating:has(> .form-control[readonly]) > label,
+.form-floating:has(> .form-control:disabled) > label,
+.form-floating:has(> .form-select:disabled) > label,
+.form-floating:has(> textarea.form-control[readonly]) > label,
+.form-floating:has(> textarea.form-control:disabled) > label {
+  color: var(--text-secondary);
+}
+
+/* Quita la “pastilla” blanca de Bootstrap en el label flotante */
+.form-floating > .form-control:focus ~ label::after,
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating > .form-control:not(:-moz-placeholder-shown) ~ label::after,
+.form-floating > .form-control-plaintext ~ label::after,
+.form-floating > .form-select ~ label::after,
+.form-floating > .form-control:disabled ~ label::after,
+.form-floating > :disabled ~ label::after {
+  display: none;
+  content: none;
+  background: none;
+}
+
+/* ================================
+   ESTILOS PARA VALIDACIÓN DE FORMULARIOS
+   ================================ */
+
+/* Campo inválido - borde rojo */
+.form-control.is-invalid,
+.form-select.is-invalid,
+.form-floating .form-control.is-invalid,
+.form-floating .form-select.is-invalid,
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+  border-color: #dc3545;
+  outline: 2px solid rgba(220, 53, 69, 0.22);
+  outline-offset: 0;
+  box-shadow: none;
+  background-color: #fff5f5;
+  background-image: none;
+}
+
+.form-select.is-invalid {
+  border-width: 1px;
+}
+
+/* Validación debajo del campo */
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+/* Quitar el verde de Bootstrap - campos válidos sin color */
+.was-validated .form-control:valid,
+.was-validated .form-select:valid,
+.form-control.is-valid,
+.form-select.is-valid,
+input.is-valid,
+select.is-valid,
+textarea.is-valid {
+  border-color: #dee2e6;
+  background-color: #fff;
+  box-shadow: none;
+  background-image: none;
+  padding-right: 0.75rem;
+}
+
+/* Animación para campos con error */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.is-invalid {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Estilo para labels de campos obligatorios */
+.required-field::after {
+  content: " *";
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Estilo para campos obligatorios vacíos */
+.field-required {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
+/* Estilo para el mensaje de error general */
+.validation-error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* ================================
+   ESTILOS GLOBALES PARA CAMPOS READONLY / DISABLED
+   ================================ */
+
+/* Campos readonly/disabled - estilo gris Bootstrap */
+.form-control[readonly],
+.form-control:disabled,
+.form-select:disabled {
+  background-color: var(--form-control-readonly-bg);
+  opacity: 1;
+  color: #495057;
+  border-color: #ced4da;
+}
+
+.form-control[readonly]:focus,
+.form-control:disabled:focus,
+.form-select:disabled:focus {
+  background-color: var(--form-control-readonly-bg);
+  border-color: #ced4da;
+  box-shadow: none;
+}
+
+/* Validación debajo del campo flotante */
+[class*='col-'] > .invalid-feedback,
+.mb-3 > .invalid-feedback {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* ================================
+   CONTROLES DE FORMULARIO
+   ================================ */
+.form-control,
+.form-select,
+textarea.form-control {
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  box-shadow: none;
+  transition: border-color 0.2s ease;
+  background-position: right 0.75rem center;
+  filter: none;
+  font-size: 0.875rem;
+  line-height: 1.25;
+}
+
+.form-control:not(textarea),
+.form-select {
+  height: 2.375rem;
+  min-height: 2.375rem;
+}
+
+input.form-control:not([type='checkbox']):not([type='radio']) {
+  padding: 0.5rem 0.75rem;
+  line-height: 1.25;
+}
+
+.form-select {
+  padding: 0 2.25rem 0 0.75rem;
+  line-height: 2.25rem;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea.form-control:focus {
+  border-color: var(--iflow-primary);
+  box-shadow: none;
+  outline: 2px solid rgba(105, 120, 255, 0.28);
+  outline-offset: 0;
+}
+
+.modal-body .row.g-3,
+.modal-body .row.g-3 > [class*='col-'] {
+  overflow: visible;
+}
+
+/* Modal footer — botones unificados */
+.modal-footer .btn-iflow {
+  min-height: var(--btn-height-sm);
+}
+
+.btn-primary {
+  min-height: var(--btn-height-sm);
+  border-radius: var(--btn-radius);
+  font-weight: var(--btn-font-weight);
+}
+
+.btn-outline-primary {
+  color: var(--iflow-primary);
+  border-color: var(--iflow-primary);
+  border-radius: var(--btn-radius);
+  font-weight: var(--btn-font-weight);
+  min-height: var(--btn-height-sm);
+}
+
+.btn-outline-primary:hover {
+  background: var(--iflow-primary);
+  color: #fff;
+}
+
+.card.bg-light {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}

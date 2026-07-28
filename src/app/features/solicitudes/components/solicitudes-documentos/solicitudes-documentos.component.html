@@ -3,18 +3,45 @@
     <div>
       <h3 id="soli-docs-title" class="soli-panel__title">Documentos</h3>
       <p class="soli-panel__desc">
-        Adjuntos de esta solicitud. Pulse un archivo para abrirlo.
+        <ng-container *ngIf="s.hasSolicitudSeleccionada; else docsDescEmpty">
+          Adjuntos de esta solicitud. Pulse un archivo para abrirlo.
+        </ng-container>
+        <ng-template #docsDescEmpty>
+          Se mostrarán al seleccionar una solicitud del listado.
+        </ng-template>
       </p>
     </div>
     <div class="soli-panel__actions">
-      <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm" (click)="handleNuevoDocumento()">
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--primary btn-iflow--sm"
+        (click)="handleNuevoDocumento()"
+        [disabled]="!s.hasSolicitudSeleccionada"
+      >
         <i class="bi bi-plus-lg" aria-hidden="true"></i> Añadir documento
       </button>
     </div>
   </header>
 
-  <div class="soli-docs-body" *ngIf="!s.documentosCargando; else docsLoading">
-    <ul class="soli-docs-list" *ngIf="s.documentosSolicitud?.length; else docsEmpty" role="list">
+  <div class="soli-docs-body">
+    <div *ngIf="!s.hasSolicitudSeleccionada" class="soli-empty-state soli-empty-state--docs" role="status">
+      <i class="bi bi-folder2-open soli-empty-state__icon" aria-hidden="true"></i>
+      <p class="soli-empty-state__title">Sin solicitud seleccionada</p>
+      <p class="soli-empty-state__desc">
+        Elige una fila del listado para ver y gestionar sus documentos.
+      </p>
+    </div>
+
+    <div *ngIf="s.hasSolicitudSeleccionada && s.documentosCargando" class="soli-docs-loading" role="status">
+      <div class="spinner-border spinner-border-sm text-secondary" aria-hidden="true"></div>
+      <span>Cargando documentos…</span>
+    </div>
+
+    <ul
+      *ngIf="s.hasSolicitudSeleccionada && !s.documentosCargando && s.documentosSolicitud?.length"
+      class="soli-docs-list"
+      role="list"
+    >
       <li
         *ngFor="let doc of s.documentosSolicitud; trackBy: trackByDocId"
         class="soli-doc"
@@ -70,21 +97,16 @@
       </li>
     </ul>
 
-    <ng-template #docsEmpty>
-      <div class="soli-empty-state soli-empty-state--docs" role="status">
-        <i class="bi bi-folder2-open soli-empty-state__icon" aria-hidden="true"></i>
-        <p class="soli-empty-state__title">Sin documentos</p>
-        <p class="soli-empty-state__desc">
-          Esta solicitud aún no tiene archivos. Use «Añadir documento» para subir el primero.
-        </p>
-      </div>
-    </ng-template>
-  </div>
-
-  <ng-template #docsLoading>
-    <div class="soli-docs-loading" role="status">
-      <div class="spinner-border spinner-border-sm text-secondary" aria-hidden="true"></div>
-      <span>Cargando documentos…</span>
+    <div
+      *ngIf="s.hasSolicitudSeleccionada && !s.documentosCargando && !s.documentosSolicitud?.length"
+      class="soli-empty-state soli-empty-state--docs"
+      role="status"
+    >
+      <i class="bi bi-folder2-open soli-empty-state__icon" aria-hidden="true"></i>
+      <p class="soli-empty-state__title">Sin documentos</p>
+      <p class="soli-empty-state__desc">
+        Esta solicitud aún no tiene archivos. Use «Añadir documento» para subir el primero.
+      </p>
     </div>
-  </ng-template>
+  </div>
 </section>

@@ -5,7 +5,6 @@ describe('SolicitudesPersonaFacade', () => {
     const facade = new SolicitudesPersonaFacade(
       {} as any,
       {} as any,
-      {} as any,
     )
     expect(facade).toBeTruthy()
   })

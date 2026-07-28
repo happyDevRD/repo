@@ -32,7 +32,6 @@ export interface SolicitudesDocumentosHost extends SolicitudesGridHost, Solicitu
   progreso: number
   clearUploadForm(): void
   updateProgressBar(): void
-  veoPdf(ruta: string): void
   cerrarModal(modalId: string): void
   abrirModal(modalId: string): void
 }
@@ -256,6 +255,119 @@ export class SolicitudesDocumentosFacade {
     return String(nombreArchivo ?? '').trim().toLowerCase().endsWith('.pdf')
   }
 
+  private esImagen(nombreArchivo: string | null | undefined): boolean {
+    const nombre = String(nombreArchivo ?? '').trim().toLowerCase()
+    return nombre.endsWith('.jpg') || nombre.endsWith('.jpeg') || nombre.endsWith('.png')
+  }
+
+  private mimeDesdeNombre(nombreArchivo: string | null | undefined): string {
+    const nombre = String(nombreArchivo ?? '').trim().toLowerCase()
+    if (nombre.endsWith('.pdf')) {
+      return 'application/pdf'
+    }
+    if (nombre.endsWith('.png')) {
+      return 'image/png'
+    }
+    if (nombre.endsWith('.jpg') || nombre.endsWith('.jpeg')) {
+      return 'image/jpeg'
+    }
+    if (nombre.endsWith('.docx')) {
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    }
+    if (nombre.endsWith('.odt')) {
+      return 'application/vnd.oasis.opendocument.text'
+    }
+    return 'application/octet-stream'
+  }
+
+  private tiparBlob(blob: Blob, nombreArchivo: string | null | undefined): Blob {
+    const mime = this.mimeDesdeNombre(nombreArchivo)
+    const tipo = String(blob.type || '').toLowerCase()
+    if (!tipo || tipo.includes('octet-stream') || tipo.includes('force-download') || tipo.includes('application/json')) {
+      return new Blob([blob], { type: mime })
+    }
+    return blob
+  }
+
+  private triggerDownload(objectUrl: string, nombreArchivo: string): void {
+    const link = document.createElement('a')
+    link.href = objectUrl
+    link.download = nombreArchivo || 'documento'
+    link.rel = 'noopener'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+
+  private fetchDocumentoBlob(
+    url: string,
+    nombreArchivo: string | null | undefined,
+  ): void {
+    const nombre = String(nombreArchivo ?? '').trim() || 'documento'
+    const puedeVer = this.esPdf(nombre) || this.esImagen(nombre)
+    const popup = puedeVer ? window.open('about:blank', '_blank') : null
+
+    this.http.get(url, { responseType: 'blob' }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (blob) => {
+        const fileBlob = this.tiparBlob(blob, nombre)
+        const objectUrl = URL.createObjectURL(fileBlob)
+
+        if (puedeVer && popup && !popup.closed) {
+          popup.location.href = objectUrl
+          setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000)
+          return
+        }
+
+        if (popup && !popup.closed) {
+          popup.close()
+        }
+
+        this.triggerDownload(objectUrl, nombre)
+        if (puedeVer) {
+          this.notificationService.info({
+            title: 'Documento',
+            text: 'El navegador bloqueó la vista previa. Se ha iniciado la descarga.',
+          })
+        }
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 2_000)
+      },
+      error: () => {
+        if (popup && !popup.closed) {
+          popup.close()
+        }
+        this.notificationService.error({
+          title: 'Documento',
+          text: 'No se pudo abrir el documento. Inténtelo de nuevo o descárguelo.',
+        })
+      },
+    })
+  }
+
+  private downloadDocumentoBlob(
+    url: string,
+    nombreArchivo: string | null | undefined,
+  ): void {
+    this.http.get(url, { responseType: 'blob' }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (blob) => {
+        const fileBlob = this.tiparBlob(blob, nombreArchivo)
+        const objectUrl = URL.createObjectURL(fileBlob)
+        const nombre = String(nombreArchivo ?? '').trim() || 'documento'
+        this.triggerDownload(objectUrl, nombre)
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 2_000)
+      },
+      error: () => {
+        this.notificationService.error({
+          title: 'Descarga',
+          text: 'No se pudo descargar el documento.',
+        })
+      },
+    })
+  }
+
   seleccionarDocumento(host: SolicitudesDocumentosHost, doc: DocumentosListar): string {
     const url = this.buildDescargaUrl(doc.archivo)
     host.iddocumento = doc.id ?? null
@@ -268,6 +380,18 @@ export class SolicitudesDocumentosFacade {
   abrirDocumento(host: SolicitudesDocumentosHost, doc: DocumentosListar): void {
     const url = this.seleccionarDocumento(host, doc)
     this.abrirDocumentoSeleccionado(host, url, doc.nombreArchivo)
+  }
+
+  descargarDocumento(host: SolicitudesDocumentosHost, doc: DocumentosListar): void {
+    const url = this.seleccionarDocumento(host, doc)
+    if (!url) {
+      this.notificationService.warning({
+        title: 'Sin archivo',
+        text: 'No hay ruta de descarga para este documento.',
+      })
+      return
+    }
+    this.downloadDocumentoBlob(url, doc.nombreArchivo)
   }
 
   abrirDocumentoSeleccionado(
@@ -286,12 +410,7 @@ export class SolicitudesDocumentosFacade {
       return
     }
 
-    if (this.esPdf(nombre)) {
-      host.veoPdf(href)
-      return
-    }
-
-    window.open(href, '_blank', 'noopener')
+    this.fetchDocumentoBlob(href, nombre)
   }
 
   iconoDocumento(nombreArchivo: string | null | undefined): string {

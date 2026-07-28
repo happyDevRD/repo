@@ -1,47 +1,45 @@
-<section class="soli-form-section" aria-labelledby="soli-alta-datos-title">
-      <h3 id="soli-alta-datos-title" class="soli-form-section__title">Datos de la solicitud</h3>
-      <p class="soli-form-section__desc">Información principal y asignación al instructor.</p>
-      <div class="row g-3">
-        <div class="col-12">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="asunto" name="asunto"
-              [(ngModel)]="s.creasolicitud.asunto" required placeholder=" ">
-            <label class="required-field" for="asunto">Asunto</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-floating">
-            <input class="form-control" (change)="s.gestionEjercicio()"
-              type="date" id="startSolic" name="trip-startSolici"
-              [(ngModel)]="s.creasolicitud.fecInicio" required placeholder=" ">
-            <label class="required-field" for="startSolic">Fecha solicitud</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-floating">
-            <select class="form-select" id="asignado" name="asignado"
-              [(ngModel)]="s.creasolicitud.usuario" required>
-              <option value="" disabled selected>Selecciona un usuario</option>
-              <option *ngFor="let procedipermisos of s.procedipermiso; trackBy: trackByUsuario"
-                [value]="procedipermisos.usuario">{{ procedipermisos.usuario }}</option>
-            </select>
-            <label class="required-field" for="asignado">Asignado a</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-floating">
-            <input type="text" class="form-control" disabled id="departamento"
-              [value]="s.depart" name="departamento" placeholder=" ">
-            <label for="departamento">Departamento</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-floating">
-            <input type="text" class="form-control" [(ngModel)]="s.creasolicitud.numDocum"
-              (change)="s.soliciUsuario(s.creasolicitud.numDocum)" id="interesado"
-              name="interesado" placeholder=" ">
-            <label class="required-field" for="interesado">Interesado (DNI)</label>
-          </div>
-        </div>
+<section class="soli-alta__section" aria-labelledby="soli-alta-datos-title">
+  <header class="soli-alta__head">
+    <span class="soli-alta__step" aria-hidden="true">1</span>
+    <div>
+      <h3 id="soli-alta-datos-title" class="soli-alta__title">Solicitud</h3>
+      <p class="soli-alta__desc">Datos principales y asignación.</p>
+    </div>
+  </header>
+
+  <div class="row g-3">
+    <div class="col-12">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="asunto" name="asunto"
+          [(ngModel)]="s.creasolicitud.asunto" required placeholder=" ">
+        <label class="required-field" for="asunto">Asunto</label>
       </div>
-    </section>
+    </div>
+    <div class="col-md-2">
+      <div class="form-floating">
+        <input class="form-control" (change)="s.gestionEjercicio()"
+          type="date" id="startSolic" name="trip-startSolici"
+          [(ngModel)]="s.creasolicitud.fecInicio" required placeholder=" ">
+        <label class="required-field" for="startSolic">Fecha</label>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-floating">
+        <select class="form-select" id="asignado" name="asignado"
+          [(ngModel)]="s.creasolicitud.usuario" required>
+          <option value="" disabled selected>Selecciona un usuario</option>
+          <option *ngFor="let procedipermisos of s.procedipermiso; trackBy: trackByUsuario"
+            [value]="procedipermisos.usuario">{{ procedipermisos.usuario }}</option>
+        </select>
+        <label class="required-field" for="asignado">Asignado a</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" disabled id="departamento"
+          [value]="s.depart" name="departamento" placeholder=" ">
+        <label for="departamento">Departamento</label>
+      </div>
+    </div>
+  </div>
+</section>

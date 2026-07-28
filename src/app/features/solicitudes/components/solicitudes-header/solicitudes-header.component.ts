@@ -9,6 +9,7 @@ export class SolicitudesHeaderComponent {
   private readonly s = inject(SolicitudesComponent)
 
   handleNuevaSolicitud(): void {
+    this.s.prepararNuevaSolicitud()
     this.s.abrirModal('nsolicitudModal')
   }
 }

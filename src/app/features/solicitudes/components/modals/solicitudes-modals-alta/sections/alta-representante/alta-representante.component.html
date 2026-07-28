@@ -1,104 +1,106 @@
-<section class="soli-form-section" *ngIf="s.personaFacade.dniok"
-      aria-labelledby="soli-alta-repre-title">
-      <div class="soli-form-section__head">
-        <div>
-          <h3 id="soli-alta-repre-title" class="soli-form-section__title">Representante</h3>
-          <p class="soli-form-section__desc mb-0">Selecciona un representante existente o crea uno nuevo.</p>
-        </div>
+<section class="soli-alta__section soli-alta__section--last" aria-labelledby="soli-alta-repre-title">
+  <header class="soli-alta__head">
+    <span class="soli-alta__step soli-alta__step--muted" aria-hidden="true">3</span>
+    <div class="flex-grow-1">
+      <h3 id="soli-alta-repre-title" class="soli-alta__title">Representante <span class="soli-alta__optional">(opcional)</span></h3>
+      <p class="soli-alta__desc mb-0">
+        {{ s.personaFacade.dniok
+          ? 'Elige un representante vinculado o añade uno por documento.'
+          : 'Disponible cuando el interesado esté localizado.' }}
+      </p>
+    </div>
+    <button *ngIf="s.personaFacade.dniok && !s.personaFacade.documrepre"
+      type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+      (click)="s.cambiamosRepre()">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i> Añadir
+    </button>
+  </header>
+
+  <div *ngIf="!s.personaFacade.dniok" class="soli-alta__empty">
+    Localiza primero al interesado para gestionar representantes.
+  </div>
+
+  <ng-container *ngIf="s.personaFacade.dniok">
+    <p *ngIf="s.personaFacade.cargandoRepresentantes" class="soli-alta__hint mb-2">
+      Cargando representantes…
+    </p>
+
+    <div *ngIf="!s.personaFacade.cargandoRepresentantes && s.personaFacade.representantesLista.length"
+      class="list-group soli-alta-list mb-3" role="listbox" aria-label="Representantes vinculados">
+      <button type="button" class="list-group-item list-group-item-action soli-alta-list__item"
+        *ngFor="let repre of s.personaFacade.representantesLista; trackBy: trackByRepre"
+        role="option"
+        [attr.aria-selected]="s.personaFacade.representanteSeleccionadoKey === s.personaFacade.representanteKey(repre)"
+        [class.active]="s.personaFacade.representanteSeleccionadoKey === s.personaFacade.representanteKey(repre)"
+        (click)="s.seleccionarRepresentanteLista(repre)">
+        <span class="soli-alta-list__avatar" aria-hidden="true">
+          <i class="bi bi-person-fill"></i>
+        </span>
+        <span class="soli-alta-list__text">
+          <span class="soli-alta-list__name">{{ repre.desPerEntid || 'Sin nombre' }}</span>
+          <span class="soli-alta-list__meta">{{ repre.dirPosta || 'Sin dirección' }}</span>
+        </span>
+        <i class="bi bi-check-circle-fill soli-alta-list__check" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div *ngIf="!s.personaFacade.cargandoRepresentantes && !s.personaFacade.representantesLista.length && !s.personaFacade.documrepre"
+      class="soli-alta__empty mb-2">
+      No hay representantes vinculados. Puedes añadir uno.
+    </div>
+
+    <div *ngIf="s.personaFacade.documrepre" class="soli-alta__subpanel">
+      <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+        <h4 class="soli-alta__subtitle mb-0">Añadir por documento</h4>
         <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-          (click)="s.cambiamosRepre()">
-          <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo representante
-        </button>
+          (click)="s.cancelarAltaRepresentante()">Cancelar</button>
       </div>
 
-      <div class="row g-3" *ngIf="s.personaFacade.cambioRepresentante">
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="nrepren" name="nrepren"
-              [(ngModel)]="s.creasolicitud.nombreRepre" placeholder=" ">
-            <label class="required-field" for="nrepren">Nombre</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="ap1repren" name="ap1repren"
-              [(ngModel)]="s.creasolicitud.apellido1Repre" placeholder=" ">
-            <label class="required-field" for="ap1repren">Primer apellido</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="ap2repren" name="ap2repren"
-              [(ngModel)]="s.creasolicitud.apellido2Repre" placeholder=" ">
-            <label class="required-field" for="ap2repren">Segundo apellido</label>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="direccionn" name="direccionn"
-              [(ngModel)]="s.creasolicitud.dirPostaRepre" placeholder=" ">
-            <label class="required-field" for="direccionn">Dirección</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="cpn" name="cpn"
-              [(ngModel)]="s.creasolicitud.codPostaRepre" placeholder=" ">
-            <label class="required-field" for="cpn">Código postal</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <select class="form-select" id="ps-provn"
-              (change)="s.gestimunicip(s.creasolicitud.codProviRepre)"
-              name="provinciarn" title="Provincia" [(ngModel)]="s.creasolicitud.codProviRepre">
-              <option value="" disabled selected>Selecciona provincia</option>
-              <option *ngFor="let provincias of s.provin; trackBy: trackById"
-                [value]="provincias.id">{{ provincias.nm }}</option>
-            </select>
-            <label class="required-field" for="ps-provn">Provincia</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <select class="form-select" id="ps-munn" name="Municipiorn" title="Municipio"
-              [(ngModel)]="s.creasolicitud.codMunicRepre">
-              <option value="" disabled selected>Selecciona municipio</option>
-              <option *ngFor="let municipio of s.personaFacade.municiflitro; trackBy: trackById"
-                [value]="municipio.id">{{ municipio.nm }}</option>
-            </select>
-            <label class="required-field" for="ps-munn">Municipio</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-container mt-3">
-        <app-iflow-grid
-          [source]="s.sourceListRepre"
-          (rowClick)="s.selecrepresentante($event)"
-          [pagesize]="4"
-          [columns]="s.columnsListRepre"
-          [localization]="s.localizationObject"
-          #gridRepresentantes>
-        </app-iflow-grid>
-      </div>
-    </section>
-
-<section class="soli-form-section" *ngIf="s.personaFacade.documrepre || s.personaFacade.existeRepresentante || s.personaFacade.representanteok"
-      aria-labelledby="soli-alta-repre-doc-title">
-      <h3 id="soli-alta-repre-doc-title" class="soli-form-section__title">
-        Documento del representante
-        <span *ngIf="s.creasolicitud.numDocumRepre">· {{ s.creasolicitud.numDocumRepre }}</span>
-      </h3>
-      <p class="soli-form-section__desc">Consulta o alta del representante por número de documento.</p>
-
-      <div class="row g-3" *ngIf="s.personaFacade.documrepre">
-        <div class="col-md-4">
+      <div class="row g-3">
+        <div class="col-md-6">
           <div class="form-floating">
             <input type="text" class="form-control" id="numerorepre" name="numerorepre"
               (change)="s.soliciUsuarioparaRepre(s.creasolicitud.numDocumRepre)"
               [(ngModel)]="s.creasolicitud.numDocumRepre" placeholder=" ">
             <label class="required-field" for="numerorepre">Número de documento</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mt-1" *ngIf="s.personaFacade.representanteok">
+        <div class="col-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" readonly
+              [value]="s.personaFacade.repreNombreVista" id="nombreRepre" name="nombreRepre" placeholder=" ">
+            <label for="nombreRepre">Nombre del representante</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" readonly
+              [value]="s.personaFacade.repreDireccionVista" id="direccionRepre" name="direccionRepre" placeholder=" ">
+            <label for="direccionRepre">Dirección</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" readonly
+              [value]="s.personaFacade.repreCpVista" id="cpRepre" name="cpRepre" placeholder=" ">
+            <label for="cpRepre">Código postal</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" readonly
+              [value]="s.personaFacade.repreProvinciaVista" id="provinciaRepre" name="provinciaRepre" placeholder=" ">
+            <label for="provinciaRepre">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" readonly
+              [value]="s.personaFacade.repreMunicipioVista" id="municipioRepre" name="municipioRepre" placeholder=" ">
+            <label for="municipioRepre">Municipio</label>
           </div>
         </div>
       </div>
@@ -163,42 +165,6 @@
           </div>
         </div>
       </div>
-
-      <div class="row g-3 mt-1" *ngIf="s.personaFacade.representanteok">
-        <div class="col-12">
-          <div class="form-floating">
-            <input type="text" class="form-control" disabled [value]="s.personaFacade.nombredni"
-              id="nombreRepre" name="nombreRepre" placeholder=" ">
-            <label for="nombreRepre">Nombre del representante</label>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <input type="text" class="form-control" disabled [value]="s.personaFacade.direcciondni"
-              id="direccionRepre" name="direccionRepre" placeholder=" ">
-            <label for="direccionRepre">Dirección</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" disabled [value]="s.personaFacade.cpdni"
-              id="cpRepre" name="cpRepre" placeholder=" ">
-            <label for="cpRepre">Código postal</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" disabled [value]="s.personaFacade.provinciadni"
-              id="provinciaRepre" name="provinciaRepre" placeholder=" ">
-            <label for="provinciaRepre">Provincia</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" disabled [value]="s.personaFacade.nommunicipiodni"
-              id="municipioRepre" name="municipioRepre" placeholder=" ">
-            <label for="municipioRepre">Municipio</label>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
+  </ng-container>
+</section>

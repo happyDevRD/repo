@@ -2,17 +2,18 @@
   modalId="nsolicitudModal"
   title="Nueva Solicitud"
   titleId="nsolicitudModalLabel"
-  dialogClass="modal-xl modal-dialog-centered"
+  modalClass="iflow-modal iflow-modal--fixed"
+  dialogClass="modal-lg"
   [dismissOnClose]="false"
   (closed)="s.limpiarErroresSolicitud(); s.cerrarModal('nsolicitudModal')"
 >
-  <form modalBody id="formNuevaSolicitud" (ngSubmit)="s.validateAndCreateSolicitud($event)">
+  <form modalBody id="formNuevaSolicitud" class="soli-alta" (ngSubmit)="s.validateAndCreateSolicitud($event)">
     <app-solicitudes-alta-datos></app-solicitudes-alta-datos>
     <app-solicitudes-alta-interesado></app-solicitudes-alta-interesado>
     <app-solicitudes-alta-representante></app-solicitudes-alta-representante>
   </form>
 
-  <div modalFooter>
+  <div modalFooter class="modal-footer__actions">
     <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
       (click)="s.limpiarErroresSolicitud(); s.cerrarModal('nsolicitudModal')">Cancelar</button>
     <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"

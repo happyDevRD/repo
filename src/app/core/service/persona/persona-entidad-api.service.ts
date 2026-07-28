@@ -85,4 +85,22 @@ export class PersonaEntidadApiService {
       .get(`${this.urlRepresentante}/${idPerso}/${idHisPerso}`)
       .pipe(map((response) => response as RepresentanteExpLIstar))
   }
+
+  /** Lista de representantes vinculados a una persona (array plano, sin jqx). */
+  listarRepresentantes(
+    idPerso: number | string,
+    idHisPerso: number | string,
+  ): Observable<RepresentanteExpLIstar[]> {
+    return this.http.get(`${this.urlRepresentante}/${idPerso}/${idHisPerso}`).pipe(
+      map((response) => {
+        if (Array.isArray(response)) {
+          return response as RepresentanteExpLIstar[]
+        }
+        if (response) {
+          return [response as RepresentanteExpLIstar]
+        }
+        return []
+      }),
+    )
+  }
 }

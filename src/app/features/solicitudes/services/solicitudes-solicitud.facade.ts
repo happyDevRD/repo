@@ -28,11 +28,15 @@ export interface SolicitudesSolicitudHost extends SolicitudesGridHost {
   isAsignando: boolean;
   isRechazando: boolean;
   isModificandoSolicitud: boolean;
+  veoRechazaSolici: boolean;
+  modificoSolicitud: boolean;
+  vermenu: boolean;
   recargapagina(): void;
   recargarpagina(): void;
   limpiarErroresSolicitud(): void;
   limpiarDatosModificar(): void;
   limpiaDatosEditarSolicitudes(): void;
+  borraDatosSolicitud(): void;
   cerrarModal(modalId: string): void;
 }
 
@@ -174,7 +178,14 @@ export class SolicitudesSolicitudFacade {
       return;
     }
 
-    this.notificationService.confirmDelete('solicitud').then((result) => {
+    this.notificationService.confirm({
+      title: '¿Confirmar rechazo?',
+      text: '¿Está seguro de rechazar esta solicitud?',
+      icon: 'warning',
+      confirmButtonText: 'Sí, rechazar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+    }).then((result) => {
       if (result.isConfirmed) {
         this.ejecutarRechazo(host);
       }
@@ -230,7 +241,7 @@ export class SolicitudesSolicitudFacade {
           this.notificationService.saveSuccess('Solicitud');
           host.limpiarErroresSolicitud();
           this.modalManagerService.closeModal('nsolicitudModal');
-          setTimeout(host.recargapagina, 1000);
+          this.gridFacade.refreshSolicitudesList(host, true);
           return;
         }
 
@@ -289,13 +300,14 @@ export class SolicitudesSolicitudFacade {
     ).subscribe({
       next: () => {
         host.isRechazando = false;
+        const motivoRechazo = host.editasolicitud.motivoRechazo;
         host.cerrarModal('rechazaSoliModal');
-        this.notificationService
-          .success(`Solicitud rechazada correctamente.\nMotivo: ${host.editasolicitud.motivoRechazo}`)
-          .then(() => {
-            this.router.navigate(['/solicitudes']);
-            setTimeout(host.recargarpagina, 1000);
-          });
+        host.veoRechazaSolici = false;
+        host.modificoSolicitud = false;
+        this.gridFacade.refreshSolicitudesList(host, true);
+        this.notificationService.success(
+          `Solicitud rechazada correctamente.\nMotivo: ${motivoRechazo}`,
+        );
       },
       error: () => {
         host.isRechazando = false;
@@ -310,7 +322,14 @@ export class SolicitudesSolicitudFacade {
       return;
     }
 
-    this.notificationService.confirmDelete('solicitud').then((result) => {
+    this.notificationService.confirm({
+      title: '¿Confirmar rechazo?',
+      text: '¿Está seguro de rechazar esta solicitud?',
+      icon: 'warning',
+      confirmButtonText: 'Sí, rechazar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+    }).then((result) => {
       if (!result.isConfirmed) {
         return;
       }
@@ -319,8 +338,10 @@ export class SolicitudesSolicitudFacade {
       this.solicitudApi.editar(host.editasolicitud, id).pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe(() => {
-        this.router.navigate(['/solicitudes']);
-        setTimeout(host.recargarpagina, 1000);
+        host.veoRechazaSolici = false;
+        host.modificoSolicitud = false;
+        this.gridFacade.refreshSolicitudesList(host, true);
+        this.notificationService.success('Solicitud rechazada correctamente');
       });
     });
   }
@@ -369,12 +390,18 @@ export class SolicitudesSolicitudFacade {
         return;
       }
 
+      const referencia = host.ejerNumeroSolicitud;
       this.solicitudesService.deleteSolicitud(id).pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe({
         next: () => {
-          this.notificationService.success({ title: 'Eliminada!', text: `Solicitud  ${host.ejerNumeroSolicitud} eliminada!` });
-          setTimeout(host.recargapagina, 1000);
+          host.vermenu = false;
+          host.idsolicitud = 0;
+          this.gridFacade.refreshSolicitudesList(host, true);
+          this.notificationService.success({
+            title: 'Eliminada!',
+            text: `Solicitud ${referencia} eliminada!`,
+          });
         },
         error: () => {
           this.notificationService.warning('No se pudo borrar la solicitud. Tiene documentos asociados.');
@@ -439,6 +466,8 @@ export class SolicitudesSolicitudFacade {
     host.editasolicitud.fecInicio = rowData.fecInicio;
     host.editasolicitud.estado = rowData.estado;
     host.editasolicitud.usuario = rowData.usuario;
+    host.editasolicitud.motivoRechazo = '';
+    this.mostrarValidacionesRechazar = false;
 
     if (rowData.estado == 'RECHAZADA') {
       host.veoRechazaSolici = false;
@@ -465,7 +494,7 @@ export class SolicitudesSolicitudFacade {
     host.vermenu = true;
     host.edicion = true;
     host.idsolicitud = rowData.id;
-    host.expsolicitud = rowData.expediente;
+    host.expsolicitud = this.formatExpedienteRef(rowData.expediente);
     host.idexpedienteAsoc = rowData.idExpediente;
 
     if (host.idexpedienteAsoc) {
@@ -479,5 +508,22 @@ export class SolicitudesSolicitudFacade {
 
     this.versolici(host, rowData.id);
     host.getExpediente(rowData.idexpediente);
+  }
+
+  /** Referencia legible `ejercicio/numero` (el API envía el expediente como objeto anidado). */
+  private formatExpedienteRef(expediente: unknown): string {
+    if (!expediente) {
+      return '';
+    }
+    if (typeof expediente === 'string' || typeof expediente === 'number') {
+      return String(expediente);
+    }
+
+    const exp = expediente as { ejercicio?: string | number; numero?: string | number };
+    if (exp.ejercicio == null || exp.numero == null) {
+      return '';
+    }
+
+    return `${exp.ejercicio}/${exp.numero}`;
   }
 }

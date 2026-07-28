@@ -1,181 +1,252 @@
-<!-- INICIAR EXPEDIENTE -->
 <app-modal-shell
- modalId="iniciarExpedieModal"
- title=""
- titleId="iniciarExpediModalLabel"
- dialogClass="modal-xl modal-dialog-centered"
- [staticBackdrop]="true"
- [keyboard]="false"
- [dismissOnClose]="false"
- (closed)="s.limpiadatosIniciarExpediente(); s.cerrarModal('iniciarExpedieModal')"
+  modalId="iniciarExpedieModal"
+  titleId="iniciarExpediModalLabel"
+  modalClass="iflow-modal iflow-modal--fixed soli-iniciar-modal"
+  dialogClass="modal-lg"
+  [staticBackdrop]="true"
+  [keyboard]="false"
+  [dismissOnClose]="false"
+  (closed)="s.limpiadatosIniciarExpediente(); s.cerrarModal('iniciarExpedieModal')"
 >
- <ng-container modalTitle><i class="fas fa-play-circle me-2 text-success"></i>Iniciar Expediente</ng-container>
- <form modalBody id="iniciarExpedienteForm" #iniciarExpedienteForm="ngForm" (ngSubmit)="s.onIniciarExpedienteSubmit()">
- <div class="row g-3 mb-4">
- <div class="col-12">
- <h5 class="text-primary mb-3 border-bottom pb-2">
- <i class="bi bi-file-text-fill me-2"></i>Datos de la Solicitud
- </h5>
- </div>
- </div>
+  <span modalTitle>
+    <i class="bi bi-play-circle me-2 soli-iniciar-title-icon" aria-hidden="true"></i>Iniciar Expediente
+  </span>
 
- <div class="row">
- <div class="col-12 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled value="{{s.asuntoSolicitud}}" id="asuntoSol" name="asuntoSol" placeholder=" ">
- <label for="asuntoSol">Asunto</label>
- </div></div>
- <div class="col-md-3 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled [value]="s.ejerNumeroSolicitud" id="ejercicioNum" name="ejercicioNum" placeholder=" ">
- <label for="ejercicioNum">Ejercicio/Número</label>
- </div></div>
- <div class="col-md-3 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled [value]="s.FIniSolicitud" id="fechaInicioSol" name="fechaInicioSol" placeholder=" ">
- <label for="fechaInicioSol">Fecha Inicio Solicitud</label>
- </div></div>
- <div class="col-md-3 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled [value]="s.NumeroRegistroSolicitud" id="numRegistro" name="numRegistro" placeholder=" ">
- <label for="numRegistro">Número de Registro</label>
- </div></div>
- <div class="col-md-3 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled value="ENTRADA" id="tipoRegistro" name="tipoRegistro" placeholder=" ">
- <label for="tipoRegistro">Tipo de Registro</label>
- </div></div>
- <div class="col-md-6 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled [value]="s.usuarioSolicitud" id="usuarioAsignado" name="usuarioAsignado" placeholder=" ">
- <label for="usuarioAsignado">Usuario Asignado</label>
- </div></div>
- <div class="col-md-6 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled [value]="s.personaFacade.InteresadoSolicitud" id="interesadoSol" name="interesadoSol" placeholder=" ">
- <label for="interesadoSol">Interesado</label>
- </div></div>
- <div class="col-md-6 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled value="{{s.personaFacade.representanteSolicitud}}" id="representanteSol" name="representanteSol" placeholder=" ">
- <label for="representanteSol">Representante</label>
- </div></div>
- <div class="col-md-6 mb-3"><div class="form-floating">
- <input type="text" class="form-control" disabled value="{{s.depart}}" id="departamentoSol" name="departamentoSol" placeholder=" ">
- <label for="departamentoSol">Departamento</label>
- </div></div>
- </div>
+  <form
+    modalBody
+    id="iniciarExpedienteForm"
+    class="soli-iniciar"
+    #iniciarExpedienteForm="ngForm"
+    (ngSubmit)="s.onIniciarExpedienteSubmit()"
+  >
+    <!-- Card 1: datos del expediente -->
+    <section class="soli-iniciar-card soli-iniciar-card--lg" aria-labelledby="soli-iniciar-exp-title">
+      <header class="soli-iniciar-card__head">
+        <span class="soli-iniciar-card__step" aria-hidden="true">1</span>
+        <div>
+          <h3 id="soli-iniciar-exp-title" class="soli-iniciar-card__title">Datos del expediente</h3>
+          <p class="soli-iniciar-card__desc">Completa los campos para abrir el expediente.</p>
+        </div>
+      </header>
 
- <div class="row mt-4 mb-4">
- <div class="col-12">
- <h5 class="text-success mb-3 border-bottom pb-2">
- <i class="bi bi-folder-plus me-2"></i>Información del Expediente
- </h5>
- </div>
- </div>
+      <div class="soli-iniciar-form">
+        <div class="soli-iniciar-form__group">
+          <p class="soli-iniciar-form__label">Identificación</p>
+          <div class="row g-2">
+            <div class="col-12">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="tituloExp"
+                  name="titulo"
+                  required
+                  [(ngModel)]="s.nuevoexpediente.titulo"
+                  [class.is-invalid]="s.isTituloExpedienteInvalid()"
+                  placeholder=" "
+                >
+                <label class="required-field" for="tituloExp">Título del expediente</label>
+              </div>
+              <div *ngIf="s.isTituloExpedienteInvalid()" class="invalid-feedback d-block">
+                El título del expediente es obligatorio
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="procedimientoExp"
+                  name="procedimiento"
+                  required
+                  [(ngModel)]="s.nuevoexpediente.procedimiento"
+                  [class.is-invalid]="s.isProcedimientoInvalid()"
+                  [class.soli-iniciar-select--placeholder]="!s.nuevoexpediente.procedimiento"
+                >
+                  <option [ngValue]="''" disabled>Selecciona un procedimiento</option>
+                  <option *ngFor="let procedimiento of s.procedimientos" [ngValue]="procedimiento.id">
+                    {{ procedimiento.descripcion }}
+                  </option>
+                </select>
+                <label class="required-field" for="procedimientoExp">Procedimiento</label>
+              </div>
+              <div *ngIf="s.isProcedimientoInvalid()" class="invalid-feedback d-block">
+                Debe seleccionar un procedimiento
+              </div>
+            </div>
+          </div>
+        </div>
 
- <div class="row">
- <div class="col-12 mb-3"><div class="form-floating">
- <input
- type="text"
- class="form-control"
- required
- value="{{s.versolicitud.asunto}}"
- id="titulo"
- name="titulo"
- [(ngModel)]="s.nuevoexpediente.titulo"
- [class.is-invalid]="s.isTituloExpedienteInvalid()"
- #tituloInput="ngModel" placeholder=" ">
- <label for="titulo">Título Expediente *</label>
- </div><div *ngIf="s.isTituloExpedienteInvalid()" class="invalid-feedback">
- El título del expediente es obligatorio
- </div></div>
- <div class="col-md-4 mb-3"><div class="form-floating">
- <input
- class="form-control"
- type="text"
- id="fecha"
- name="fecha"
- value="{{s.FechaSistema}}"
- disabled placeholder=" ">
- <label for="fecha">Fecha Inicio Expediente</label>
- </div></div>
- <div class="col-md-4 mb-3"><div class="form-floating">
- <select
- class="form-select"
- id="procedimiento"
- name="procedimiento"
- [(ngModel)]="s.nuevoexpediente.procedimiento"
- required
- [class.is-invalid]="s.isProcedimientoInvalid()"
- #procedimientoSelect="ngModel">
- <option value="" disabled selected></option>
- <option *ngFor="let procedimiento of s.procedimientos" [value]="procedimiento.id">
- {{procedimiento.descripcion}}
- </option>
- </select>
- <label for="procedimiento">Procedimiento *</label>
- </div><div *ngIf="s.isProcedimientoInvalid()" class="invalid-feedback">
- Debe seleccionar un procedimiento
- </div></div>
- <div class="col-md-4 mb-3"><div class="form-floating">
- <select
- class="form-select"
- id="fnotifi"
- name="fnotifi"
- [(ngModel)]="s.nuevoexpediente.formaNotifi"
- disabled>
- <option value="0">Correo postal</option>
- <option value="1">Telemática</option>
- </select>
- <label for="fnotifi">Forma Notificación *</label>
- </div></div>
- </div>
+        <div class="soli-iniciar-form__group">
+          <p class="soli-iniciar-form__label">Inicio y notificación</p>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fechaInicioExp"
+                  name="fechaInicioExp"
+                  [value]="s.FechaSistema"
+                  disabled
+                  placeholder=" "
+                >
+                <label for="fechaInicioExp">Fecha de inicio</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="formaNotifiExp"
+                  name="fnotifi"
+                  [(ngModel)]="s.nuevoexpediente.formaNotifi"
+                  disabled
+                >
+                  <option [ngValue]="0">Correo postal</option>
+                  <option [ngValue]="1">Telemática</option>
+                </select>
+                <label for="formaNotifiExp">Forma de notificación</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="emailExp"
+                  name="emailExp"
+                  [(ngModel)]="s.nuevoexpediente.email"
+                  [disabled]="s.nuevoexpediente.formaNotifi != 1"
+                  placeholder=" "
+                >
+                <label for="emailExp">Correo electrónico</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
- <div *ngIf="s.nuevoexpediente.formaNotifi==1" class="mb-3"><div class="form-floating">
- <input
- type="email"
- class="form-control"
- id="emailExp"
- name="emailExp"
- [(ngModel)]="s.nuevoexpediente.email"
- placeholder=" ">
- <label for="emailExp">Correo electrónico</label>
- </div></div>
+    <!-- Card 2: solicitud origen como documento -->
+    <section class="soli-iniciar-card soli-iniciar-card--md" aria-labelledby="soli-iniciar-origen-title">
+      <header class="soli-iniciar-card__head">
+        <span class="soli-iniciar-card__step" aria-hidden="true">2</span>
+        <div>
+          <h3 id="soli-iniciar-origen-title" class="soli-iniciar-card__title">Solicitud origen</h3>
+          <p class="soli-iniciar-card__desc">Documento de solicitud que genera el expediente.</p>
+        </div>
+      </header>
 
- <div *ngIf="s.personaFacade.dniok" class="row mt-4 mb-4">
- <div class="col-12">
- <h5 class="text-info mb-3 border-bottom pb-2">
- <i class="bi bi-person-fill me-2"></i>Información del Interesado
- </h5>
- </div>
- </div>
+      <article class="soli-iniciar-doc" aria-label="Documento de solicitud">
+        <div class="soli-iniciar-doc__sheet">
+          <header class="soli-iniciar-doc__head">
+            <span class="soli-iniciar-doc__icon" aria-hidden="true">
+              <i class="bi bi-file-earmark-text"></i>
+            </span>
+            <div class="soli-iniciar-doc__identity">
+              <span class="soli-iniciar-doc__type">Solicitud</span>
+              <strong class="soli-iniciar-doc__ref">{{ s.ejerNumeroSolicitud || '—' }}</strong>
+            </div>
+            <time class="soli-iniciar-doc__date" *ngIf="s.FIniSolicitud">{{ s.FIniSolicitud }}</time>
+          </header>
 
- <div *ngIf="s.personaFacade.dniok" class="row">
- <div class="col-md-6 mb-3"><div class="form-floating">
- <input type="text" class="form-control" [value]="s.personaFacade.consultadni.nombre" id="nombreInt" name="nombreInt" readonly placeholder=" ">
- <label for="nombreInt">Nombre</label>
- </div></div>
- <div class="col-md-6 mb-3"><div class="form-floating">
- <input type="text" class="form-control" [value]="s.personaFacade.consultadni.apellido1 + ' ' + s.personaFacade.consultadni.apellido2"
- id="apellidosInt" name="apellidosInt" readonly placeholder=" ">
- <label for="apellidosInt">Apellidos</label>
- </div></div>
- <div class="col-12 mb-3"><div class="form-floating">
- <input type="text" class="form-control" [value]="s.personaFacade.consultadni.dirPosta" id="direccionInt"
- name="direccionInt" readonly placeholder=" ">
- <label for="direccionInt">Dirección</label>
- </div></div>
- <div class="col-md-4 mb-3"><div class="form-floating">
- <input type="text" class="form-control" [value]="s.personaFacade.consultadni.codPosta" id="cpInt" name="cpInt" readonly placeholder=" ">
- <label for="cpInt">Código Postal</label>
- </div></div>
- <div class="col-md-4 mb-3"><div class="form-floating">
- <input type="text" class="form-control" [value]="s.personaFacade.consultadni.provincia" id="provinciaInt"
- name="provinciaInt" readonly placeholder=" ">
- <label for="provinciaInt">Provincia</label>
- </div></div>
- <div class="col-md-4 mb-3"><div class="form-floating">
- <input type="text" class="form-control" [value]="s.personaFacade.consultadni.municipio" id="municipioInt"
- name="municipioInt" readonly placeholder=" ">
- <label for="municipioInt">Municipio</label>
- </div></div>
- </div>
- </form>
- <div modalFooter>
- <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="s.limpiadatosIniciarExpediente(); s.cerrarModal('iniciarExpedieModal')">Cancelar</button>
- <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary" form="iniciarExpedienteForm">Iniciar Expediente</button>
- </div>
+          <div class="soli-iniciar-doc__body">
+            <p class="soli-iniciar-doc__asunto" [title]="s.asuntoSolicitud || ''">
+              {{ s.asuntoSolicitud || 'Sin asunto' }}
+            </p>
+
+            <dl class="soli-iniciar-doc__fields">
+              <div class="soli-iniciar-doc__field">
+                <dt>Registro</dt>
+                <dd>{{ s.NumeroRegistroSolicitud || '—' }}</dd>
+              </div>
+              <div class="soli-iniciar-doc__field">
+                <dt>Asignado</dt>
+                <dd>{{ s.usuarioSolicitud || '—' }}</dd>
+              </div>
+              <div class="soli-iniciar-doc__field soli-iniciar-doc__field--wide">
+                <dt>Departamento</dt>
+                <dd>{{ s.depart || '—' }}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Card 3: personas (interesado > representante) -->
+    <section class="soli-iniciar-card soli-iniciar-card--sm" aria-labelledby="soli-iniciar-personas-title">
+      <header class="soli-iniciar-card__head">
+        <span class="soli-iniciar-card__step" aria-hidden="true">3</span>
+        <div>
+          <h3 id="soli-iniciar-personas-title" class="soli-iniciar-card__title">Personas</h3>
+          <p class="soli-iniciar-card__desc">Interesado principal y representante vinculado.</p>
+        </div>
+      </header>
+
+      <div class="soli-iniciar-people">
+        <article
+          class="soli-iniciar-people__primary"
+          *ngIf="s.personaFacade.InteresadoSolicitud; else interesadoVacio"
+        >
+          <span class="soli-iniciar-people__icon soli-iniciar-people__icon--lg" aria-hidden="true">
+            <i class="bi bi-person-fill"></i>
+          </span>
+          <div class="soli-iniciar-people__body">
+            <span class="soli-iniciar-people__role">Interesado</span>
+            <strong class="soli-iniciar-people__name">{{ s.personaFacade.InteresadoSolicitud }}</strong>
+            <span class="soli-iniciar-people__meta">
+              {{ s.personaFacade.dirPosta || 'Sin dirección' }}
+              · {{ s.personaFacade.codPosta || '—' }}
+              · {{ s.personaFacade.Municipio || '—' }}
+            </span>
+          </div>
+        </article>
+
+        <ng-template #interesadoVacio>
+          <article class="soli-iniciar-people__primary soli-iniciar-people__primary--empty">
+            <span class="soli-iniciar-people__icon soli-iniciar-people__icon--lg" aria-hidden="true">
+              <i class="bi bi-person-x"></i>
+            </span>
+            <div class="soli-iniciar-people__body">
+              <span class="soli-iniciar-people__role">Interesado</span>
+              <strong class="soli-iniciar-people__name">Sin interesado</strong>
+            </div>
+          </article>
+        </ng-template>
+
+        <aside class="soli-iniciar-people__secondary">
+          <span class="soli-iniciar-people__icon soli-iniciar-people__icon--sm" aria-hidden="true">
+            <i class="bi bi-people"></i>
+          </span>
+          <div class="soli-iniciar-people__body">
+            <span class="soli-iniciar-people__role soli-iniciar-people__role--muted">Representante</span>
+            <strong class="soli-iniciar-people__name soli-iniciar-people__name--sm">
+              {{ s.personaFacade.representanteSolicitud || 'Sin representante' }}
+            </strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </form>
+
+  <div modalFooter class="modal-footer__actions">
+    <button
+      type="button"
+      class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      (click)="s.limpiadatosIniciarExpediente(); s.cerrarModal('iniciarExpedieModal')"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      class="btn-iflow modal-footer__btn btn-iflow--primary"
+      form="iniciarExpedienteForm"
+      [disabled]="s.isIniciandoExpediente"
+    >
+      <span *ngIf="s.isIniciandoExpediente" class="spinner-border spinner-border-sm me-2" role="status"></span>
+      <i *ngIf="!s.isIniciandoExpediente" class="bi bi-play-fill me-1" aria-hidden="true"></i>
+      {{ s.isIniciandoExpediente ? 'Iniciando…' : 'Iniciar expediente' }}
+    </button>
+  </div>
 </app-modal-shell>

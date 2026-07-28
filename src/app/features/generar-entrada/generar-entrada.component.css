@@ -3,14 +3,13 @@
   padding: 0;
 }
 
-/* Estilos para compactar el formulario, como antes */
-.form-floating .form-control,
-.form-floating .form-select {
-  height: calc(2.4rem + 2px);
+/* Compactación suave sin romper la geometría del form-floating */
+.form-floating > .form-control,
+.form-floating > .form-select {
   font-size: 0.9rem;
 }
 
-.form-floating label {
+.form-floating > label {
   font-size: 0.85rem;
 }
 

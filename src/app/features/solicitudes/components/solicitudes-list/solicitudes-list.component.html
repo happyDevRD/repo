@@ -1,12 +1,18 @@
-<div class="grid-container">
+<div class="grid-container soli-list-grid">
   <app-iflow-grid
     #gridSolicitudes
-    selectionMode="radio"
-    radioName="Solicitudes"
+    selectionmode="singlerow"
+    width="100%"
     (rowClick)="handleRowClick($event)"
     (rowDoubleClick)="handleRowDoubleClick($event)"
     [columns]="s.columnsSolici"
     [showfilterrow]="true"
+    [columnsresize]="true"
+    [columnsautoresize]="false"
+    [autoheight]="false"
+    [height]="480"
+    [pagesize]="10"
+    [pagesizeoptions]="['5', '10', '20']"
     [localization]="s.localizationObject"
     [source]="s.sourceSolici">
   </app-iflow-grid>

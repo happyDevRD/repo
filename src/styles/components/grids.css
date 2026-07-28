@@ -1,0 +1,103 @@
+.jqx-widget-header {
+  background: initial !important;
+  color: white;
+}
+
+div[id^="columntablejqxWidget"] {
+  background: var(--iflow-primary) !important;
+}
+
+.jqx-grid-pager {
+  background: var(--iflow-primary) !important;
+  color: white;
+}
+
+.jqx-grid-cell-alt {
+  background-color: rgba(105, 120, 255, 0.04) !important;
+}
+
+.jqx-grid-cell:hover {
+  background-color: rgba(105, 120, 255, 0.08) !important;
+}
+
+.jqx-grid-cell-selected,
+.jqx-fill-state-pressed {
+  background-color: rgba(105, 120, 255, 0.16) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(105, 120, 255, 0.22) !important;
+}
+
+.jqx-grid-cell-selected:hover {
+  background-color: rgba(105, 120, 255, 0.2) !important;
+}
+
+/* Contenedor de grids jqxGrid */
+.grid-container {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1rem;
+}
+
+app-iflow-grid,
+jqxGrid {
+  display: block;
+  width: 100%;
+  border-radius: var(--border-radius);
+}
+
+/* ================================
+   TABLAS DE DATOS
+   ================================ */
+.table-iflow {
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: #fff;
+}
+
+.table-iflow thead th {
+  background: var(--iflow-gradient);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.75rem 0.65rem;
+  border: none;
+  white-space: nowrap;
+}
+
+.table-iflow tbody td,
+.table-iflow tbody th {
+  padding: 0.65rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+  border-color: rgba(105, 120, 255, 0.08);
+}
+
+.table-iflow tbody th {
+  font-weight: normal;
+}
+
+.table-iflow tbody tr:hover {
+  background-color: rgba(105, 120, 255, 0.04);
+}
+
+.table-iflow .table-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .inicio-subnav {
+    flex-direction: column;
+  }
+
+  .inicio-subnav__link {
+    justify-content: center;
+  }
+}

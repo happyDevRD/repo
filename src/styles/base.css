@@ -1,0 +1,60 @@
+/* ================================
+   ESTILOS DEL BODY
+   ================================ */
+html, body {
+  margin: 0;
+  padding: 0 0 20px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #eef1f8;
+  background-image: url("../assets/new/fondo_new.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  font-family: Poppins, "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--surface-overlay);
+  z-index: -1;
+  pointer-events: none;
+}
+
+::selection {
+  background: rgba(105, 120, 255, 0.25);
+  color: var(--text-primary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(105, 120, 255, 0.4) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(105, 120, 255, 0.35);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(105, 120, 255, 0.55);
+}
+
+/* Bloqueo de scroll cuando el menú móvil está abierto */
+@media screen and (max-width: 1200px) {
+  body.nav-mobile-open {
+    overflow: hidden;
+  }
+}

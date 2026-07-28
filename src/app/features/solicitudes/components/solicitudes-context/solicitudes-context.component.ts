@@ -21,10 +21,12 @@ export class SolicitudesContextComponent {
   }
 
   handleRechazarSolicitud(): void {
+    this.s.limpiarDatosRechazar()
     this.s.abrirModal('rechazaSoliModal')
   }
 
   handleIniciarExpediente(): void {
+    this.s.prepararIniciarExpediente()
     this.s.abrirModal('iniciarExpedieModal')
   }
 

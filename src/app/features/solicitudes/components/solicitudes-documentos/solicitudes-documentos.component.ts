@@ -24,6 +24,9 @@ export class SolicitudesDocumentosComponent {
   }
 
   handleNuevoDocumento(): void {
+    if (!this.s.hasSolicitudSeleccionada) {
+      return
+    }
     this.s.abrirModal('documentoModal')
   }
 
@@ -32,8 +35,7 @@ export class SolicitudesDocumentosComponent {
   }
 
   handleDescargarDocumento(doc: DocumentosListar): void {
-    this.documentosFacade.seleccionarDocumento(this.s, doc)
-    this.s.abreArchivo(this.s.descargafichero)
+    this.documentosFacade.descargarDocumento(this.s, doc)
   }
 
   handleEliminarDocumento(doc: DocumentosListar): void {
