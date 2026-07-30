@@ -5,10 +5,18 @@
     <form modalBody #asignarForm="ngForm" (ngSubmit)="s.onAsignarSubmit()">
         <div class="mb-3">
             <div class="form-floating">
-                <select class="form-select" id="asignado" name="asignado" [(ngModel)]="s.editasolicitud.usuario"
-                    required [class.is-invalid]="s.isUsuarioAsignadoInvalid()" #usuarioSelect="ngModel">
-                    <option value="" disabled selected>Selecciona un usuario</option>
-                    <option *ngFor="let usupermiso of s.usupermisos" [value]="usupermiso.usuario">
+                <select
+                    class="form-select"
+                    id="asignado"
+                    name="asignado"
+                    [(ngModel)]="s.editasolicitud.usuario"
+                    required
+                    [class.is-invalid]="s.isUsuarioAsignadoInvalid()"
+                    [class.form-select--placeholder]="!s.editasolicitud.usuario"
+                    #usuarioSelect="ngModel"
+                >
+                    <option [ngValue]="''" disabled>Selecciona un usuario</option>
+                    <option *ngFor="let usupermiso of s.usupermisos" [ngValue]="usupermiso.usuario">
                         {{usupermiso.usuario}}
                     </option>
                 </select>

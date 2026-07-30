@@ -1,6 +1,5 @@
 import { DestroyRef, Injectable, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { Router } from '@angular/router'
 import { NuevoExpediente, VerExpediente } from '../../expedientes/expedientes'
 import { EditExpediente, VerSolicitud } from '../models'
 import { ExpedienteApiService } from '../../../core/service/expediente/expediente-api.service'
@@ -29,7 +28,6 @@ export interface SolicitudesExpedienteHost extends SolicitudesGridHost {
   activainiciaExpedi: boolean
   expsolicitud: string
   veoIniciarExp: boolean
-  recargarpagina(): void
   cerrarModal(modalId: string): void
 }
 
@@ -45,7 +43,6 @@ export class SolicitudesExpedienteFacade {
     private readonly notificationService: NotificationService,
     private readonly modalManagerService: ModalManagerService,
     private readonly gridFacade: SolicitudesGridFacade,
-    private readonly router: Router,
   ) {}
 
   isTituloExpedienteInvalid(host: SolicitudesExpedienteHost): boolean {
@@ -166,8 +163,14 @@ export class SolicitudesExpedienteFacade {
   creaExpediente(host: SolicitudesExpedienteHost): void {
     this.solicitudesService.creaExpediente(host.idexpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(() => {
-      this.router.navigate(['/solicitudes'])
+    ).subscribe({
+      next: () => {
+        this.gridFacade.refreshSolicitudesList(host, true)
+        this.notificationService.success('Expediente actualizado correctamente')
+      },
+      error: () => {
+        this.notificationService.error('No se pudo actualizar el expediente')
+      },
     })
   }
 }

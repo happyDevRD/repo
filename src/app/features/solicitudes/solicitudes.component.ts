@@ -133,7 +133,7 @@ export class SolicitudesComponent {
   idexpediente!: number;
   intructorExpediente!: string;
   public recargapagina() {
-    location.reload();
+    this.gridFacade.refreshSolicitudesList(this, true)
   }
 
   verpagina() {
@@ -435,6 +435,12 @@ export class SolicitudesComponent {
 
   public borraDatosSolicitud() {
     this.creasolicitud = new CreaSolicitudNuevo()
+    this.creasolicitud.usuario = ''
+    this.creasolicitud.tipPerso = ''
+    this.creasolicitud.codProvi = ''
+    this.creasolicitud.codMunic = ''
+    this.creasolicitud.codProviRepre = ''
+    this.creasolicitud.codMunicRepre = ''
     this.crearpersonaentidad = new CrearPersonaEntidad()
     this.representanteexplistar = new RepresentanteExpLIstar()
     this.seleccionoRepre = ''
@@ -596,8 +602,6 @@ export class SolicitudesComponent {
   }
 
   limpiarDatosModificar(): void {
-    this.representanteexplistar.desPerEntid = "";
-    this.personaFacade.representanteSolicitud = "";
     this.limpiaDatosEditarSolicitudes();
   }
 
@@ -719,7 +723,7 @@ export class SolicitudesComponent {
   }
 
   recargarpagina() {
-    window.location.reload();
+    this.gridFacade.refreshSolicitudesList(this, true)
   }
 
   deleteSolicitudes(id: number): void {

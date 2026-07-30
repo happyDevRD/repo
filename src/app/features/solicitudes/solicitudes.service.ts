@@ -1,6 +1,5 @@
 import {Injectable, inject} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
 import {map, Observable} from 'rxjs';
 import {
   ConsultaDni,
@@ -56,8 +55,6 @@ export class SolicitudesService {
 
   constructor(
     public http: HttpClient,
-    public router: Router,
-    public activatedRoute: ActivatedRoute,
     private session: UserSessionService,
     private notificationService: NotificationService
   ) {}
@@ -153,7 +150,6 @@ export class SolicitudesService {
     const httpHeaders = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
-    this.router.navigate(['/solicitudes']);
     return this.http.delete<CreaSolicitud>(`${this.urlborrarsolicitud}${id}`, {headers: httpHeaders})
   }
 
@@ -161,7 +157,6 @@ export class SolicitudesService {
     const httpHeaders = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
-    this.router.navigate(['/solicitudes']);
     return this.http.delete<DocumentosListar>(`${this.urldocsoliciborrar}${id}`, {headers: httpHeaders})
   }
 }

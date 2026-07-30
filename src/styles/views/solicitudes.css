@@ -550,16 +550,17 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-height: 0;
 }
 
 .soli-alta .row.g-3 {
   --bs-gutter-x: 0.75rem;
-  --bs-gutter-y: 0.75rem;
+  --bs-gutter-y: 0.65rem;
 }
 
 .soli-alta__section {
-  padding: 0 0 0.9rem;
-  margin-bottom: 0.9rem;
+  padding: 0 0 0.7rem;
+  margin-bottom: 0.7rem;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -573,7 +574,7 @@
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.55rem;
 }
 
 .soli-alta__step {
@@ -731,6 +732,47 @@
   color: var(--iflow-primary);
 }
 
+.soli-alta__resultado--warn {
+  border-color: rgba(183, 121, 31, 0.35);
+  background: rgba(183, 121, 31, 0.06);
+  box-shadow: inset 3px 0 0 #b7791f;
+  margin-top: 0.75rem;
+}
+
+.soli-alta__resultado-head--warn {
+  background: rgba(183, 121, 31, 0.12);
+  border-bottom: 1px solid rgba(183, 121, 31, 0.22);
+}
+
+.soli-alta__resultado-badge--warn {
+  color: #b7791f;
+}
+
+.soli-alta__resultado-warn-body {
+  padding: 0.7rem 0.9rem 0.8rem;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.soli-alta__resultado-warn-title {
+  margin: 0 0 0.2rem;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.soli-alta__resultado-warn-title strong {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.soli-alta__resultado-warn-desc {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
 .soli-edit__repre-check {
   margin-top: 0.15rem;
   padding-left: 1.6rem;
@@ -753,7 +795,7 @@
 }
 
 .soli-alta__empty {
-  padding: 0.75rem 0.9rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 10px;
   border: 1px dashed var(--border-subtle);
   background: rgba(105, 120, 255, 0.03);
@@ -1037,14 +1079,7 @@
   opacity: 1;
 }
 
-/* Placeholder visible en el select cerrado (opción vacía seleccionada) */
-.soli-iniciar-card .form-select.soli-iniciar-select--placeholder {
-  color: var(--text-secondary);
-}
-
-.soli-iniciar-card .form-select:not(.soli-iniciar-select--placeholder) {
-  color: var(--text-primary);
-}
+/* Placeholder visible: ver .form-select--placeholder en forms.css */
 
 /* —— Solicitud origen como documento —— */
 .soli-iniciar-doc {

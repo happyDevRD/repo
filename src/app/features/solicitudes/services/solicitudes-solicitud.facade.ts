@@ -1,7 +1,6 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { CreaSolicitudNuevo, EditarSolicitud, VerSolicitud } from '../models';
 import { NuevoExpediente, RegistroDocumento, RepresentanteExpLIstar } from '../../expedientes/expedientes';
 import { RdDocumentoApiService } from '../../../core/service/documento/rd-documento-api.service';
@@ -31,8 +30,14 @@ export interface SolicitudesSolicitudHost extends SolicitudesGridHost {
   veoRechazaSolici: boolean;
   modificoSolicitud: boolean;
   vermenu: boolean;
-  recargapagina(): void;
-  recargarpagina(): void;
+  usuarioSolicitud: string;
+  asuntoSolicitud: string;
+  persoEntiDocu: unknown;
+  personaFacade: SolicitudesPersonaFacade;
+  expsolicitud: string;
+  documentosSolicitud: DocumentosListar[];
+  documentosCargando: boolean;
+  iddocumento: number | null;
   limpiarErroresSolicitud(): void;
   limpiarDatosModificar(): void;
   limpiaDatosEditarSolicitudes(): void;
@@ -98,7 +103,6 @@ export class SolicitudesSolicitudFacade {
     private readonly modalManagerService: ModalManagerService,
     private readonly gridFacade: SolicitudesGridFacade,
     private readonly documentosFacade: SolicitudesDocumentosFacade,
-    private readonly router: Router,
   ) {}
 
   isUsuarioAsignadoInvalid(host: SolicitudesSolicitudHost): boolean {
@@ -263,32 +267,33 @@ export class SolicitudesSolicitudFacade {
     this.solicitudApi.asignar(host.editasolicitud, id).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => {
-      this.router.navigate(['/solicitudes']);
-      setTimeout(host.recargarpagina, 1000);
-    });
+      host.usuarioSolicitud = host.editasolicitud.usuario
+      this.gridFacade.refreshSolicitudesList(host, true)
+      this.notificationService.success(`Solicitud asignada correctamente a ${host.editasolicitud.usuario}`)
+    })
   }
 
   ejecutarAsignacion(host: SolicitudesSolicitudHost): void {
-    host.isAsignando = true;
+    host.isAsignando = true
 
     this.solicitudApi.asignar(host.editasolicitud, host.idsolicitud).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
-        host.isAsignando = false;
-        host.cerrarModal('asignarModal');
-        this.notificationService
-          .success(`Solicitud asignada correctamente a ${host.editasolicitud.usuario}`)
-          .then(() => {
-            this.router.navigate(['/solicitudes']);
-            setTimeout(host.recargarpagina, 1000);
-          });
+        host.isAsignando = false
+        host.usuarioSolicitud = host.editasolicitud.usuario
+        host.cerrarModal('asignarModal')
+        this.mostrarValidacionesAsignar = false
+        this.gridFacade.refreshSolicitudesList(host, true)
+        this.notificationService.success(
+          `Solicitud asignada correctamente a ${host.editasolicitud.usuario}`,
+        )
       },
       error: () => {
-        host.isAsignando = false;
-        this.notificationService.error('Ha ocurrido un error al asignar la solicitud. Inténtelo de nuevo.');
+        host.isAsignando = false
+        this.notificationService.error('Ha ocurrido un error al asignar la solicitud. Inténtelo de nuevo.')
       },
-    });
+    })
   }
 
   ejecutarRechazo(host: SolicitudesSolicitudHost): void {
@@ -359,25 +364,31 @@ export class SolicitudesSolicitudFacade {
   }
 
   ejecutarModificar(host: SolicitudesSolicitudHost): void {
-    host.isModificandoSolicitud = true;
-    applyRepresentanteToEdit(host.editasolicitud, host.representanteexplistar, host.seleccionoRepre);
+    host.isModificandoSolicitud = true
+    applyRepresentanteToEdit(host.editasolicitud, host.representanteexplistar, host.seleccionoRepre)
 
     this.solicitudApi.editar(host.editasolicitud, host.idsolicitud).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
-        host.isModificandoSolicitud = false;
-        host.cerrarModal('edicionSolicitudModal');
-        this.notificationService.success('Solicitud modificada correctamente').then(() => {
-          host.recargarpagina();
-          host.limpiarDatosModificar();
-        });
+        host.isModificandoSolicitud = false
+        host.asuntoSolicitud = host.editasolicitud.asunto
+        host.usuarioSolicitud = host.editasolicitud.usuario
+        host.persoEntiDocu = host.editasolicitud.dni
+        if (host.representanteexplistar?.desPerEntid) {
+          host.personaFacade.representanteSolicitud = String(host.representanteexplistar.desPerEntid)
+        }
+        host.cerrarModal('edicionSolicitudModal')
+        this.mostrarValidacionesModificarSolicitud = false
+        this.gridFacade.refreshSolicitudesList(host, true)
+        host.limpiarDatosModificar()
+        this.notificationService.success('Solicitud modificada correctamente')
       },
       error: () => {
-        host.isModificandoSolicitud = false;
-        this.notificationService.error('Ha ocurrido un error al modificar la solicitud. Inténtelo de nuevo.');
+        host.isModificandoSolicitud = false
+        this.notificationService.error('Ha ocurrido un error al modificar la solicitud. Inténtelo de nuevo.')
       },
-    });
+    })
   }
 
   eliminar(host: SolicitudesSolicitudHost, id: number): void {
@@ -395,13 +406,20 @@ export class SolicitudesSolicitudFacade {
         takeUntilDestroyed(this.destroyRef),
       ).subscribe({
         next: () => {
-          host.vermenu = false;
-          host.idsolicitud = 0;
-          this.gridFacade.refreshSolicitudesList(host, true);
+          host.vermenu = false
+          host.idsolicitud = 0
+          host.ejerNumeroSolicitud = ''
+          host.asuntoSolicitud = ''
+          host.usuarioSolicitud = ''
+          host.expsolicitud = ''
+          host.documentosSolicitud = []
+          host.documentosCargando = false
+          host.iddocumento = null
+          this.gridFacade.refreshSolicitudesList(host, true)
           this.notificationService.success({
-            title: 'Eliminada!',
-            text: `Solicitud ${referencia} eliminada!`,
-          });
+            title: 'Eliminada',
+            text: `Solicitud ${referencia} eliminada.`,
+          })
         },
         error: () => {
           this.notificationService.warning('No se pudo borrar la solicitud. Tiene documentos asociados.');

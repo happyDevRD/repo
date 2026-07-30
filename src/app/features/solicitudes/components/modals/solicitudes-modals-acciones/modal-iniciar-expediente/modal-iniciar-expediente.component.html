@@ -60,7 +60,7 @@
                   required
                   [(ngModel)]="s.nuevoexpediente.procedimiento"
                   [class.is-invalid]="s.isProcedimientoInvalid()"
-                  [class.soli-iniciar-select--placeholder]="!s.nuevoexpediente.procedimiento"
+                  [class.form-select--placeholder]="!s.nuevoexpediente.procedimiento"
                 >
                   <option [ngValue]="''" disabled>Selecciona un procedimiento</option>
                   <option *ngFor="let procedimiento of s.procedimientos" [ngValue]="procedimiento.id">

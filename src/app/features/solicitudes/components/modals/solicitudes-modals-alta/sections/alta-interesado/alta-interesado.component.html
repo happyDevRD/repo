@@ -67,20 +67,45 @@
     </dl>
   </div>
 
-  <p class="soli-alta__status soli-alta__status--warn" *ngIf="s.personaFacade.existepersonaentidad">
-    <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i> No registrado: completa el alta
-  </p>
+  <!-- No encontrado: aviso + alta manual -->
+  <div
+    class="soli-alta__resultado soli-alta__resultado--warn"
+    *ngIf="s.personaFacade.existepersonaentidad"
+    aria-live="polite"
+  >
+    <div class="soli-alta__resultado-head soli-alta__resultado-head--warn">
+      <span class="soli-alta__resultado-badge soli-alta__resultado-badge--warn">
+        <i class="bi bi-person-x-fill" aria-hidden="true"></i>
+        Interesado no encontrado
+      </span>
+    </div>
+    <div class="soli-alta__resultado-warn-body">
+      <p class="soli-alta__resultado-warn-title">
+        No hay registro para
+        <strong>{{ s.creasolicitud.numDocum || 'este documento' }}</strong>
+      </p>
+      <p class="soli-alta__resultado-warn-desc">
+        Completa los campos siguientes para dar de alta al interesado junto con la solicitud.
+      </p>
+    </div>
+  </div>
 
   <!-- Alta: campos editables (solo si no está en el sistema) -->
-  <div class="row g-2 mt-1" *ngIf="s.personaFacade.existepersonaentidad">
+  <div class="row g-2 mt-2" *ngIf="s.personaFacade.existepersonaentidad">
     <div class="col-md-4">
       <div class="form-floating">
-        <select class="form-select" (change)="s.selecTipPerso(s.creasolicitud.tipPerso)"
-          id="tipPerso" name="tipPerso" [(ngModel)]="s.creasolicitud.tipPerso">
-          <option value="" disabled selected>Selecciona tipo</option>
-          <option value="1">D.N.I.</option>
-          <option value="2">C.I.F</option>
-          <option value="3">Tarjeta Residencia</option>
+        <select
+          class="form-select"
+          (change)="s.selecTipPerso(s.creasolicitud.tipPerso)"
+          id="tipPerso"
+          name="tipPerso"
+          [(ngModel)]="s.creasolicitud.tipPerso"
+          [class.form-select--placeholder]="!s.creasolicitud.tipPerso"
+        >
+          <option [ngValue]="''" disabled>Selecciona tipo</option>
+          <option [ngValue]="'1'">D.N.I.</option>
+          <option [ngValue]="'2'">C.I.F</option>
+          <option [ngValue]="'3'">Tarjeta Residencia</option>
         </select>
         <label class="required-field" for="tipPerso">Tipo de documento</label>
       </div>
@@ -129,22 +154,35 @@
     </div>
     <div class="col-md-4">
       <div class="form-floating">
-        <select class="form-select" id="ps-prov" (change)="s.gestimunicip(s.creasolicitud.codProvi)"
-          name="provincia" title="Provincia" [(ngModel)]="s.creasolicitud.codProvi">
-          <option value="" disabled selected>Selecciona provincia</option>
+        <select
+          class="form-select"
+          id="ps-prov"
+          (change)="s.creasolicitud.codMunic = ''; s.gestimunicip(s.creasolicitud.codProvi)"
+          name="provincia"
+          title="Provincia"
+          [(ngModel)]="s.creasolicitud.codProvi"
+          [class.form-select--placeholder]="!s.creasolicitud.codProvi"
+        >
+          <option [ngValue]="''" disabled>Selecciona provincia</option>
           <option *ngFor="let provincias of s.provin; trackBy: trackById"
-            [value]="provincias.id">{{ provincias.nm }}</option>
+            [ngValue]="provincias.id">{{ provincias.nm }}</option>
         </select>
         <label class="required-field" for="ps-prov">Provincia</label>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-floating">
-        <select class="form-select" id="ps-mun" name="municipio" title="Municipio"
-          [(ngModel)]="s.creasolicitud.codMunic">
-          <option value="" disabled selected>Selecciona municipio</option>
+        <select
+          class="form-select"
+          id="ps-mun"
+          name="municipio"
+          title="Municipio"
+          [(ngModel)]="s.creasolicitud.codMunic"
+          [class.form-select--placeholder]="!s.creasolicitud.codMunic"
+        >
+          <option [ngValue]="''" disabled>Selecciona municipio</option>
           <option *ngFor="let municipio of s.personaFacade.municiflitro; trackBy: trackById"
-            [value]="municipio.id">{{ municipio.nm }}</option>
+            [ngValue]="municipio.id">{{ municipio.nm }}</option>
         </select>
         <label class="required-field" for="ps-mun">Municipio</label>
       </div>

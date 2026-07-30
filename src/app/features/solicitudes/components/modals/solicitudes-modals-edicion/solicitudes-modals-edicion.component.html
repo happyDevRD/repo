@@ -60,11 +60,16 @@
 
         <div class="col-md-3">
           <div class="form-floating">
-            <select class="form-select" id="edit-asignado" name="asignado"
-              [(ngModel)]="s.editasolicitud.usuario">
-              <option value="" disabled>Selecciona un usuario</option>
+            <select
+              class="form-select"
+              id="edit-asignado"
+              name="asignado"
+              [(ngModel)]="s.editasolicitud.usuario"
+              [class.form-select--placeholder]="!s.editasolicitud.usuario"
+            >
+              <option [ngValue]="''" disabled>Selecciona un usuario</option>
               <option *ngFor="let procedipermisos of s.procedipermiso"
-                [value]="procedipermisos.usuario">{{ procedipermisos.usuario }}</option>
+                [ngValue]="procedipermisos.usuario">{{ procedipermisos.usuario }}</option>
             </select>
             <label for="edit-asignado">Asignado a</label>
           </div>

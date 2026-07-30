@@ -127,15 +127,16 @@ export class SolicitudesPersonaFacade {
       error: (err: HttpErrorResponse) => {
         this.buscandoInteresado = false
         if (err.status == 404) {
-          this.notificationService.error(
-            'El interesado no está registrado. Por favor introduzca los datos para el alta.',
-          )
           this.existepersonaentidad = true
           this.dniok = false
           return
         }
         this.existepersonaentidad = false
         this.dniok = false
+        this.notificationService.error({
+          title: 'Búsqueda',
+          text: 'No se pudo consultar el interesado. Inténtelo de nuevo.',
+        })
       },
     })
   }
@@ -384,8 +385,8 @@ export class SolicitudesPersonaFacade {
     host.creasolicitud.apellido2Repre = ''
     host.creasolicitud.dirPostaRepre = ''
     host.creasolicitud.codPostaRepre = undefined as unknown as number
-    host.creasolicitud.codProviRepre = null
-    host.creasolicitud.codMunicRepre = null
+    host.creasolicitud.codProviRepre = ''
+    host.creasolicitud.codMunicRepre = ''
   }
 
   resetConsulta(): void {

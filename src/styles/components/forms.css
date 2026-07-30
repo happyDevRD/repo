@@ -348,6 +348,15 @@ input.form-control:not([type='checkbox']):not([type='radio']) {
   line-height: 2.25rem;
 }
 
+/* Placeholder visible en select cerrado (opción vacía seleccionada vía ngModel) */
+.form-select.form-select--placeholder {
+  color: var(--text-secondary);
+}
+
+.form-select:not(.form-select--placeholder) {
+  color: var(--text-primary);
+}
+
 .form-control:focus,
 .form-select:focus,
 textarea.form-control:focus {

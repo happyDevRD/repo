@@ -143,23 +143,35 @@
         </div>
         <div class="col-md-4">
           <div class="form-floating">
-            <select class="form-select" id="ps-prov3"
-              (change)="s.gestimunicip(s.creasolicitud.codProviRepre)"
-              name="provinciar" title="Provincia" [(ngModel)]="s.creasolicitud.codProviRepre">
-              <option value="" disabled selected>Selecciona provincia</option>
+            <select
+              class="form-select"
+              id="ps-prov3"
+              (change)="s.creasolicitud.codMunicRepre = ''; s.gestimunicip(s.creasolicitud.codProviRepre)"
+              name="provinciar"
+              title="Provincia"
+              [(ngModel)]="s.creasolicitud.codProviRepre"
+              [class.form-select--placeholder]="!s.creasolicitud.codProviRepre"
+            >
+              <option [ngValue]="''" disabled>Selecciona provincia</option>
               <option *ngFor="let provincias of s.provin; trackBy: trackById"
-                [value]="provincias.id">{{ provincias.nm }}</option>
+                [ngValue]="provincias.id">{{ provincias.nm }}</option>
             </select>
             <label class="required-field" for="ps-prov3">Provincia</label>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-floating">
-            <select class="form-select" id="ps-mun3" name="Municipior" title="Municipio"
-              [(ngModel)]="s.creasolicitud.codMunicRepre">
-              <option value="" disabled selected>Selecciona municipio</option>
+            <select
+              class="form-select"
+              id="ps-mun3"
+              name="Municipior"
+              title="Municipio"
+              [(ngModel)]="s.creasolicitud.codMunicRepre"
+              [class.form-select--placeholder]="!s.creasolicitud.codMunicRepre"
+            >
+              <option [ngValue]="''" disabled>Selecciona municipio</option>
               <option *ngFor="let municipio of s.personaFacade.municiflitro; trackBy: trackById"
-                [value]="municipio.id">{{ municipio.nm }}</option>
+                [ngValue]="municipio.id">{{ municipio.nm }}</option>
             </select>
             <label class="required-field" for="ps-mun3">Municipio</label>
           </div>
