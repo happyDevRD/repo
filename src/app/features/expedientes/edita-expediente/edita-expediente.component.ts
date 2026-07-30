@@ -328,7 +328,8 @@ export class EditaExpedienteComponent
 
   public procedipermisolistar!: ProcediPermisosListar[];
   public tareatramiteexpedientelistar: TareaTramiteSeleccionRow[] = [];
-  public tareasCargando = false;  public listarinteresados!: ListarInteresados[];
+  public tareasCargando = false;
+  public listarinteresados!: ListarInteresados[];
   public listarinteresadosdto!: InteresadoListarDto[];
   get receptornotifilistar() { return this.notifUiFacade.receptornotifilistar }
   set receptornotifilistar(value: ReceptorNotifiListar[]) { this.notifUiFacade.receptornotifilistar = value }
