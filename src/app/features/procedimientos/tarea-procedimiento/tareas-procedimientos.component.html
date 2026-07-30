@@ -46,16 +46,25 @@
         </div>
       </div>
 
-<!-- Modal tareasModal -->
+<!-- Modal tareasModal (stub) -->
 <app-modal-shell
   modalId="tareasModal"
   title="Tareas"
   titleId="tareasModalLabel"
-  dialogClass="modal-xl"
-  [showFooter]="false"
+  modalClass="iflow-modal iflow-modal--fit proc-tareas-modal"
+  dialogClass="modal-lg"
 >
   <div modalBody>
-<p class="text-secondary mb-0">Formulario de nueva tarea (en desarrollo).</p>
+    <p class="text-secondary mb-0">Formulario de nueva tarea (en desarrollo).</p>
+  </div>
+  <div modalFooter class="modal-footer__actions">
+    <button
+      type="button"
+      class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      data-bs-dismiss="modal"
+    >
+      Cerrar
+    </button>
   </div>
 </app-modal-shell>
 

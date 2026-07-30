@@ -45,6 +45,7 @@ import {
   resetActionState,
   validarConsultaAccionClick,
 } from './tareas-accion.helper'
+import { TareaTramiteSeleccionRow } from './tareas-seleccion.helper'
 import { cerrarModalesNuevaTarea } from './tareas-modal.helper'
 import {
   createEmptyHabitante,
@@ -60,6 +61,7 @@ import {
 } from './tareas-form-validation.helper'
 import { cargarRecibosPendientes, RecibosPendientesHost } from './tareas-recibos.helper'
 import { COLUMNS_RECIBOS } from './recibos-grid.config'
+import { IflowGridColumns, IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 import { EditaExpedienteTareasFirmaFacade, FirmaTareaHost } from './edita-expediente-tareas-firma.facade'
 import {
   EditaExpedienteTareasNuevaFacade,
@@ -79,8 +81,10 @@ export type { EditaExpedienteTareasAccionHost, ObjetoTributarioBajaHost, Consult
 
 export interface EditaExpedienteTareasGridHost {
   sourceTareasTramite: unknown;
-  tareatramiteexpedientelistar?: unknown[];
+  tareatramiteexpedientelistar?: TareaTramiteSeleccionRow[];
+  tareasCargando?: boolean;
   veoeditofasetramite?: boolean;
+  cdr?: ChangeDetectorRef;
 }
 
 export interface EditaExpedienteTareasHost extends EditaExpedienteTareasGridHost {
@@ -117,6 +121,7 @@ export interface ClickTareaProcedimientoHost {
 
 export interface TareaProcedimientoHost extends TareaProcedimientoSeleccionHost, ConfigurarAccionTareaHost {
   tareatramiteprocedimiento: TareaProcedimientoDTO;
+  cdr?: ChangeDetectorRef;
 }
 
 export interface HistoricoGridHost {
@@ -148,9 +153,9 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
   personaentidad = new PersonaEntidad()
   objetotributario!: ObjetoTributarioDto
   veoDIVBorrarObjetoTRibu = true
-  sourceRecibos: any = null
-  dataAdapter: any = null
-  columnsRecibos: any[] = [...COLUMNS_RECIBOS] as any[]
+  sourceRecibos: IflowGridSource | null = null
+  dataAdapter: IflowGridSource | null = null
+  columnsRecibos: IflowGridColumns = [...COLUMNS_RECIBOS]
   tipoObjetoSeleccionado: TipoObjetoTributarioDto = {
     idHisTipObjTribu: 0,
     idTipObjTribu: 0,
@@ -187,7 +192,7 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
     return buildTareaGridSource(idTramite, options);
   }
 
-  createGridAdapter(idTramite: number, options?: TareaGridSourceOptions): any {
+  createGridAdapter(idTramite: number, options?: TareaGridSourceOptions): IflowGridSource {
     return createTareaGridAdapter(idTramite, options);
   }
 
@@ -197,18 +202,34 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
       if (host.tareatramiteexpedientelistar) {
         host.tareatramiteexpedientelistar = [];
       }
+      if (host.tareasCargando !== undefined) {
+        host.tareasCargando = false;
+      }
+      host.cdr?.markForCheck();
       return;
+    }
+
+    if (host.tareasCargando !== undefined) {
+      host.tareasCargando = true;
+      host.cdr?.markForCheck();
     }
 
     this.expedientesService.getTareaTramiteExpedienteListar(idTramite).pipe(
       takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
+        if (host.tareasCargando !== undefined) {
+          host.tareasCargando = false;
+          host.cdr?.markForCheck();
+        }
+      }),
     ).subscribe({
       next: (list) => {
-        const rows = list ?? [];
+        const rows = (list ?? []) as TareaTramiteSeleccionRow[];
         if (host.tareatramiteexpedientelistar) {
           host.tareatramiteexpedientelistar = rows;
         }
         host.sourceTareasTramite = buildTareaGridSourceFromLocal(rows);
+        host.cdr?.markForCheck();
       },
       error: () => {
         if (host.veoeditofasetramite !== undefined) {
@@ -218,15 +239,19 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
           host.tareatramiteexpedientelistar = [];
         }
         host.sourceTareasTramite = buildTareaGridSourceFromLocal([]);
+        host.cdr?.markForCheck();
       },
     });
   }
 
-  refrescarGridAdapter(host: EditaExpedienteTareasGridHost, options?: TareaGridSourceOptions): void {
-    host.sourceTareasTramite = createTareaGridAdapter(
-      (host as EditaExpedienteTareasHost).idTramite,
-      options,
-    );
+  refrescarGridAdapter(host: EditaExpedienteTareasGridHost, _options?: TareaGridSourceOptions): void {
+    const idTramite = (host as EditaExpedienteTareasHost).idTramite;
+    if (!idTramite) {
+      this.refrescarGrid(host, 0);
+      return;
+    }
+    // Preferir localdata (mismo contrato R2 que crear/borrar) para no mezclar URL/local
+    this.refrescarGrid(host, idTramite);
   }
 
   seleccionarTareaProcedimiento(host: TareaProcedimientoHost, selectedValue: number | string): void {
@@ -244,6 +269,8 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
         host.tareatramiteprocedimiento = data;
         host.tareasFacade.veoAcciones = true;
         configurarAccionTarea(host, data);
+        host.cdr?.markForCheck();
+        host.cdr?.detectChanges();
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener tarea procedimiento:', error);
@@ -379,7 +406,7 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
 
   crearTablonAnuncio(host: EditaExpedienteTareasHost): void {
     const form = host.creartablonanuncio;
-    if (!form.tipAnunc || !form.desAnunc || !form.fecDesde || !form.fecHasta) {
+    if (form.tipAnunc == null || form.tipAnunc === '' || !form.desAnunc || !form.fecDesde || !form.fecHasta) {
       this.notificationService.warning('Debe rellenar todos los campos obligatorios.');
       return;
     }
@@ -388,7 +415,7 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
-        host.sourceTareasTramite = createTareaGridAdapter(host.idTramite);
+        this.refrescarGrid(host, host.idTramite);
         this.notificationService.success({ title: 'Enviado Tablón de anuncio' });
         host.creartablonanuncio = new CrearTablonAnuncio();
         this.modalManagerService.closeModal('crearTablonAnunciosModal');
@@ -451,7 +478,9 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
   resetActionState(host: { cdr: ChangeDetectorRef }): void { this.accionFacade.resetActionState(host) }
   getAccionButtonText(tareatramiteprocedimiento: TareaProcedimientoDTO): string { return this.accionFacade.getAccionButtonText(tareatramiteprocedimiento) }
   isDNIAction(accion?: number | null): boolean { return this.accionFacade.isDNIAction(accion) }
-  onConsultaAccionClick(host: EditaExpedienteTareasAccionHost, tareaProcedimientoHost: TareaProcedimientoHost): void { this.accionFacade.onConsultaAccionClick(host, tareaProcedimientoHost as never) }
+  onConsultaAccionClick(host: EditaExpedienteTareasAccionHost, tareaProcedimientoHost?: TareaProcedimientoHost): void {
+    this.accionFacade.onConsultaAccionClick(host, tareaProcedimientoHost as never)
+  }
   consultaAccion(host: EditaExpedienteTareasAccionHost, valor: string, idtipobje: TipoObjetoTributarioDto): void { this.accionFacade.consultaAccion(host, valor, idtipobje) }
   darDeBajaObjeto(host: ObjetoTributarioBajaHost): void { this.accionFacade.darDeBajaObjeto(host) }
   loadRecibos(host: EditaExpedienteTareasAccionHost) { return this.accionFacade.loadRecibos(host) }

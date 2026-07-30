@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http'
 import { DestroyRef, Injectable, inject } from '@angular/core'
-import { Router } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import {
   ConsultaDni,
@@ -70,9 +69,8 @@ export interface EditaExpedienteInteresadosHost {
   idInteresado: number;
   verborrarinteresado: boolean;
   crearinteresado: CrearInteresado;
-  lifecycleFacade: { consultadni: ConsultaDni };
+  lifecycleFacade: { consultadni: ConsultaDni; dniok: boolean };
   listarinteresadosdto: InteresadoListarDto[];
-  recargarpagina(): void;
 }
 
 /** Facade unificado de operaciones (bolsa + salida + interesados). Las acciones
@@ -87,7 +85,6 @@ export class EditaExpedienteOperacionesFacade {
     private readonly expedientesService: ExpedientesService,
     private readonly notificationService: NotificationService,
     private readonly tareasFacade: EditaExpedienteTareasFacade,
-    private readonly router: Router,
     private readonly insideAcciones: InsideAccionesFacade,
     private readonly modalManagerService: ModalManagerService,
   ) {}
@@ -125,9 +122,10 @@ export class EditaExpedienteOperacionesFacade {
       host.insertabolsacrear.fecAlta &&
       host.insertabolsacrear.fecPrefe &&
       host.insertabolsacrear.fecMaxResol &&
-      host.insertabolsacrear.prioridad &&
-      host.insertabolsacrear.tipSesion &&
-      host.insertabolsacrear.tipPunto
+      host.insertabolsacrear.prioridad != null &&
+      host.insertabolsacrear.prioridad !== '' &&
+      host.insertabolsacrear.tipSesion != null &&
+      host.insertabolsacrear.tipPunto != null
 
     if (!camposObligatorios) {
       this.notificationService.incompleteFields()
@@ -144,8 +142,8 @@ export class EditaExpedienteOperacionesFacade {
     this.expedientesService
       .crearInsertaBolsa(
         host.insertabolsacrear,
-        host.verExpediente.personaEntidad.idPerso,
-        host.verExpediente.personaEntidad.idHisPerso,
+        host.verExpediente.personaEntidad.idPerso as number,
+        host.verExpediente.personaEntidad.idHisPerso as number,
         host.numeroArchivo,
         host.idTarea,
       )
@@ -162,14 +160,11 @@ export class EditaExpedienteOperacionesFacade {
           }
         },
         error: (response: HttpErrorResponse) => {
-          if (response.status === 500) {
-            this.notificationService.error('No se ha generado la propuesta de resolución.')
-            this.limpiarFormularioBolsa(host)
-            return
-          }
-          this.notificationService.saveSuccess('Propuesta de resolución')
+          this.notificationService.fromHttpError(
+            response,
+            'No se ha generado la propuesta de resolución.',
+          )
           this.limpiarFormularioBolsa(host)
-          this.modalManagerService.closeModal('GenerarPropuestaResolucionModal')
         },
       })
   }
@@ -220,8 +215,8 @@ export class EditaExpedienteOperacionesFacade {
       this.expedientesService
         .crearGenerarSalida(
           host.creargenerarsalida,
-          host.verExpediente.personaEntidad.idPerso,
-          host.verExpediente.personaEntidad.idHisPerso,
+          host.verExpediente.personaEntidad.idPerso as number,
+          host.verExpediente.personaEntidad.idHisPerso as number,
           host.numeroArchivo,
           host.idTarea,
         )
@@ -249,34 +244,29 @@ export class EditaExpedienteOperacionesFacade {
 
   // --- Interesados ---
   crearInteresado(host: EditaExpedienteInteresadosHost): void {
-    host.crearinteresado.idHisPerso = host.lifecycleFacade.consultadni.idHisPerso;
-    host.crearinteresado.idPerso = host.lifecycleFacade.consultadni.idPerso;
-    host.crearinteresado.idexpediente = host.idExpediente;
+    host.crearinteresado.idHisPerso = host.lifecycleFacade.consultadni.idHisPerso
+    host.crearinteresado.idPerso = host.lifecycleFacade.consultadni.idPerso
+    host.crearinteresado.idexpediente = host.idExpediente
 
     this.expedientesService.crearInteresado(host.crearinteresado).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: () => this.router.navigate(['/expedientes', host.idExpediente, 'tramitar']),
-      error: (error: HttpErrorResponse) => {
-        if (error.status !== 500) {
-          this.notificationService.success({
-            position: 'center',
-            title: 'Se a creado el interesado con exito!!!',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          this.notificationService.warning({
-            position: 'center',
-            title: 'No se pudo crear el nuevo interesado',
-            showConfirmButton: false,
-            timer: 2500,
-          });
-        }
+      next: () => {
+        this.notificationService.success({
+          title: 'Interesado creado correctamente',
+        })
+        host.crearinteresado = new CrearInteresado()
+        host.lifecycleFacade.dniok = false
+        this.modalManagerService.closeModal('ninteresadoModal')
+        this.listarInteresados(host, host.idExpediente)
       },
-    });
-
-    setTimeout(host.recargarpagina, 1000);
+      error: (error: HttpErrorResponse) => {
+        this.notificationService.fromHttpError(
+          error,
+          'No se pudo crear el nuevo interesado',
+        )
+      },
+    })
   }
 
   borrarInteresado(host: EditaExpedienteInteresadosHost): void {
@@ -294,8 +284,10 @@ export class EditaExpedienteOperacionesFacade {
         takeUntilDestroyed(this.destroyRef),
       ).subscribe({
         next: () => {
-          this.notificationService.deleteSuccess('Interesado');
-          setTimeout(host.recargarpagina, 1500);
+          this.notificationService.deleteSuccess('Interesado')
+          host.verborrarinteresado = false
+          host.idInteresado = 0
+          this.listarInteresados(host, host.idExpediente)
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 403) {

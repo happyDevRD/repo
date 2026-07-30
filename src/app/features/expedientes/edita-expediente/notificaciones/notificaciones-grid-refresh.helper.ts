@@ -25,22 +25,17 @@ export function actualizarSourceNotificacionesGrid(
     host.verExpediente.ejercicio,
     host.verExpediente.numero,
   )
+  host.cdr.markForCheck()
 
+  // Reaplicar botones de fila tras el rebind de jqx (iflow-grid fuerza setSource en ngOnChanges)
   setTimeout(() => {
     const grid = host.gridNotificaciones
-    if (grid) {
-      grid.updatebounddata()
-      grid.refreshdata()
-
-      if (host.idNotificacion) {
-        setTimeout(() => {
-          const rowData = grid.getrowdata(host.idNotificacion)
-          if (rowData) {
-            host.habilitarBotonesNotificacion(rowData)
-          }
-        }, 200)
+    if (grid && host.idNotificacion) {
+      const rowData = grid.getrowdata(host.idNotificacion)
+      if (rowData) {
+        host.habilitarBotonesNotificacion(rowData)
       }
     }
     host.cdr.detectChanges()
-  }, 100)
+  }, 150)
 }

@@ -7,29 +7,24 @@
       <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
         <div>
           <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Expediente</p>
-          <h2 class="h5 fw-bold mb-0">
+          <h2 class="h4 fw-bold mb-0">
             Interesados: <span class="expediente-nombre">{{ expedienteEjercicio }}/{{ expedienteNumero }}</span>
           </h2>
         </div>
         <div class="d-flex flex-wrap gap-2">
-          <button class="btn-iflow btn-iflow--icon" type="button" aria-label="Nuevo interesado" title="Nuevo Interesado"
+          <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button" title="Nuevo Interesado"
             (click)="handleNuevoInteresado()">
-            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo interesado
           </button>
-          <button *ngIf="verojointeresado" class="btn-iflow btn-iflow--icon" type="button" aria-label="Ver interesado"
-            title="Seleccione un interesado en la tabla y use Nuevo para gestionar"
-            disabled>
-            <i class="bi bi-eye" aria-hidden="true"></i>
-          </button>
-          <button *ngIf="verborrarinteresado" class="btn-iflow btn-iflow--icon" type="button"
-            aria-label="Borrar interesado" title="Borrar Interesado" (click)="handleBorrarInteresados()">
-            <i class="bi bi-trash" aria-hidden="true"></i>
+          <button *ngIf="verborrarinteresado" class="btn-iflow btn-iflow--secondary btn-iflow--sm" type="button"
+            title="Borrar Interesado" (click)="handleBorrarInteresados()">
+            <i class="bi bi-trash" aria-hidden="true"></i> Borrar interesado
           </button>
         </div>
       </header>
 
     </div>
-    <h5>Interesados asignados al expediente : {{ idExpediente }}</h5>
+    <p class="text-secondary small mb-2">Asignados al expediente {{ idExpediente }}</p>
     <div class="table-responsive">
       <table class="table table-iflow table-hover">
         <thead>
@@ -73,12 +68,12 @@
       <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
         <div>
           <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Expediente</p>
-          <h2 class="h5 fw-bold mb-0">Histórico del Expediente</h2>
+          <h2 class="h4 fw-bold mb-0">Histórico del Expediente</h2>
         </div>
         <div class="d-flex flex-wrap gap-2">
-          <button class="btn-iflow btn-iflow--icon" type="button" aria-label="Ver expediente" title="Ver Expediente"
+          <button class="btn-iflow btn-iflow--secondary btn-iflow--sm" type="button" title="Ver Expediente"
             (click)="handleVerHistoricoExpediente()">
-            <i class="bi bi-eye" aria-hidden="true"></i>
+            <i class="bi bi-eye" aria-hidden="true"></i> Ver expediente
           </button>
         </div>
       </header>

@@ -1,24 +1,173 @@
-<div *ngIf="verTareasdelTramite" class="seccion-tareas-tramite">
-  <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
-    <div>
-      <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Trámite</p>
-      <h2 class="h4 fw-bold mb-0">Listado de Tareas del Trámite</h2>
+<div *ngIf="verTareasdelTramite" class="exp-tareas seccion-tareas-tramite">
+  <section class="exp-tareas-panel" aria-labelledby="exp-tareas-title">
+    <header class="exp-tareas-panel__head">
+      <div>
+        <p class="exp-tareas-panel__eyebrow">Tareas</p>
+        <h2 id="exp-tareas-title" class="exp-tareas-panel__title">Listado de Tareas del Trámite</h2>
+        <p class="exp-tareas-panel__desc">
+          <ng-container *ngIf="tareas?.length; else tareasDescEmpty">
+            {{ tareas.length }} tarea{{ tareas.length === 1 ? '' : 's' }} en este trámite.
+          </ng-container>
+          <ng-template #tareasDescEmpty>
+            No hay tareas en este trámite. Use «Nueva tarea» para crear la primera.
+          </ng-template>
+        </p>
+        <div *ngIf="tareas?.length" class="exp-tareas-stats" aria-label="Resumen de tareas">
+          <span class="exp-tareas-stat exp-tareas-stat--abierta">
+            <i class="bi bi-circle-fill" aria-hidden="true"></i>
+            {{ totalAbiertas }} abierta{{ totalAbiertas === 1 ? '' : 's' }}
+          </span>
+          <span class="exp-tareas-stat exp-tareas-stat--fin">
+            <i class="bi bi-check2-circle" aria-hidden="true"></i>
+            {{ totalFinalizadas }} finalizada{{ totalFinalizadas === 1 ? '' : 's' }}
+          </span>
+        </div>
+      </div>
+      <div class="exp-tareas-panel__actions">
+        <app-modal-action-bar
+          containerClass="d-flex flex-wrap gap-2"
+          size="sm"
+          [actions]="headerActions"
+          (action)="handleAction($event)">
+        </app-modal-action-bar>
+      </div>
+    </header>
+
+    <section
+      class="exp-tarea-context"
+      aria-label="Tarea seleccionada"
+      [class.exp-tarea-context--empty]="!tareaSeleccionada"
+    >
+      <ng-container *ngIf="tareaSeleccionada as sel; else contextEmpty">
+        <div class="exp-tarea-context__main">
+          <div class="exp-tarea-context__title-row">
+            <h3 class="exp-tarea-context__title">
+              <span class="exp-tarea__numero">#{{ sel.numero }}</span>
+              {{ sel.descripcion || 'Tarea seleccionada' }}
+            </h3>
+            <span class="exp-tarea-badge" [ngClass]="estadoBadgeClass(sel)">{{ estadoLabel(sel) }}</span>
+          </div>
+          <div class="exp-tarea-context__meta">
+            <span class="exp-tarea-context__label">Inicio</span>
+            <span class="exp-tarea-context__value">{{ formatearFecha(sel.fecInicio) || '—' }}</span>
+            <span class="exp-tarea-context__sep" aria-hidden="true"></span>
+            <span class="exp-tarea-context__label">Fin</span>
+            <span class="exp-tarea-context__value">{{ formatearFecha(sel.fecFin) || 'Pendiente' }}</span>
+            <span class="exp-tarea-context__sep" aria-hidden="true"></span>
+            <span class="exp-tarea-context__label">Usuario</span>
+            <span class="exp-tarea-context__value">{{ sel.usuario || '—' }}</span>
+            <ng-container *ngIf="sel.nombreArchivo">
+              <span class="exp-tarea-context__sep" aria-hidden="true"></span>
+              <span class="exp-tarea-context__label">Archivo</span>
+              <span class="exp-tarea-context__value">{{ sel.nombreArchivo }}</span>
+            </ng-container>
+            <ng-container *ngIf="esFirmado(sel)">
+              <span class="exp-tarea-context__sep" aria-hidden="true"></span>
+              <span class="exp-tarea-badge exp-tarea-badge--ok">Firmado</span>
+            </ng-container>
+          </div>
+        </div>
+        <div class="exp-tarea-context__actions" *ngIf="verAccionesdeTarea && toolbarActions?.length">
+          <app-modal-action-bar
+            containerClass="d-flex flex-wrap gap-2"
+            size="sm"
+            [actions]="toolbarActions"
+            (action)="handleAction($event)">
+          </app-modal-action-bar>
+        </div>
+      </ng-container>
+      <ng-template #contextEmpty>
+        <div class="exp-tarea-context__main">
+          <div class="exp-tarea-context__title-row">
+            <h3 class="exp-tarea-context__title">Ninguna tarea seleccionada</h3>
+          </div>
+          <p class="exp-tarea-context__hint">
+            Selecciona una fila del listado para ver el detalle y las acciones disponibles.
+          </p>
+        </div>
+      </ng-template>
+    </section>
+
+    <div class="exp-tareas-body">
+      <div *ngIf="tareasCargando" class="exp-tareas-loading" role="status">
+        <div class="spinner-border spinner-border-sm text-secondary" aria-hidden="true"></div>
+        <span>Cargando tareas…</span>
+      </div>
+
+      <ul *ngIf="!tareasCargando && tareas?.length" class="exp-tareas-list" role="list">
+        <li
+          *ngFor="let tarea of tareas; trackBy: trackByTareaId"
+          class="exp-tarea"
+          [class.exp-tarea--activo]="idTarea === tarea.id"
+          [class.exp-tarea--finalizada]="!!tarea.fecFin"
+        >
+          <button
+            type="button"
+            class="exp-tarea__main"
+            (click)="handleSelect(tarea)"
+            (dblclick)="handleOpen(tarea)"
+            (keydown)="handleRowKeydown($event, tarea)"
+            [attr.aria-label]="'Seleccionar tarea ' + (tarea.descripcion || tarea.numero)"
+            [attr.aria-pressed]="idTarea === tarea.id"
+          >
+            <span class="exp-tarea__icon" aria-hidden="true">
+              <i class="bi" [ngClass]="iconoTarea(tarea)"></i>
+            </span>
+            <span class="exp-tarea__text">
+              <span class="exp-tarea__name">
+                <span class="exp-tarea__numero">#{{ tarea.numero }}</span>
+                {{ tarea.descripcion || 'Sin descripción' }}
+              </span>
+              <span class="exp-tarea__meta">
+                <span *ngIf="tarea.fecInicio">Inicio {{ formatearFecha(tarea.fecInicio) }}</span>
+                <span *ngIf="tarea.fecInicio && tarea.fecFin" class="exp-tarea__dot" aria-hidden="true">·</span>
+                <span *ngIf="tarea.fecFin">Fin {{ formatearFecha(tarea.fecFin) }}</span>
+                <span *ngIf="(tarea.fecInicio || tarea.fecFin) && tarea.usuario" class="exp-tarea__dot" aria-hidden="true">·</span>
+                <span *ngIf="tarea.usuario">{{ tarea.usuario }}</span>
+                <span *ngIf="tarea.nombreArchivo" class="exp-tarea__dot" aria-hidden="true">·</span>
+                <span *ngIf="tarea.nombreArchivo">{{ tarea.nombreArchivo }}</span>
+              </span>
+            </span>
+            <span class="exp-tarea__side">
+              <span class="exp-tarea-badge" [ngClass]="estadoBadgeClass(tarea)">{{ estadoLabel(tarea) }}</span>
+              <span *ngIf="tarea.archivo" class="exp-tarea__flag" title="Con archivo" aria-label="Con archivo">
+                <i class="bi bi-paperclip" aria-hidden="true"></i>
+              </span>
+              <span *ngIf="esFirmado(tarea)" class="exp-tarea__flag exp-tarea__flag--ok" title="Firmado" aria-label="Firmado">
+                <i class="bi bi-pen-fill" aria-hidden="true"></i>
+              </span>
+            </span>
+          </button>
+
+          <ng-container *ngIf="accionesFila(tarea) as acciones">
+            <div class="exp-tarea__actions" *ngIf="acciones.length">
+              <button
+                *ngFor="let item of acciones; trackBy: trackByActionId"
+                type="button"
+                class="btn-iflow btn-iflow--sm btn-iflow--icon"
+                [class.btn-iflow--secondary]="(item.tone || 'secondary') === 'secondary'"
+                [class.btn-iflow--primary]="item.tone === 'primary'"
+                [class.btn-iflow--danger]="item.tone === 'danger'"
+                [disabled]="!!item.disabled || !!item.busy"
+                [attr.title]="item.title || item.label"
+                [attr.aria-label]="item.title || item.label"
+                (click)="handleRowAction(tarea, item.id)"
+              >
+                <i *ngIf="item.icon" [class]="item.icon" aria-hidden="true"></i>
+                <span class="visually-hidden">{{ item.label }}</span>
+              </button>
+            </div>
+          </ng-container>
+        </li>
+      </ul>
+
+      <div *ngIf="!tareasCargando && !tareas?.length" class="exp-tareas-empty" role="status">
+        <i class="bi bi-list-task exp-tareas-empty__icon" aria-hidden="true"></i>
+        <p class="exp-tareas-empty__title">Sin tareas</p>
+        <p class="exp-tareas-empty__desc">
+          Este trámite aún no tiene tareas. Cree una con el botón de la cabecera.
+        </p>
+      </div>
     </div>
-    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="headerActions"
-      (action)="handleAction($event)">
-    </app-modal-action-bar>
-  </header>
-
-  <div *ngIf="verAccionesdeTarea" class="acciones-botones-container">
-    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="toolbarActions"
-      (action)="handleAction($event)">
-    </app-modal-action-bar>
-  </div>
-
-  <div class="grid-container">
-    <app-iflow-grid #gridTareas id="gridTareasTramite" selectionMode="radio" radioName="TareasTramite"
-      (rowClick)="handleRowClick($event)" (rowDoubleClick)="handleRowDoubleClick($event)" [columns]="columns"
-      [localization]="localization" [source]="source">
-    </app-iflow-grid>
-  </div>
+  </section>
 </div>

@@ -9,6 +9,7 @@ import { takeUntil, switchMap, catchError, startWith } from 'rxjs/operators';
 import { UserSessionService } from '../../core/service/user-session.service';
 import { reconcileModalDomState } from '../../core/service/modal-dom.util';
 import { NotificationService } from '../../core/service/notification.service';
+import { fechaHoyISO } from '../../core/helper/fecha-legacy.helper';
 
 @Component({
   selector: 'app-operacion-form',
@@ -117,7 +118,7 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
         ],
       ],
       signo: ['', Validators.required],
-      fecOpera: ['', Validators.required],
+      fecOpera: [fechaHoyISO(), Validators.required],
       txtOpera: ['', [ Validators.maxLength(200)]],
       tipoIva: [''],
       observaciones: ['', Validators.maxLength(200)],
@@ -127,6 +128,9 @@ export class OperacionFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarRotContaOptions();
 
+    if (!this.operacionForm.get('fecOpera')?.value) {
+      this.operacionForm.patchValue({ fecOpera: fechaHoyISO() })
+    }
     // Usamos combineLatest con startWith para emitir los valores iniciales
     combineLatest([
       this.operacionForm.get('impTotal')!.valueChanges.pipe(

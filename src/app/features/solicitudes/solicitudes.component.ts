@@ -28,6 +28,7 @@ import { SolicitudesDocumentosFacade } from './services/solicitudes-documentos.f
 import { SolicitudesExpedienteFacade } from './services/solicitudes-expediente.facade';
 import { SolicitudesPersonaFacade } from './services/solicitudes-persona.facade';
 import { SolicitudesPageFacade } from './services/solicitudes-page.facade';
+import { JqxGridRowEvent } from '../../core/helper/jqx-grid-event.model';
 
 import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -69,12 +70,12 @@ export class SolicitudesComponent {
   public idexpedienteAsoc!: number;
   public registrodocumento: RegistroDocumento = new RegistroDocumento();
   public solicitudlistar!: SolicitudListar[];
-  public versolicitud: any = new VerSolicitud();
-  public crearpersonaentidad: any = new CrearPersonaEntidad()
-  public crearrepresentante: any = new CrearRepresentante()
+  public versolicitud: VerSolicitud = new VerSolicitud();
+  public crearpersonaentidad: CrearPersonaEntidad = new CrearPersonaEntidad()
+  public crearrepresentante: CrearRepresentante = new CrearRepresentante()
   public usupermisos!: UsuPermisos[];
-  public procedipermisos: any = new ProcediPermisos();
-  public verexpediente: any = new VerExpediente()
+  public procedipermisos: ProcediPermisos = new ProcediPermisos();
+  public verexpediente: VerExpediente = new VerExpediente()
   procedimientos!: Procedimiento[];
   public documentoslistar!: DocumentosListar[];
   public documentosSolicitud: DocumentosListar[] = [];
@@ -84,49 +85,49 @@ export class SolicitudesComponent {
   public nuevoexpediente: NuevoExpediente = new NuevoExpediente();
   public selected = new Date("dd/mm/aaaa");
   public lafecha = new Date().toLocaleString();
-  public ejercicio!: any;
+  public ejercicio!: string | number;
   public creasolicitud: CreaSolicitudNuevo = new CreaSolicitudNuevo();
   public editasolicitud: EditarSolicitud = new EditarSolicitud();
   public editexpediente: EditExpediente = new EditExpediente();
   public representanteexplistar: RepresentanteExpLIstar = new RepresentanteExpLIstar();
   public statusGetSolicitudes!: number;
-  public descargafichero!: any;
+  public descargafichero!: string | Blob | null;
   public progreso: number = 0;
   public intervalo!: number;
   public page!: number;
   public npagina: number = 5;
   public nombre!: string;
-  public apellido1!: any;
-  public apellido2!: any;
+  public apellido1!: string;
+  public apellido2!: string;
   public usuarioAsignado!: string;
   public isAsignando: boolean = false;
   public isRechazando: boolean = false;
   public isIniciandoExpediente: boolean = false;
   public isModificandoSolicitud: boolean = false;
   public mostrarValidacionesNuevaSolicitud = false
-  filtroasunto!: any;
-  filtrointeresado!: any;
-  filtrorepresentante!: any;
-  filtrodepartamento!: any;
-  filtroasignado!: any;
-  filtroestado!: any;
+  filtroasunto!: string;
+  filtrointeresado!: string;
+  filtrorepresentante!: string;
+  filtrodepartamento!: string;
+  filtroasignado!: string;
+  filtroestado!: string;
   percentDone!: number;
   nomArchiv!: string;
   uploadSuccess!: boolean;
   url!: string;
-  archivoSubido!: any;
-  nombreArchivoSubido!: any;
+  archivoSubido!: File | string | null;
+  nombreArchivoSubido!: string;
   base64EncodedString!: string;
   public filesToUpload!: Array<File>;
-  mes: any = new Date().getMonth();
-  dia: any = new Date().getDate()
-  fechaarchivo: any = new Date();
-  descripcionArchivo!: any;
+  mes: number = new Date().getMonth();
+  dia: number = new Date().getDate()
+  fechaarchivo: Date = new Date();
+  descripcionArchivo!: string;
   iddocumento!: number | null;
-  name!: any;
+  name!: string;
   id!: number;
   myimage!: unknown;
-  base64code!: any;
+  base64code!: string;
 
   //EXPEDIENTES
 
@@ -198,7 +199,7 @@ export class SolicitudesComponent {
     this.cadenaEstadoSolicitudes = "";
   }
 
-  public valorEstato(value: any) {
+  public valorEstato(value: string | number) {
     this.pageFacade.filtrarPorEstado(this, value)
   }
 
@@ -347,7 +348,7 @@ export class SolicitudesComponent {
 
 
 
-  public selecDocumento(id, nombre): void {
+  public selecDocumento(id: number | null, nombre: string): void {
     this.iddocumento = id;
     this.listadocmenu = true;
     this.nombreArchivoSubido = nombre;
@@ -361,11 +362,11 @@ export class SolicitudesComponent {
 
   }
 
-  public selecDocumentoNuevos(event: any): void {
+  public selecDocumentoNuevos(event: JqxGridRowEvent<DocumentosListar>): void {
     this.documentosFacade.seleccionarDocumentoNuevo(this, event)
   }
 
-  public selecExpediente(id): void {
+  public selecExpediente(id: number): void {
     this.idexpediente = id;
     this.menuexpedientes = true;
 
@@ -378,7 +379,7 @@ export class SolicitudesComponent {
 
   }
 
-  public versolici(id): void {
+  public versolici(id: number): void {
     this.solicitudFacade.versolici(this, id);
   }
 
@@ -396,29 +397,29 @@ export class SolicitudesComponent {
     this.nuevoexpediente.titulo = titulo
     this.asuntoexpedi = titulo
     this.FechaSistema = new Date().toLocaleDateString()
-    this.fechanuevoExpedi = new Date()
+    this.fechanuevoExpedi = fechaHoyISO()
     this.solicitudFacade.obtenerFormaNotificacionInteresado(this)
   }
 
   public fecha: Date = new Date()
 
-  public fecha2: any = new Date().toLocaleDateString()
-  public FechaSistema!: any;
+  public fecha2: string = new Date().toLocaleDateString()
+  public FechaSistema!: string;
 
   public asuntoexpedi!: string;
-  public cambioasuntoexpe(dato: any) {
+  public cambioasuntoexpe(dato: string) {
     this.versolicitud.asunto = dato;
     this.asuntoexpedi = dato;
     this.nuevoexpediente.titulo = this.asuntoexpedi;
   }
 
-  public fechanuevoExpedi = new Date()
+  public fechanuevoExpedi = fechaHoyISO()
 
   public iniciarExpediente(): void {
     this.expedienteFacade.iniciarLegacy(this);
   }
 
-  public descargarDocumento(archivo): void {
+  public descargarDocumento(archivo: string): void {
 
     this.nombreArchivoSubido = archivo;
   }
@@ -456,8 +457,8 @@ export class SolicitudesComponent {
     form?.classList.remove('was-validated')
   }
 
-  public fsistema: any = new Date().toLocaleDateString()
-  public fechaSistema!: any;
+  public fsistema: string = new Date().toLocaleDateString()
+  public fechaSistema!: string;
 
   public FechaSolicitud() {
     this.fsistema = new Date().toLocaleDateString()
@@ -474,15 +475,15 @@ export class SolicitudesComponent {
    * El estado (selectnombre, selectape1..., municiflitro, cambioRepresentante...)
    * y la lógica viven en SolicitudesPersonaFacade.
    */
-  public selecTipPerso(valor: any): void {
+  public selecTipPerso(valor: string | number): void {
     this.personaFacade.selecTipPerso(valor);
   }
 
   // provincias y municipios
-  public provin: any[] = PROVIN;
-  public municio: any[] = MUNICIO;
+  public provin: typeof PROVIN = PROVIN;
+  public municio: typeof MUNICIO = MUNICIO;
 
-  public gestimunicip(id: any): void {
+  public gestimunicip(id: string | number | null | undefined): void {
     this.personaFacade.gestimunicip(id);
   }
 
@@ -509,33 +510,75 @@ export class SolicitudesComponent {
 
     const form = event.target as HTMLFormElement
     const numDocum = String(this.creasolicitud.numDocum ?? '').trim()
-    const formInvalido = !!form && !form.checkValidity()
     const dniVacio = !numDocum
     const interesadoSinResolver =
       !dniVacio &&
       !this.personaFacade.dniok &&
       !this.personaFacade.existepersonaentidad
+    const camposInvalidos =
+      this.isAsuntoNuevaInvalid() ||
+      this.isFechaNuevaInvalid() ||
+      this.isAsignadoNuevaInvalid() ||
+      this.isDniNuevaInvalid()
 
-    if (formInvalido || dniVacio || interesadoSinResolver) {
+    if (camposInvalidos || interesadoSinResolver) {
       form?.classList.add('was-validated')
       if (dniVacio) {
         this.notificationService.incompleteFields('El DNI del interesado es obligatorio')
       } else if (interesadoSinResolver) {
         this.notificationService.incompleteFields(
-          'Consulta el DNI del interesado (sal del campo) antes de guardar',
+          'Busca el interesado (botón Buscar) antes de guardar',
         )
       } else {
         this.notificationService.incompleteFields()
       }
       this.modalManagerService.keepModalOpen('nsolicitudModal')
+      this.focusPrimerCampoInvalidoNuevaSolicitud()
       return
     }
 
     this.creaSolicitud()
   }
 
+  public isAsuntoNuevaInvalid(): boolean {
+    return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.asunto ?? '').trim()
+  }
+
+  public isFechaNuevaInvalid(): boolean {
+    return this.mostrarValidacionesNuevaSolicitud && !this.creasolicitud.fecInicio
+  }
+
+  public isAsignadoNuevaInvalid(): boolean {
+    return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.usuario ?? '').trim()
+  }
+
   public isDniNuevaInvalid(): boolean {
     return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.numDocum ?? '').trim()
+  }
+
+  public handleBuscarInteresado(): void {
+    this.buscarInteresado()
+  }
+
+  public handleAnadirRepresentante(): void {
+    this.cambiamosRepre()
+  }
+
+  public handleCancelarAltaRepresentante(): void {
+    this.cancelarAltaRepresentante()
+  }
+
+  private focusPrimerCampoInvalidoNuevaSolicitud(): void {
+    const fieldIds = [
+      this.isAsuntoNuevaInvalid() ? 'soli-alta-asunto' : null,
+      this.isFechaNuevaInvalid() ? 'soli-alta-fecha' : null,
+      this.isAsignadoNuevaInvalid() ? 'soli-alta-asignado' : null,
+      this.isDniNuevaInvalid() ? 'soli-alta-interesado-doc' : null,
+    ].filter((id): id is string => !!id)
+
+    const firstId = fieldIds[0] ?? 'soli-alta-interesado-doc'
+    const el = document.getElementById(firstId) as HTMLElement | null
+    el?.focus()
   }
 
   public limpiarErroresSolicitud(): void {
@@ -612,7 +655,7 @@ export class SolicitudesComponent {
     this.personaFacade.consultarInteresado(this, dni);
   }
 
-  public selecrepresentante(event) {
+  public selecrepresentante(event?: JqxGridRowEvent<RepresentanteExpLIstar>) {
     const row = event?.args?.row?.bounddata
     if (!row) {
       return
@@ -630,16 +673,16 @@ export class SolicitudesComponent {
 
   public veoIniciarExp: boolean = true;
   public veoRechazaSolici: boolean = true;
-  public FIniSolicitud!: any;
-  public ejerNumeroSolicitud!: any;
-  public NumeroRegistroSolicitud!: any;
+  public FIniSolicitud!: string;
+  public ejerNumeroSolicitud!: string | number;
+  public NumeroRegistroSolicitud!: string | number;
   public usuarioSolicitud!: string;
   public asuntoSolicitud!: string;
-  public persoEntiDocu!: any;
+  public persoEntiDocu!: string;
   public CambioFormatoFecha!: string;
   public fecInicio!: string;
 
-  public preparaFechaGeneral(fechaDato: any) {
+  public preparaFechaGeneral(fechaDato: string | Date | null | undefined) {
     this.CambioFormatoFecha = formatearFechaDDMMYYYY(fechaDato)
   }
 
@@ -655,11 +698,11 @@ export class SolicitudesComponent {
   }
   public iddocum: string;
   public idhisDocum: string;
-  public selecsolicitudNueva(event: any): void {
+  public selecsolicitudNueva(event: JqxGridRowEvent<SolicitudListar>): void {
     this.solicitudFacade.seleccionarSolicitud(this, event.args.row.bounddata)
   }
   // Método para abrir modal de edición con doble click
-  public abrirModalEdicionSolicitud(event: any) {
+  public abrirModalEdicionSolicitud(event: JqxGridRowEvent<SolicitudListar>) {
     const rowData = event.args.row.bounddata;
 
     // Solo abrir el modal si la solicitud es editable
@@ -675,11 +718,11 @@ export class SolicitudesComponent {
     }
   }
 
-  public abrirModalVerDocumento(event: any) {
+  public abrirModalVerDocumento(event: JqxGridRowEvent<DocumentosListar>) {
     this.documentosFacade.abrirVerDocumento(this, event)
   }
 
-  public selecsolicitud(id, expedi, idexpedienteA) {
+  public selecsolicitud(id: number, expedi: unknown, idexpedienteA: number) {
     this.progreso = this.progreso + 20;
     this.updateProgressBar();
     this.vermenu = true;
@@ -720,10 +763,6 @@ export class SolicitudesComponent {
 
   rechazarSolicitud(id: number): void {
     this.solicitudFacade.rechazarLegacy(this, id);
-  }
-
-  recargarpagina() {
-    this.gridFacade.refreshSolicitudesList(this, true)
   }
 
   deleteSolicitudes(id: number): void {
@@ -773,19 +812,19 @@ export class SolicitudesComponent {
   sourceSPENDI: SolicitudListar[] = [];
   sourceSolpen!: IflowGridSource;
   sourceSoliciPendientes!: IflowGridSource;
-  rendergridrows = (params: any): any => {
+  rendergridrows = (params: { defaultRender: (p: unknown) => unknown }): unknown => {
     return params.defaultRender(params);
   };
   public verLisDoc = false;
 
 
-  public selecListDoc(event: any): void {
+  public selecListDoc(event: JqxGridRowEvent<DocumentosListar>): void {
     const rowData = event.args.row.bounddata
     if (rowData.solicitud == this.idsolicitud) {
       this.verLisDoc = true
     }
   }
-  public selectExpSolicitudt(event) {
+  public selectExpSolicitudt(event: JqxGridRowEvent<{ solicitud?: number | string }>) {
 
 
 

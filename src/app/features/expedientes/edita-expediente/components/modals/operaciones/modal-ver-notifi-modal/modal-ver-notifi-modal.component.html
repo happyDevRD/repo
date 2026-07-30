@@ -1,282 +1,225 @@
-<app-modal-shell modalId="verNotifiModal" title="" titleId="editarNotificacionModalLabel" dialogClass="modal-xl modal-dialog-scrollable"
-     [staticBackdrop]="true" [showFooter]="false">
-     <ng-container modalTitle><i class="bi" [class.bi-pencil-square]="!notif.modoVerNotificacion"
-               [class.bi-eye]="notif.modoVerNotificacion"></i>
-          {{ notif.modoVerNotificacion ? 'Ver' : 'Editar' }} Notificación {{
-          notif.ejerNotifi }}/{{ notif.numeroNotifi }}</ng-container>
-     <form modalBody (ngSubmit)="notif.editaNotifi()" #editarNotificacionForm="ngForm">
+<app-modal-shell
+     modalId="verNotifiModal"
+     titleId="editarNotificacionModalLabel"
+     modalClass="iflow-modal iflow-modal--fixed exp-ver-notifi-modal"
+     dialogClass="modal-xl"
+     [staticBackdrop]="true"
+     [dismissOnClose]="false"
+     (closed)="notif.cerrarModalNotificacion()">
+     <ng-container modalTitle>
+          <i class="bi me-1"
+               [class.bi-pencil-square]="!notif.modoVerNotificacion"
+               [class.bi-eye]="notif.modoVerNotificacion"
+               aria-hidden="true"></i>
+          {{ notif.modoVerNotificacion ? 'Ver' : 'Editar' }} Notificación
+          {{ notif.ejerNotifi }}/{{ notif.numeroNotifi }}
+     </ng-container>
+     <form modalBody id="formVerNotifi" (ngSubmit)="notif.editaNotifi()" #editarNotificacionForm="ngForm">
           <div class="row g-3">
-               <div class="col-sm-2">
+               <div class="col-md-2">
                     <div class="form-floating">
-
                          <input [value]="notif.notificacionver.ejeNotif" class="form-control"
-                              id="ejeNotif" name="ejeNotif" disabled type="text" placeholder=" ">
-                         <label for="ejeNotif">Ejercicio </label>
-
-
+                              id="ejeNotifVer" name="ejeNotif" disabled type="text" placeholder=" ">
+                         <label for="ejeNotifVer">Ejercicio</label>
                     </div>
                </div>
-               <div class="col-sm-2">
+               <div class="col-md-2">
                     <div class="form-floating">
-
                          <input [value]="notif.notificacionver.numNotif" class="form-control"
-                              id="numNotif" name="numNotif" disabled type="text" placeholder=" ">
-                         <label for="numNotif">Número Notificación </label>
-
-
+                              id="numNotifVer" name="numNotif" disabled type="text" placeholder=" ">
+                         <label for="numNotifVer">Número notificación</label>
                     </div>
                </div>
-
-
-               <div class="col-sm-2">
+               <div class="col-md-2">
                     <div class="form-floating">
-
                          <select [(ngModel)]="notif.creanotificacion.forNotif"
-                              [value]="notif.notificacionver.forNotif" class="form-select " id="fnotifi"
-                              name="fnotifi" [disabled]="notif.modoVerNotificacion">
-
-                              <option name="correoP" value=0>Correo postal</option>
-                              <option name="telematico" value=1>Telemática</option>
-
-                         </select>
-                         <label for="fnotifi">Forma Notificación </label>
-
-
-                         <br>
-                    </div>
-               </div>
-               <div class="col-sm-3">
-                    <div class="form-floating">
-
-                         <input [value]="notif.fechNotifi" class="form-control" disabled id="numNotif"
-                              name="FechNotif" type="text" placeholder=" ">
-
-                         <label for="numNotif">Fecha Notificación </label>
-                    </div>
-               </div>
-               <div class="col-sm-3">
-                    <div class="form-floating">
-
-                         <select [(ngModel)]="notif.creanotificacion.situacion"
-                              [value]="notif.notificacionver.situacion" class="form-select "
-                              id="situacion" name="situacion" (change)="notif.limpiarErroresVisuales()"
+                              class="form-select" id="fnotifiVer" name="fnotifi"
                               [disabled]="notif.modoVerNotificacion">
-                              <option name="0" value=1>GENERADA</option>
-                              <option name="1" value=2>ENVIADA</option>
-                              <option name="2" value=3>RECEPCIONADA</option>
-                              <option name="3" value=4>DEVUELTA</option>
-                              <option name="4" value=5>COBRADA</option>
-                              <option name="5" value=6>ANULADA</option>
-                              <option name="5" value=7>GENERADA</option>
-                              <option name="5" value=8>NOTIFICA_ENVIADA</option>
-                              <option name="5" value=9>CADUCADA</option>
-
-
+                              <option [ngValue]="0">Correo postal</option>
+                              <option [ngValue]="1">Telemática</option>
                          </select>
-                         <label for="situacion">Estado Notificación *</label>
-
-
-                         <br>
+                         <label for="fnotifiVer">Forma notificación</label>
                     </div>
                </div>
-
-
-          </div>
-
-          <div class="row">
-               <div class="col-sm-3">
+               <div class="col-md-3">
                     <div class="form-floating">
-                         <input [value]="notif.dniNotifi" class="form-control" disabled id="interesado"
-                              name="interesado" type="text" placeholder=" ">
-
-                         <label for="interesado"> Interesado DNI</label>
-
-
+                         <input [value]="notif.fechNotifi" class="form-control" disabled
+                              id="fechNotifiVer" name="FechNotif" type="text" placeholder=" ">
+                         <label for="fechNotifiVer">Fecha notificación</label>
                     </div>
                </div>
-
-               <div class="col-sm-3">
+               <div class="col-md-3">
+                    <div class="form-floating">
+                         <select [(ngModel)]="notif.creanotificacion.situacion"
+                              class="form-select" id="situacionVer" name="situacion"
+                              (change)="notif.limpiarErroresVisuales()"
+                              [disabled]="notif.modoVerNotificacion">
+                              <option [ngValue]="1">GENERADA</option>
+                              <option [ngValue]="2">ENVIADA</option>
+                              <option [ngValue]="3">RECEPCIONADA</option>
+                              <option [ngValue]="4">DEVUELTA</option>
+                              <option [ngValue]="5">COBRADA</option>
+                              <option [ngValue]="6">ANULADA</option>
+                              <option [ngValue]="7">GENERADA</option>
+                              <option [ngValue]="8">NOTIFICA_ENVIADA</option>
+                              <option [ngValue]="9">CADUCADA</option>
+                         </select>
+                         <label class="required-field" for="situacionVer">Estado notificación</label>
+                    </div>
+               </div>
+               <div class="col-md-3">
+                    <div class="form-floating">
+                         <input [value]="notif.dniNotifi" class="form-control" disabled
+                              id="interesadoVerNotif" name="interesado" type="text" placeholder=" ">
+                         <label for="interesadoVerNotif">Interesado DNI</label>
+                    </div>
+               </div>
+               <div class="col-md-3">
                     <div class="form-floating">
                          <select [(ngModel)]="notif.creanotificacion.notificador2"
-                              [value]="notif.notificacionver.notificador" class="form-select "
-                              id="notificador" name="notificador" (change)="notif.limpiarErroresVisuales()"
+                              class="form-select"
+                              [class.form-select--placeholder]="!notif.creanotificacion.notificador2"
+                              id="notificadorVer" name="notificador"
+                              (change)="notif.limpiarErroresVisuales()"
                               [disabled]="notif.modoVerNotificacion">
+                              <option value="" disabled>Seleccione notificador</option>
                               <option
                                    *ngFor="let notificalistar of notif.notificadorlistar; trackBy: trackByNotificador"
-                                   name="notificadorNotifi" value="{{ notificalistar.notificador }}"> {{
-                                   notificalistar.descripcion }}
+                                   [value]="notificalistar.notificador">
+                                   {{ notificalistar.descripcion }}
                               </option>
-
-
                          </select>
-                         <label for="receptor">Notificador </label>
-                         <br>
+                         <label for="notificadorVer">Notificador</label>
                     </div>
                </div>
-          </div>
-
-          <div class="row">
-               <div class="col-3">
+               <div class="col-md-3">
                     <div class="form-floating">
                          <input [(ngModel)]="notif.creanotificacion.fecEnvio"
-                              [value]="notif.fechaordenadafenvio" class="form-control"
-                              data-mdb-inline="true" id="start1" name="trip-start1" type="date"
-                              (input)="notif.onFechaCampoChange(undefined, 'fecEnvio', $any($event.target).value)" (change)="notif.limpiarErroresVisuales()"
-                              placeholder=" ">
-                         <label for="boe">Fecha Envio</label>
+                              class="form-control" id="fecEnvioVer" name="fecEnvio" type="date"
+                              (input)="notif.onFechaCampoChange(undefined, 'fecEnvio', $event)"
+                              (change)="notif.limpiarErroresVisuales()"
+                              [disabled]="notif.modoVerNotificacion" placeholder=" ">
+                         <label for="fecEnvioVer">Fecha envío</label>
                     </div>
                </div>
-               <div class="col-3">
+               <div class="col-md-3">
                     <div class="form-floating">
                          <input [(ngModel)]="notif.creanotificacion.fecRecNotif"
-                              [value]="notif.fechaordenadafrecep" class="form-control"
-                              data-mdb-inline="true" id="start2" max="2999-12-31" min="2020-01-01" name="trip-start2"
-                              type="date" (input)="notif.onFechaCampoChange(undefined, 'fecRecNotif', $any($event.target).value)"
-                              (change)="notif.limpiarErroresVisuales()" placeholder=" ">
-                         <label for="boe">Fecha Recepción / Devolución</label>
+                              class="form-control" id="start2" max="2999-12-31" min="2020-01-01"
+                              name="fecRecNotif" type="date"
+                              (input)="notif.onFechaCampoChange(undefined, 'fecRecNotif', $event)"
+                              (change)="notif.limpiarErroresVisuales()"
+                              [disabled]="notif.modoVerNotificacion" placeholder=" ">
+                         <label for="start2">Fecha recepción / devolución</label>
                     </div>
                </div>
-               <div class="col-sm-3">
+               <div class="col-md-3">
                     <div class="form-floating">
-                         <select [(ngModel)]="notif.creanotificacion.receptor" class="form-select "
-                              id="receptor" name="receptor" (change)="notif.limpiarErroresVisuales()">
+                         <select [(ngModel)]="notif.creanotificacion.receptor"
+                              class="form-select"
+                              [class.form-select--placeholder]="!notif.creanotificacion.receptor"
+                              id="receptorVer" name="receptor"
+                              (change)="notif.limpiarErroresVisuales()"
+                              [disabled]="notif.modoVerNotificacion">
                               <option value="">Seleccione un receptor</option>
                               <option
                                    *ngFor="let receptornotifislistar of notif.receptornotifilistar; trackBy: trackByReceptor"
-                                   name="receptorNotifi" value="{{ receptornotifislistar.receptor }}"> {{
-                                   receptornotifislistar.descripcion }}
+                                   [value]="receptornotifislistar.receptor">
+                                   {{ receptornotifislistar.descripcion }}
                               </option>
                          </select>
-                         <label for="receptor">Receptor </label>
-
+                         <label for="receptorVer">Receptor</label>
                     </div>
                </div>
-
-
-               <div class="col-sm-3">
+               <div class="col-md-3">
                     <div class="form-floating">
                          <select [(ngModel)]="notif.creanotificacion.motNotif"
-                              [value]="notif.notificacionver.motNotif" class="form-select "
-                              id="desMotNotif" name="desMotNotif" (change)="notif.limpiarErroresVisuales()">
+                              class="form-select"
+                              [class.form-select--placeholder]="!notif.creanotificacion.motNotif"
+                              id="desMotNotif" name="desMotNotif"
+                              (change)="notif.limpiarErroresVisuales()"
+                              [disabled]="notif.modoVerNotificacion">
                               <option value="">Seleccione un motivo</option>
                               <option
                                    *ngFor="let motivosnotificacioneslistar of notif.motivonotificacioneslistar; trackBy: trackByMotNotif"
-                                   name="descripcionMotivo" value="{{ motivosnotificacioneslistar.motNotif }}"> {{
-                                   motivosnotificacioneslistar.descripcion }}
+                                   [value]="motivosnotificacioneslistar.motNotif">
+                                   {{ motivosnotificacioneslistar.descripcion }}
                               </option>
-
-
                          </select>
-                         <label for="desMotNotif">Motivo Devolución </label>
-                         <br>
-
+                         <label for="desMotNotif">Motivo devolución</label>
                     </div>
                </div>
-          </div>
-          <div class="row">
-
-               <div class="col-3">
+               <div class="col-md-3">
                     <div class="form-floating">
-
                          <input [(ngModel)]="notif.creanotificacion.fecRegistSalid"
-                              [value]="notif.fechaenvioTEU" class="form-control" data-mdb-inline="true"
-                              id="startenvioteu" name="trip-startenvioteu" type="date"
-                              (input)="notif.onFechaCampoChange(undefined, 'fecRegistSalid', $any($event.target).value)" (change)="notif.limpiarErroresVisuales()"
-                              placeholder=" ">
-                         <label for="boe">Fecha Envio TEU</label>
-                         <br>
+                              class="form-control" id="fecRegistSalidVer" name="fecRegistSalid" type="date"
+                              (input)="notif.onFechaCampoChange(undefined, 'fecRegistSalid', $event)"
+                              (change)="notif.limpiarErroresVisuales()"
+                              [disabled]="notif.modoVerNotificacion" placeholder=" ">
+                         <label for="fecRegistSalidVer">Fecha envío TEU</label>
                     </div>
                </div>
-
-               <div class="col-3">
+               <div class="col-md-3">
                     <div class="form-floating">
-
                          <input [(ngModel)]="notif.creanotificacion.numEnvioTeu"
-                              [value]="notif.notificacionver.numEnvioTeu" class="form-control" id="nteu"
-                              name="nteu" type="text" placeholder=" ">
-                         <label for="boe">Número T.E.U.</label>
-                         <br>
-
+                              class="form-control" id="nteuVer" name="nteu" type="text"
+                              [disabled]="notif.modoVerNotificacion" placeholder=" ">
+                         <label for="nteuVer">Número T.E.U.</label>
                     </div>
                </div>
-          </div>
-
-
-          <div class="row">
-
-
-               <div class="col-3">
+               <div class="col-md-3">
                     <div class="form-floating">
-
                          <select [(ngModel)]="notif.creanotificacion.bop"
-                              [value]="notif.notificacionver.bop" class="form-select " id="sboe"
-                              name="sboe">
-                              <option name="0" value=0>N/A</option>
-                              <option name="1" value=1>ENVIADO</option>
-                              <option name="2" value=2>PUBLICADO</option>
-
-
+                              class="form-select" id="sboeVer" name="sboe"
+                              [disabled]="notif.modoVerNotificacion">
+                              <option [ngValue]="0">N/A</option>
+                              <option [ngValue]="1">ENVIADO</option>
+                              <option [ngValue]="2">PUBLICADO</option>
                          </select>
-                         <label for="sboe">Situación B.O.E. *</label>
-
+                         <label class="required-field" for="sboeVer">Situación B.O.E.</label>
                     </div>
                </div>
-               <div class="col-3">
+               <div class="col-md-3">
                     <div class="form-floating">
-
                          <input [(ngModel)]="notif.creanotificacion.fecPubBop"
-                              [value]="notif.fechaordenadafpubli" class="form-control"
-                              data-mdb-inline="true" id="start6" name="trip-start6" type="date"
-                              (input)="notif.onFechaCampoChange(undefined, 'fecPubBop', $any($event.target).value)" (change)="notif.limpiarErroresVisuales()"
-                              placeholder=" ">
-                         <label for="boeP">Fecha Publicación B.O.E.</label>
-
+                              class="form-control" id="fecPubBopVer" name="fecPubBop" type="date"
+                              (input)="notif.onFechaCampoChange(undefined, 'fecPubBop', $event)"
+                              (change)="notif.limpiarErroresVisuales()"
+                              [disabled]="notif.modoVerNotificacion" placeholder=" ">
+                         <label for="fecPubBopVer">Fecha publicación B.O.E.</label>
                     </div>
                </div>
-
-
-               <div class="col-3">
+               <div class="col-md-3">
                     <div class="form-floating">
-
                          <input [(ngModel)]="notif.creanotificacion.numBop"
-                              [value]="notif.notificacionver.numBop" class="form-control" id="boe"
-                              name="boe" type="text" placeholder=" ">
-                         <label for="boe"> Número B.O.E. </label>
-                         <br>
+                              class="form-control" id="numBopVer" name="boe" type="text"
+                              [disabled]="notif.modoVerNotificacion" placeholder=" ">
+                         <label for="numBopVer">Número B.O.E.</label>
                     </div>
                </div>
-
-
-          </div>
-          <div class="row">
-               <div class="col-sm-12">
+               <div class="col-12">
                     <div class="form-floating">
-
                          <input [(ngModel)]="notif.creanotificacion.observacion"
-                              [value]="notif.notificacionver.observacion" class="form-control"
-                              id="observacion" name="observacion" type="text" placeholder=" ">
-                         <label for="observacion">Observaciones </label>
-                         <br>
+                              class="form-control" id="observacionVer" name="observacion" type="text"
+                              [disabled]="notif.modoVerNotificacion" placeholder=" ">
+                         <label for="observacionVer">Observaciones</label>
                     </div>
                </div>
-          </div>
-
-          <br>
-          <div class="modal-footer">
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" type="button"
-                    (click)="notif.cerrarModalNotificacion()">
-                    <i class="bi bi-x-circle me-1"></i>Cerrar
-               </button>
-               <button *ngIf="!notif.modoVerNotificacion"
-                    class="btn-iflow modal-footer__btn btn-iflow--primary" type="button"
-                    (click)="notif.editaNotifi()">
-                    <i class="bi bi-check-circle me-1"></i>Guardar Cambios
-               </button>
-               <button *ngIf="notif.modoVerNotificacion"
-                    class="btn-iflow modal-footer__btn btn-iflow--primary" type="button"
-                    (click)="notif.modoVerNotificacion = false">
-                    <i class="bi bi-pencil-square me-1"></i>Editar Notificación
-               </button>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="notif.cerrarModalNotificacion()">
+               Cerrar
+          </button>
+          <button *ngIf="!notif.modoVerNotificacion" type="submit"
+               class="btn-iflow modal-footer__btn btn-iflow--primary" form="formVerNotifi">
+               Guardar cambios
+          </button>
+          <button *ngIf="notif.modoVerNotificacion" type="button"
+               class="btn-iflow modal-footer__btn btn-iflow--primary"
+               (click)="notif.modoVerNotificacion = false">
+               Editar notificación
+          </button>
+     </div>
 </app-modal-shell>

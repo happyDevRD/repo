@@ -14,6 +14,7 @@ import {
   validarFormularioNuevaTarea,
   validarTareaProcedimientoCampo,
 } from './tareas-form-validation.helper'
+import { fechaHoyISO } from '../../../../core/helper/fecha-legacy.helper'
 
 export interface EditaExpedienteNuevaTareaHost {
   tareasFacade: TareasAccionUiState
@@ -187,17 +188,20 @@ export class EditaExpedienteTareasNuevaFacade {
   }
 
   abrirModalNuevaTarea(host: EditaExpedienteNuevaTareaHost, fileInput?: ElementRef): void {
+    this.resetFormularioNuevaTarea(host)
     this.limpiarEstadoModal(host, fileInput)
+    this.limpiarErroresNuevaTarea()
     this.modalManagerService.openModal('NuevaTareaTra')
   }
 
-  borraDatosNuevaTarea(host: EditaExpedienteNuevaTareaHost): void {
+  /** Resetea el modelo del formulario sin cerrar el modal. */
+  resetFormularioNuevaTarea(host: EditaExpedienteNuevaTareaHost): void {
     host.tareatramiteexpedientecrear = new TareaTramiteExpedienteCrear()
     host.tareatramiteexpedientecrear.tareaProcedimiento = -1
     host.tareatramiteexpedientecrear.visible = true
-    host.tareatramiteexpedientecrear.fecInicio = new Date()
-    host.tareatramiteexpedientecrear.fecContr = new Date()
-    host.tareatramiteexpedientecrear.archivo = null
+    host.tareatramiteexpedientecrear.fecInicio = fechaHoyISO()
+    host.tareatramiteexpedientecrear.fecContr = fechaHoyISO()
+    host.tareatramiteexpedientecrear.archivo = undefined
     host.tareatramiteexpedientecrear.descripcion = ''
     host.tareatramiteexpedientecrear.firmante = null
     host.tareatramiteexpedientecrear.propuestaResolucion = null
@@ -213,7 +217,10 @@ export class EditaExpedienteTareasNuevaFacade {
     host.plantillaDefecto = null
     host.FechaSistema()
     resetActionState(host.tareasFacade, host.cdr)
+  }
 
+  borraDatosNuevaTarea(host: EditaExpedienteNuevaTareaHost): void {
+    this.resetFormularioNuevaTarea(host)
     setTimeout(() => host.cerrarModalNuevaTareaSeguro(), 100)
   }
 
@@ -246,7 +253,7 @@ export class EditaExpedienteTareasNuevaFacade {
       form.querySelectorAll('.form-control, .form-select').forEach((field) => {
         field.classList.remove('is-invalid', 'is-valid')
       })
-    }, 100)
+    }, 50)
 
     this.changeDetector.detectChanges()
   }

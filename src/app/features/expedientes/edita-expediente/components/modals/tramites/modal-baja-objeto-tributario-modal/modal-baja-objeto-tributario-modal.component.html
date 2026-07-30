@@ -1,107 +1,88 @@
-<app-modal-shell modalId="bajaObjetoTributarioModal" title="Baja objeto tributario"
-     titleId="bajaObjetoTributarioModalLabel" dialogClass="modal-xl modal-dialog-centered" headingLevel="h5"
-     [staticBackdrop]="true" [showFooter]="false" (closed)="edita.cerrarModalBajaObjetoTributario()">
+<app-modal-shell
+     modalId="bajaObjetoTributarioModal"
+     title="Baja objeto tributario"
+     titleId="bajaObjetoTributarioModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-baja-objeto-modal"
+     dialogClass="modal-lg"
+     headingLevel="h5"
+     [staticBackdrop]="true"
+     [dismissOnClose]="false"
+     (closed)="edita.cerrarModalBajaObjetoTributario()">
      <div modalBody>
-          <div class="container py-3"
-               *ngIf="tareas.objetotributario && edita.tareatramiteprocedimiento?.accion === 5">
-
-               <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                         <h5 class="mb-0">Baja de Objeto Tributario</h5>
+          <ng-container *ngIf="tareas.objetotributario && edita.tareatramiteprocedimiento?.accion === 5">
+               <div class="row g-3">
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="tipoObjetoBaja"
+                                   [value]="tareas.objetotributario.tipoObjetoTributario" disabled placeholder=" ">
+                              <label for="tipoObjetoBaja">Tipo objeto tributario</label>
+                         </div>
                     </div>
-                    <div class="card-body">
-
-                         <!-- Informaci�n General -->
-                         <div class="row g-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="tipoObjetoBaja"
-                                             [value]="tareas.objetotributario.tipoObjetoTributario" disabled
-                                             placeholder=" ">
-                                        <label for="tipoObjetoBaja">Tipo Objeto Tributario</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="descripcionBaja"
-                                             [value]="tareas.objetotributario.desObjTribu" disabled
-                                             placeholder=" ">
-                                        <label for="descripcionBaja">Descripci�n</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="fecAltaBaja"
-                                             [value]="tareas.objetotributario.fecAlta" disabled
-                                             placeholder=" ">
-                                        <label for="fecAltaBaja">Fecha Alta</label>
-                                   </div>
-                              </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="descripcionBaja"
+                                   [value]="tareas.objetotributario.desObjTribu" disabled placeholder=" ">
+                              <label for="descripcionBaja">Descripción</label>
                          </div>
-
-                         <div class="row g-3 mt-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="numDocumBaja"
-                                             [value]="tareas.objetotributario.numDocum" disabled
-                                             placeholder=" ">
-                                        <label for="numDocumBaja">N.� Documento</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="personaBaja"
-                                             [value]="tareas.objetotributario.desPerEntid" disabled
-                                             placeholder=" ">
-                                        <label for="personaBaja">Persona / Entidad</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="domFiscalBaja"
-                                             [value]="tareas.objetotributario.domFiscal" disabled
-                                             placeholder=" ">
-                                        <label for="domFiscalBaja">Domicilio Fiscal</label>
-                                   </div>
-                              </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="fecAltaBaja"
+                                   [value]="tareas.objetotributario.fecAlta" disabled placeholder=" ">
+                              <label for="fecAltaBaja">Fecha alta</label>
                          </div>
-
-                         <div class="row g-3 mt-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="codMovimBaja"
-                                             [value]="tareas.objetotributario.codMovim" disabled
-                                             placeholder=" ">
-                                        <label for="codMovimBaja">C�digo Movimiento</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-8 d-flex align-items-center"
-                                   *ngIf="tareas.objetotributario.codMovim === 'BAJA'">
-                                   <span class="text-danger fw-bold">Este objeto tributario ya est� dado de baja.</span>
-                              </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="numDocumBaja"
+                                   [value]="tareas.objetotributario.numDocum" disabled placeholder=" ">
+                              <label for="numDocumBaja">N.º documento</label>
                          </div>
-
-                         <!-- Observaciones y Bot�n de Baja (solo si no est� ya de baja) -->
-                         <div class="row g-3 mt-4" *ngIf="tareas.objetotributario.codMovim !== 'BAJA'">
-                              <div class="col-md-10">
-                                   <div class="form-floating">
-                                        <textarea maxlength="200" class="form-control" id="observacionesBaja"
-                                             name="observacionesBaja" placeholder=" "
-                                             [(ngModel)]="tareas.objetotributario.observaciones"
-                                             rows="4"></textarea>
-                                        <label for="observacionesBaja">Observaciones (opcional)</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-2 d-flex align-items-end">
-                                   <button type="button" class="btn-iflow btn-iflow--primary w-100"
-                                        (click)="tareas.darDeBajaObjeto(edita)">
-                                        Dar de Baja
-                                   </button>
-                              </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="personaBaja"
+                                   [value]="tareas.objetotributario.desPerEntid" disabled placeholder=" ">
+                              <label for="personaBaja">Persona / entidad</label>
                          </div>
-
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="domFiscalBaja"
+                                   [value]="tareas.objetotributario.domFiscal" disabled placeholder=" ">
+                              <label for="domFiscalBaja">Domicilio fiscal</label>
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="codMovimBaja"
+                                   [value]="tareas.objetotributario.codMovim" disabled placeholder=" ">
+                              <label for="codMovimBaja">Código movimiento</label>
+                         </div>
+                    </div>
+                    <div class="col-md-8 d-flex align-items-center"
+                         *ngIf="tareas.objetotributario.codMovim === 'BAJA'">
+                         <span class="text-danger fw-bold">Este objeto tributario ya está dado de baja.</span>
+                    </div>
+                    <div class="col-12" *ngIf="tareas.objetotributario.codMovim !== 'BAJA'">
+                         <div class="form-floating">
+                              <textarea maxlength="200" class="form-control" id="observacionesBaja"
+                                   name="observacionesBaja" placeholder=" "
+                                   [(ngModel)]="tareas.objetotributario.observaciones"
+                                   rows="3"></textarea>
+                              <label for="observacionesBaja">Observaciones (opcional)</label>
+                         </div>
                     </div>
                </div>
-          </div>
+          </ng-container>
+     </div>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="edita.cerrarModalBajaObjetoTributario()">Cerrar</button>
+          <button *ngIf="tareas.objetotributario && tareas.objetotributario.codMovim !== 'BAJA'"
+               type="button" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               (click)="tareas.darDeBajaObjeto(edita)">
+               Dar de baja
+          </button>
      </div>
 </app-modal-shell>

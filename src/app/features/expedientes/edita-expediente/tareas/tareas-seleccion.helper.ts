@@ -72,7 +72,7 @@ export interface TareaTramiteSeleccionRow {
   numero: number | string
   descripcion: string
   nombreArchivo?: string | null
-  archivo?: number | null
+  archivo?: number | string | null
   firmado?: string | number | null
   usuario: string
   numRegis?: string | number | null
@@ -84,6 +84,11 @@ export interface TareaTramiteSeleccionRow {
   fecInicio?: string | null
   fecFin?: string | null
   propuestaResolucion?: string | number | boolean | null
+  /** Estado de plazo del listado API: VERDE | AMARILLO | ROJO */
+  color?: string | null
+  fecPlazo?: string | null
+  ejeNumNotif?: string | number | null
+  idAnunc?: string | number | null
 }
 
 export interface SeleccionTareaNuevaHost extends TareaBotonesVisibles {
@@ -170,7 +175,7 @@ export function aplicarSeleccionTareaNueva(
 
   if (rowData.fecFin && archivo) {
     host.veoMetadatos = true;
-    callbacks.leoMetadatos(archivo);
+    callbacks.leoMetadatos(Number(archivo));
   } else {
     host.veoMetadatos = false;
   }
@@ -178,13 +183,13 @@ export function aplicarSeleccionTareaNueva(
   host.verAccionesdeTarea = !rowData.fecFin;
   host.FecIniTarea = rowData.fecInicio ? rowData.fecInicio.slice(0, 10) : '';
   host.FecFinTarea = rowData.fecFin ?? null;
-  host.numeroArchiTarea = archivo;
+  host.numeroArchiTarea = archivo != null ? Number(archivo) : null;
   callbacks.getListaTareas();
   host.veopropuestaresolu = !rowData.propuestaResolucion;
   host.tareatramiteexpedienteeditar.descripcion = rowData.descripcion;
   host.descripTarea = rowData.descripcion;
   host.idTarea = rowData.id;
-  host.numeroArchivo = archivo ?? 0;
+  host.numeroArchivo = archivo != null ? Number(archivo) : 0;
   host.tareaProcedi = rowData.tareaProcedimiento;
   host.numeroTareaTramite = rowData.numero;
   host.ejerNumExpedi = `${host.verExpediente.ejercicio}/${host.verExpediente.numero}`;

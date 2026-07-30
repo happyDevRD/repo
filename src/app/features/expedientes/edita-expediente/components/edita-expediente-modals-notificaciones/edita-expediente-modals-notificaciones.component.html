@@ -1,147 +1,173 @@
-<!-- teu -->
-
-        <!-- Modal Envío TEU -->
-    <app-modal-shell
-      modalId="EnvioTeu"
-      title="Envio T.E.U."
-      titleId="EnvioTeuLabel"
-      dialogClass="modal-xl"
-      [showFooter]="false"
-    >
-      <form modalBody #teuForm="ngForm" (ngSubmit)="handleCrearModeloTeuFichero()">
-<div class="row g-3 mb-3">
-                <div class="col-sm-4"><div class="form-floating">
-                  <input [(ngModel)]="modeloteucrear.fecSolic" class="form-control" id="fecSolic" name="fecSolic"
-                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="isFechaSolicInvalid" placeholder=" ">
-                  <label class="form-label" for="fecSolic">Fecha de Solicitud *</label>
-                  </div><div *ngIf="isFechaSolicInvalid" class="invalid-feedback">
-                    La fecha de solicitud es obligatoria
-                  </div></div>
-
-                <div class="col-sm-4"><div class="form-floating">
-                  <input [(ngModel)]="modeloteucrear.fecGener" class="form-control" id="fecGener" name="fecGener"
-                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="isFechaGenerInvalid" placeholder=" ">
-                  <label class="form-label" for="fecGener">Fecha de Generaci�n *</label>
-                  </div><div *ngIf="isFechaGenerInvalid" class="invalid-feedback">
-                    La fecha de generaci�n es obligatoria
-                  </div></div>
-                <div class="col-sm-4"><div class="form-floating">
-                  <input [(ngModel)]="modeloteucrear.fecFirma" class="form-control" id="fecFirma" name="fecFirma"
-                    type="date" max="2099-12-31" min="2023-01-01" required [class.is-invalid]="isFechaFirmaInvalid" placeholder=" ">
-                  <label class="form-label" for="fecFirma">Fecha de Firma *</label>
-                  </div><div *ngIf="isFechaFirmaInvalid" class="invalid-feedback">
-                    La fecha de firma es obligatoria
-                  </div></div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-sm-6"><div class="form-floating">
-                  <select id="materia" class="form-select" [(ngModel)]="modeloteucrear.idMater" name="materia" required>
-                    <option value="">Seleccione una materia</option>
-                    <option value="1">Agricultura y Ganader�a</option>
-                    <option value="2">Aguas</option>
-                    <option value="3">Catastro</option>
-                    <option value="4">Caza y Pesca</option>
-                    <option value="5">Consumo</option>
-                    <option value="6">Cr�dito, Banca y Seguros</option>
-                    <option value="7">Cultura y Espect�culos</option>
-                    <option value="8">Deportes</option>
-                    <option value="9">Econom�a y Comercio</option>
-                    <option value="10">Empleados P�blicos</option>
-                    <option value="11">Empleo</option>
-                    <option value="12">Energ�a</option>
-                    <option value="13">Educaci�n</option>
-                    <option value="14">Ense�anza Universitaria</option>
-                    <option value="15">Estad�sticas</option>
-                    <option value="16">Expropiaciones</option>
-                    <option value="17">Extranjer�a</option>
-                    <option value="18">Fuerzas Armadas</option>
-                    <option value="19">Hacienda</option>
-                    <option value="20">Industria y Artesan�a</option>
-                    <option value="21">Inspecci�n de Trabajo</option>
-                    <option value="22">Juego</option>
-                    <option value="23">Medio Ambiente y Sostenibilidad</option>
-                    <option value="24">Metrolog�a</option>
-                    <option value="25">Navegaci�n A�rea</option>
-                    <option value="26">Navegaci�n Mar�tima, Puertos y Marina Mercante</option>
-                    <option value="27">Notar�as</option>
-                    <option value="28">Urbanismo y Vivienda</option>
-                    <option value="29">Padr�n Municipal de Habitantes</option>
-                    <option value="30">Parimonio y Propiedades P�blicas</option>
-                    <option value="31">Propiedad Intelectual</option>
-                    <option value="32">Propiedad Industrial</option>
-                    <option value="33">Protecci�n de Datos de Car�cter</option>
-                    <option value="34">Registros de la Propiedad</option>
-                    <option value="35">Responsabilidad Patrimonial</option>
-                    <option value="36">Sanidad y Farmacia</option>
-                    <option value="37">Seguridad Ciudadana y Protecci�n Civil</option>
-                    <option value="38">Prestaciones de Seguridad Social y de Acci�n Social Mar�tima</option>
-                    <option value="39">Servicios Funerarios</option>
-                    <option value="40">Servicios Sociales</option>
-                    <option value="41">Subvenciones, Becas y otras Ayudas</option>
-                    <option value="42">Telecomunicaciones y Nuevas Tecnolog�as</option>
-                    <option value="43">Tr�fico, Circulaci�n y Seguridad Vial</option>
-                    <option value="44">Transportes Terretres</option>
-                    <option value="45">Turismo</option>
-                    <option value="46">Otras</option>
-                    <option value="47">Inscripci�n, Afiliaci�n y Recaudaci�n de la Seguridad Social</option>
-                  </select>
-                  <label class="form-label" for="materia">Materia *</label>
-                </div></div>
-
-                <div class="col-sm-6">
-                  <label for="idModel" class="form-label">Modelo *</label>
-                  <select id="idModel" class="form-select" [(ngModel)]="modeloteucrear.idModel" name="idModel" required>
-                    <option *ngFor="let listado of modeloteulistar; trackBy: trackByIdModel" [value]="listado.idModel">
-                      {{ listado.desModel }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-sm-6"><div class="form-floating">
-                  <input [(ngModel)]="modeloteucrear.procedimiento" class="form-control" id="procedimiento"
-                    name="procedimiento" type="text" placeholder=" ">
-                  <label for="procedimiento">Procedimiento </label>
-                </div></div>
-                <div class="col-sm-6"><div class="form-floating">
-                  <select [(ngModel)]="modeloteucrear.forPubli" class="form-select " id="forPublic" name="forPublic">
-                    <option value=1>En Extracto</option>
-                    <option value=2>�ntegra</option>
-                  </select>
-                  <label for="forPublic">Forma Publicaci�n </label>
-                  <br>
-                </div></div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12"><div class="form-floating">
-
-                  <input [(ngModel)]="modeloteucrear.email" class="form-control form-floating" id="email" name="email"
-                    type="text" placeholder=" ">
-                  <label for="email">Correo Electr�nico </label>
-                  <br>
-                </div></div>
-                <div class="col-sm-12"><div class="form-floating">
-                  <input [(ngModel)]="modeloteucrear.url" class="form-control " id="url" name="url" type="text" placeholder=" ">
-                  <label for="url">Url </label>
-                  <br>
-                </div></div>
-                <div class="col-3 "></div>
-                <div class="col-3 "></div>
-                <div class="col-3 text-start">
-                  <input [(ngModel)]="modeloteucrear.datPerso" id="datoperso" name="datoperso" type="checkbox">Incluir
-                  datos personales eee
-                  <input [(ngModel)]="modeloteucrear.texPlura" id="incltex" name="incltex" type="checkbox">
-                  Incluir Textos
-                  <input [(ngModel)]="modeloteucrear.incLgt" id="leygene" name="leygene" type="checkbox">Ley
-                  general tributaria
-                </div>
-              </div>
-              <div class="col-1 "></div>
-              <div class="modal-footer">
-                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
-                <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
-              </div>
-      </form>
-    </app-modal-shell>
+<!-- Modal Envío TEU -->
+<app-modal-shell
+  modalId="EnvioTeu"
+  title="Envío T.E.U."
+  titleId="EnvioTeuLabel"
+  modalClass="iflow-modal iflow-modal--fit exp-teu-modal"
+  dialogClass="modal-lg"
+  [dismissOnClose]="false"
+  (closed)="handleCancelar()">
+  <form modalBody id="formEnvioTeu" #teuForm="ngForm" (ngSubmit)="handleCrearModeloTeuFichero()">
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input [(ngModel)]="modeloteucrear.fecSolic" class="form-control" id="fecSolic" name="fecSolic"
+            type="date" max="2099-12-31" min="2023-01-01" required
+            [class.is-invalid]="isFechaSolicInvalid" placeholder=" ">
+          <label class="required-field" for="fecSolic">Fecha de solicitud</label>
+        </div>
+        <div *ngIf="isFechaSolicInvalid" class="invalid-feedback d-block">
+          La fecha de solicitud es obligatoria
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input [(ngModel)]="modeloteucrear.fecGener" class="form-control" id="fecGener" name="fecGener"
+            type="date" max="2099-12-31" min="2023-01-01" required
+            [class.is-invalid]="isFechaGenerInvalid" placeholder=" ">
+          <label class="required-field" for="fecGener">Fecha de generación</label>
+        </div>
+        <div *ngIf="isFechaGenerInvalid" class="invalid-feedback d-block">
+          La fecha de generación es obligatoria
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input [(ngModel)]="modeloteucrear.fecFirma" class="form-control" id="fecFirma" name="fecFirma"
+            type="date" max="2099-12-31" min="2023-01-01" required
+            [class.is-invalid]="isFechaFirmaInvalid" placeholder=" ">
+          <label class="required-field" for="fecFirma">Fecha de firma</label>
+        </div>
+        <div *ngIf="isFechaFirmaInvalid" class="invalid-feedback d-block">
+          La fecha de firma es obligatoria
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <select id="materia" class="form-select"
+            [class.form-select--placeholder]="!modeloteucrear.idMater"
+            [(ngModel)]="modeloteucrear.idMater" name="materia" required>
+            <option value="" disabled>Seleccione una materia</option>
+            <option value="1">Agricultura y Ganadería</option>
+            <option value="2">Aguas</option>
+            <option value="3">Catastro</option>
+            <option value="4">Caza y Pesca</option>
+            <option value="5">Consumo</option>
+            <option value="6">Crédito, Banca y Seguros</option>
+            <option value="7">Cultura y Espectáculos</option>
+            <option value="8">Deportes</option>
+            <option value="9">Economía y Comercio</option>
+            <option value="10">Empleados Públicos</option>
+            <option value="11">Empleo</option>
+            <option value="12">Energía</option>
+            <option value="13">Educación</option>
+            <option value="14">Enseñanza Universitaria</option>
+            <option value="15">Estadísticas</option>
+            <option value="16">Expropiaciones</option>
+            <option value="17">Extranjería</option>
+            <option value="18">Fuerzas Armadas</option>
+            <option value="19">Hacienda</option>
+            <option value="20">Industria y Artesanía</option>
+            <option value="21">Inspección de Trabajo</option>
+            <option value="22">Juego</option>
+            <option value="23">Medio Ambiente y Sostenibilidad</option>
+            <option value="24">Metrología</option>
+            <option value="25">Navegación Aérea</option>
+            <option value="26">Navegación Marítima, Puertos y Marina Mercante</option>
+            <option value="27">Notarías</option>
+            <option value="28">Urbanismo y Vivienda</option>
+            <option value="29">Padrón Municipal de Habitantes</option>
+            <option value="30">Patrimonio y Propiedades Públicas</option>
+            <option value="31">Propiedad Intelectual</option>
+            <option value="32">Propiedad Industrial</option>
+            <option value="33">Protección de Datos de Carácter</option>
+            <option value="34">Registros de la Propiedad</option>
+            <option value="35">Responsabilidad Patrimonial</option>
+            <option value="36">Sanidad y Farmacia</option>
+            <option value="37">Seguridad Ciudadana y Protección Civil</option>
+            <option value="38">Prestaciones de Seguridad Social y de Acción Social Marítima</option>
+            <option value="39">Servicios Funerarios</option>
+            <option value="40">Servicios Sociales</option>
+            <option value="41">Subvenciones, Becas y otras Ayudas</option>
+            <option value="42">Telecomunicaciones y Nuevas Tecnologías</option>
+            <option value="43">Tráfico, Circulación y Seguridad Vial</option>
+            <option value="44">Transportes Terrestres</option>
+            <option value="45">Turismo</option>
+            <option value="46">Otras</option>
+            <option value="47">Inscripción, Afiliación y Recaudación de la Seguridad Social</option>
+          </select>
+          <label class="required-field" for="materia">Materia</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <select id="idModel" class="form-select"
+            [class.form-select--placeholder]="!modeloteucrear.idModel"
+            [(ngModel)]="modeloteucrear.idModel" name="idModel" required>
+            <option value="" disabled>Seleccione un modelo</option>
+            <option *ngFor="let listado of modeloteulistar; trackBy: trackByIdModel" [value]="listado.idModel">
+              {{ listado.desModel }}
+            </option>
+          </select>
+          <label class="required-field" for="idModel">Modelo</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input [(ngModel)]="modeloteucrear.procedimiento" class="form-control" id="procedimientoTeu"
+            name="procedimiento" type="text" placeholder=" ">
+          <label for="procedimientoTeu">Procedimiento</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <select [(ngModel)]="modeloteucrear.forPubli"
+            class="form-select"
+            [class.form-select--placeholder]="modeloteucrear.forPubli == null"
+            id="forPublic" name="forPublic">
+            <option [ngValue]="null" disabled>Seleccione forma</option>
+            <option [ngValue]="1">En extracto</option>
+            <option [ngValue]="2">Íntegra</option>
+          </select>
+          <label for="forPublic">Forma publicación</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-floating">
+          <input [(ngModel)]="modeloteucrear.email" class="form-control" id="emailTeu" name="email"
+            type="email" placeholder=" ">
+          <label for="emailTeu">Correo electrónico</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-floating">
+          <input [(ngModel)]="modeloteucrear.url" class="form-control" id="urlTeu" name="url" type="text" placeholder=" ">
+          <label for="urlTeu">URL</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" [(ngModel)]="modeloteucrear.datPerso" id="datoperso"
+            name="datoperso" type="checkbox">
+          <label class="form-check-label" for="datoperso">Incluir datos personales</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" [(ngModel)]="modeloteucrear.texPlura" id="incltex"
+            name="incltex" type="checkbox">
+          <label class="form-check-label" for="incltex">Incluir textos</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" [(ngModel)]="modeloteucrear.incLgt" id="leygene"
+            name="leygene" type="checkbox">
+          <label class="form-check-label" for="leygene">Ley general tributaria</label>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      (click)="handleCancelar()">Cancelar</button>
+    <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+      form="formEnvioTeu">Guardar</button>
+  </div>
+</app-modal-shell>

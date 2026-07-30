@@ -13,7 +13,7 @@ import { SolicitudesPersonaFacade } from './solicitudes-persona.facade';
 import { SolicitudesDocumentosFacade } from './solicitudes-documentos.facade';
 import { applyRepresentanteToCreate, applyRepresentanteToEdit } from '../helpers/solicitudes-representante.helper';
 import { formatearFechaDDMMYYYY } from '../../../core/helper/fecha-legacy.helper';
-import { DocumentosListar } from '../models';
+import { DocumentosListar, SolicitudListar, SolicitudPersonaEntidadResumen } from '../models';
 
 export interface SolicitudesSolicitudHost extends SolicitudesGridHost {
   creasolicitud: CreaSolicitudNuevo;
@@ -23,7 +23,7 @@ export interface SolicitudesSolicitudHost extends SolicitudesGridHost {
   representanteexplistar: RepresentanteExpLIstar;
   seleccionoRepre: string | String;
   idsolicitud: number;
-  ejerNumeroSolicitud: string;
+  ejerNumeroSolicitud: string | number;
   isAsignando: boolean;
   isRechazando: boolean;
   isModificandoSolicitud: boolean;
@@ -53,8 +53,8 @@ export interface SolicitudesSolicitudHost extends SolicitudesGridHost {
  */
 export interface SolicitudesSeleccionHost extends SolicitudesSolicitudHost {
   direccionRepresentante: string;
-  idhisDocum: string;
-  iddocum: string;
+  idhisDocum: string | number;
+  iddocum: string | number;
   registrodocumento: RegistroDocumento;
   VeoRegDoc: boolean;
   modificoSolicitud: boolean;
@@ -62,8 +62,8 @@ export interface SolicitudesSeleccionHost extends SolicitudesSolicitudHost {
   FIniSolicitud: unknown;
   CambioFormatoFecha: string;
   FechaSistema: unknown;
-  idRepre: string;
-  idHisRepre: string;
+  idRepre: string | number | null;
+  idHisRepre: string | number | null;
   NumeroRegistroSolicitud: unknown;
   personaFacade: SolicitudesPersonaFacade;
   usuarioSolicitud: string;
@@ -124,8 +124,8 @@ export class SolicitudesSolicitudFacade {
   }
 
   obtenerFormaNotificacionInteresado(host: SolicitudesSolicitudHost): void {
-    const persona = host.versolicitud?.personaEntidad as any;
-    const interesado = Array.isArray(persona) ? persona[0] : persona;
+    const persona = host.versolicitud?.personaEntidad
+    const interesado = Array.isArray(persona) ? persona[0] : persona
     if (!interesado) {
       host.nuevoexpediente.formaNotifi = 0;
       return;
@@ -434,12 +434,12 @@ export class SolicitudesSolicitudFacade {
    * persona/interesado (delegados en `SolicitudesPersonaFacade`), las fechas
    * formateadas y el estado de los indicadores de la pantalla.
    */
-  seleccionarSolicitud(host: SolicitudesSeleccionHost, rowData: any): void {
-    host.direccionRepresentante = rowData.dirRepre;
+  seleccionarSolicitud(host: SolicitudesSeleccionHost, rowData: SolicitudListar): void {
+    host.direccionRepresentante = rowData.dirRepre ?? '';
 
     if (rowData.idHisDocum) {
       host.idhisDocum = rowData.idHisDocum;
-      host.iddocum = rowData.idDocum;
+      host.iddocum = rowData.idDocum ?? '';
       this.rdDocumentoApi.getRegistroDocVer(rowData.idHisDocum).pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe(
@@ -468,18 +468,18 @@ export class SolicitudesSolicitudFacade {
     host.idHisRepre = rowData.idHisRepre;
     host.NumeroRegistroSolicitud = rowData.ejeNumRegis;
     // rowData.personaEntidad puede venir null cuando la solicitud aún no tiene interesado asociado.
-    const personaEntidad = rowData.personaEntidad ?? {};
-    host.personaFacade.InteresadoSolicitud = personaEntidad.desPerEntid;
-    host.personaFacade.dirPosta = personaEntidad.dirPosta;
-    host.personaFacade.codPosta = personaEntidad.codPosta;
-    host.personaFacade.provincia = personaEntidad.provincia;
-    host.personaFacade.Municipio = personaEntidad.municipio;
+    const personaEntidad: SolicitudPersonaEntidadResumen = rowData.personaEntidad ?? {};
+    host.personaFacade.InteresadoSolicitud = personaEntidad.desPerEntid ?? '';
+    host.personaFacade.dirPosta = personaEntidad.dirPosta ?? '';
+    host.personaFacade.codPosta = personaEntidad.codPosta != null ? String(personaEntidad.codPosta) : '';
+    host.personaFacade.provincia = personaEntidad.provincia ?? '';
+    host.personaFacade.Municipio = personaEntidad.municipio ?? '';
     host.usuarioSolicitud = rowData.usuario;
     host.asuntoSolicitud = rowData.asunto;
-    host.personaFacade.representanteSolicitud = rowData.nomRepre;
+    host.personaFacade.representanteSolicitud = rowData.nomRepre ?? '';
     host.persoEntiDocu = personaEntidad.numDocum;
 
-    host.editasolicitud.dni = personaEntidad.numDocum;
+    host.editasolicitud.dni = personaEntidad.numDocum ?? '';
     host.editasolicitud.asunto = rowData.asunto;
     host.editasolicitud.fecInicio = rowData.fecInicio;
     host.editasolicitud.estado = rowData.estado;
@@ -513,7 +513,7 @@ export class SolicitudesSolicitudFacade {
     host.edicion = true;
     host.idsolicitud = rowData.id;
     host.expsolicitud = this.formatExpedienteRef(rowData.expediente);
-    host.idexpedienteAsoc = rowData.idExpediente;
+    host.idexpedienteAsoc = Number(rowData.idExpediente ?? 0);
 
     if (host.idexpedienteAsoc) {
       host.activainiciaExpedi = true;
@@ -525,7 +525,7 @@ export class SolicitudesSolicitudFacade {
     this.documentosFacade.cargarLista(host, rowData.id);
 
     this.versolici(host, rowData.id);
-    host.getExpediente(rowData.idexpediente);
+    host.getExpediente(Number(rowData.idExpediente ?? 0));
   }
 
   /** Referencia legible `ejercicio/numero` (el API envía el expediente como objeto anidado). */

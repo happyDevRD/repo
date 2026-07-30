@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types';
 
 export const TAREA_GRID_DATA_FIELDS = [
   { name: 'numero', type: 'number' },
@@ -75,6 +76,6 @@ export function buildTareaGridSource(
 export function createTareaGridAdapter(
   idTramite: number,
   options?: TareaGridSourceOptions,
-): any {
+): IflowGridSource {
   return new jqx.dataAdapter(buildTareaGridSource(idTramite, options));
 }

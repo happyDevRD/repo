@@ -4,14 +4,34 @@ export class Expedientes {
 }
 
 
+/** Procedimiento embebido en filas del listado de expedientes. */
+export interface ExpedienteListarProcedimiento {
+  id: number | string
+  descripcion?: string
+  departamento?: {
+    idOrgEleme?: string | number
+    idOrgan?: string | number
+    cadEleme?: string
+    desEleme?: string
+    accesible?: string | boolean
+    organo?: string
+    usuContr?: string
+    idOrgElePadre?: string | number
+    fecContr?: string
+  }
+  codigoSia?: string
+  usuContr?: string
+  fecContr?: string
+}
+
 export class ExpedienteListar {
   id!: number;
   ejercicio!: number;
   estado!: string;
   fase!: string;
-  fecArchivo!: any;
-  fecCancelacion!: any
-  fecFin!: any;
+  fecArchivo!: string | null;
+  fecCancelacion!: string | null
+  fecFin!: string | null;
   fecInicio!: string;
   formaApertura!: string
   numero!: number;
@@ -20,10 +40,13 @@ export class ExpedienteListar {
   instructor!: string;
   solicitud!: string;
   usuContr!: string;
-  fecContr!: any;
-  forNotif!: any;
+  fecContr!: string | null;
+  forNotif!: number | string | null;
+  /** Presente en filas del grid (no siempre en el DTO base). */
+  email?: string | null;
+  idHisDocum?: number | string | null;
   insideEstado?: string;
-  procedimiento: any = [{
+  procedimiento: ExpedienteListarProcedimiento = {
     id: "",
     descripcion: "",
     departamento: {
@@ -41,73 +64,71 @@ export class ExpedienteListar {
     usuContr: "",
     fecContr: ""
 
-  }]
+  }
 
 }
 
 export class VerExpedientesInstructor {
-  id: any;
-  ejercicio: String;
-  estado: String;
-  fase: String;
-  fecArchivo: String;
-  fecCancelacion: String;
-  fecFin: String;
-  fecInicio: String;
-  formaApertura: String;
-  numero: String;
-  titulo: String;
-  departamento: String;
-  instructor: String;
-  procedimiento: String;
-  solicitud: String;
-  idPerso: String;
-  idHisPerso: String;
-  idRepre: String;
-  idHisRepre: String;
-  idDocum: String;
-  idHisDocum: String;
-  archivo: String;
-  usuContr: String;
-  fecContr: String;
-
-
+  id!: number | string;
+  ejercicio!: string;
+  estado!: string;
+  fase!: string;
+  fecArchivo!: string | null;
+  fecCancelacion!: string | null;
+  fecFin!: string | null;
+  fecInicio!: string;
+  formaApertura!: string;
+  numero!: string;
+  titulo!: string;
+  departamento!: string;
+  instructor!: string;
+  procedimiento!: string;
+  solicitud!: string;
+  idPerso!: string;
+  idHisPerso!: string;
+  idRepre!: string;
+  idHisRepre!: string;
+  idDocum!: string;
+  idHisDocum!: string;
+  archivo!: string;
+  usuContr!: string;
+  fecContr!: string;
 }
 
 export class TareaTramiteExpporExpedi {
-  id: any;
-  descripcion: String;
-  fecFin: String;
-  fecInicio: String;
-  firmante: String;
-  numero: any;
-  visible: any;
-  archivo: any;
-  tareaProcedimiento: any;
-  tramite: any;
-  usuario: String;
-  notificacion: any;
-  firmado: any;
-  propuestaResolucion: any;
-  idHisDocum: any;
-  idDocum: any;
-  tramitador: any;
-  usuContr: String;
-  numRegis: any;
-  color: String;
-  fecPlazo: String;
-  tipAnexo: any;
-  docAport: any;
-  tipDocEni: String;
-  documentacion: any;
-  nombreArchivo: String;
-  ejeNumNotif: any;
-  idAnunc: any;
-  desTramite: String;
-  ejeExped: any;
-  numExped: any;
-  titulo: any;
-  fecFinPlazo: String;
+  id!: number;
+  descripcion!: string;
+  fecFin!: string | null;
+  fecInicio!: string | null;
+  firmante!: string | number | null;
+  numero!: number;
+  visible!: boolean | number | null;
+  archivo!: number | string | null;
+  tareaProcedimiento!: number | string | null;
+  tramite!: number | string | null;
+  usuario!: string;
+  notificacion!: number | string | null;
+  firmado!: number | boolean | null;
+  propuestaResolucion!: string | number | null;
+  idHisDocum!: number | string | null;
+  idDocum!: number | string | null;
+  tramitador!: number | string | null;
+  usuContr!: string;
+  numRegis!: string | number | null;
+  color!: string;
+  fecPlazo!: string | null;
+  tipAnexo!: number | string | null;
+  docAport!: number | string | null;
+  tipDocEni!: string;
+  documentacion!: number | string | null;
+  nombreArchivo!: string;
+  ejeNumNotif!: number | string | null;
+  idAnunc!: number | string | null;
+  desTramite!: string;
+  ejeExped!: number | string | null;
+  numExped!: number | string | null;
+  titulo!: string;
+  fecFinPlazo!: string | null;
 }
 
 export class VerTareaTramiteExpporUsuario {
@@ -123,23 +144,23 @@ export class VerTareaTramiteExpporUsuario {
   tareaProcedimiento: string;
   tramite: string;
   usuario: string;
-  notificacion: any;
-  firmado: number;
-  propuestaResolucion: any;
-  idHisDocum: any;
-  idDocum: any;
-  tramitador: any;
-  usuContr: string;
-  numRegis: any;
-  color: string;
-  fecPlazo: string;
-  tipAnexo: number;
-  docAport: any;
-  tipDocEni: string;
-  documentacion: number;
-  nombreArchivo: string;
-  ejeNumNotif: any;
-  idAnunc: number;
+  notificacion!: number | string | null;
+  firmado!: number;
+  propuestaResolucion!: string | number | null;
+  idHisDocum!: number | string | null;
+  idDocum!: number | string | null;
+  tramitador!: number | string | null;
+  usuContr!: string;
+  numRegis!: string | number | null;
+  color!: string;
+  fecPlazo!: string;
+  tipAnexo!: number;
+  docAport!: number | string | null;
+  tipDocEni!: string;
+  documentacion!: number;
+  nombreArchivo!: string;
+  ejeNumNotif!: number | string | null;
+  idAnunc!: number;
   desTramite: string;
   ejeExped: string;
   numExped: number;
@@ -155,23 +176,22 @@ export class VerExpedienteOLD {
   ejercicio!: number;
   estado!: string
   fase!: string
-  fecArchivo!: any;
-  fecCancelacion!: any;
-  fecFin!: any;
+  fecArchivo!: string | null;
+  fecCancelacion!: string | null;
+  fecFin!: string | null;
   fecInicio!: string;
   formaApertura!: string;
   numero!: number;
   titulo!: string;
   departamento!: number;
   instructor!: string;
-  solicitud!: any;
-  usuContr!: any;
-  fecContr!: any;
+  solicitud!: number | string | null;
+  usuContr!: string;
+  fecContr!: string | null;
   idProc!: number;
-  idSolic!: any
-  personaEntidad!: any;
+  idSolic!: number | string | null
+  personaEntidad!: ExpedientePersonaEntidadResumen | null;
   procedimiento!: number;
-
 }
 
 export class ModeloTeuListar {
@@ -198,7 +218,8 @@ export class ModeloTeuListar {
 }
 
 export class ModeloTeuCrear {
-  fecGener!: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecGener!: string;
   datPerso!: boolean;
   idMater!: string;
   descripcion!: string;
@@ -210,8 +231,10 @@ export class ModeloTeuCrear {
   incLgt!: boolean;
   texlegal!: string;
   texPlura!: boolean;
-  fecSolic!: Date;
-  fecFirma!: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecSolic!: string;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecFirma!: string;
   firmante!: string
 
 }
@@ -227,27 +250,42 @@ export class TemaDocumentoListar {
   fecContr!: Date
 }
 
+/** Persona embebida en ver/editar expediente. */
+export interface ExpedientePersonaEntidadResumen {
+  idPerso?: number | string
+  idHisPerso?: number | string
+  numDocum?: string
+  nombre?: string
+  apellido1?: string
+  apellido2?: string
+  desPerEntid?: string
+  codPosta?: string | number
+  dirPosta?: string
+  municipio?: string
+  provincia?: string
+}
+
 export class VerExpediente {
 
   id!: number;
   ejercicio!: number;
   estado!: string
   fase!: string
-  fecArchivo!: any;
-  fecCancelacion!: any;
-  fecFin!: any;
+  fecArchivo!: string | null;
+  fecCancelacion!: string | null;
+  fecFin!: string | null;
   fecInicio!: string;
   formaApertura!: string;
   numero!: number;
   titulo!: string;
   departamento!: number;
   instructor!: string;
-  solicitud!: any;
-  usuContr!: any;
-  fecContr!: any;
+  solicitud!: number | string | null;
+  usuContr!: string;
+  fecContr!: string | null;
   idProc!: number;
-  idSolic!: any;
-  forNotif!: any;
+  idSolic!: number | string | null;
+  forNotif!: number | string | null;
   email!: string;
   forNotifTexto!: string;
   nomRepre!: string;
@@ -265,7 +303,7 @@ export class VerExpediente {
   codigoPostal!: string;
   provincia!: string;
   municipio!: string;
-  personaEntidad: any = {
+  personaEntidad: ExpedientePersonaEntidadResumen = {
     idPerso: "",
     idHisPerso: "",
     numDocum: "",
@@ -276,7 +314,7 @@ export class VerExpediente {
     municipio: "",
     provincia: ""
   };
-  procedimiento: any = {
+  procedimiento: ExpedienteListarProcedimiento = {
     id: "",
     descripcion: "",
     departamento: {
@@ -337,16 +375,16 @@ export class EditExpediente {
   procedimiento!: string;
   estado!: string;
   fase!: string;
-  fecArchivo!: Date;
-  fecCancelacion!: Date;
-  fecInicio!: Date;
-  fecFin!: Date;
+  fecArchivo!: string | null;
+  fecCancelacion!: string | null;
+  fecInicio!: string;
+  fecFin!: string | null;
   forma_apertura!: string;
   titulo!: string;
-  dni!: any;
-  forNotif!: any;
+  dni!: string | null;
+  forNotif!: number | string | null;
   forNotif2!: string;
-  idPerso!: any;
+  idPerso!: number | string | null;
   email!: string;
 
 
@@ -369,23 +407,24 @@ export class CrearGenerarSalida {
 export class NuevoExpediente {
   estado!: string;
   fase!: string;
-  fechaInicio!: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fechaInicio!: string;
   forma_apertura!: string;
   titulo!: string;
-  idHisPerso!: any;
-  idPerso!: any;
+  idHisPerso!: number | string | null;
+  idPerso!: number | string | null;
   instructor!: string;
-  representante!: any;
+  representante!: number | string | null;
   procedimiento!: string;
   usuario!: string;
-  ejercicio!: any;
+  ejercicio!: number | string;
   /** Devuelto por expediente/crear tras el alta. */
   numero!: number;
   email!: string;
   formaNotifi!: number;
   idsolicitud!: number;
-  idHisRepre!: any;
-  idRepre!: any;
+  idHisRepre!: number | string | null;
+  idRepre!: number | string | null;
   asunto!: string;
   numDocumRepre!: string;
   nombreRepre!: string;
@@ -424,16 +463,16 @@ export class CrearTramiteExp {
 }
 
 export class EditarTramiteExp {
-  id!: Number;
+  id!: number;
   descripcion!: string;
   fase!: string;
-  fase2!: any;
+  fase2!: string | null;
   fecTramite!: string;
   numero!: number;
-  expediente!: Number;
+  expediente!: number;
   usuContr!: string;
-  fecContr!: Date;
-  puente!: any;
+  fecContr!: Date | string | null;
+  puente!: string | number | null;
   varios!: string
 }
 
@@ -454,7 +493,7 @@ export class Procedimiento {
   id!: number;
   descripcion!: string;
   codigoSia!: string;
-  departamento: any = [
+  departamento: Record<string, unknown>[] = [
     {
       idOrgEleme: '',
       idOrgan: '',
@@ -467,56 +506,46 @@ export class Procedimiento {
       fecContr: ''
     }
   ]
-
-
 }
 
 export class ListarInteresados {
   id!: number;
   idHisPerso!: number;
   idPerso!: number;
-  idHisRepre!: number;
-  idRepre!: any;
-  expediente!: any;
-  ejeExped!: any;
-  numExped!: any;
-  principal!: any;
-  tipForNotif!: any;
-  forNotif!: any;
-  emailNotif!: any;
-  idHisDomNotif!: any;
-  idDomNotif!: any;
-  nomInter!: any;
-  nomRepre!: any;
-  dirInter!: any;
-  dirRepre!: any;
-  numDocumInter!: any;
-  numDocumRepre!: any;
-  desProviInter!: any;
-  desMunicInter!: any;
-  desProviRepre!: any;
-  desMunicRepre!: any;
-  perEntid: any = [{
+  idHisRepre!: number | null;
+  idRepre!: number | null;
+  expediente!: number | string | null;
+  ejeExped!: number | string | null;
+  numExped!: number | string | null;
+  principal!: boolean | number | null;
+  tipForNotif!: number | null;
+  forNotif!: number | string | null;
+  emailNotif!: string | null;
+  idHisDomNotif!: number | null;
+  idDomNotif!: number | null;
+  nomInter!: string;
+  nomRepre!: string;
+  dirInter!: string;
+  dirRepre!: string;
+  numDocumInter!: string;
+  numDocumRepre!: string;
+  desProviInter!: string;
+  desMunicInter!: string;
+  desProviRepre!: string;
+  desMunicRepre!: string;
+  perEntid: ExpedientePersonaEntidadResumen[] = [{
     idPerso: "",
     idHisPerso: "",
     numDocum: "",
-    tipPerso: "",
     nombre: "",
-    particula1: "",
     apellido1: "",
-    particula2: "",
     apellido2: "",
-    razSocia: "",
-    razSocReduc: "",
     desPerEntid: "",
-    localidad: "",
     codPosta: "",
     dirPosta: "",
     municipio: "",
     provincia: "",
   }]
-
-
 }
 
 export class DescargaArchivoTarea {
@@ -541,44 +570,44 @@ export class CreaTramitador {
 export class CrearInteresado {
   estado!: string;
   fase!: string;
-  fechaInicio!: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fechaInicio!: string;
   forma_apertura!: string;
   titulo!: string;
-  idHisPerso!: any;
-  idPerso!: any;
+  idHisPerso!: number | string | null;
+  idPerso!: number | string | null;
   instructor!: string;
   procedimiento!: string;
   usuario!: string;
-  ejercicio!: any;
+  ejercicio!: number | string;
   email!: string;
   formaNotifi!: number;
   idsolicitud!: number;
   idexpediente!: number;
   tipForNotif!: number;
-  idHisRepre: any;
-  idPersoRepre: any
+  idHisRepre: number | string | null;
+  idPersoRepre: number | string | null
 }
 
 
 export class CrearRepresentante {
-  idPerso!: any;
-  idHisPerso!: any;
-  numDocum!: number;
+  idPerso!: number | string;
+  idHisPerso!: number | string;
+  numDocum!: number | string;
   tipPerso!: string;
   nombre!: string;
-  particula1!: any;
+  particula1!: string | null;
   apellido1!: string;
   particula2!: string;
   apellido2!: string;
-  razSocia!: any;
-  razSocReduc!: any;
+  razSocia!: string | null;
+  razSocReduc!: string | null;
   desPerEntid!: string;
-  localidad: string;
-  codPosta!: number;
+  localidad!: string;
+  codPosta!: number | string | null;
   dirPosta!: string;
   municipio!: string;
   provincia!: string
-
 }
 
 export class CrearPersonaEntidad {
@@ -604,22 +633,16 @@ export class CrearPersonaEntidad {
 export class ListarInteresadosOLD {
 
   id!: number;
-  idHisPerso!: any;
-  idPerso!: any;
-  perEntid: any = [{
+  idHisPerso!: number | string;
+  idPerso!: number | string;
+  perEntid: ExpedientePersonaEntidadResumen[] = [{
     idPerso: "",
     idHisPerso: "",
     numDocum: "",
-    tipPerso: "",
     nombre: "",
-    particula1: "",
     apellido1: "",
-    particula2: "",
     apellido2: "",
-    razSocia: "",
-    razSocReduc: "",
     desPerEntid: "",
-    localidad: "",
     codPosta: "",
     dirPosta: "",
     municipio: "",
@@ -643,21 +666,19 @@ export class TareaTramiteExpedienteUsuarioListar {
   descripcion!: string;
   fecFin!: string;
   fecInicio!: string;
-  firmante!: any;
+  firmante!: string | number | null;
   numero!: number;
   visible!: boolean;
-  archivo!: any;
+  archivo!: number | string | null;
   tareaProcedimiento!: number;
   tramite!: number;
   usuario!: string;
-  propuestaResolucion!: any;
+  propuestaResolucion!: string | null;
   id_His_Docum!: number;
   idDocum!: number;
   tramitador!: number;
   usuContr!: string;
-  fecContr!: Date;
-
-
+  fecContr!: Date | string | null;
 }
 
 export class TareaTramiteExpedienteListar {
@@ -665,21 +686,20 @@ export class TareaTramiteExpedienteListar {
   descripcion!: string;
   fecFin!: string;
   fecInicio!: string;
-  firmante!: any;
+  firmante!: string | number | null;
   numero!: number;
   visible!: boolean;
-  archivo!: any;
+  archivo!: number | string | null;
   tareaProcedimiento!: number;
   tramite!: number;
   usuario!: string;
-  propuestaResolucion!: any;
+  propuestaResolucion!: string | null;
   id_His_Docum!: number;
   idDocum!: number;
   tramitador!: number;
   usuContr!: string;
-  fecContr!: Date;
+  fecContr!: Date | string | null;
   numRegis!: string
-
 }
 
 export class ArchivoFirmadoEF {
@@ -693,22 +713,25 @@ export class ArchivoFirmantes {
 
   numDocum!: string;
   desPerso!: string;
-  idHisPerso!: any
-  idPerso!: any;
+  idHisPerso!: number | string | null
+  idPerso!: number | string | null;
   cargo!: string;
 }
 
 export class InsertaBolsaCrear {
   prioridad!: string;
   tipSesion!: number;
-  fecAlta!: Date;
-  fecPrefe!: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecAlta!: string;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecPrefe!: string;
   extracto!: string;
   observaciones!: string;
   expMotiv!: string;
   refExped!: string;
   usuContr!: string;
-  fecMaxResol!: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecMaxResol!: string;
   tipPunto!: number;
   estado!: number;
   idOrgEleme!: string;
@@ -717,94 +740,99 @@ export class InsertaBolsaCrear {
 
 
 export class CrearTareaTramiteExp {
-  descripcion!: any;
-  fecFin!: Date;
-  fecInicio!: Date;
-  firmante!: any;
+  descripcion!: string;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecFin!: string | null;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecInicio!: string;
+  firmante!: string | number | null;
   numero!: number;
-  numRegis!: any;
+  numRegis!: string | number | null;
   visible!: boolean;
-  archivo!: any;
+  archivo!: number | string | null;
   tareaProcedimiento!: number;
   tramite!: number;
-  usuario!: any;
-  propuestaResolucion!: any;
+  usuario!: string;
+  propuestaResolucion!: string | null;
   id_His_Docum!: number;
   idDocum!: number;
   tramitador!: number;
   usuContr!: string;
-  fecContr!: Date;
-  descrip!: any;
-
-
+  /** ISO `YYYY-MM-DD`. */
+  fecContr!: string;
+  descrip!: string | null;
 }
 
 export class TareaTramiteExpedienteCrear {
 
   descripcion!: string;
-  fecFin!: Date;
-  fecInicio!: Date;
-  firmante!: any;
+  fecFin!: string | null;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecInicio!: string;
+  firmante!: string | number | null;
   numero!: number;
   numRegis!: string;
   visible!: boolean;
-  archivo!: any;
+  archivo?: number | string | null;
   tareaProcedimiento!: number;
   tramite!: number;
   usuario!: string;
-  propuestaResolucion!: any;
+  propuestaResolucion!: string | null;
   id_His_Docum!: number;
   idDocum!: number;
   tramitador!: number;
   usuContr!: string;
-  fecContr!: Date;
-  descrip!: any;
-  anexo!: any;
-  documAportada!: any;
-  tipoDocumEni!: any;
-  documentacion!: any;
+  /** ISO `YYYY-MM-DD`. */
+  fecContr!: string;
+  descrip!: string | null;
+  anexo!: string | number | null;
+  documAportada!: string | number | null;
+  tipoDocumEni!: string | number | null;
+  documentacion!: string | number | null;
 }
 
 export class TareaTramiteExpedienteEditar {
 
   descripcion!: string;
-  fecFin!: Date;
-  fecInicio!: Date;
-  firmante!: any;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecFin!: string | null;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecInicio!: string;
+  firmante!: string | number | null;
   numero!: number;
   visible!: boolean;
-  archivo!: any;
+  archivo!: number | string | null;
   tareaProcedimiento!: number;
   tramite!: number;
   usuario!: string;
-  propuestaResolucion!: any;
+  propuestaResolucion!: string | null;
   id_His_Docum!: number;
   idDocum!: number;
   tramitador!: number;
   usuContr!: string;
-  fecContr!: Date;
-  anexo!: any;
-  documAportada!: any;
-  tipoDocumEni!: any;
-  documentacion!: any;
-
+  /** ISO `YYYY-MM-DD`. */
+  fecContr!: string;
+  anexo!: string | number | null;
+  documAportada!: string | number | null;
+  tipoDocumEni!: string | number | null;
+  documentacion!: string | number | null;
 }
 
 export class RepresentanteExpLIstar {
-  idPerso!: any;
-  idHisPerso!: any;
-  numDocum!: number;
+  idPerso!: number | string | null;
+  idHisPerso!: number | string | null;
+  numDocum!: number | string;
   tipPerso!: string;
   nombre!: string;
-  particula1!: any;
+  particula1!: string | null;
   apellido1!: string;
   particula2!: string;
   apellido2!: string;
-  razSocia!: any;
-  razSocReduc!: any;
+  razSocia!: string | null;
+  razSocReduc!: string | null;
   desPerEntid!: string;
-  localidad: string;
-  codPosta!: number;
+  localidad!: string;
+  codPosta!: number | string | null;
   dirPosta!: string;
   municipio!: string;
   provincia!: string
@@ -836,13 +864,13 @@ export class CrearNotificacion {
   idPerso!: number;
   situacion!: number;
   motNotif!: string;
-  receptor!: number;
+  receptor!: number | string;
   numBop!: number;
   bop: number | null = null;
   fecEmiBop!: Date | string | null;
   fecPubBop!: Date | string | null;
-  notificador!: number;
-  notificador2!: number;
+  notificador!: number | string;
+  notificador2!: number | string;
   codProvi!: number;
   codMunic!: number;
   tipVial!: string;
@@ -895,13 +923,11 @@ export class NotificadorListar {
 
   notificador!: number;
   descripcion!: string;
-  idHisPerso!: any;
-  idPerso!: any;
-  idOrgEleme!: any;
+  idHisPerso!: number | string | null;
+  idPerso!: number | string | null;
+  idOrgEleme!: number | string | null;
   usuContr!: string;
-  fecContr!: Date
-
-
+  fecContr!: Date | string | null
 }
 
 export class LeerNotificacion {
@@ -959,24 +985,25 @@ export class LeerNotificacion {
 
 export class EditarNotificacion {
   idNotif!: number;
-  personaEntidad!: any;
+  personaEntidad!: PersonaEntidadDto | null;
   desNotificador!: string;
   desSituacion!: string;
   desMotNotif!: string;
   ejeNotif!: number;
   numNotif!: number;
-  fecNotif!: Date;
-  fecRecNotif!: Date;
+  /** ISO `YYYY-MM-DD` o datetime del API. */
+  fecNotif!: Date | string;
+  fecRecNotif!: Date | string | null;
   idHisPerso!: number;
   idPerso!: number;
-  situacion!: string;
-  motNotif!: string;
-  receptor!: string;
+  situacion!: string | number;
+  motNotif!: string | number;
+  receptor!: string | number | null;
   numBop!: number;
-  bop: any;
-  fecEmiBop!: Date;
-  fecPubBop!: Date;
-  notificador!: any;
+  bop: number | null = null;
+  fecEmiBop!: Date | string | null;
+  fecPubBop!: Date | string | null;
+  notificador!: number | string | null;
   codProvi!: number;
   codMunic!: number;
   tipVial!: string;
@@ -992,20 +1019,19 @@ export class EditarNotificacion {
   localidad!: string;
   domicilio!: string;
   codPosta!: number;
-  fecArchi!: Date;
-  ejeExped!: any;
-  numExped!: string;
+  fecArchi!: Date | string | null;
+  ejeExped!: number | string | null;
+  numExped!: number | string;
   observacion!: string;
-  fecRegistSalid!: Date;
-  numRegisSalid!: number;
-  fecEnvio!: Date;
-  forNotif!: any;
-  fecCaduc!: Date;
-  numEnvioTeu!: any;
-  codArchi!: any;
-  codArchiAcuse!: any;
+  fecRegistSalid!: Date | string | null;
+  numRegisSalid!: number | null;
+  fecEnvio!: Date | string | null;
+  forNotif!: number | null;
+  fecCaduc!: Date | string | null;
+  numEnvioTeu!: number | string | null;
+  codArchi!: number | string | null;
+  codArchiAcuse!: number | string | null;
   usuContr!: string
-
 }
 
 
@@ -1036,13 +1062,15 @@ export class CrearTablonAnuncio {
 
   idOrgEleme: string;
 
-  tipAnunc: any;
+  tipAnunc: number | string | null;
 
   desAnunc: string;
 
-  fecDesde: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecDesde: string;
 
-  fecHasta: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecHasta: string;
 
 
 }
@@ -1065,7 +1093,7 @@ export class Atributosleer {
 
 export class AtributosModificar {
   etiGruAtrib: string;
-  idExped: any;
+  idExped: number | string;
   idGrupo: number;
   valor: string;
 
@@ -1073,9 +1101,9 @@ export class AtributosModificar {
 }
 
 export class RegistroDocumento {
-  ejeRegis: any;
+  ejeRegis: number | string;
   numRegis: number;
-  fecRegis: any;
+  fecRegis: string | null;
   extracto: string;
 
 }

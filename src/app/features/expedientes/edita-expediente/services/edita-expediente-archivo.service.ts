@@ -5,6 +5,11 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from '../../../../core/service/notification.service';
 
+/** Host mínimo para asignar el id de archivo subido (evita acoplar el modelo completo). */
+export interface ArchivoTareaHost {
+  archivo?: number | string | null
+}
+
 export interface SubirArchivoParams {
   base64code: string;
   name: string;
@@ -18,8 +23,8 @@ export interface SubirArchivoHost {
   name?: string;
   archivoSubidaEnProgreso: boolean;
   identificadorFicheroSubido?: number;
-  tareatramiteexpedienteeditar: { archivo?: number };
-  tareatramiteexpedientecrear: { archivo?: number };
+  tareatramiteexpedienteeditar: ArchivoTareaHost;
+  tareatramiteexpedientecrear: ArchivoTareaHost;
   user: string | null;
   verExpediente?: { ejercicio?: number; numero?: number };
 }

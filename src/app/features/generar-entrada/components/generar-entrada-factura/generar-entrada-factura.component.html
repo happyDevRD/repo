@@ -3,9 +3,16 @@
 
       <div class="row g-3">
         <div class="col-md-8 mb-3"><div class="form-floating">
-          <select class="form-select" id="contabilidad" [(ngModel)]="ge.factura.idConta" name="idConta" [required]="ge.registrarFactura">
-            <option [ngValue]="null">-- Seleccione --</option>
-            <option *ngFor="let conta of ge.contabilidades" [value]="conta.idConta">{{ conta.rotConta }}</option>
+          <select
+            class="form-select"
+            id="contabilidad"
+            [(ngModel)]="ge.factura.idConta"
+            name="idConta"
+            [required]="ge.registrarFactura"
+            [class.form-select--placeholder]="ge.factura.idConta == null"
+          >
+            <option [ngValue]="null" disabled>Selecciona contabilidad</option>
+            <option *ngFor="let conta of ge.contabilidades" [ngValue]="conta.idConta">{{ conta.rotConta }}</option>
           </select>
           <label for="contabilidad">Contabilidad <span class="text-danger">*</span></label>
         </div></div>
@@ -25,10 +32,17 @@
           <label for="fecJusExter">Fecha Factura <span class="text-danger">*</span></label>
         </div></div>
         <div class="col-md-4 mb-3"><div class="form-floating">
-          <select class="form-select" id="tipoDoc" [(ngModel)]="ge.factura.indTipDocum" name="indTipDocum" [required]="ge.registrarFactura">
-            <option [value]="null">-- Seleccione --</option>
-            <option [value]="1">Factura</option>
-            <option [value]="2">Justificante Gasto</option>
+          <select
+            class="form-select"
+            id="tipoDoc"
+            [(ngModel)]="ge.factura.indTipDocum"
+            name="indTipDocum"
+            [required]="ge.registrarFactura"
+            [class.form-select--placeholder]="ge.factura.indTipDocum == null"
+          >
+            <option [ngValue]="null" disabled>Selecciona tipo</option>
+            <option [ngValue]="1">Factura</option>
+            <option [ngValue]="2">Justificante Gasto</option>
           </select>
           <label for="tipoDoc">Tipo de Documento <span class="text-danger">*</span></label>
         </div></div>
@@ -45,10 +59,10 @@
         </div></div>
         <div class="col-md-4 mb-3"><div class="form-floating">
           <select class="form-select" id="tipoIVA" [(ngModel)]="ge.tipoIVA" name="tipoIVA" [required]="ge.registrarFactura" (ngModelChange)="ge.calcularImportes()">
-            <option [value]="0.00">Sin IVA</option>
-            <option [value]="0.04">4%</option>
-            <option [value]="0.10">10%</option>
-            <option [value]="0.21">21%</option>
+            <option [ngValue]="0.00">Sin IVA</option>
+            <option [ngValue]="0.04">4%</option>
+            <option [ngValue]="0.10">10%</option>
+            <option [ngValue]="0.21">21%</option>
           </select>
           <label for="tipoIVA">Tipo IVA <span class="text-danger">*</span></label>
         </div></div>
@@ -56,10 +70,17 @@
 
       <div class="row g-3">
         <div class="col-md-6 mb-3"><div class="form-floating">
-          <select class="form-select" id="indArea" [(ngModel)]="ge.factura.indArea" name="indArea" [required]="ge.registrarFactura">
-            <option [value]="null">-- Seleccione --</option>
-            <option [value]="1">Gastos</option>
-            <option [value]="2">No presupuestaria</option>
+          <select
+            class="form-select"
+            id="indArea"
+            [(ngModel)]="ge.factura.indArea"
+            name="indArea"
+            [required]="ge.registrarFactura"
+            [class.form-select--placeholder]="ge.factura.indArea == null"
+          >
+            <option [ngValue]="null" disabled>Selecciona área</option>
+            <option [ngValue]="1">Gastos</option>
+            <option [ngValue]="2">No presupuestaria</option>
           </select>
           <label for="indArea">Área <span class="text-danger">*</span></label>
         </div></div>

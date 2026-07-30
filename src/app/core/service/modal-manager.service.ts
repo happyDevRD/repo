@@ -36,6 +36,8 @@ export class ModalManagerService {
   private static globalListenersAttached = false
   private static instance: ModalManagerService | null = null
   private activeModals = new Map<string, bootstrap.Modal>()
+  /** Elemento que tenía el foco al abrir cada modal (restaurar al cerrar). */
+  private modalOpeners = new Map<string, HTMLElement>()
 
   constructor(private readonly router: Router) {
     ModalManagerService.instance = this
@@ -61,6 +63,11 @@ export class ModalManagerService {
       this.hideOtherModals(modalId)
     }
 
+    const active = document.activeElement
+    if (active instanceof HTMLElement && !modalElement.contains(active)) {
+      this.modalOpeners.set(modalId, active)
+    }
+
     modalElement.style.display = ''
     const modal = this.getManagedInstance(modalElement)
     this.activeModals.set(modalId, modal)
@@ -70,6 +77,7 @@ export class ModalManagerService {
       modalElement.removeEventListener('shown.bs.modal', onShown)
       removeBootstrapBackdrops()
       syncManagedBackdrop()
+      this.focusModalTitle(modalElement)
     }
     modalElement.addEventListener('shown.bs.modal', onShown)
 
@@ -80,6 +88,7 @@ export class ModalManagerService {
     const modalElement = document.getElementById(modalId)
     if (!modalElement) {
       this.activeModals.delete(modalId)
+      this.modalOpeners.delete(modalId)
       reconcileModalDomState()
       options?.onHidden?.()
       return
@@ -96,6 +105,7 @@ export class ModalManagerService {
       removeBootstrapBackdrops()
       reconcileModalDomState()
       options?.onHidden?.()
+      this.restoreOpenerFocus(modalId)
     }
 
     modalElement.addEventListener('hidden.bs.modal', finalizeClose, { once: true })
@@ -132,6 +142,7 @@ export class ModalManagerService {
       }
     })
     this.activeModals.clear()
+    this.modalOpeners.clear()
     forceCleanupModalDom()
   }
 
@@ -305,5 +316,32 @@ export class ModalManagerService {
     if (modalId !== 'NprocediModal') {
       form.reset()
     }
+  }
+
+  private focusModalTitle(modalElement: HTMLElement): void {
+    const title = modalElement.querySelector<HTMLElement>('.modal-title')
+    if (!title) {
+      return
+    }
+    if (!title.hasAttribute('tabindex')) {
+      title.setAttribute('tabindex', '-1')
+    }
+    title.focus({ preventScroll: true })
+  }
+
+  private restoreOpenerFocus(modalId: string): void {
+    const opener = this.modalOpeners.get(modalId)
+    this.modalOpeners.delete(modalId)
+    if (!opener || !opener.isConnected) {
+      return
+    }
+    if (getVisibleModals().length > 0) {
+      return
+    }
+    window.setTimeout(() => {
+      if (opener.isConnected && getVisibleModals().length === 0) {
+        opener.focus({ preventScroll: true })
+      }
+    }, 0)
   }
 }

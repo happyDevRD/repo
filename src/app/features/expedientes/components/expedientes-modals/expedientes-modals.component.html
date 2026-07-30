@@ -2,21 +2,25 @@
 <!-- *********************** MODALES *********************** -->
 
 <!-- NUEVOS ATRIBUTOS INPUT DINAMICOS BIS -->
-<app-modal-shell modalId="NAtributosModal2" title="" titleId="NAtributosModal2Label" dialogClass="modal-xl"
-     [showFooter]="false" [dismissOnClose]="false" (closed)="e.cerrarModal('NAtributosModal2')">
+<app-modal-shell
+     modalId="NAtributosModal2"
+     titleId="NAtributosModal2Label"
+     modalClass="iflow-modal iflow-modal--fit exp-atributos-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
+     (closed)="e.cerrarModal('NAtributosModal2')">
      <ng-container modalTitle>Atributos EXP: {{ e.tituloExp }}</ng-container>
      <form modalBody id="dynamicForm" (ngSubmit)="e.envioAtributos()">
           <div *ngIf="e.atributosleer?.length" class="mb-3">
                <h5 class="text-primary mb-3">Valores editables</h5>
-               <div id="divform" class="row gx-3 gy-2 mb-4"></div>
+               <div id="divform" class="row gx-3 gy-2 mb-3"></div>
           </div>
 
-          <div *ngIf="e.veoAtributos && !e.atributosleer?.length" class="alert alert-light border mb-4" role="status">
+          <div *ngIf="e.veoAtributos && !e.atributosleer?.length" class="alert alert-light border mb-3" role="status">
                <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
                Este expediente no tiene atributos configurados.
           </div>
 
-          <!-- Grilla y botón borrar -->
           <div class="row align-items-center mb-3" *ngIf="e.veoAtributos && e.atributosleer?.length">
                <div class="col">
                     <h5 class="text-primary mb-0">Listado de atributos</h5>
@@ -29,302 +33,461 @@
                </div>
           </div>
 
-          <div *ngIf="e.veoAtributos && e.atributosleer?.length" class="mb-4 grid-container proc-atributos-grid">
+          <div *ngIf="e.veoAtributos && e.atributosleer?.length" class="mb-0 grid-container proc-atributos-grid">
                <app-iflow-grid #gridAtributosExp selectionMode="radio" radioName="Atributos" [columnsresize]="true"
                     [source]="e.sourceAtributo" [pagesize]="5" (rowClick)="e.marcaAtributo($event)"
                     [columns]="e.columnsAtributo" [localization]="e.localizationObject">
                </app-iflow-grid>
           </div>
-
-          <!-- Footer -->
-          <div class="modal-footer">
-               <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
-                    (click)="e.cerrarModal('NAtributosModal2')">
-                    Cerrar
-               </button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">
-                    Guardar
-               </button>
-          </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('NAtributosModal2')">
+               Cerrar
+          </button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary" form="dynamicForm">
+               Guardar
+          </button>
+     </div>
 </app-modal-shell>
 
 
 <!-- expedientes-modals-alta -->
 
 <!-- Modal: Nuevo Expediente -->
-<app-modal-shell modalId="nexpedienteModal" title="Nuevo Expediente" titleId="nexpedienteModalLabel"
-     dialogClass="modal-xl" [staticBackdrop]="true" [keyboard]="false" [showFooter]="false" [dismissOnClose]="false"
+<app-modal-shell
+     modalId="nexpedienteModal"
+     title="Nuevo Expediente"
+     titleId="nexpedienteModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-expediente-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
      (closed)="e.cerrarModal('nexpedienteModal')">
-     <form modalBody id="creaExpedienteForm" (ngSubmit)="e.onCrearExpedienteSubmit()">
-          <!-- Información del Expediente -->
-          <div class="row g-3 mb-4">
-               <div class="col-12">
-                    <h5 class="text-primary mb-3 border-bottom pb-2">
-                         <i class="bi bi-folder-plus me-2"></i>Información del Expediente
-                    </h5>
-               </div>
-          </div>
+     <form modalBody id="creaExpedienteForm" class="soli-alta" (ngSubmit)="e.onCrearExpedienteSubmit()">
+          <!-- 1. Datos del expediente -->
+          <section class="soli-alta__section" aria-labelledby="exp-alta-datos-title">
+               <header class="soli-alta__head">
+                    <span class="soli-alta__step" aria-hidden="true">1</span>
+                    <div>
+                         <h3 id="exp-alta-datos-title" class="soli-alta__title">Datos del expediente</h3>
+                         <p class="soli-alta__desc">Identificación, procedimiento y notificación.</p>
+                    </div>
+               </header>
 
-          <div class="row">
-               <div class="col-md-4 mb-3">
+               <div class="mb-3">
                     <div class="form-floating">
-                         <input class="form-control" data-mdb-inline="true" required
-                              [(ngModel)]="e.nuevoexpediente.fechaInicio" type="date" id="fechaExpediente"
-                              name="fechaExpediente" [class.is-invalid]="e.isFechaExpedienteInvalid()" placeholder=" ">
-                         <label for="fechaExpediente">Fecha Expediente *</label>
-                    </div>
-                    <div *ngIf="e.isFechaExpedienteInvalid()" class="invalid-feedback">
-                         La fecha del expediente es obligatoria
-                    </div>
-               </div>
-               <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                         <select class="form-select" id="formaApertura" name="formaApertura"
-                              [(ngModel)]="e.nuevoexpediente.forma_apertura" required
-                              [class.is-invalid]="e.isFormaAperturaInvalid()">
-                              <option value="" disabled selected></option>
-                              <option name="instancia" value="INSTANCIA">Instancia</option>
-                              <option name="oficio" value="OFICIO">Oficio</option>
-                         </select>
-                         <label for="formaApertura">Forma Apertura *</label>
-                    </div>
-                    <div *ngIf="e.isFormaAperturaInvalid()" class="invalid-feedback">
-                         Debe seleccionar una forma de apertura
-                    </div>
-               </div>
-               <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                         <select class="form-select" id="formaNotificacion" name="formaNotificacion"
-                              [(ngModel)]="e.nuevoexpediente.formaNotifi" required
-                              [class.is-invalid]="e.isFormaNotificacionInvalid()">
-                              <option value="" disabled selected></option>
-                              <option name="correoP" value=0>Correo postal</option>
-                              <option name="telematico" value=1>Telemática</option>
-                         </select>
-                         <label for="formaNotificacion">Forma Notificación *</label>
-                    </div>
-                    <div *ngIf="e.isFormaNotificacionInvalid()" class="invalid-feedback">
-                         Debe seleccionar una forma de notificación
-                    </div>
-               </div>
-          </div>
-
-          <div *ngIf="e.nuevoexpediente.formaNotifi==1" class="mb-3">
-               <div class="form-floating">
-                    <input type="email" class="form-control" id="emailExpediente" name="emailExpediente"
-                         [(ngModel)]="e.nuevoexpediente.email" required
-                         [class.is-invalid]="e.isEmailExpedienteInvalid()" placeholder=" ">
-                    <label for="emailExpediente">Correo electrónico *</label>
-               </div>
-               <div *ngIf="e.isEmailExpedienteInvalid()" class="invalid-feedback">
-                    El correo electrónico es obligatorio para notificación telemática
-               </div>
-          </div>
-
-          <div class="mb-3">
-               <div class="form-floating">
-                    <input type="text" class="form-control" id="tituloExpediente" name="tituloExpediente"
-                         [(ngModel)]="e.nuevoexpediente.titulo" required
-                         [class.is-invalid]="e.isTituloExpedienteInvalid()" placeholder=" ">
-                    <label for="tituloExpediente">Título *</label>
-               </div>
-               <div *ngIf="e.isTituloExpedienteInvalid()" class="invalid-feedback">
-                    El título del expediente es obligatorio
-               </div>
-          </div>
-
-          <!-- Información del Interesado y Procedimiento -->
-          <div class="row mb-4">
-               <div class="col-12">
-                    <h5 class="text-success mb-3 border-bottom pb-2">
-                         <i class="bi bi-person-plus-fill me-2"></i>Interesado y Procedimiento
-                    </h5>
-               </div>
-          </div>
-
-          <div class="row">
-               <div class="col-md-6 mb-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" [(ngModel)]="e.nuevoexpediente.usuario"
-                              (change)="e.solicitadni(e.nuevoexpediente.usuario)" id="interesadoDNI"
-                              name="interesadoDNI" required [class.is-invalid]="e.isInteresadoDNIInvalid()"
+                         <input
+                              type="text"
+                              class="form-control"
+                              id="tituloExpediente"
+                              name="tituloExpediente"
+                              [(ngModel)]="e.nuevoexpediente.titulo"
+                              required
+                              [class.is-invalid]="e.isTituloExpedienteInvalid()"
+                              [attr.aria-invalid]="e.isTituloExpedienteInvalid() || null"
+                              [attr.aria-describedby]="e.isTituloExpedienteInvalid() ? 'exp-alta-titulo-err' : null"
                               placeholder=" ">
-                         <label for="interesadoDNI">Interesado DNI *</label>
+                         <label class="required-field" for="tituloExpediente">Título</label>
                     </div>
-                    <div *ngIf="e.isInteresadoDNIInvalid()" class="invalid-feedback">
-                         El DNI del interesado es obligatorio
-                    </div>
-               </div>
-               <div class="col-md-6 mb-3">
-                    <div class="form-floating">
-                         <select class="form-select" id="procedimientoExp" name="procedimientoExp"
-                              [(ngModel)]="e.nuevoexpediente.procedimiento" required
-                              [class.is-invalid]="e.isProcedimientoExpedienteInvalid()">
-                              <option value="" disabled selected></option>
-                              <option name="procedidescrip" *ngFor="let procedimientos of e.procedimientos"
-                                   value="{{procedimientos.id}}">{{ procedimientos.descripcion }}
-                              </option>
-                         </select>
-                         <label for="procedimientoExp">Procedimiento *</label>
-                    </div>
-                    <div *ngIf="e.isProcedimientoExpedienteInvalid()" class="invalid-feedback">
-                         Debe seleccionar un procedimiento
+                    <div *ngIf="e.isTituloExpedienteInvalid()" id="exp-alta-titulo-err" class="invalid-feedback d-block" role="alert">
+                         El título del expediente es obligatorio
                     </div>
                </div>
-          </div>
+
+               <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input
+                                   class="form-control"
+                                   required
+                                   [(ngModel)]="e.nuevoexpediente.fechaInicio"
+                                   type="date"
+                                   id="fechaExpediente"
+                                   name="fechaExpediente"
+                                   [class.is-invalid]="e.isFechaExpedienteInvalid()"
+                                   placeholder=" ">
+                              <label class="required-field" for="fechaExpediente">Fecha expediente</label>
+                         </div>
+                         <div *ngIf="e.isFechaExpedienteInvalid()" class="invalid-feedback d-block">
+                              La fecha del expediente es obligatoria
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <select
+                                   class="form-select"
+                                   id="formaApertura"
+                                   name="formaApertura"
+                                   [(ngModel)]="e.nuevoexpediente.forma_apertura"
+                                   required
+                                   [class.is-invalid]="e.isFormaAperturaInvalid()"
+                                   [class.form-select--placeholder]="!e.nuevoexpediente.forma_apertura">
+                                   <option [ngValue]="''" disabled>Selecciona forma de apertura</option>
+                                   <option [ngValue]="'INSTANCIA'">Instancia</option>
+                                   <option [ngValue]="'OFICIO'">Oficio</option>
+                              </select>
+                              <label class="required-field" for="formaApertura">Forma apertura</label>
+                         </div>
+                         <div *ngIf="e.isFormaAperturaInvalid()" class="invalid-feedback d-block">
+                              Debe seleccionar una forma de apertura
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <select
+                                   class="form-select"
+                                   id="procedimientoExp"
+                                   name="procedimientoExp"
+                                   [(ngModel)]="e.nuevoexpediente.procedimiento"
+                                   required
+                                   [class.is-invalid]="e.isProcedimientoExpedienteInvalid()"
+                                   [class.form-select--placeholder]="!e.nuevoexpediente.procedimiento">
+                                   <option [ngValue]="''" disabled>Selecciona un procedimiento</option>
+                                   <option *ngFor="let procedimiento of e.procedimientos" [ngValue]="procedimiento.id">
+                                        {{ procedimiento.descripcion }}
+                                   </option>
+                              </select>
+                              <label class="required-field" for="procedimientoExp">Procedimiento</label>
+                         </div>
+                         <div *ngIf="e.isProcedimientoExpedienteInvalid()" class="invalid-feedback d-block">
+                              Debe seleccionar un procedimiento
+                         </div>
+                    </div>
+               </div>
+
+               <div class="row g-3">
+                    <div class="col-md-6">
+                         <div class="form-floating">
+                              <select
+                                   class="form-select"
+                                   id="formaNotificacion"
+                                   name="formaNotificacion"
+                                   [(ngModel)]="e.nuevoexpediente.formaNotifi"
+                                   (ngModelChange)="e.handleFormaNotificacionChange()"
+                                   required
+                                   [class.is-invalid]="e.isFormaNotificacionInvalid()"
+                                   [class.form-select--placeholder]="e.nuevoexpediente.formaNotifi !== 0 && e.nuevoexpediente.formaNotifi !== 1">
+                                   <option [ngValue]="null" disabled>Selecciona forma de notificación</option>
+                                   <option [ngValue]="0">Correo postal</option>
+                                   <option [ngValue]="1">Telemática</option>
+                              </select>
+                              <label class="required-field" for="formaNotificacion">Forma notificación</label>
+                         </div>
+                         <div *ngIf="e.isFormaNotificacionInvalid()" class="invalid-feedback d-block">
+                              Debe seleccionar una forma de notificación
+                         </div>
+                    </div>
+                    <div class="col-md-6">
+                         <div class="form-floating">
+                              <input
+                                   type="email"
+                                   class="form-control"
+                                   id="emailExpediente"
+                                   name="emailExpediente"
+                                   [(ngModel)]="e.nuevoexpediente.email"
+                                   [required]="e.nuevoexpediente.formaNotifi == 1"
+                                   [disabled]="e.nuevoexpediente.formaNotifi != 1"
+                                   [class.is-invalid]="e.isEmailExpedienteInvalid()"
+                                   placeholder=" ">
+                              <label [class.required-field]="e.nuevoexpediente.formaNotifi == 1" for="emailExpediente">
+                                   Correo electrónico
+                              </label>
+                         </div>
+                         <div *ngIf="e.isEmailExpedienteInvalid()" class="invalid-feedback d-block">
+                              El correo electrónico es obligatorio para notificación telemática
+                         </div>
+                    </div>
+               </div>
+          </section>
+
+          <!-- 2. Interesado -->
+          <section class="soli-alta__section" aria-labelledby="exp-alta-interesado-title">
+               <header class="soli-alta__head">
+                    <span class="soli-alta__step" aria-hidden="true">2</span>
+                    <div>
+                         <h3 id="exp-alta-interesado-title" class="soli-alta__title">Interesado</h3>
+                         <p class="soli-alta__desc">Obligatorio. Introduce el documento y pulsa Buscar.</p>
+                    </div>
+               </header>
+
+               <div class="row g-2 align-items-end soli-alta__search">
+                    <div class="col">
+                         <div class="form-floating">
+                              <input
+                                   type="text"
+                                   class="form-control"
+                                   [(ngModel)]="e.nuevoexpediente.usuario"
+                                   (ngModelChange)="e.onDocumentoInteresadoInput()"
+                                   (keydown.enter)="$event.preventDefault(); e.buscarInteresado()"
+                                   id="interesadoDNI"
+                                   name="interesadoDNI"
+                                   required
+                                   [class.is-invalid]="e.isInteresadoDNIInvalid()"
+                                   placeholder=" ">
+                              <label class="required-field" for="interesadoDNI">Documento (DNI / CIF / NIE)</label>
+                         </div>
+                         <div *ngIf="e.isInteresadoDNIInvalid()" class="invalid-feedback d-block">
+                              El documento del interesado es obligatorio
+                         </div>
+                    </div>
+                    <div class="col-auto">
+                         <button
+                              type="button"
+                              class="btn-iflow btn-iflow--secondary soli-alta__buscar"
+                              (click)="e.buscarInteresado()"
+                              [disabled]="e.expedienteFacade.buscandoInteresado || !e.nuevoexpediente.usuario"
+                              [attr.aria-busy]="e.expedienteFacade.buscandoInteresado || null"
+                              [attr.aria-label]="e.expedienteFacade.buscandoInteresado ? 'Buscando interesado' : 'Buscar interesado'">
+                              <span *ngIf="e.expedienteFacade.buscandoInteresado" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                              <span *ngIf="e.expedienteFacade.buscandoInteresado" class="visually-hidden">Buscando…</span>
+                              <i *ngIf="!e.expedienteFacade.buscandoInteresado" class="bi bi-search me-1" aria-hidden="true"></i>
+                              Buscar
+                         </button>
+                    </div>
+               </div>
+
+               <div class="exp-expediente-modal__interesado-slot">
+               <p class="soli-alta__hint" *ngIf="!e.expedienteFacade.dniok && !e.expedienteFacade.existepersonaentidad">
+                    Los datos del interesado aparecerán aquí tras la búsqueda.
+               </p>
+
+               <div
+                    class="soli-alta__resultado"
+                    *ngIf="e.expedienteFacade.dniok"
+                    role="status"
+                    aria-live="polite"
+                    aria-labelledby="exp-alta-interesado-ok">
+                    <div class="soli-alta__resultado-head">
+                         <span class="soli-alta__resultado-badge" id="exp-alta-interesado-ok">
+                              <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                              Interesado localizado
+                         </span>
+                    </div>
+                    <dl class="soli-alta__resultado-grid">
+                         <div class="soli-alta__resultado-item soli-alta__resultado-item--full">
+                              <dt>Nombre / razón social</dt>
+                              <dd>{{ e.expedienteFacade.nombredni || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item soli-alta__resultado-item--full">
+                              <dt>Dirección</dt>
+                              <dd>{{ e.expedienteFacade.direcciondni || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item">
+                              <dt>Código postal</dt>
+                              <dd>{{ e.expedienteFacade.cpdni || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item">
+                              <dt>Provincia</dt>
+                              <dd>{{ e.expedienteFacade.provinciadni || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item">
+                              <dt>Municipio</dt>
+                              <dd>{{ e.expedienteFacade.nommunicipiodni || '—' }}</dd>
+                         </div>
+                    </dl>
+               </div>
+
+               <div
+                    class="soli-alta__resultado soli-alta__resultado--warn"
+                    *ngIf="e.expedienteFacade.existepersonaentidad"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-labelledby="exp-alta-interesado-warn">
+                    <div class="soli-alta__resultado-head soli-alta__resultado-head--warn">
+                         <span class="soli-alta__resultado-badge soli-alta__resultado-badge--warn" id="exp-alta-interesado-warn">
+                              <i class="bi bi-person-x-fill" aria-hidden="true"></i>
+                              Interesado no encontrado
+                         </span>
+                    </div>
+                    <div class="soli-alta__resultado-warn-body">
+                         <p class="soli-alta__resultado-warn-title">
+                              No hay registro para
+                              <strong>{{ e.nuevoexpediente.usuario || 'este documento' }}</strong>
+                         </p>
+                         <p class="soli-alta__resultado-warn-desc">
+                              El interesado debe existir en el sistema para crear el expediente. Regístralo antes o revisa el documento.
+                         </p>
+                    </div>
+               </div>
+               </div>
+          </section>
      </form>
+
+     <div modalFooter class="modal-footer__actions">
+          <button
+               type="button"
+               class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('nexpedienteModal')">
+               Cancelar
+          </button>
+          <button
+               type="submit"
+               class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="creaExpedienteForm"
+               [disabled]="e.isCreandoExpediente"
+               [attr.aria-busy]="e.isCreandoExpediente || null">
+               <span *ngIf="e.isCreandoExpediente" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+               <span *ngIf="e.isCreandoExpediente" class="visually-hidden">Creando expediente…</span>
+               <i *ngIf="!e.isCreandoExpediente" class="bi bi-folder-plus me-1" aria-hidden="true"></i>
+               {{ e.isCreandoExpediente ? 'Creando…' : 'Crear expediente' }}
+          </button>
+     </div>
 </app-modal-shell>
 
 
 <!-- expedientes-modals-consulta -->
 
 <!-- Modal ver expediente -->
-<app-modal-shell modalId="verexpedienteModal" title="Ver Expediente" titleId="verexpedienteModal" dialogClass="modal-xl"
-     [showFooter]="false" [dismissOnClose]="false" (closed)="e.cerrarModal('verexpedienteModal')">
-     <div modalBody>
-          <!-- Título -->
-          <div class="row g-3 mb-3">
-               <div class="col-12">
+<app-modal-shell
+     modalId="verexpedienteModal"
+     titleId="verexpedienteModal"
+     modalClass="iflow-modal iflow-modal--fit exp-expediente-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
+     (closed)="e.cerrarModal('verexpedienteModal')">
+     <span modalTitle>
+          Ver expediente
+          <span *ngIf="e.verexpediente.ejercicio && e.verexpediente.numero" class="text-secondary fw-normal">
+               {{ e.verexpediente.ejercicio }}/{{ e.verexpediente.numero }}
+          </span>
+     </span>
+
+     <div modalBody class="soli-alta">
+          <!-- 1. Datos del expediente (misma estructura que Nuevo) -->
+          <section class="soli-alta__section" aria-labelledby="exp-ver-datos-title">
+               <header class="soli-alta__head">
+                    <span class="soli-alta__step" aria-hidden="true">1</span>
+                    <div>
+                         <h3 id="exp-ver-datos-title" class="soli-alta__title">Datos del expediente</h3>
+                         <p class="soli-alta__desc">
+                              <span *ngIf="e.verexpediente.estado">Estado: {{ e.verexpediente.estado }}</span>
+                              <span *ngIf="e.verexpediente.estado && e.verexpediente.fase"> · </span>
+                              <span *ngIf="e.verexpediente.fase">Fase: {{ e.verexpediente.fase }}</span>
+                              <span *ngIf="!e.verexpediente.estado && !e.verexpediente.fase">Consulta en solo lectura.</span>
+                         </p>
+                    </div>
+               </header>
+
+               <div class="mb-3">
                     <div class="form-floating">
-                         <input type="text" class="form-control" id="tituloVer" [value]="e.verexpediente.titulo"
-                              readonly placeholder=" ">
+                         <input type="text" class="form-control" id="tituloVer"
+                              [value]="e.verexpediente.titulo || ''" readonly placeholder=" ">
                          <label for="tituloVer">Título</label>
                     </div>
                </div>
-          </div>
-          <!-- Estado, Fase, Forma Notificación, Correo -->
-          <div class="row mb-3">
-               <div class="col-md-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="estadoVer" [value]="e.verexpediente.estado"
-                              readonly placeholder=" ">
-                         <label for="estadoVer">Estado</label>
+
+               <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="fechaExpedienteVer"
+                                   [value]="e.verexpediente.fecInicio | date:'yyyy-MM-dd'" readonly placeholder=" ">
+                              <label for="fechaExpedienteVer">Fecha expediente</label>
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="formaAperturaVer"
+                                   [value]="e.verexpediente.formaApertura || ''" readonly placeholder=" ">
+                              <label for="formaAperturaVer">Forma apertura</label>
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="procedimientoVer"
+                                   [value]="e.verexpediente.procedimiento?.descripcion || ''" readonly placeholder=" ">
+                              <label for="procedimientoVer">Procedimiento</label>
+                         </div>
                     </div>
                </div>
-               <div class="col-md-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="faseVer" [value]="e.verexpediente.fase" readonly
-                              placeholder=" ">
-                         <label for="faseVer">Fase</label>
+
+               <div class="row g-3">
+                    <div class="col-md-6">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="formaNotificacionVer"
+                                   [value]="e.verFormaNotificacionLabel" readonly placeholder=" ">
+                              <label for="formaNotificacionVer">Forma notificación</label>
+                         </div>
+                    </div>
+                    <div class="col-md-6">
+                         <div class="form-floating">
+                              <input type="text" class="form-control" id="correoVer"
+                                   [value]="e.verEmailDisplay" readonly placeholder=" ">
+                              <label for="correoVer">Correo electrónico</label>
+                         </div>
                     </div>
                </div>
-               <div class="col-md-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="formaNotificacionVer"
-                              [value]="e.verexpediente.formaNotificacion || e.verexpediente.forNotifTexto" readonly
-                              placeholder=" ">
-                         <label for="formaNotificacionVer">Forma Notificación</label>
+          </section>
+
+          <!-- 2. Interesado (panel resultado, sin búsqueda) -->
+          <section class="soli-alta__section" aria-labelledby="exp-ver-interesado-title">
+               <header class="soli-alta__head">
+                    <span class="soli-alta__step" aria-hidden="true">2</span>
+                    <div>
+                         <h3 id="exp-ver-interesado-title" class="soli-alta__title">Interesado</h3>
+                         <p class="soli-alta__desc">Datos del interesado vinculado al expediente.</p>
                     </div>
-               </div>
-               <div class="col-md-3">
-                    <div class="form-floating">
-                         <input type="email" class="form-control" id="correoVer" [value]="e.verexpediente.email"
-                              readonly placeholder=" ">
-                         <label for="correoVer">Correo electrónico</label>
-                    </div>
-               </div>
-          </div>
-          <!-- Interesado DNI, Fecha cancelación, Fecha Expediente, Representante -->
-          <div class="row mb-3">
-               <div class="col-md-3">
+               </header>
+
+               <div class="mb-3">
                     <div class="form-floating">
                          <input type="text" class="form-control" id="dniVer"
                               [value]="e.verexpediente.personaEntidad?.numDocum || ''" readonly placeholder=" ">
-                         <label for="dniVer">Interesado DNI</label>
+                         <label for="dniVer">Documento (DNI / CIF / NIE)</label>
                     </div>
                </div>
-               <div class="col-md-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="fechaCancelacionVer"
-                              [value]="e.verexpediente.fecCancelacion | date:'yyyy-MM-dd'" readonly placeholder=" ">
-                         <label for="fechaCancelacionVer">Fecha cancelación</label>
+
+               <div class="exp-expediente-modal__interesado-slot">
+               <div class="soli-alta__resultado" *ngIf="e.verexpediente.personaEntidad?.numDocum || e.verexpediente.personaEntidad?.nombre || e.verexpediente.personaEntidad?.desPerEntid" aria-live="polite">
+                    <div class="soli-alta__resultado-head">
+                         <span class="soli-alta__resultado-badge">
+                              <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                              Interesado
+                         </span>
                     </div>
+                    <dl class="soli-alta__resultado-grid">
+                         <div class="soli-alta__resultado-item soli-alta__resultado-item--full">
+                              <dt>Nombre / razón social</dt>
+                              <dd>{{ e.verInteresadoNombreDisplay }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item soli-alta__resultado-item--full">
+                              <dt>Dirección</dt>
+                              <dd>{{ e.verexpediente.personaEntidad?.dirPosta || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item">
+                              <dt>Código postal</dt>
+                              <dd>{{ e.verexpediente.personaEntidad?.codPosta || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item">
+                              <dt>Provincia</dt>
+                              <dd>{{ e.verexpediente.personaEntidad?.provincia || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item">
+                              <dt>Municipio</dt>
+                              <dd>{{ e.verexpediente.personaEntidad?.municipio || '—' }}</dd>
+                         </div>
+                         <div class="soli-alta__resultado-item soli-alta__resultado-item--full" *ngIf="e.verexpediente.nomRepre">
+                              <dt>Representante</dt>
+                              <dd>{{ e.verexpediente.nomRepre }}</dd>
+                         </div>
+                    </dl>
                </div>
-               <div class="col-md-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="fechaExpedienteVer"
-                              [value]="e.verexpediente.fecInicio | date:'yyyy-MM-dd'" readonly placeholder=" ">
-                         <label for="fechaExpedienteVer">Fecha Expediente</label>
-                    </div>
+
+               <p class="soli-alta__hint" *ngIf="!e.verexpediente.personaEntidad?.numDocum && !e.verexpediente.personaEntidad?.nombre && !e.verexpediente.personaEntidad?.desPerEntid">
+                    No hay datos de interesado para este expediente.
+               </p>
                </div>
-               <div class="col-md-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="representanteVer"
-                              [value]="e.verexpediente.nomRepre || ''" readonly placeholder=" ">
-                         <label for="representanteVer">Representante</label>
-                    </div>
-               </div>
-          </div>
-          <!-- Procedimiento, Forma Apertura -->
-          <div class="row mb-3">
-               <div class="col-md-6">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="procedimientoVer"
-                              [value]="e.verexpediente.procedimiento?.descripcion || ''" readonly placeholder=" ">
-                         <label for="procedimientoVer">Procedimiento</label>
-                    </div>
-               </div>
-               <div class="col-md-6">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="formaAperturaVer"
-                              [value]="e.verexpediente.formaApertura" readonly placeholder=" ">
-                         <label for="formaAperturaVer">Forma Apertura</label>
-                    </div>
-               </div>
-          </div>
-          <!-- Nombre, Apellidos -->
-          <div class="row mb-3">
-               <div class="col-md-6">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="nombreVer"
-                              [value]="e.verexpediente.personaEntidad?.nombre || ''" readonly placeholder=" ">
-                         <label for="nombreVer">Nombre</label>
-                    </div>
-               </div>
-               <div class="col-md-6">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="apellidosVer"
-                              [value]="(e.verexpediente.personaEntidad?.apellido1 || '') + ' ' + (e.verexpediente.personaEntidad?.apellido2 || '')"
-                              readonly placeholder=" ">
-                         <label for="apellidosVer">Apellidos</label>
-                    </div>
-               </div>
-          </div>
-          <!-- Dirección -->
-          <div class="row mb-3">
-               <div class="col-12">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="direccionVer"
-                              [value]="e.verexpediente.personaEntidad?.dirPosta || ''" readonly placeholder=" ">
-                         <label for="direccionVer">Dirección</label>
-                    </div>
-               </div>
-          </div>
-          <!-- Código Postal, Provincia, Municipio -->
-          <div class="row mb-3">
-               <div class="col-md-4">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="codigoPostalVer"
-                              [value]="e.verexpediente.personaEntidad?.codPosta || ''" readonly placeholder=" ">
-                         <label for="codigoPostalVer">Código Postal</label>
-                    </div>
-               </div>
-               <div class="col-md-4">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="provinciaVer"
-                              [value]="e.verexpediente.personaEntidad?.provincia || ''" readonly placeholder=" ">
-                         <label for="provinciaVer">Provincia</label>
-                    </div>
-               </div>
-               <div class="col-md-4">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" id="municipioVer"
-                              [value]="e.verexpediente.personaEntidad?.municipio || ''" readonly placeholder=" ">
-                         <label for="municipioVer">Municipio</label>
-                    </div>
-               </div>
-          </div>
+          </section>
+     </div>
+
+     <div modalFooter class="modal-footer__actions">
+          <button
+               type="button"
+               class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('verexpedienteModal')">
+               Cerrar
+          </button>
      </div>
 </app-modal-shell>
 
@@ -332,141 +495,168 @@
 <!-- expedientes-modals-estado -->
 
 <!-- Modal cancelar expediente -->
-<app-modal-shell modalId="cancelarExpModal" title="Cancelar Expediente" titleId="cancelarExpModalLabel"
-     dialogClass="modal-xl" [showFooter]="false">
-     <form modalBody (ngSubmit)="e.cancelarExpediente()">
-          <div class="col-12">
-               <div class="form-floating">
-                    <textarea type="text" class="form-control" disabled name="numero" [value]="e.verexpediente.titulo"
-                         id="tituloCancelar" placeholder=" "></textarea>
-                    <label for="tituloCancelar">Título Expediente </label>
-               </div>
+<app-modal-shell
+     modalId="cancelarExpModal"
+     title="Cancelar Expediente"
+     titleId="cancelarExpModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-estado-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
+     (closed)="e.cerrarModal('cancelarExpModal')">
+     <form modalBody id="cancelarExpForm" (ngSubmit)="e.cancelarExpediente()">
+          <div class="form-floating">
+               <textarea class="form-control" disabled name="numero" [value]="e.verexpediente.titulo"
+                    id="tituloCancelar" placeholder=" "></textarea>
+               <label for="tituloCancelar">Título expediente</label>
           </div>
-          <div class="col-12">
-               <div class="form-floating">
-                    <input class="form-control" data-mdb-inline="true" required type="date" id="fechaCancelacion"
-                         name="fechaCancelacion" value="{{e.selected}}" [(ngModel)]="e.fechacancelacionexpedi"
-                         min="2023-01-01" max="2099-12-31" placeholder=" ">
-                    <label for="fechaCancelacion">Fecha Cancelación* </label>
-               </div>
-          </div>
-          <div class="modal-footer">
-               <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
-                    (click)="e.cerrarModal('cancelarExpModal')">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Aceptar</button>
+          <div class="form-floating mt-3">
+               <input class="form-control" required type="date" id="fechaCancelacion"
+                    name="fechaCancelacion" [(ngModel)]="e.fechacancelacionexpedi"
+                    min="2023-01-01" max="2099-12-31" placeholder=" ">
+               <label class="required-field" for="fechaCancelacion">Fecha cancelación</label>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('cancelarExpModal')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="cancelarExpForm">Aceptar</button>
+     </div>
 </app-modal-shell>
 
 
 <!-- Modal cerrar expediente -->
-<app-modal-shell modalId="cerrarExpModal" title="Cerrar Expediente" titleId="cerrarExpModalLabel" dialogClass="modal-xl"
-     [showFooter]="false">
-     <form modalBody (ngSubmit)="e.cerrarExpediente()">
-          <div class="col-12">
-               <div class="form-floating">
-                    <input class="form-control" data-mdb-inline="true" required type="date" id="fechaCierre"
-                         name="fechaCierre" value="{{e.selected}}" [(ngModel)]="e.fechacierreexpedi" min="2023-01-01"
-                         max="2099-12-31" placeholder=" ">
-                    <label for="fechaCierre">Fecha Cierre* </label>
-               </div>
+<app-modal-shell
+     modalId="cerrarExpModal"
+     title="Cerrar Expediente"
+     titleId="cerrarExpModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-estado-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
+     (closed)="e.cerrarModal('cerrarExpModal')">
+     <form modalBody id="cerrarExpForm" (ngSubmit)="e.cerrarExpediente()">
+          <div class="form-floating">
+               <input class="form-control" required type="date" id="fechaCierre"
+                    name="fechaCierre" [(ngModel)]="e.fechacierreexpedi" min="2023-01-01"
+                    max="2099-12-31" placeholder=" ">
+               <label class="required-field" for="fechaCierre">Fecha cierre</label>
           </div>
-          <div class="col-12">
-               <div class="form-floating">
-                    <input type="text" class="form-control" name="codseridocu" id="codseridocu"
-                         [(ngModel)]="e.serieDocumental" placeholder=" ">
-                    <label for="codseridocu">Código Serie Documental *</label>
-               </div>
-          </div>
-          <div class="modal-footer">
-               <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
-                    (click)="e.cerrarModal('cerrarExpModal')">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+          <div class="form-floating mt-3">
+               <input type="text" class="form-control" name="codseridocu" id="codseridocu"
+                    [(ngModel)]="e.serieDocumental" required placeholder=" ">
+               <label class="required-field" for="codseridocu">Código serie documental</label>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('cerrarExpModal')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="cerrarExpForm">Guardar</button>
+     </div>
 </app-modal-shell>
 
 
 <!-- expedientes-modals-tramitador -->
 
 <!-- Modal asignar tramitador -->
-<app-modal-shell modalId="AsigfnarTramitadorModal" title="Asignar Tramitador" titleId="AsigfnarTramitadorModalLabel"
-     dialogClass="modal-xl" [keyboard]="false" [showFooter]="false">
+<app-modal-shell
+     modalId="AsigfnarTramitadorModal"
+     title="Asignar Tramitador"
+     titleId="AsigfnarTramitadorModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-asignar-tramitador-modal"
+     dialogClass="modal-xl"
+     [keyboard]="false"
+     [dismissOnClose]="false"
+     (closed)="e.cerrarModal('AsigfnarTramitadorModal')">
      <form modalBody id="formAsignarTramitador" (ngSubmit)="e.onAsignarTramitadorSubmit()">
-          <div class="row g-3">
-               <div class="col-12 mb-3">
-                    <div class="form-floating">
-                         <input type="text" class="form-control" (click)="e.lanzaTareaProcedi()"
-                              name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="e.crearmensaje.descripcion"
-                              required [class.is-invalid]="e.isDescripcionMensajeInvalid()" placeholder=" ">
-                         <label for="descripcionMensaje">Asunto* </label>
-                    </div>
-                    <div *ngIf="e.isDescripcionMensajeInvalid()" class="invalid-feedback">
-                         El asunto es obligatorio
-                    </div>
-               </div>
+          <div class="form-floating mb-3">
+               <input type="text" class="form-control" (click)="e.lanzaTareaProcedi()"
+                    name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="e.crearmensaje.descripcion"
+                    required [class.is-invalid]="e.isDescripcionMensajeInvalid()" placeholder=" ">
+               <label class="required-field" for="descripcionMensaje">Asunto</label>
+          </div>
+          <div *ngIf="e.isDescripcionMensajeInvalid()" class="invalid-feedback d-block mb-3">
+               El asunto es obligatorio
           </div>
 
-          <div *ngIf="e.veoasignatramitador" class="px-3">
-               <div class="row">
-                    <div class="col-8 text-start">
-                         <h4>Tareas Procedimientos</h4>
-                         <app-iflow-grid selectionMode="radio" radioName="TareaProcedi" [height]="332"
-                              [source]="e.sourceTareaProcedi" [pagesize]="5"
-                              (rowClick)="e.envioTareaProcedi($event)" [localization]="e.localizationObject"
-                              [autoloadstate]="true" [columns]="e.columnsTareaProcedi" #grid>
-                         </app-iflow-grid>
-                    </div>
-                    <div *ngIf="e.veoPermisoProcedi" class="col-4 text-start">
-                         <h4>Permiso Procedimientos</h4>
-                         <app-iflow-grid selectionMode="radio" radioName="Permisos" [height]="332"
-                              [source]="e.sourcePermi" [pagesize]="5"
-                              (rowClick)="e.idpermisosPermi($event)" [localization]="e.localizationObject"
-                              [columns]="e.columnsPermi" #grid>
-                         </app-iflow-grid>
-                    </div>
+          <div *ngIf="e.veoasignatramitador" class="row g-3">
+               <div class="col-lg-8">
+                    <h5 class="h6 text-primary mb-2">Tareas del procedimiento</h5>
+                    <app-iflow-grid selectionMode="radio" radioName="TareaProcedi" [height]="332"
+                         [source]="e.sourceTareaProcedi" [pagesize]="5"
+                         (rowClick)="e.envioTareaProcedi($event)" [localization]="e.localizationObject"
+                         [autoloadstate]="true" [columns]="e.columnsTareaProcedi" #grid>
+                    </app-iflow-grid>
+               </div>
+               <div *ngIf="e.veoPermisoProcedi" class="col-lg-4">
+                    <h5 class="h6 text-primary mb-2">Permisos</h5>
+                    <app-iflow-grid selectionMode="radio" radioName="Permisos" [height]="332"
+                         [source]="e.sourcePermi" [pagesize]="5"
+                         (rowClick)="e.idpermisosPermi($event)" [localization]="e.localizationObject"
+                         [columns]="e.columnsPermi" #grid>
+                    </app-iflow-grid>
                </div>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('AsigfnarTramitadorModal')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formAsignarTramitador"
+               [disabled]="e.isAsignandoTramitador">
+               <span *ngIf="e.isAsignandoTramitador" class="spinner-border spinner-border-sm me-2" role="status"></span>
+               {{ e.isAsignandoTramitador ? 'Asignando…' : 'Asignar' }}
+          </button>
+     </div>
 </app-modal-shell>
 
 
 <!-- expedientes-modals-tareas -->
 
 <!-- Modal tareas expediente -->
-<app-modal-shell modalId="TareaExpedienteModal" title="Tareas del Expediente" titleId="TareaExpedienteModalLabel"
-     dialogClass="modal-xl" [showFooter]="false">
+<app-modal-shell
+     modalId="TareaExpedienteModal"
+     title="Tareas del Expediente"
+     titleId="TareaExpedienteModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-tareas-modal"
+     dialogClass="modal-xl"
+     [dismissOnClose]="false"
+     (closed)="e.cerrarModal('TareaExpedienteModal')">
      <div modalBody>
-          <div class="px-3">
-               <div class="row g-3">
-                    <div *ngIf="e.numeroArchivo" class="col-12 text-end">
-                         <button class="btn-iflow btn-iflow--primary" type="button" title="Descargar Documento Original"
-                              (click)="e.abreArchivo()">
-                              Descarga Documento <i class="bi bi-cloud-arrow-down"></i></button>
-                    </div>
-               </div>
-
-               <div *ngIf="e.cargandoTareasExpediente" class="text-center text-secondary py-4" role="status">
-                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                    Cargando tareas del expediente…
-               </div>
-
-               <div *ngIf="!e.cargandoTareasExpediente && e.tareasExpedienteVacio" class="alert alert-light border mb-0"
-                    role="status">
-                    <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
-                    Este expediente no tiene tareas registradas.
-               </div>
-
-               <div *ngIf="e.cargotareasexpedi && (!e.tareasExpedienteVacio || e.cargandoTareasExpediente)"
-                    class="grid-container tareas-expediente-grid">
-                    <app-iflow-grid #gridTareasExpediente selectionMode="radio" radioName="TareasExpediente"
-                         [height]="480" [columnsresize]="true" [source]="e.sourceTareasExpediente" [pagesize]="15"
-                         (rowClick)="e.clicktareExpediente($event)"
-                         (bindingComplete)="e.onTareasExpedienteBindingComplete()" [columns]="e.columnsTareasExpediente"
-                         [localization]="e.localizationObject">
-                    </app-iflow-grid>
-               </div>
+          <div class="d-flex justify-content-end mb-3" *ngIf="e.numeroArchivo">
+               <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+                    title="Descargar Documento Original" (click)="e.abreArchivo()">
+                    <i class="bi bi-cloud-arrow-down me-1" aria-hidden="true"></i>
+                    Descargar documento
+               </button>
           </div>
+
+          <div *ngIf="e.cargandoTareasExpediente" class="text-center text-secondary py-4" role="status">
+               <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+               Cargando tareas del expediente…
+          </div>
+
+          <div *ngIf="!e.cargandoTareasExpediente && e.tareasExpedienteVacio" class="alert alert-light border mb-0"
+               role="status">
+               <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+               Este expediente no tiene tareas registradas.
+          </div>
+
+          <div *ngIf="e.cargotareasexpedi && (!e.tareasExpedienteVacio || e.cargandoTareasExpediente)"
+               class="grid-container tareas-expediente-grid">
+               <app-iflow-grid #gridTareasExpediente selectionMode="radio" radioName="TareasExpediente"
+                    [height]="420" [columnsresize]="true" [source]="e.sourceTareasExpediente" [pagesize]="15"
+                    (rowClick)="e.clicktareExpediente($event)"
+                    (bindingComplete)="e.onTareasExpedienteBindingComplete()" [columns]="e.columnsTareasExpediente"
+                    [localization]="e.localizationObject">
+               </app-iflow-grid>
+          </div>
+     </div>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('TareaExpedienteModal')">
+               Cerrar
+          </button>
      </div>
 </app-modal-shell>
 
@@ -474,11 +664,23 @@
 <!-- expedientes-modals-indice -->
 
 <!-- Modal índice expediente -->
-<app-modal-shell modalId="IndiceExpedienteModal" title="Índice del Expediente" titleId="IndiceExpedienteModalLabel"
-     dialogClass="modal-xl" [showFooter]="false">
+<app-modal-shell
+     modalId="IndiceExpedienteModal"
+     title="Índice del Expediente"
+     titleId="IndiceExpedienteModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-indice-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
+     (closed)="e.cerrarModal('IndiceExpedienteModal')">
      <div modalBody>
           <app-iflow-grid [height]="332" [source]="e.sourceIndiceENI" [pagesize]="5"
                [localization]="e.localizationObject" [columns]="e.columnsIndiceENI" #grid>
           </app-iflow-grid>
+     </div>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="e.cerrarModal('IndiceExpedienteModal')">
+               Cerrar
+          </button>
      </div>
 </app-modal-shell>

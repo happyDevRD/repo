@@ -13,4 +13,10 @@ export class EditaModalNuevoTramiteModalComponent {
   handleSubmit(event: Event): void {
     this.tramites.validateAndCreateTramite(event, () => this.tramites.crearTramite(this.edita))
   }
+
+  handleCancelar(): void {
+    this.tramites.limpiarErroresTramite()
+    this.tramites.cancelarnuevotramite(this.edita)
+    this.edita.cerrarModal('NuevoTramiteModal')
+  }
 }

@@ -3,8 +3,10 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core'
 import { jqxGridComponent } from 'jqwidgets-ng/jqxgrid'
@@ -32,7 +34,7 @@ export type IflowGridSelectionMode = 'none' | 'radio' | 'checkbox'
   styleUrls: ['./iflow-grid.component.css'],
   host: { class: 'iflow-grid' },
 })
-export class IflowGridComponent implements OnInit {
+export class IflowGridComponent implements OnInit, OnChanges {
   @Input() columns: IflowGridColumns = []
   @Input() source: IflowGridSource
   @Input() width: string | number = IFLOW_GRID_DEFAULTS.width
@@ -81,6 +83,20 @@ export class IflowGridComponent implements OnInit {
     if (this.gridId && !hostId) {
       host.id = this.gridId
     }
+  }
+
+  /**
+   * jqxGrid no siempre reacciona al binding Angular de `source` (OnPush / widget ya vivo).
+   * Forzar setSource + updatebounddata tras el primer cambio (patrón R2 / solicitudes).
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['source'] || changes['source'].firstChange) {
+      return
+    }
+    queueMicrotask(() => {
+      this.setSource(this.source)
+      this.updatebounddata()
+    })
   }
 
   get resolvedLocalization(): IflowGridLocalization {

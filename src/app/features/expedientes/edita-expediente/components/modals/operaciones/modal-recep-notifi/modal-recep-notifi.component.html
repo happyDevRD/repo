@@ -1,40 +1,57 @@
-<app-modal-shell modalId="RecepNotifi" title="Recepción de Notificación" titleId="RecepNotifiLabel"
-     dialogClass="modal-xl" [staticBackdrop]="true" [keyboard]="false" [showFooter]="false"
+<app-modal-shell
+     modalId="RecepNotifi"
+     title="Recepción de Notificación"
+     titleId="RecepNotifiLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-notifi-accion-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
      (closed)="notif.borraDatosRecepcion()">
-     <form modalBody (ngSubmit)="notif.recepcionarNotificacion()">
+     <form modalBody id="formRecepNotifi" novalidate [formGroup]="form" (ngSubmit)="handleSubmit()">
           <div class="row g-3">
-               <div class="col-sm-4">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <input [(ngModel)]="notif.creanotificacion.fecRecNotif" class="form-control"
-                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
-                              type="date" value="{{ edita.selected }}" placeholder=" ">
-                         <label for="documento">Fecha de Recepción</label>
+                         <input formControlName="fecRecNotif" class="form-control"
+                              id="fecRecNotifi" max="2099-12-31" min="2023-01-01"
+                              type="date" placeholder=" "
+                              [class.is-invalid]="fecRecNotifInvalid"
+                              [attr.aria-invalid]="fecRecNotifInvalid || null"
+                              [attr.aria-describedby]="fecRecNotifInvalid ? 'fecRecNotifi-err' : null">
+                         <label class="required-field" for="fecRecNotifi">Fecha de recepción</label>
+                    </div>
+                    <div *ngIf="fecRecNotifInvalid" id="fecRecNotifi-err" class="invalid-feedback d-block" role="alert">
+                         La fecha de recepción es obligatoria
                     </div>
                </div>
-               <div class="col-sm-4">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <select [(ngModel)]="notif.creanotificacion.receptor" class="form-select "
-                              id="receptor" name="receptor" required>
+                         <select formControlName="receptor"
+                              class="form-select"
+                              [class.form-select--placeholder]="!form.controls.receptor.value"
+                              [class.is-invalid]="receptorInvalid"
+                              [attr.aria-invalid]="receptorInvalid || null"
+                              [attr.aria-describedby]="receptorInvalid ? 'receptor-err' : null"
+                              id="receptor">
+                              <option [ngValue]="null" disabled>Seleccione receptor</option>
                               <option
                                    *ngFor="let receptornotifislistar of notif.receptornotifilistar; trackBy: trackByReceptor"
-                                   name="receptorNotifi" value="{{ receptornotifislistar.receptor }}"> {{
-                                   receptornotifislistar.descripcion }}
+                                   [ngValue]="receptornotifislistar.receptor">
+                                   {{ receptornotifislistar.descripcion }}
                               </option>
                          </select>
-                         <label for="receptor">Receptor* </label>
+                         <label class="required-field" for="receptor">Receptor</label>
+                    </div>
+                    <div *ngIf="receptorInvalid" id="receptor-err" class="invalid-feedback d-block" role="alert">
+                         Debe seleccionar un receptor
                     </div>
                </div>
-               <div class="col-sm-4">
-                    <div class="form-floating"></div>
-               </div>
-          </div>
-          <br>
-          <div class="modal-footer">
-               <button (click)="notif.borraDatosRecepcion()"
-                    class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    type="button">Cancelar
-               </button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="handleCancelar()">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formRecepNotifi">Guardar</button>
+     </div>
 </app-modal-shell>

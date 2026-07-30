@@ -1,332 +1,305 @@
-<app-modal-shell modalId="NuevaTareaTra" title="Nueva Tarea del Trámite" titleId="NuevaTareaTraLabel"
-     dialogClass="modal-xl modal-dialog-centered" bodyClass="p-4" [showFooter]="false"
+<app-modal-shell
+     modalId="NuevaTareaTra"
+     title="Nueva Tarea del Trámite"
+     titleId="NuevaTareaTraLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-nueva-tarea-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
      (closed)="tareas.limpiarErroresNuevaTarea()">
-     <form modalBody id="formNuevaTarea" (ngSubmit)="tareas.validateAndCreateTarea(edita, edita, edita, $event)">
+     <form modalBody id="formNuevaTarea" novalidate
+          (ngSubmit)="tareas.validateAndCreateTarea(edita, edita, edita, $event)">
 
-
-          <!-- Descripción -->
-          <div class="row mb-4">
+          <!-- Datos principales -->
+          <p class="exp-nueva-tarea-modal__section-title">Datos de la tarea</p>
+          <div class="row g-3 mb-3">
                <div class="col-12">
                     <div class="form-floating">
                          <input [(ngModel)]="edita.tareatramiteexpedientecrear.descripcion" class="form-control"
-                              id="descriptara" name="descriptarea" type="text" required
+                              id="descriptara" name="descriptarea" type="text" required aria-required="true"
+                              aria-describedby="descriptara-error"
                               (input)="tareas.validarCampo($event, 'descriptara')" placeholder=" ">
-                         <label for="descriptara">Descripción *</label>
-                    </div>
-                    <div class="invalid-feedback">
-                         Por favor, ingresa una descripción para la tarea.
+                         <label class="required-field" for="descriptara">Descripción</label>
+                         <div class="invalid-feedback" id="descriptara-error">
+                              Por favor, ingresa una descripción para la tarea.
+                         </div>
                     </div>
                </div>
-          </div>
-
-          <!-- Fecha y Archivo -->
-          <div class="row mb-4">
-               <div class="col-3">
+               <div class="col-md-4">
                     <div class="form-floating">
                          <input [(ngModel)]="edita.tareatramiteexpedientecrear.fecInicio" class="form-control"
-                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
-                              type="date" value="{{ edita.selected }}" required
-                              (change)="tareas.validarCampo($event, 'start')" placeholder=" ">
-                         <label for="start">Fecha Tarea *</label>
-                    </div>
-                    <div class="invalid-feedback">
-                         Por favor, selecciona una fecha para la tarea.
-                    </div>
-               </div>
-               <div class="col-9">
-                    <div class="form-floating">
-                         <input #fileInput (change)="edita.upload($event,edita.idTramite)"
-                              [(ngModel)]="edita.tareatramiteexpedientecrear.numero"
-                              [disabled]="edita.disabledArchivoTareaTramite" accept=".pdf,.docx,.odt,.jpg"
-                              class="form-control" id="formFile" name="formFile" type="file">
-                         <label for="formFile">Seleccione Documento (docx,odt,pdf,jpg)</label>
+                              id="fecInicioNuevaTarea" max="2099-12-31" min="2023-01-01" name="fecInicio"
+                              type="date" required aria-required="true"
+                              aria-describedby="fecInicioNuevaTarea-error"
+                              (change)="tareas.validarCampo($event, 'fecInicioNuevaTarea')" placeholder=" ">
+                         <label class="required-field" for="fecInicioNuevaTarea">Fecha tarea</label>
+                         <div class="invalid-feedback" id="fecInicioNuevaTarea-error">
+                              Por favor, selecciona una fecha para la tarea.
+                         </div>
                     </div>
                </div>
-          </div>
-
-          <!-- Tarea Procedimiento -->
-          <div class="row mb-4">
-               <div class="col-4">
+               <div class="col-md-8">
                     <div class="form-floating">
                          <select
                               (change)="edita.idListaTareaProcedimiento(edita.tareatramiteexpedientecrear.tareaProcedimiento); tareas.validarTareaProcedimiento($event)"
-                              [(ngModel)]="edita.tareatramiteexpedientecrear.tareaProcedimiento" class="form-select"
-                              id="tprocedi2" name="tprocedi2" required>
-                              <option value="" disabled selected>Seleccione una tarea del procedimiento</option>
+                              [(ngModel)]="edita.tareatramiteexpedientecrear.tareaProcedimiento"
+                              class="form-select"
+                              [class.form-select--placeholder]="edita.tareatramiteexpedientecrear.tareaProcedimiento == null || edita.tareatramiteexpedientecrear.tareaProcedimiento === -1"
+                              id="tprocedi2" name="tprocedi2" required aria-required="true"
+                              aria-describedby="tprocedi2-error">
+                              <option [ngValue]="-1" disabled>Seleccione una tarea del procedimiento</option>
                               <option
                                    *ngFor="let listatareaprocedimiento of edita.listatareaprocedi; trackBy: trackById"
-                                   [value]="listatareaprocedimiento.id">
+                                   [ngValue]="listatareaprocedimiento.id">
                                    {{ listatareaprocedimiento.descripcion }}
                               </option>
                          </select>
-                         <label for="tprocedi2">Tarea Procedimiento *</label>
+                         <label class="required-field" for="tprocedi2">Tarea procedimiento</label>
+                         <div class="invalid-feedback" id="tprocedi2-error">
+                              Por favor, selecciona una tarea del procedimiento.
+                         </div>
                     </div>
-                    <div class="invalid-feedback">
-                         Por favor, selecciona una tarea del procedimiento.
+               </div>
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input #fileInput (change)="edita.upload($event, edita.idTramite)"
+                              [disabled]="edita.disabledArchivoTareaTramite"
+                              accept=".pdf,.docx,.odt,.jpg"
+                              class="form-control" id="formFileNuevaTarea" name="formFile" type="file">
+                         <label for="formFileNuevaTarea">Documento (docx, odt, pdf, jpg)</label>
+                    </div>
+               </div>
+          </div>
+
+          <!-- Acciones contextuales de la tarea procedimiento -->
+          <ng-container *ngIf="tareas.veoAcciones && edita.tareatramiteprocedimiento?.accion !== -1">
+               <p class="exp-nueva-tarea-modal__section-title">Acción asociada</p>
+               <div class="row g-3 mb-3 align-items-end">
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input [value]="tareas.descripcionAccion" class="form-control" readonly
+                                   id="accionesNuevaTarea" name="acciones" type="text" placeholder=" "
+                                   tabindex="-1" aria-readonly="true">
+                              <label for="accionesNuevaTarea">Acciones</label>
+                         </div>
+                    </div>
+                    <div class="col-md-3"
+                         *ngIf="edita.tareatramiteprocedimiento?.accion !== 10 && edita.tareatramiteprocedimiento?.accion !== 11">
+                         <div class="form-floating">
+                              <input [(ngModel)]="tareas.introValorConsulta" class="form-control"
+                                   id="introacciones" name="introacciones" type="text" placeholder=" ">
+                              <label for="introacciones">{{ tareas.ediquetaValorConsulta }}</label>
+                         </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="tareas.veoTipoObjetoTributario">
+                         <div class="form-floating">
+                              <select [(ngModel)]="tareas.introTObjTrubu" class="form-select" id="tipoObtribu"
+                                   name="tipoObtribu">
+                                   <option *ngFor="let tipoobjeto of edita.tipoObjetoTributario; trackBy: trackByTipoObjeto"
+                                        [ngValue]="tipoobjeto">
+                                        {{ tipoobjeto.codTipObjTribu }}
+                                   </option>
+                              </select>
+                              <label for="tipoObtribu">Tipo objeto tributario</label>
+                         </div>
+                    </div>
+                    <div class="col-md-2 ms-md-auto">
+                         <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm w-100"
+                              [disabled]="tareas.isConsultaAccionRunning"
+                              (click)="tareas.onConsultaAccionClick(edita)">
+                              {{ tareas.getAccionButtonText(edita.tareatramiteprocedimiento) }}
+                         </button>
+                    </div>
+               </div>
+          </ng-container>
+
+          <div class="exp-nueva-tarea-modal__dinamicos">
+               <div *ngIf="tareas.veoBajaHabitante" class="mb-3">
+                    <app-baja-habitante [documento]="tareas.personaentidad.numDocum || ''"></app-baja-habitante>
+               </div>
+
+               <div *ngIf="tareas.veoModifiDatosPerso" class="mb-3">
+                    <app-modificar-datos-persona [persona]="tareas.personaentidad"></app-modificar-datos-persona>
+               </div>
+
+               <div *ngIf="tareas.objetotributario && edita.tareatramiteprocedimiento?.accion == 5" class="mb-3">
+                    <p class="exp-nueva-tarea-modal__section-title">Baja objeto tributario</p>
+                    <div class="row g-3">
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="tipoObjetoBajaNueva"
+                                        [value]="tareas.objetotributario.tipoObjetoTributario" disabled placeholder=" ">
+                                   <label for="tipoObjetoBajaNueva">Tipo objeto tributario</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="descripcionBajaNueva"
+                                        [value]="tareas.objetotributario.desObjTribu" disabled placeholder=" ">
+                                   <label for="descripcionBajaNueva">Descripción</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="fecAltaBajaNueva"
+                                        [value]="tareas.objetotributario.fecAlta" disabled placeholder=" ">
+                                   <label for="fecAltaBajaNueva">Fecha alta</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="numDocumBajaNueva"
+                                        [value]="tareas.objetotributario.numDocum" disabled placeholder=" ">
+                                   <label for="numDocumBajaNueva">N.º documento</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="personaBajaNueva"
+                                        [value]="tareas.objetotributario.desPerEntid" disabled placeholder=" ">
+                                   <label for="personaBajaNueva">Persona / entidad</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="domFiscalBajaNueva"
+                                        [value]="tareas.objetotributario.domFiscal" disabled placeholder=" ">
+                                   <label for="domFiscalBajaNueva">Domicilio fiscal</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="codMovimBajaNueva"
+                                        [value]="tareas.objetotributario.codMovim" disabled placeholder=" ">
+                                   <label for="codMovimBajaNueva">Código movimiento</label>
+                              </div>
+                         </div>
+                         <div class="col-md-8 d-flex align-items-center"
+                              *ngIf="tareas.objetotributario.codMovim === 'BAJA'">
+                              <span class="text-danger fw-bold">Este objeto tributario ya está dado de baja.</span>
+                         </div>
+                         <div class="col-md-10" *ngIf="tareas.objetotributario.codMovim !== 'BAJA'">
+                              <div class="form-floating">
+                                   <textarea maxlength="200" class="form-control" id="observacionesBajaNueva"
+                                        name="observacionesBajaNueva" placeholder=" "
+                                        [(ngModel)]="tareas.objetotributario.observaciones"
+                                        rows="2"></textarea>
+                                   <label for="observacionesBajaNueva">Observaciones (opcional)</label>
+                              </div>
+                         </div>
+                         <div class="col-md-2 d-flex align-items-end"
+                              *ngIf="tareas.objetotributario.codMovim !== 'BAJA'">
+                              <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm w-100"
+                                   (click)="tareas.darDeBajaObjeto(edita)">
+                                   Dar de baja
+                              </button>
+                         </div>
                     </div>
                </div>
 
-               <!-- Acciones (solo si hay tarea seleccionada) -->
-               <div *ngIf="tareas.veoAcciones && edita.tareatramiteprocedimiento?.accion !== -1"
-                    class="col-3">
-                    <div class="form-floating">
-                         <input [value]="tareas.descripcionAccion" class="form-control" disabled
-                              id="acciones" name="acciones" type="text" placeholder=" ">
-                         <label for="acciones">Acciones</label>
+               <div *ngIf="tareas.veoConsultaObjetoTributario && tareas.objetotributario" class="mb-3">
+                    <p class="exp-nueva-tarea-modal__section-title">Consulta objeto tributario</p>
+                    <div class="row g-3">
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="tipoObjetoConsulta"
+                                        [value]="tareas.objetotributario.tipoObjetoTributario" disabled placeholder=" ">
+                                   <label for="tipoObjetoConsulta">Tipo objeto tributario</label>
+                              </div>
+                         </div>
+                         <div class="col-md-8">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="descripcionObjConsulta"
+                                        [value]="tareas.objetotributario.desObjTribu" disabled placeholder=" ">
+                                   <label for="descripcionObjConsulta">Descripción</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="fechaAltaConsulta"
+                                        [value]="tareas.objetotributario.fecAlta" disabled placeholder=" ">
+                                   <label for="fechaAltaConsulta">Fecha alta</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="numDocumConsulta"
+                                        [value]="tareas.objetotributario.numDocum" disabled placeholder=" ">
+                                   <label for="numDocumConsulta">N.º documento</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="personaConsulta"
+                                        [value]="tareas.objetotributario.desPerEntid" disabled placeholder=" ">
+                                   <label for="personaConsulta">Persona / entidad</label>
+                              </div>
+                         </div>
+                         <div class="col-md-8">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="domFiscalConsulta"
+                                        [value]="tareas.objetotributario.domFiscal" disabled placeholder=" ">
+                                   <label for="domFiscalConsulta">Domicilio fiscal</label>
+                              </div>
+                         </div>
+                         <div class="col-md-4">
+                              <div class="form-floating">
+                                   <input type="text" class="form-control" id="codMovimConsulta"
+                                        [value]="tareas.objetotributario.codMovim" disabled placeholder=" ">
+                                   <label for="codMovimConsulta">Código movimiento</label>
+                              </div>
+                         </div>
                     </div>
                </div>
 
-               <!-- Input para datos adicionales -->
-               <div *ngIf="tareas.veoAcciones && edita.tareatramiteprocedimiento?.accion !== -1 && edita.tareatramiteprocedimiento?.accion !== 10 && edita.tareatramiteprocedimiento?.accion !== 11"
-                    class="col-2">
-                    <div class="form-floating">
-                         <input [(ngModel)]="tareas.introValorConsulta" class="form-control"
-                              id="introacciones" name="introacciones" type="text" placeholder=" ">
-                         <label for="introacciones">{{ tareas.ediquetaValorConsulta }}</label>
-                    </div>
+               <div class="mb-3" *ngIf="edita.sourceTareasProcedi">
+                    <app-iflow-grid #grid (rowClick)="edita.clickTareProcedimiento($event)"
+                         [columns]="edita.columnsTareasProcedi" [columnsresize]="true"
+                         [localization]="edita.localizationObject" [pagesize]="2"
+                         [source]="edita.sourceTareasProcedi" [height]="160">
+                    </app-iflow-grid>
                </div>
+          </div>
 
-               <!-- Select tipo objeto tributario -->
-               <div *ngIf="tareas.veoTipoObjetoTributario && edita.tareatramiteprocedimiento?.accion !== -1"
-                    class="col-2">
+          <!-- Metadatos documentales -->
+          <p class="exp-nueva-tarea-modal__section-title">Documentación</p>
+          <div class="row g-3">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <select [(ngModel)]="tareas.introTObjTrubu" class="form-select" id="tipoObtribu"
-                              name="tipoObtribu">
-                              <option *ngFor="let tipoobjeto of edita.tipoObjetoTributario; trackBy: trackByTipoObjeto"
-                                   [ngValue]="tipoobjeto">
-                                   {{ tipoobjeto.codTipObjTribu }}
-                              </option>
+                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.anexo"
+                              class="form-select"
+                              [class.form-select--placeholder]="edita.tareatramiteexpedientecrear.anexo == null || edita.tareatramiteexpedientecrear.anexo === ''"
+                              id="anexoNuevaTarea" name="anexo" required aria-required="true">
+                              <option [ngValue]="null" disabled>Seleccione anexo</option>
+                              <option value="1">Documentación física requerida</option>
+                              <option value="2">Fichero enlace</option>
+                              <option value="3">Documentación física complementaria</option>
                          </select>
-                         <label for="tipoObtribu">Tipo Objeto tributario</label>
+                         <label class="required-field" for="anexoNuevaTarea">Anexo</label>
                     </div>
                </div>
-
-               <!-- Botón de acción -->
-               <div *ngIf="tareas.veoAcciones && edita.tareatramiteprocedimiento?.accion !== -1"
-                    class="col-1 d-flex align-items-end">
-                    <button type="button" class="btn-iflow btn-iflow--primary" (click)="tareas.onConsultaAccionClick(edita, edita)">
-                         {{ tareas.getAccionButtonText(edita.tareatramiteprocedimiento) }}
-                    </button>
-               </div>
-          </div>
-
-          <!-- Componentes dinámicos -->
-          <div *ngIf="tareas.veoBajaHabitante" class="mb-4">
-               <app-baja-habitante [documento]="tareas.personaentidad.numDocum || ''"></app-baja-habitante>
-          </div>
-
-          <div *ngIf="tareas.veoModifiDatosPerso" class="mb-4">
-               <app-modificar-datos-persona [persona]="tareas.personaentidad"></app-modificar-datos-persona>
-          </div>
-
-          <!-- Baja Objeto Tributario -->
-          <div *ngIf="tareas.objetotributario && edita.tareatramiteprocedimiento?.accion == 5" class="mb-4">
-               <div class="card">
-                    <div class="card-header bg-primary text-white">
-                         <h5 class="mb-0">Baja Objeto Tributario</h5>
-                    </div>
-                    <div class="card-body">
-                         <div class="row g-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="tipoObjetoBaja"
-                                             [value]="tareas.objetotributario.tipoObjetoTributario" disabled
-                                             placeholder=" ">
-                                        <label for="tipoObjetoBaja">Tipo Objeto Tributario</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="descripcionBaja"
-                                             [value]="tareas.objetotributario.desObjTribu" disabled
-                                             placeholder=" ">
-                                        <label for="descripcionBaja">Descripción</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="fecAltaBaja"
-                                             [value]="tareas.objetotributario.fecAlta" disabled
-                                             placeholder=" ">
-                                        <label for="fecAltaBaja">Fecha Alta</label>
-                                   </div>
-                              </div>
-                         </div>
-                         <div class="row g-3 mt-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="numDocumBaja"
-                                             [value]="tareas.objetotributario.numDocum" disabled
-                                             placeholder=" ">
-                                        <label for="numDocumBaja">N.º Documento</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="personaBaja"
-                                             [value]="tareas.objetotributario.desPerEntid" disabled
-                                             placeholder=" ">
-                                        <label for="personaBaja">Persona / Entidad</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="domFiscalBaja"
-                                             [value]="tareas.objetotributario.domFiscal" disabled
-                                             placeholder=" ">
-                                        <label for="domFiscalBaja">Domicilio Fiscal</label>
-                                   </div>
-                              </div>
-                         </div>
-                         <div class="row g-3 mt-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="codMovimBaja"
-                                             [value]="tareas.objetotributario.codMovim" disabled
-                                             placeholder=" ">
-                                        <label for="codMovimBaja">Código Movimiento</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-8 d-flex align-items-center"
-                                   *ngIf="tareas.objetotributario.codMovim === 'BAJA'">
-                                   <span class="text-danger fw-bold">Este objeto tributario ya está dado de baja.</span>
-                              </div>
-                         </div>
-                         <div class="row g-3 mt-3" *ngIf="tareas.objetotributario.codMovim !== 'BAJA'">
-                              <div class="col-md-10">
-                                   <div class="form-floating">
-                                        <textarea maxlength="200" class="form-control" id="observacionesBaja"
-                                             placeholder=" "
-                                             [(ngModel)]="tareas.objetotributario.observaciones"
-                                             rows="2"></textarea>
-                                        <label for="observacionesBaja">Observaciones (opcional)</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-2 d-flex align-items-end">
-                                   <button type="button" class="btn-iflow btn-iflow--primary w-100"
-                                        (click)="tareas.darDeBajaObjeto(edita)">
-                                        Dar de Baja
-                                   </button>
-                              </div>
-                         </div>
-                    </div>
-               </div>
-          </div>
-
-          <!-- Consulta Objeto Tributario -->
-          <div *ngIf="tareas.veoConsultaObjetoTributario" class="mb-4">
-               <div class="card" *ngIf="tareas.objetotributario">
-                    <div class="card-header bg-primary text-white">
-                         <h5 class="mb-0">Consulta Objeto Tributario</h5>
-                    </div>
-                    <div class="card-body">
-                         <div class="row g-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="tipoObjeto"
-                                             [value]="tareas.objetotributario.tipoObjetoTributario" disabled
-                                             placeholder=" ">
-                                        <label for="tipoObjeto">Tipo Objeto Tributario</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-8">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="descripcionObj"
-                                             [value]="tareas.objetotributario.desObjTribu" disabled
-                                             placeholder=" ">
-                                        <label for="descripcionObj">Descripción Objeto Tributario</label>
-                                   </div>
-                              </div>
-                         </div>
-                         <div class="row g-3 mt-3">
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="fechaAlta"
-                                             [value]="tareas.objetotributario.fecAlta" disabled
-                                             placeholder=" ">
-                                        <label for="fechaAlta">Fecha Alta</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="numDocum"
-                                             [value]="tareas.objetotributario.numDocum" disabled
-                                             placeholder=" ">
-                                        <label for="numDocum">N.º Documento</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="persona"
-                                             [value]="tareas.objetotributario.desPerEntid" disabled
-                                             placeholder=" ">
-                                        <label for="persona">Persona / Entidad</label>
-                                   </div>
-                              </div>
-                         </div>
-                         <div class="row g-3 mt-3">
-                              <div class="col-md-8">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="domFiscal"
-                                             [value]="tareas.objetotributario.domFiscal" disabled
-                                             placeholder=" ">
-                                        <label for="domFiscal">Domicilio Fiscal</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-4">
-                                   <div class="form-floating">
-                                        <input type="text" class="form-control" id="codMovim"
-                                             [value]="tareas.objetotributario.codMovim" disabled
-                                             placeholder=" ">
-                                        <label for="codMovim">Código Movimiento</label>
-                                   </div>
-                              </div>
-                         </div>
-                    </div>
-               </div>
-          </div>
-
-          <!-- Grid de Tareas del Procedimiento -->
-          <div class="mb-4" *ngIf="edita.sourceTareasProcedi">
-               <app-iflow-grid #grid (rowClick)="edita.clickTareProcedimiento($event)"
-                    [columns]="edita.columnsTareasProcedi" [columnsresize]="true"
-                    [localization]="edita.localizationObject" [pagesize]="2" [source]="edita.sourceTareasProcedi">
-               </app-iflow-grid>
-          </div>
-
-          <!-- Campos de Documentación -->
-          <div class="row mb-4">
-               <div class="col-6">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.anexo" class="form-select" id="anexo"
-                              name="anexo" required>
-                              <option value="1">Documentación Física Requerida</option>
-                              <option value="2">Fichero Enlace</option>
-                              <option value="3">Documentación Física Complementaria</option>
-                         </select>
-                         <label for="anexo">Anexo *</label>
-                    </div>
-               </div>
-               <div class="col-6">
-                    <div class="form-floating">
-                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.documAportada" class="form-select"
-                              id="docapor" name="docapor" required>
+                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.documAportada"
+                              class="form-select"
+                              [class.form-select--placeholder]="edita.tareatramiteexpedientecrear.documAportada == null || edita.tareatramiteexpedientecrear.documAportada === ''"
+                              id="docaporNuevaTarea" name="docapor" required aria-required="true">
+                              <option [ngValue]="null" disabled>Seleccione documentación aportada</option>
                               <option value="0">Ninguno</option>
                               <option value="1">Copia</option>
                               <option value="2">Compulsado</option>
-                              <option value="3">Copia Original</option>
+                              <option value="3">Copia original</option>
                               <option value="4">Original</option>
                          </select>
-                         <label for="docapor">Documentación Aportada *</label>
+                         <label class="required-field" for="docaporNuevaTarea">Documentación aportada</label>
                     </div>
                </div>
-          </div>
-
-          <div class="row mb-4">
-               <div class="col-6">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.tipoDocumEni" class="form-select"
-                              id="tipoDocumEni" name="tipoDocumEni" required>
+                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.tipoDocumEni"
+                              class="form-select"
+                              [class.form-select--placeholder]="!edita.tareatramiteexpedientecrear.tipoDocumEni"
+                              id="tipoDocumEniNuevaTarea" name="tipoDocumEni" required aria-required="true">
+                              <option [ngValue]="null" disabled>Seleccione tipo ENI</option>
                               <option value="TD01">Resolución</option>
                               <option value="TD02">Acuerdo</option>
                               <option value="TD03">Contrato</option>
@@ -349,27 +322,29 @@
                               <option value="TD20">Otros incautados</option>
                               <option value="TD21">Otros</option>
                          </select>
-                         <label for="tipoDocumEni">Tipo Documento ENI *</label>
+                         <label class="required-field" for="tipoDocumEniNuevaTarea">Tipo documento ENI</label>
                     </div>
                </div>
-               <div class="col-6">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.documentacion" class="form-select"
-                              id="documentacion" name="documentacion" required>
-                              <option value="" disabled selected>Seleccione una opción</option>
-                              <option value="1">Documentación Adjunta Digitalizada</option>
-                              <option value="2">Documentación Adjunta en Soporte Papel</option>
-                              <option value="3">Documentación Adjunta Digitalizada y en Papel</option>
+                         <select [(ngModel)]="edita.tareatramiteexpedientecrear.documentacion"
+                              class="form-select"
+                              [class.form-select--placeholder]="!edita.tareatramiteexpedientecrear.documentacion"
+                              id="documentacionNuevaTarea" name="documentacion" required aria-required="true">
+                              <option value="" disabled>Seleccione una opción</option>
+                              <option value="1">Documentación adjunta digitalizada</option>
+                              <option value="2">Documentación adjunta en soporte papel</option>
+                              <option value="3">Documentación adjunta digitalizada y en papel</option>
                          </select>
-                         <label for="documentacion">Documentación *</label>
+                         <label class="required-field" for="documentacionNuevaTarea">Documentación</label>
                     </div>
                </div>
-          </div>
-
-          <div class="modal-footer">
-               <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    (click)="tareas.limpiarErroresNuevaTarea()">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="tareas.limpiarErroresNuevaTarea(); edita.cerrarModal('NuevaTareaTra')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formNuevaTarea">Guardar</button>
+     </div>
 </app-modal-shell>

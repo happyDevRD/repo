@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment'
 import { FileUploadService } from '../../../core/service/file-upload.service'
 import { UserSessionService } from '../../../core/service/user-session.service'
 import { NotificationService } from '../../../core/service/notification.service'
+import { fechaHoyISO } from '../../../core/helper/fecha-legacy.helper'
 import { DocumentosListar } from '../models'
 import { SolicitudesService } from '../solicitudes.service'
 import { SolicitudesGridHost } from './solicitudes-grid.facade'
@@ -102,7 +103,7 @@ export class SolicitudesDocumentosFacade {
 
     const uploadData = {
       descripcion: host.descripcionArchivo,
-      fechaSubida: new Date(),
+      fechaSubida: fechaHoyISO(),
       usuContr: this.session.user,
       idSolicitud: host.idsolicitud,
       nombreArchivo: host.selectedFile.name,

@@ -7,6 +7,10 @@ import { EditaExpedienteOperacionesFacade } from '../../operaciones/edita-expedi
 import { EditaExpedienteRefs } from '../../services/edita-expediente-refs.service'
 import { ModalManagerService } from '../../../../../core/service/modal-manager.service'
 import { ModalActionEvent } from '../../../../../shared/modals/modal-action.model'
+import { fechaHoyISO } from '../../../../../core/helper/fecha-legacy.helper'
+import { CrearTablonAnuncio } from '../../../../../core/models/expediente-domain.model'
+import { CrearInteresado } from '../../../expedientes'
+import { TareaRowActionEvent } from '../edita-expediente-workspace-tareas/edita-expediente-workspace-tareas.component'
 
 @Component({
   selector: 'app-edita-expediente-workspace',
@@ -24,8 +28,7 @@ export class EditaExpedienteWorkspaceComponent {
   handleTramiteAction(event: ModalActionEvent): void {
     switch (event.id) {
       case 'nuevoTramite':
-        this.tramitesFacade.habilitaTramiteExp(this.edita)
-        this.modalManager.openModal('NuevoTramiteModal')
+        this.tramitesFacade.abrirModalNuevoTramite(this.edita)
         return
       case 'borrarTramite':
         this.tramitesFacade.borrarTramite(this.edita)
@@ -49,15 +52,19 @@ export class EditaExpedienteWorkspaceComponent {
         this.notifUiFacade.sincronizarConNotificaPlataforma()
         return
       case 'enviar':
+        this.notifUiFacade.creanotificacion.fecEnvio = fechaHoyISO()
         this.modalManager.openModal('EnvioNotifi')
         return
       case 'recepcionar':
+        this.notifUiFacade.creanotificacion.fecRecNotif = fechaHoyISO()
         this.modalManager.openModal('RecepNotifi')
         return
       case 'devolver':
+        this.notifUiFacade.creanotificacion.fecRecNotif = fechaHoyISO()
         this.modalManager.openModal('DevolverNotifi')
         return
       case 'publicar':
+        this.notifUiFacade.creanotificacion.fecPubBop = fechaHoyISO()
         this.modalManager.openModal('PubliNotifModal')
         return
       case 'anular':
@@ -119,6 +126,12 @@ export class EditaExpedienteWorkspaceComponent {
         this.tareasFacade.descargarArchivoFirmado(this.edita)
         return
       case 'propuestaResolucion':
+        this.edita.insertabolsacrear.fecAlta = fechaHoyISO()
+        this.edita.insertabolsacrear.fecPrefe = fechaHoyISO()
+        this.edita.insertabolsacrear.fecMaxResol = fechaHoyISO()
+        this.edita.insertabolsacrear.prioridad = ''
+        this.edita.insertabolsacrear.tipSesion = null as unknown as number
+        this.edita.insertabolsacrear.tipPunto = null as unknown as number
         this.modalManager.openModal('GenerarPropuestaResolucionModal')
         return
       case 'crearNotificacion':
@@ -129,7 +142,10 @@ export class EditaExpedienteWorkspaceComponent {
         this.modalManager.openModal('GenerarSalidaModal')
         return
       case 'tablonAnuncios':
-        this.tareasFacade.crearTablonAnuncio(this.edita)
+        this.edita.creartablonanuncio = new CrearTablonAnuncio()
+        this.edita.creartablonanuncio.tipAnunc = null
+        this.edita.creartablonanuncio.fecDesde = fechaHoyISO()
+        this.edita.creartablonanuncio.fecHasta = fechaHoyISO()
         this.modalManager.openModal('crearTablonAnunciosModal')
         return
       case 'finalizarTarea':
@@ -138,5 +154,22 @@ export class EditaExpedienteWorkspaceComponent {
       default:
         return
     }
+  }
+
+  handleTareaRowAction(event: TareaRowActionEvent): void {
+    if (!event?.tarea?.id || !event.actionId) {
+      return
+    }
+    this.edita.clicktareaNueva(event.tarea)
+    this.handleTareaAction({ id: event.actionId })
+  }
+
+  handleNuevoInteresado(): void {
+    this.edita.crearinteresado = new CrearInteresado()
+    this.edita.crearinteresado.fechaInicio = fechaHoyISO()
+    this.edita.crearinteresado.tipForNotif = null as unknown as number
+    this.edita.crearinteresado.email = ''
+    this.edita.lifecycleFacade.dniok = false
+    this.modalManager.openModal('ninteresadoModal')
   }
 }

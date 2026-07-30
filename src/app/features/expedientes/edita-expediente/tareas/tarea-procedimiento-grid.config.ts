@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types';
 
 export const TAREA_PROCEDIMIENTO_GRID_DATA_FIELDS = [
   { name: 'descripcion', type: 'string' },
@@ -23,6 +24,6 @@ export function buildTareaProcedimientoGridSource(idTareaProcedimiento: number |
   };
 }
 
-export function createTareaProcedimientoGridAdapter(idTareaProcedimiento: number | string): any {
+export function createTareaProcedimientoGridAdapter(idTareaProcedimiento: number | string): IflowGridSource {
   return new jqx.dataAdapter(buildTareaProcedimientoGridSource(idTareaProcedimiento));
 }

@@ -6,6 +6,7 @@ import { TemaDocumentoService } from '../../core/service/documento/tema-document
 import { ContabilidadService } from '../../core/service/contabilidad/contabilidad.service';
 import { UserSessionService } from '../../core/service/user-session.service';
 import { NotificationService } from '../../core/service/notification.service';
+import { fechaHoyISO } from '../../core/helper/fecha-legacy.helper';
 
 interface Contabilidad {
   idConta: number;
@@ -29,7 +30,7 @@ export class GenerarEntradaComponent implements OnInit {
   @ViewChild('entradaForm') entradaForm!: NgForm;
 
   // Propiedades del componente
-  public fechaHoy: string = new Date().toISOString().split('T')[0];
+  public fechaHoy: string = fechaHoyISO();
   public tipoIVA: number = 0.00;
   public currencyOptions = {
     align: 'right',

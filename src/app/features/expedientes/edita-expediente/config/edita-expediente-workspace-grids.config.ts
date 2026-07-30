@@ -1,3 +1,7 @@
+import {
+  IflowGridColumns,
+  IflowGridSource,
+} from '../../../../shared/components/iflow-grid/iflow-grid.types';
 import { GridRadioSelector } from '../../../../core/helper/grid-radio-selector';
 import { createColumnsListarNotifi } from '../notificaciones/notificaciones-grid-columns';
 import { createNotificacionGridAdapter } from '../notificaciones/notificaciones-grid.config';
@@ -31,18 +35,18 @@ export interface EditaExpedienteWorkspaceGridsContext {
 }
 
 export interface EditaExpedienteWorkspaceGridsBundle {
-  columnsTramite: any[];
-  sourceTramite: any;
-  columnsTareasTramite: any[];
-  sourceTareasTramite: any;
-  columnsListarNotifi: any[];
-  sourceListarNotifi: any;
-  columnsTramitadores: any[];
-  sourceTramitadores: any;
-  columnsTareasProcedi: any[];
-  sourceTareasProcedi: any;
-  columnsHistorico: any[];
-  sourceHistorico: any;
+  columnsTramite: IflowGridColumns;
+  sourceTramite: IflowGridSource;
+  columnsTareasTramite: IflowGridColumns;
+  sourceTareasTramite: IflowGridSource;
+  columnsListarNotifi: IflowGridColumns;
+  sourceListarNotifi: IflowGridSource;
+  columnsTramitadores: IflowGridColumns;
+  sourceTramitadores: IflowGridSource;
+  columnsTareasProcedi: IflowGridColumns;
+  sourceTareasProcedi: IflowGridSource;
+  columnsHistorico: IflowGridColumns;
+  sourceHistorico: IflowGridSource;
 }
 
 export const buildEditaExpedienteWorkspaceGrids = (

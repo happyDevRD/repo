@@ -77,7 +77,7 @@ export class SolicitudesPageFacade {
     })
   }
 
-  filtrarPorEstado(host: SolicitudesPageHost, value: unknown): void {
+  filtrarPorEstado(host: SolicitudesPageHost, value: string | number): void {
     this.solicitudesService.getSolicitudesfiltro(value).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe((solicitudlistar) => {

@@ -1,4 +1,9 @@
-type GridRenderer = (...args: any[]) => string;
+import {
+  IflowGridCellsRenderer,
+  IflowGridColumns,
+} from '../../../../shared/components/iflow-grid/iflow-grid.types'
+
+type GridRenderer = IflowGridCellsRenderer
 
 export interface TareaTramiteGridColumnRenderers {
   columnseleccionTareaTramite: GridRenderer;
@@ -13,7 +18,7 @@ export interface TareaTramiteGridColumnRenderers {
   cellsrendererPlazo: GridRenderer;
 }
 
-export function createColumnsTareasTramite(r: TareaTramiteGridColumnRenderers): any[] {
+export function createColumnsTareasTramite(r: TareaTramiteGridColumnRenderers): IflowGridColumns {
   return [
     { text: 'id', datafield: 'id', width: '1%', hidden: true },
     { text: 'TareaProcedimiento', datafield: 'tareaProcedimiento', width: '1%', hidden: true },

@@ -12,6 +12,7 @@ import { NotificationService } from '../../../core/service/notification.service'
 import { FormValidatorHelper } from '../../../core/helper/form-validator.helper';
 import { ModalManagerService } from '../../../core/service/modal-manager.service';
 import { UserSessionService } from '../../../core/service/user-session.service';
+import { fechaHoyISO } from '../../../core/helper/fecha-legacy.helper';
 
 
 
@@ -133,6 +134,10 @@ export class InteresadoComponent implements OnInit {
     this.dniok = false;
     this.veorepresentante = false;
     this.crearinteresado = new CrearInteresado();
+    this.crearinteresado.fechaInicio = fechaHoyISO();
+    this.crearinteresado.tipForNotif = null as unknown as number;
+    this.crearinteresado.email = '';
+    this.seleccionoRepre = false;
     this.idhispersodni = "";
     this.idpersodni = "";
     this.nombredni = "";
@@ -147,6 +152,12 @@ export class InteresadoComponent implements OnInit {
   }
   public seleccionoRepre!: any;
 
+  public handleFormaNotificacionChange(tipForNotif: number | null): void {
+    if (tipForNotif !== 1) {
+      this.crearinteresado.email = '';
+    }
+  }
+
   /**
    * Valida un campo individual cuando el usuario lo completa
    */
@@ -159,14 +170,19 @@ export class InteresadoComponent implements OnInit {
   }
 
   public crearInteresado() {
-    // Validar campos obligatorios
-    const requiredFields = ['interesado', 'fnotifi'];
+    // Validar campos obligatorios (tipForNotif=0 es válido: correo postal)
+    const requiredFields = ['interesado'];
     const formData = {
       interesado: this.crearinteresado.usuario,
-      fnotifi: this.crearinteresado.tipForNotif
     };
 
     if (!FormValidatorHelper.validateFields(formData, requiredFields, this.notificationService)) {
+      return;
+    }
+
+    if (this.crearinteresado.tipForNotif !== 0 && this.crearinteresado.tipForNotif !== 1) {
+      FormValidatorHelper.markFieldAsError('fnotifi');
+      this.notificationService.incompleteFields();
       return;
     }
 
@@ -187,49 +203,46 @@ export class InteresadoComponent implements OnInit {
     this.crearinteresado.idPerso = this.idpersodni;
     this.crearinteresado.idexpediente = this.idExpediente;
 
-    if (this.seleccionoRepre == "1") {
+    if (this.seleccionoRepre == "1" || this.seleccionoRepre === true) {
       this.crearinteresado.idHisRepre = this.representanteexplistar.idHisPerso;
       this.crearinteresado.idPersoRepre = this.representanteexplistar.idPerso;
     }
     this.expedientesService.crearInteresado(this.crearinteresado).pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(response => {
-      // Actualizar el grid
-      this.sourceInteresado = ({
-        dataType: 'json',
-        dataFields: [
-          { name: 'nomInter', type: 'string' },
-          { name: 'numDocumInter', type: 'string' },
-          { name: 'principal', type: 'any' },
-          { name: "nomRepre", type: 'string' },
-          { name: "numDocumRepre", type: 'string' },
-          { name: 'id', type: 'any' },
-          { name: 'forNotif', type: 'any' },
-          { name: 'dirInter', type: 'any' },
-          { name: 'dirRepre', type: 'any' },
-          { name: 'desProviInter', type: 'any' },
-          { name: 'desProviRepre', type: 'any' },
-          { name: 'desMunicInter', type: 'any' },
-          { name: 'desMunicRepre', type: 'any' },
-          { name: 'emailNotif', type: 'any' },
-        ],
-        url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
-        id: 'id'
-      });
+    ).subscribe({
+      next: () => {
+        this.sourceInteresado = ({
+          dataType: 'json',
+          dataFields: [
+            { name: 'nomInter', type: 'string' },
+            { name: 'numDocumInter', type: 'string' },
+            { name: 'principal', type: 'any' },
+            { name: 'nomRepre', type: 'string' },
+            { name: 'numDocumRepre', type: 'string' },
+            { name: 'id', type: 'any' },
+            { name: 'forNotif', type: 'any' },
+            { name: 'dirInter', type: 'any' },
+            { name: 'dirRepre', type: 'any' },
+            { name: 'desProviInter', type: 'any' },
+            { name: 'desProviRepre', type: 'any' },
+            { name: 'desMunicInter', type: 'any' },
+            { name: 'desMunicRepre', type: 'any' },
+            { name: 'emailNotif', type: 'any' },
+          ],
+          url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
+          id: 'id',
+        })
 
-      this.limpiadatosinteresado();
-      this.notificationService.saveSuccess('Interesado');
-    },
-      (error: HttpErrorResponse) => {
-        if (error.status == 403) {
-          this.notificationService.error(error.error.message);
-          this.limpiadatosinteresado();
-        } else {
-          this.notificationService.saveSuccess('Interesado');
-          this.limpiadatosinteresado();
+        this.notificationService.saveSuccess('Interesado')
+        this.cerrarModal('ninteresadoModal')
+      },
+      error: (error: HttpErrorResponse) => {
+        this.notificationService.fromHttpError(error, 'No se pudo crear el interesado')
+        if (error.status === 403) {
+          this.limpiadatosinteresado()
         }
-      }
-    );
+      },
+    })
   }
 
   public borrarinteresados() {
@@ -525,6 +538,9 @@ export class InteresadoComponent implements OnInit {
 
   // Gestión de modales
   public abrirModal(modalId: string): void {
+    if (modalId === 'ninteresadoModal') {
+      this.limpiadatosinteresado();
+    }
     this.modalManagerService.openModal(modalId);
   }
 

@@ -15,6 +15,8 @@ import {
   resolveNotificacionActions,
 } from '../../notificaciones/notificacion-actions.helper'
 import { NotificacionesService } from '../../services/notificaciones.service'
+import { fechaHoyISO } from '../../../../core/helper/fecha-legacy.helper'
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 import {
   crearNotificacionVacia,
   aplicarNotificacionVer,
@@ -362,7 +364,10 @@ export class EditaExpedienteNotificacionesUiFacade {
     host.limpiarCacheValidacion()
   }
 
-  onFechaCampoChange(_host: EditaExpedienteNotificacionesUiHost | undefined, campo: CampoFechaNotificacion, valor: string): void {
+  onFechaCampoChange(_host: EditaExpedienteNotificacionesUiHost | undefined, campo: CampoFechaNotificacion, eventOrValue: Event | string): void {
+    const valor = typeof eventOrValue === 'string'
+      ? eventOrValue
+      : (eventOrValue.target as HTMLInputElement).value
     asignarFechaCampoNotificacion(this.creanotificacion, campo, valor)
   }
 
@@ -401,7 +406,10 @@ export class EditaExpedienteNotificacionesUiFacade {
   }
 
   abrirModalEnviarNotificacion(_host?: EditaExpedienteNotificacionesUiHost): void {
-    Promise.resolve(this.vernotifi(undefined, this.idNotificacion, false)).then(() => abrirModalEnviarNotificacion())
+    Promise.resolve(this.vernotifi(undefined, this.idNotificacion, false)).then(() => {
+      this.creanotificacion.fecEnvio = fechaHoyISO()
+      abrirModalEnviarNotificacion()
+    })
   }
 
   borraDatosCrearNotifi(hostParam?: EditaExpedienteNotificacionesUiHost): void {
@@ -478,7 +486,7 @@ export class EditaExpedienteNotificacionesUiFacade {
   }
 
   inicializarFechaNotificacion(_host?: EditaExpedienteNotificacionesUiHost): void {
-    this.creanotificacion.fecNotif = new Date()
+    this.creanotificacion.fecNotif = fechaHoyISO()
   }
 
   limpiarFormularioNotificacion(hostParam?: EditaExpedienteNotificacionesUiHost): void {
@@ -512,7 +520,7 @@ export class EditaExpedienteNotificacionesUiFacade {
     ejercicio: number,
     numero: number,
     options?: NotificacionGridSourceOptions,
-  ): any {
+  ): IflowGridSource {
     return createNotificacionGridAdapter(ejercicio, numero, options)
   }
 
@@ -528,8 +536,8 @@ export class EditaExpedienteNotificacionesUiFacade {
     verNotificacion: (id: number) => void
     editarNotificacion: (id: number) => void
   }): void {
-    ; (window as any).verNotificacion = handlers.verNotificacion
-      ; (window as any).editarNotificacion = handlers.editarNotificacion
+    window.verNotificacion = handlers.verNotificacion
+    window.editarNotificacion = handlers.editarNotificacion
   }
 
   cargarEnvioNotificaActivo(

@@ -6,6 +6,7 @@
   [isFechaGenerInvalid]="edita.notifUiFacade.isFechaGenerInvalid()"
   [isFechaFirmaInvalid]="edita.notifUiFacade.isFechaFirmaInvalid()"
   (crearModeloTeuFichero)="edita.notifUiFacade.crearModeloTeuFichero()"
+  (cancelar)="edita.notifUiFacade.cerrarModal()"
 ></app-edita-expediente-modals-notificaciones>
 <app-edita-expediente-modals-interesados
   [crearinteresado]="edita.crearinteresado"
@@ -13,6 +14,7 @@
   [dniok]="edita.lifecycleFacade.dniok"
   [selected]="edita.selected"
   (crear)="edita.crearInteresado()"
+  (cancelar)="edita.cerrarModal('ninteresadoModal')"
   (solicitarDni)="edita.solicitadni($event)"
 ></app-edita-expediente-modals-interesados>
 <app-edita-expediente-modals-operaciones></app-edita-expediente-modals-operaciones>

@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types';
 
 export interface NotificacionGridDataField {
   name: string;
@@ -16,23 +17,23 @@ export const NOTIFICACION_GRID_DATA_FIELDS: NotificacionGridDataField[] = [
   { name: 'usuario', type: 'string' },
   { name: 'ejeNotif', type: 'number' },
   { name: 'idNotif', type: 'number' },
-  { name: 'tareaProcedimiento', type: 'any' },
+  { name: 'tareaProcedimiento', type: 'string' },
   { name: 'numNotif', type: 'number' },
-  { name: 'numDocum', type: 'any' },
-  { name: 'desPerEntid', type: 'any' },
+  { name: 'numDocum', type: 'string' },
+  { name: 'desPerEntid', type: 'string' },
   { name: 'fecEnvio', type: 'string' },
-  { name: 'numTarea', type: 'any' },
-  { name: 'desTramite', type: 'any' },
-  { name: 'bop', type: 'any' },
-  { name: 'numBop', type: 'any' },
-  { name: 'fecEmiBop', type: 'any' },
-  { name: 'fecPubBop', type: 'any' },
-  { name: 'numEnvioTeu', type: 'any' },
-  { name: 'desReceptor', type: 'any' },
-  { name: 'desNotificador', type: 'any' },
-  { name: 'situacion', type: 'any' },
-  { name: 'fecRegistSalid', type: 'any' },
-  { name: 'acciones', type: 'any' },
+  { name: 'numTarea', type: 'string' },
+  { name: 'desTramite', type: 'string' },
+  { name: 'bop', type: 'number' },
+  { name: 'numBop', type: 'number' },
+  { name: 'fecEmiBop', type: 'string' },
+  { name: 'fecPubBop', type: 'string' },
+  { name: 'numEnvioTeu', type: 'string' },
+  { name: 'desReceptor', type: 'string' },
+  { name: 'desNotificador', type: 'string' },
+  { name: 'situacion', type: 'string' },
+  { name: 'fecRegistSalid', type: 'string' },
+  { name: 'acciones', type: 'string' },
 ];
 
 export interface NotificacionGridSourceOptions {
@@ -93,6 +94,6 @@ export function createNotificacionGridAdapter(
   ejercicio: number,
   numero: number,
   options?: NotificacionGridSourceOptions,
-): any {
+): IflowGridSource {
   return new jqx.dataAdapter(buildNotificacionGridSource(ejercicio, numero, options));
 }

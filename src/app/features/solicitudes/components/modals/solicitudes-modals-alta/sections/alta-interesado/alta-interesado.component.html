@@ -10,35 +10,58 @@
   <div class="row g-2 align-items-end soli-alta__search">
     <div class="col">
       <div class="form-floating">
-        <input type="text" class="form-control" [(ngModel)]="s.creasolicitud.numDocum"
-          (keydown.enter)="$event.preventDefault(); s.buscarInteresado()"
-          id="interesado" name="interesado" required placeholder=" "
-          [class.is-invalid]="s.isDniNuevaInvalid()">
-        <label class="required-field" for="interesado">Documento (DNI / CIF / NIE)</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="s.creasolicitud.numDocum"
+          (keydown.enter)="$event.preventDefault(); s.handleBuscarInteresado()"
+          id="soli-alta-interesado-doc"
+          name="interesado"
+          required
+          placeholder=" "
+          autocomplete="off"
+          [class.is-invalid]="s.isDniNuevaInvalid()"
+          [attr.aria-invalid]="s.isDniNuevaInvalid() || null"
+          [attr.aria-describedby]="s.isDniNuevaInvalid() ? 'soli-alta-interesado-doc-err' : null"
+          [attr.aria-busy]="s.personaFacade.buscandoInteresado || null"
+        >
+        <label class="required-field" for="soli-alta-interesado-doc">Documento (DNI / CIF / NIE)</label>
       </div>
-      <div *ngIf="s.isDniNuevaInvalid()" class="invalid-feedback d-block">
+      <div *ngIf="s.isDniNuevaInvalid()" id="soli-alta-interesado-doc-err" class="invalid-feedback d-block" role="alert">
         El documento del interesado es obligatorio
       </div>
     </div>
     <div class="col-auto">
-      <button type="button" class="btn-iflow btn-iflow--secondary soli-alta__buscar"
-        (click)="s.buscarInteresado()"
-        [disabled]="s.personaFacade.buscandoInteresado || !s.creasolicitud.numDocum">
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--secondary soli-alta__buscar"
+        (click)="s.handleBuscarInteresado()"
+        [disabled]="s.personaFacade.buscandoInteresado || !s.creasolicitud.numDocum"
+        [attr.aria-busy]="s.personaFacade.buscandoInteresado || null"
+        [attr.aria-label]="s.personaFacade.buscandoInteresado ? 'Buscando interesado' : 'Buscar interesado'"
+      >
         <span *ngIf="s.personaFacade.buscandoInteresado" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        <span *ngIf="s.personaFacade.buscandoInteresado" class="visually-hidden">Buscando…</span>
         <i *ngIf="!s.personaFacade.buscandoInteresado" class="bi bi-search me-1" aria-hidden="true"></i>
         Buscar
       </button>
     </div>
   </div>
 
-  <p class="soli-alta__hint" *ngIf="!s.personaFacade.dniok && !s.personaFacade.existepersonaentidad">
+  <p class="soli-alta__hint" *ngIf="!s.personaFacade.dniok && !s.personaFacade.existepersonaentidad" id="soli-alta-interesado-hint">
     Los datos del interesado aparecerán aquí tras la búsqueda.
   </p>
 
   <!-- Localizado: resumen en rejilla clave/valor (solo lectura) -->
-  <div class="soli-alta__resultado" *ngIf="s.personaFacade.dniok" aria-live="polite">
+  <div
+    class="soli-alta__resultado"
+    *ngIf="s.personaFacade.dniok"
+    role="status"
+    aria-live="polite"
+    aria-labelledby="soli-alta-interesado-ok"
+  >
     <div class="soli-alta__resultado-head">
-      <span class="soli-alta__resultado-badge">
+      <span class="soli-alta__resultado-badge" id="soli-alta-interesado-ok">
         <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
         Interesado localizado
       </span>
@@ -71,10 +94,12 @@
   <div
     class="soli-alta__resultado soli-alta__resultado--warn"
     *ngIf="s.personaFacade.existepersonaentidad"
-    aria-live="polite"
+    role="alert"
+    aria-live="assertive"
+    aria-labelledby="soli-alta-interesado-warn"
   >
     <div class="soli-alta__resultado-head soli-alta__resultado-head--warn">
-      <span class="soli-alta__resultado-badge soli-alta__resultado-badge--warn">
+      <span class="soli-alta__resultado-badge soli-alta__resultado-badge--warn" id="soli-alta-interesado-warn">
         <i class="bi bi-person-x-fill" aria-hidden="true"></i>
         Interesado no encontrado
       </span>
@@ -97,8 +122,9 @@
         <select
           class="form-select"
           (change)="s.selecTipPerso(s.creasolicitud.tipPerso)"
-          id="tipPerso"
+          id="soli-alta-tip-perso"
           name="tipPerso"
+          required
           [(ngModel)]="s.creasolicitud.tipPerso"
           [class.form-select--placeholder]="!s.creasolicitud.tipPerso"
         >
@@ -107,59 +133,59 @@
           <option [ngValue]="'2'">C.I.F</option>
           <option [ngValue]="'3'">Tarjeta Residencia</option>
         </select>
-        <label class="required-field" for="tipPerso">Tipo de documento</label>
+        <label class="required-field" for="soli-alta-tip-perso">Tipo de documento</label>
       </div>
     </div>
     <div class="col-12" *ngIf="s.personaFacade.selectRazonSocial">
       <div class="form-floating">
-        <input type="text" class="form-control" id="razSocia" name="razSocia"
+        <input type="text" class="form-control" id="soli-alta-raz-socia" name="razSocia" required
           [(ngModel)]="s.creasolicitud.razSocia" placeholder=" ">
-        <label class="required-field" for="razSocia">Razón social</label>
+        <label class="required-field" for="soli-alta-raz-socia">Razón social</label>
       </div>
     </div>
     <div class="col-md-4" *ngIf="s.personaFacade.selectnombre">
       <div class="form-floating">
-        <input type="text" class="form-control" id="nombreperso" name="nombreperso"
+        <input type="text" class="form-control" id="soli-alta-nombre" name="nombreperso" required
           [(ngModel)]="s.creasolicitud.nombre" placeholder=" ">
-        <label class="required-field" for="nombreperso">Nombre</label>
+        <label class="required-field" for="soli-alta-nombre">Nombre</label>
       </div>
     </div>
     <div class="col-md-4" *ngIf="s.personaFacade.selectape1">
       <div class="form-floating">
-        <input type="text" class="form-control" id="apellido1" name="apellido1"
+        <input type="text" class="form-control" id="soli-alta-apellido1" name="apellido1" required
           [(ngModel)]="s.creasolicitud.apellido1" placeholder=" ">
-        <label class="required-field" for="apellido1">Primer apellido</label>
+        <label class="required-field" for="soli-alta-apellido1">Primer apellido</label>
       </div>
     </div>
     <div class="col-md-4" *ngIf="s.personaFacade.selectape2">
       <div class="form-floating">
-        <input type="text" class="form-control" id="apellido2" name="apellido2"
+        <input type="text" class="form-control" id="soli-alta-apellido2" name="apellido2" required
           [(ngModel)]="s.creasolicitud.apellido2" placeholder=" ">
-        <label class="required-field" for="apellido2">Segundo apellido</label>
+        <label class="required-field" for="soli-alta-apellido2">Segundo apellido</label>
       </div>
     </div>
     <div class="col-12">
       <div class="form-floating">
-        <input type="text" class="form-control" id="direccion" name="direccion"
+        <input type="text" class="form-control" id="soli-alta-direccion" name="direccion" required
           [(ngModel)]="s.creasolicitud.dirPosta" placeholder=" ">
-        <label class="required-field" for="direccion">Dirección</label>
+        <label class="required-field" for="soli-alta-direccion">Dirección</label>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-floating">
-        <input type="number" class="form-control" id="cp" name="cp"
+        <input type="number" class="form-control" id="soli-alta-cp" name="cp" required
           [(ngModel)]="s.creasolicitud.codPosta" placeholder=" ">
-        <label class="required-field" for="cp">Código postal</label>
+        <label class="required-field" for="soli-alta-cp">Código postal</label>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-floating">
         <select
           class="form-select"
-          id="ps-prov"
+          id="soli-alta-prov"
           (change)="s.creasolicitud.codMunic = ''; s.gestimunicip(s.creasolicitud.codProvi)"
           name="provincia"
-          title="Provincia"
+          required
           [(ngModel)]="s.creasolicitud.codProvi"
           [class.form-select--placeholder]="!s.creasolicitud.codProvi"
         >
@@ -167,16 +193,16 @@
           <option *ngFor="let provincias of s.provin; trackBy: trackById"
             [ngValue]="provincias.id">{{ provincias.nm }}</option>
         </select>
-        <label class="required-field" for="ps-prov">Provincia</label>
+        <label class="required-field" for="soli-alta-prov">Provincia</label>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-floating">
         <select
           class="form-select"
-          id="ps-mun"
+          id="soli-alta-mun"
           name="municipio"
-          title="Municipio"
+          required
           [(ngModel)]="s.creasolicitud.codMunic"
           [class.form-select--placeholder]="!s.creasolicitud.codMunic"
         >
@@ -184,7 +210,7 @@
           <option *ngFor="let municipio of s.personaFacade.municiflitro; trackBy: trackById"
             [ngValue]="municipio.id">{{ municipio.nm }}</option>
         </select>
-        <label class="required-field" for="ps-mun">Municipio</label>
+        <label class="required-field" for="soli-alta-mun">Municipio</label>
       </div>
     </div>
   </div>

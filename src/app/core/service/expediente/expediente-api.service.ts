@@ -50,13 +50,23 @@ export class ExpedienteApiService {
   }
 
   crearExpediente(nuevoexpediente: NuevoExpediente): Observable<NuevoExpediente> {
-    const varios = {
+    const emailRaw = nuevoexpediente.email
+    const email =
+      emailRaw == null || String(emailRaw).trim() === ''
+        ? null
+        : String(emailRaw).trim()
+    const forNotif =
+      nuevoexpediente.formaNotifi === 0 || nuevoexpediente.formaNotifi === 1
+        ? nuevoexpediente.formaNotifi
+        : 0
+
+    const body = {
       estado: 'ABIERTO',
       fase: 'INICIO',
       idHisDocum: nuevoexpediente.idHisDocum,
       idDocum: nuevoexpediente.idDocum,
       fecInicio: nuevoexpediente.fechaInicio,
-      formaApertura: 'OFICIO',
+      formaApertura: nuevoexpediente.forma_apertura || 'OFICIO',
       titulo: nuevoexpediente.titulo,
       instructor: this.instructor,
       procedimiento: nuevoexpediente.procedimiento,
@@ -69,14 +79,12 @@ export class ExpedienteApiService {
       idRepre: nuevoexpediente.idRepre,
       idHisRepre: nuevoexpediente.idHisRepre,
       asunto: nuevoexpediente.asunto,
+      email,
+      forNotif,
     }
-    if (nuevoexpediente.email == null) {
-      nuevoexpediente.email = '0'
-    }
-    const email = nuevoexpediente.email
-    const fnotifi = nuevoexpediente.formaNotifi
-    const url = `${this.urlCrear}/${email}/${fnotifi}`
-    return this.http.post<NuevoExpediente>(url, JSON.stringify(varios), {
+
+    // Contrato preferido: email/forNotif en body (sin path sentinela '0')
+    return this.http.post<NuevoExpediente>(this.urlCrear, JSON.stringify(body), {
       headers: this.httpHeaders,
     })
   }

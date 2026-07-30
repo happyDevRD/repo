@@ -1,11 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http'
-import { DestroyRef, Injectable, inject } from '@angular/core'
+import { ChangeDetectorRef, DestroyRef, Injectable, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { CrearTramiteExp, EditarTramiteExp, ListarTramites } from '../../expedientes'
 import { NotificationService } from '../../../../core/service/notification.service'
 import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { ExpedientesService } from '../../expedientes.service'
-import { buildTramiteGridSource } from './tramites-grid.config'
+import {
+  buildTramiteGridSourceFromLocal,
+  createTramiteGridAdapter,
+} from './tramites-grid.config'
 import { fechaTramitePorDefecto, validarCrearTramite } from './tramites-validacion.helper'
 import {
   aplicarFechaTramitePorDefecto,
@@ -20,10 +23,13 @@ import {
   aplicarVistaTramitadores,
   aplicarVistaTramite,
 } from '../shared/edita-expediente-panel-navegacion.helper'
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 
 export interface EditaExpedienteTramitesGridHost {
   idExpediente: number
   sourceTramite: unknown
+  listartramites?: ListarTramites[]
+  cdr?: ChangeDetectorRef
 }
 
 export interface EditaExpedienteTramitesHost extends EditaExpedienteTramitesGridHost {
@@ -32,7 +38,6 @@ export interface EditaExpedienteTramitesHost extends EditaExpedienteTramitesGrid
   editartramiteexp: EditarTramiteExp
   enviandoTramite: boolean
   nuevotramite: boolean
-  recargarpagina(): void
   limpiarFormularioTramite(): void
   borrarDatosTramite(): void
 }
@@ -61,7 +66,7 @@ export class EditaExpedienteTramitesFacade {
   configurarGridTramites(
     idExpediente: number,
     onListar: (tramites: ListarTramites[]) => void,
-  ): Record<string, unknown> {
+  ): IflowGridSource {
     this.expedientesService.getTramitesListar(idExpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
@@ -77,11 +82,33 @@ export class EditaExpedienteTramitesFacade {
       },
     })
 
-    return buildTramiteGridSource(idExpediente)
+    return createTramiteGridAdapter(idExpediente)
   }
 
   refrescarGrid(host: EditaExpedienteTramitesGridHost): void {
-    host.sourceTramite = buildTramiteGridSource(host.idExpediente)
+    if (!host.idExpediente) {
+      return
+    }
+
+    this.expedientesService.getTramitesListar(host.idExpediente).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (list) => {
+        const rows = list ?? []
+        if (host.listartramites !== undefined) {
+          host.listartramites = rows
+        }
+        host.sourceTramite = buildTramiteGridSourceFromLocal(rows)
+        host.cdr?.markForCheck()
+      },
+      error: () => {
+        if (host.listartramites !== undefined) {
+          host.listartramites = []
+        }
+        host.sourceTramite = buildTramiteGridSourceFromLocal([])
+        host.cdr?.markForCheck()
+      },
+    })
   }
 
   crearTramite(host: EditaExpedienteTramitesHost): void {
@@ -113,10 +140,9 @@ export class EditaExpedienteTramitesFacade {
         host.enviandoTramite = false
         this.notificationService.saveSuccess('Trámite')
         this.modalManagerService.closeModal('NuevoTramiteModal')
-        this.refrescarGrid(host)
         host.limpiarFormularioTramite()
         host.nuevotramite = false
-        setTimeout(host.recargarpagina, 1000)
+        this.refrescarGrid(host)
       },
       error: (error: HttpErrorResponse) => {
         host.enviandoTramite = false
@@ -195,7 +221,6 @@ export class EditaExpedienteTramitesFacade {
   cancelarnuevotramite(host: EditaExpedienteTramitesUiHost): void {
     host.nuevotramite = false
     host.creartramiteexp = crearTramiteExpVacio()
-    host.nuevotramite = false
     host.FechaSistema()
   }
 
@@ -207,10 +232,19 @@ export class EditaExpedienteTramitesFacade {
   habilitaTramiteExp(host: EditaExpedienteTramitesUiHost): void {
     host.nuevotramite = true
     host.verTareasdelTramite = false
+    host.creartramiteexp = crearTramiteExpVacio()
     aplicarFechaTramitePorDefecto(host.creartramiteexp)
   }
 
+  abrirModalNuevoTramite(host: EditaExpedienteTramitesHost & EditaExpedienteTramitesUiHost): void {
+    host.enviandoTramite = false
+    this.habilitaTramiteExp(host)
+    this.modalManagerService.openModal('NuevoTramiteModal')
+    window.setTimeout(() => this.limpiarErroresTramite(), 50)
+  }
+
   validateAndCreateTramite(event: Event, crearTramExp: () => void): void {
+    event.preventDefault()
     if (!validarFormularioBootstrap(event)) {
       this.notificationService.incompleteFields()
       return
@@ -227,7 +261,7 @@ export class EditaExpedienteTramitesFacade {
   }
 
   limpiarErroresTramite(): void {
-    limpiarErroresFormulario('formNuevoTramite', true)
+    limpiarErroresFormulario('formNuevoTramite', false)
   }
 
   limpiarErroresEditarTramite(): void {

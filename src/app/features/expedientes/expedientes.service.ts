@@ -636,7 +636,7 @@ export class ExpedientesService {
     );
   }
 
-  cancelarExpediente(id: number, fcancela: Date): Observable<EditExpediente> {
+  cancelarExpediente(id: number, fcancela: string | Date): Observable<EditExpediente> {
     const varios = {
       "estado": "CANCELADO",
       "fecCancelacion": fcancela
@@ -678,12 +678,16 @@ export class ExpedientesService {
       "usuContr": this.usuContrl,
     }
     let keys = JSON.stringify(varios);
-    this.notificationService.success({ title: 'Nuevo Trámite de Expediente  ', text: ` creado con éxito` })
     return this.http.post<CrearTramiteExp>(this.urlexpeditramitecrear, keys, {headers: this.httpHeaders});
 
   }
 
   crearInteresado(crearinteresado: CrearInteresado): Observable<any> {
+    const emailRaw = crearinteresado.email
+    const emailNotif =
+      emailRaw == null || String(emailRaw).trim() === '' || String(emailRaw).trim() === '0'
+        ? null
+        : String(emailRaw).trim()
     let varios = {
       "fecInicio": crearinteresado.fechaInicio,
       "forma_apertura": crearinteresado.forma_apertura,
@@ -696,7 +700,7 @@ export class ExpedientesService {
       "ejercicio": crearinteresado.ejercicio,
       "solicitud": crearinteresado.idsolicitud,
       "expediente": crearinteresado.idexpediente,
-      "emailNotif": crearinteresado.email,
+      "emailNotif": emailNotif,
       "forNotif": crearinteresado.tipForNotif,
       "principal": 0,
       "idHisRepre": crearinteresado.idHisRepre,

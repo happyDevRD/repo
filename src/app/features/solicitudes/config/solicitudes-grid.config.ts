@@ -1,5 +1,9 @@
 import { environment } from 'src/environments/environment';
 import { GridRadioSelector } from '../../../core/helper/grid-radio-selector';
+import {
+  IflowGridColumns,
+  IflowGridSource,
+} from '../../../shared/components/iflow-grid/iflow-grid.types';
 import { SolicitudListar } from '../models';
 
 export interface SolicitudesGridRenderContext {
@@ -180,13 +184,13 @@ const REPRESENTANTES_DATA_FIELDS = [
   { name: 'dirPosta', type: 'any' },
 ];
 
-const buildSolicitudTailColumns = (renderers: SolicitudesGridRenderers): any[] => [
+const buildSolicitudTailColumns = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: 'Representante', datafield: 'nomRepre', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
   { text: 'idRepre', datafield: 'idRepre', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
   { text: 'idHisRepre', datafield: 'idHisRepre', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
 ];
 
-export const buildColumnsSolici = (renderers: SolicitudesGridRenderers): any[] => [
+export const buildColumnsSolici = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: 'id', datafield: 'id', hidden: true },
   { text: 'dirRepre', datafield: 'dirRepre', hidden: true },
   { text: 'idExpediente', datafield: 'idExpediente', hidden: true },
@@ -205,7 +209,7 @@ export const buildColumnsSolici = (renderers: SolicitudesGridRenderers): any[] =
   { text: 'iddocum', datafield: 'idDocum', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
 ];
 
-export const buildColumnsSoliciPendi = (renderers: SolicitudesGridRenderers): any[] => [
+export const buildColumnsSoliciPendi = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: 'id', datafield: 'id', hidden: true },
   { text: 'dirRepre', datafield: 'dirRepre', hidden: true },
   { text: 'idExpediente', datafield: 'idExpediente', hidden: true },
@@ -222,7 +226,7 @@ export const buildColumnsSoliciPendi = (renderers: SolicitudesGridRenderers): an
   ...buildSolicitudTailColumns(renderers),
 ];
 
-export const buildColumnsListDoc = (renderers: SolicitudesGridRenderers): any[] => [
+export const buildColumnsListDoc = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: 'id', datafield: 'id', width: '1%', hidden: true },
   { text: 'Archivo', datafield: 'archivo', width: '1%', hidden: true },
   { text: '', datafield: '', width: '1%', cellsrenderer: renderers.columnseleccionDoc, renderer: renderers.columnrenderer },
@@ -231,7 +235,7 @@ export const buildColumnsListDoc = (renderers: SolicitudesGridRenderers): any[] 
   { text: 'Nombre Archivo', datafield: 'nombreArchivo', cellsrenderer: renderers.cellsrendererDescargaDoc, renderer: renderers.columnrenderer },
 ];
 
-export const buildColumnsListExpe = (renderers: SolicitudesGridRenderers): any[] => [
+export const buildColumnsListExpe = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: '', datafield: '', width: '1%', cellsrenderer: renderers.columnseleccion, renderer: renderers.columnrenderer, hidden: true },
   { text: 'Ejercicio', datafield: 'ejercicio', cellsrenderer: renderers.cellsrenderer, renderer: renderers.columnrenderer },
   { text: 'Nùmero', width: '8%', datafield: 'id', cellsrenderer: renderers.cellsrendererEjercicio, renderer: renderers.columnrenderer },
@@ -241,7 +245,7 @@ export const buildColumnsListExpe = (renderers: SolicitudesGridRenderers): any[]
   { text: 'Estado', datafield: 'estado', cellsrenderer: renderers.cellsrenderer, renderer: renderers.columnrenderer },
 ];
 
-export const buildColumnsListRepre = (renderers: SolicitudesGridRenderers): any[] => [
+export const buildColumnsListRepre = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: 'id', datafield: 'id', width: '1%', hidden: true },
   { text: 'idPerso', datafield: 'idPerso', width: '1%', hidden: true },
   { text: 'idHisPerso', datafield: 'idHisPerso', width: '1%', hidden: true },
@@ -253,7 +257,7 @@ export const buildColumnsListRepre = (renderers: SolicitudesGridRenderers): any[
 export const createSolicitudesListAdapter = (
   idOrgEleme: string | number,
   options?: { sortById?: boolean },
-): any =>
+): IflowGridSource =>
   new jqx.dataAdapter({
     dataType: 'json',
     dataFields: SOLICITUDES_DATA_FIELDS,
@@ -263,7 +267,7 @@ export const createSolicitudesListAdapter = (
     sortdirection: 'desc',
   });
 
-export const createDocumentosAdapter = (idsolicitud: number | string): any =>
+export const createDocumentosAdapter = (idsolicitud: number | string): IflowGridSource =>
   new jqx.dataAdapter({
     dataType: 'json',
     dataFields: DOCUMENTOS_DATA_FIELDS,
@@ -278,7 +282,7 @@ export const createDocumentosSourcePlain = (idsolicitud: number | string): Recor
   id: 'id',
 });
 
-export const createExpedientesAdapter = (idexpedienteAsoc: number | string): any =>
+export const createExpedientesAdapter = (idexpedienteAsoc: number | string): IflowGridSource =>
   new jqx.dataAdapter({
     dataType: 'json',
     dataFields: EXPEDIENTES_DATA_FIELDS,
@@ -297,7 +301,7 @@ export const createRepresentantesAdapter = (
   idPerso: number | string,
   idHisPerso: number | string,
   withSort = false,
-): any => {
+): IflowGridSource => {
   const config = {
     dataType: 'json',
     dataFields: REPRESENTANTES_DATA_FIELDS,

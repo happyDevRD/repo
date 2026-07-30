@@ -1,8 +1,16 @@
     <fieldset class="mb-3">
       <div class="row g-3">
         <div class="col-md-5"><div class="form-floating">
-          <select id="temaSelect" class="form-select" [(ngModel)]="ge.selectedTema" (ngModelChange)="ge.onTemaSelected()" name="temaSelect" required>
-            <option [ngValue]="null">-- Seleccione un tema --</option>
+          <select
+            id="temaSelect"
+            class="form-select"
+            [(ngModel)]="ge.selectedTema"
+            (ngModelChange)="ge.onTemaSelected()"
+            name="temaSelect"
+            required
+            [class.form-select--placeholder]="!ge.selectedTema"
+          >
+            <option [ngValue]="null" disabled>Selecciona un tema</option>
             <option *ngFor="let tema of ge.temasDocumentoListar" [ngValue]="tema">{{ tema.desTema }}</option>
           </select>
           <label for="temaSelect">Código Tema <span class="text-danger">*</span></label>

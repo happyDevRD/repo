@@ -1,7 +1,14 @@
-<app-modal-shell modalId="insideRemisionJusticiaModal" title="Remisión a Justicia (INSIDE)"
-     titleId="insideRemisionJusticiaModalLabel" dialogClass="modal-xl modal-dialog-scrollable" [staticBackdrop]="true" [keyboard]="false"
-     [showFooter]="false">
-     <form modalBody (ngSubmit)="ops.handleRemisionAJusticia(host)">
+<app-modal-shell
+     modalId="insideRemisionJusticiaModal"
+     title="Remisión a Justicia (INSIDE)"
+     titleId="insideRemisionJusticiaModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-remision-justicia-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
+     (closed)="host.cerrarModal('insideRemisionJusticiaModal')">
+     <form modalBody id="formRemisionJusticia" (ngSubmit)="ops.handleRemisionAJusticia(host)">
           <div class="row g-3">
                <div class="col-md-6">
                     <div class="form-floating">
@@ -68,18 +75,18 @@
                     </div>
                </div>
           </div>
-
-          <div class="modal-footer">
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    type="button">Cancelar</button>
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" [disabled]="host.insideEnviando"
-                    type="button" (click)="ops.handleConsultarEstadoRemision(host)">
-                    Consultar estado
-               </button>
-               <button class="btn-iflow modal-footer__btn btn-iflow--primary" [disabled]="host.insideEnviando"
-                    type="submit">
-                    Enviar remisión
-               </button>
-          </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="host.cerrarModal('insideRemisionJusticiaModal')">Cancelar</button>
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               [disabled]="host.insideEnviando"
+               (click)="ops.handleConsultarEstadoRemision(host)">
+               Consultar estado
+          </button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formRemisionJusticia" [disabled]="host.insideEnviando">
+               Enviar remisión
+          </button>
+     </div>
 </app-modal-shell>

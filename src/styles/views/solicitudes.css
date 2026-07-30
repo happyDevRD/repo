@@ -1343,6 +1343,45 @@
   padding-bottom: 0.7rem;
 }
 
+/* Tamaños de entidad (no en modals.css general) */
+.iflow-modal--fixed.soli-iniciar-modal .modal-dialog {
+  max-width: 700px;
+  height: min(70vh, 560px);
+  max-height: min(70vh, 560px);
+}
+
+.iflow-modal--fixed.soli-alta-modal .modal-dialog {
+  height: min(70vh, 540px);
+  max-height: min(70vh, 540px);
+}
+
+.soli-alta-modal .modal-body {
+  padding-top: 0.95rem;
+  padding-bottom: 0.65rem;
+}
+
+.soli-alta-modal .modal-footer {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+
+/* Asignar / Documento */
+.iflow-modal--fit.soli-asignar-modal .modal-dialog {
+  max-height: min(55vh, 320px);
+}
+
+.iflow-modal--fit.soli-asignar-modal .modal-content {
+  max-height: min(55vh, 320px);
+}
+
+.iflow-modal--fit.soli-documento-modal .modal-dialog {
+  max-height: min(70vh, 480px);
+}
+
+.iflow-modal--fit.soli-documento-modal .modal-content {
+  max-height: min(70vh, 480px);
+}
+
 @media (max-width: 767.98px) {
   .soli-iniciar-card--lg {
     flex: 0 0 auto;

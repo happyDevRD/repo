@@ -14,9 +14,14 @@
 </ng-container>
 
 <ng-container *ngIf="modal">
-  <app-modal-shell modalId="interesadosExpedienteModal" title="Interesados del expediente"
-       titleId="interesadosExpedienteModalLabel" dialogClass="modal-xl modal-dialog-scrollable"
-       [staticBackdrop]="true" [showFooter]="false">
+  <app-modal-shell
+    modalId="interesadosExpedienteModal"
+    title="Interesados del expediente"
+    titleId="interesadosExpedienteModalLabel"
+    modalClass="iflow-modal iflow-modal--fit exp-interesados-listado-modal"
+    dialogClass="modal-xl"
+    [staticBackdrop]="true"
+  >
     <div modalBody>
       <app-access-denied
         *ngIf="!session.canManageExpedientes"
@@ -25,6 +30,15 @@
       </app-access-denied>
 
       <app-interesado-list *ngIf="session.canManageExpedientes"></app-interesado-list>
+    </div>
+    <div modalFooter class="modal-footer__actions">
+      <button
+        type="button"
+        class="btn-iflow modal-footer__btn btn-iflow--secondary"
+        data-bs-dismiss="modal"
+      >
+        Cerrar
+      </button>
     </div>
   </app-modal-shell>
   <app-interesado-modals></app-interesado-modals>

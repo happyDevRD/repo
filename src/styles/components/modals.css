@@ -1,5 +1,6 @@
 /* ================================
    DISEÑO GLOBAL DE MODALES
+   Capas: tokens (variables.css) → comportamientos aquí → variantes en views/*
    ================================ */
 .modal-content {
   border: none;
@@ -64,39 +65,21 @@
 }
 
 .modal-dialog {
-  max-width: 800px;
+  max-width: var(--iflow-modal-width-lg);
   margin: 1.75rem auto;
 }
 
 .modal-dialog.modal-xl {
-  max-width: 1140px;
+  max-width: var(--iflow-modal-width-xl);
 }
 
-/* Altura fija (R1): el diálogo no crece al mostrar bloques; el body hace scroll */
+/*
+  Comportamiento --fixed (R1): altura fija genérica + scroll en body.
+  Calibrar tamaño real en la clase de entidad (views/*), no aquí.
+*/
 .iflow-modal--fixed .modal-dialog {
-  height: min(78vh, 640px);
-  max-height: min(78vh, 640px);
-}
-
-.iflow-modal--fixed.soli-iniciar-modal .modal-dialog {
-  max-width: 700px;
-  height: min(70vh, 560px);
-  max-height: min(70vh, 560px);
-}
-
-.iflow-modal--fixed.soli-alta-modal .modal-dialog {
-  height: min(70vh, 540px);
-  max-height: min(70vh, 540px);
-}
-
-.soli-alta-modal .modal-body {
-  padding-top: 0.95rem;
-  padding-bottom: 0.65rem;
-}
-
-.soli-alta-modal .modal-footer {
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
+  height: min(var(--iflow-modal-vh-cap), var(--iflow-modal-fixed-max));
+  max-height: min(var(--iflow-modal-vh-cap), var(--iflow-modal-fixed-max));
 }
 
 .iflow-modal--fixed .modal-content {
@@ -108,6 +91,31 @@
 }
 
 .iflow-modal--fixed .modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/*
+  Comportamiento --fit: altura al contenido, tope genérico.
+  El tamaño de producto (max-height concreto) lo define la variante en views/*.
+*/
+.iflow-modal--fit .modal-dialog {
+  height: auto;
+  max-height: min(var(--iflow-modal-vh-cap), var(--iflow-modal-fit-max));
+}
+
+.iflow-modal--fit .modal-content {
+  height: auto;
+  max-height: min(var(--iflow-modal-vh-cap), var(--iflow-modal-fit-max));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.iflow-modal--fit .modal-body {
   flex: 1 1 auto;
   min-height: 0;
   max-height: none;

@@ -79,11 +79,11 @@ export class SolicitudesService {
     return this.solicitudApi.listar();
   }
 
-  getSolicitudesfiltro(value: any): Observable<SolicitudListar[]> {
+  getSolicitudesfiltro(value: string | number): Observable<SolicitudListar[]> {
     return this.solicitudApi.listarPorEstado(value);
   }
 
-  getVerSolicitudes(id): Observable<VerSolicitud[]> {
+  getVerSolicitudes(id: number | string): Observable<VerSolicitud[]> {
     return this.solicitudApi.ver(id);
   }
 
@@ -109,15 +109,15 @@ export class SolicitudesService {
     )
   }
 
-  getDni(dni): Observable<ConsultaDni> {
+  getDni(dni: string): Observable<ConsultaDni> {
     return this.personaEntidadApi.getDni(dni);
   }
 
-  creaSolicitud(creasolicitud): Observable<CreaSolicitudNuevo> {
+  creaSolicitud(creasolicitud: CreaSolicitudNuevo): Observable<CreaSolicitudNuevo> {
     return this.solicitudApi.crear(creasolicitud);
   }
 
-  creaExpediente(id): Observable<any> {
+  creaExpediente(id: number | string): Observable<unknown> {
     let varios = {
       "idsolicitud": id
     }
@@ -146,14 +146,14 @@ export class SolicitudesService {
     return this.solicitudApi.asignar(editasolicitud, id);
   }
 
-  deleteSolicitud(id: any): Observable<CreaSolicitud> {
+  deleteSolicitud(id: number | string): Observable<CreaSolicitud> {
     const httpHeaders = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
     return this.http.delete<CreaSolicitud>(`${this.urlborrarsolicitud}${id}`, {headers: httpHeaders})
   }
 
-  deleteDocumento(id: any): Observable<DocumentosListar> {
+  deleteDocumento(id: number | string): Observable<DocumentosListar> {
     const httpHeaders = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });

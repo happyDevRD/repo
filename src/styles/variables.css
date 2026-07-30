@@ -44,9 +44,14 @@
   --btn-shadow: 0 4px 12px rgba(105, 120, 255, 0.22);
   --btn-shadow-hover: 0 6px 16px rgba(105, 120, 255, 0.32);
 
-  /* Modales */
+  /* Modales — tokens de sistema (tamaños de producto van en views/*) */
   --iflow-modal-z-base: 1055;
   --iflow-modal-z-step: 20;
+  --iflow-modal-width-lg: 800px;
+  --iflow-modal-width-xl: 1140px;
+  --iflow-modal-vh-cap: 92vh;
+  --iflow-modal-fixed-max: 560px;
+  --iflow-modal-fit-max: 640px;
 
   /* Formularios */
   --form-control-readonly-bg: #e9ecef;

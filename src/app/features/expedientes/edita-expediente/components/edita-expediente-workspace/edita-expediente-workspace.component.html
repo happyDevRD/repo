@@ -16,16 +16,18 @@
   (rowDoubleClick)="edita.onTramitadorDoubleClick($event)"></app-edita-expediente-workspace-tramitadores>
 <app-edita-expediente-workspace-tareas [verTareasdelTramite]="edita.verTareasdelTramite"
   [verAccionesdeTarea]="edita.verAccionesdeTarea" [headerActions]="edita.tareaHeaderActions"
-  [toolbarActions]="edita.tareaToolbarActions" [columns]="edita.columnsTareasTramite"
-  [source]="edita.sourceTareasTramite" [localization]="edita.localizationObject" (action)="handleTareaAction($event)"
-  (rowClick)="edita.clicktareaNueva($event)"
-  (rowDoubleClick)="edita.onTareaDoubleClick($event)"></app-edita-expediente-workspace-tareas>
+  [toolbarActions]="edita.tareaToolbarActions" [rowActions]="edita.tareaRowActions"
+  [tareas]="edita.tareatramiteexpedientelistar" [idTarea]="edita.idTarea"
+  [tareasCargando]="edita.tareasCargando"
+  (action)="handleTareaAction($event)" (rowAction)="handleTareaRowAction($event)"
+  (tareaSelect)="edita.clicktareaNueva($event)"
+  (tareaOpen)="edita.onTareaDoubleClick($event)"></app-edita-expediente-workspace-tareas>
 <app-edita-expediente-workspace-tabs [expedienteEjercicio]="edita.verExpediente.ejercicio"
   [expedienteNumero]="edita.verExpediente.numero" [idExpediente]="edita.idExpediente"
   [verojointeresado]="edita.verojointeresado" [verborrarinteresado]="edita.verborrarinteresado"
   [listarinteresadosdto]="edita.listarinteresadosdto" [verxml]="edita.verxml"
   [verEditartareatramite]="edita.verEditartareatramite" [tareaDescripcion]="edita.tareatramiteexpedientever.descripcion"
   [verNuevaNotifi]="edita.verNuevaNotifi" [verformnuevatarea]="edita.verformnuevatarea"
-  [cargando]="edita.tareasFacade.cargando" (nuevoInteresado)="edita.abrirModal('ninteresadoModal')"
+  [cargando]="edita.tareasFacade.cargando" (nuevoInteresado)="handleNuevoInteresado()"
   (borrarInteresados)="edita.borrarInteresados()" (seleccionaInteresado)="edita.seleccionaInteresado($event)"
   (verHistoricoExpediente)="edita.abrirModal('verExpedienteEditaModal')"></app-edita-expediente-workspace-tabs>

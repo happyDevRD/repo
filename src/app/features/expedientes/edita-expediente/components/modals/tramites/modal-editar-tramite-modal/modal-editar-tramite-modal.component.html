@@ -1,44 +1,49 @@
-<app-modal-shell modalId="editarTramiteModal" title="Editar Trámite" titleId="editarTramiteModalLabel"
-     dialogClass="modal-xl modal-dialog-centered" bodyClass="p-4" [showFooter]="false"
+<app-modal-shell
+     modalId="editarTramiteModal"
+     title="Editar Trámite"
+     titleId="editarTramiteModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-tramite-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
      (closed)="tramites.limpiarErroresEditarTramite()">
      <form modalBody id="formEditarTramite" (ngSubmit)="handleSubmit($event)">
-          <div class="row mb-4">
-               <div class="col-6">
+          <div class="row g-3 mb-3">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <select class="form-select" id="faseEdit" name="faseEdit"
+                         <select class="form-select"
+                              [class.form-select--placeholder]="!edita.editartramiteexp.fase"
+                              id="faseEdit" name="faseEdit"
                               [(ngModel)]="edita.editartramiteexp.fase" required>
-                              <option value="" disabled selected></option>
+                              <option value="" disabled>Seleccione fase</option>
                               <option value="INICIO">INICIO</option>
                               <option value="INSTRUCCION">INSTRUCCION</option>
                               <option value="RESOLUCION">RESOLUCION</option>
                          </select>
-                         <label for="faseEdit">Fase *</label>
+                         <label class="required-field" for="faseEdit">Fase</label>
                     </div>
                </div>
-               <div class="col-6">
+               <div class="col-md-6">
                     <div class="form-floating">
                          <input class="form-control" id="fecTramiteEdit" name="fecTramiteEdit" type="date"
                               [(ngModel)]="edita.editartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31"
                               placeholder=" ">
-                         <label for="fecTramiteEdit">Fecha Trámite</label>
+                         <label for="fecTramiteEdit">Fecha trámite</label>
                     </div>
                </div>
-          </div>
-          <div class="row">
                <div class="col-12">
                     <div class="form-floating">
                          <textarea class="form-control" id="descripcionEdit" name="descripcionEdit" rows="4"
                               [(ngModel)]="edita.editartramiteexp.descripcion" required minlength="1" maxlength="500"
                               placeholder=" "></textarea>
-                         <label for="descripcionEdit">Descripción *</label>
+                         <label class="required-field" for="descripcionEdit">Descripción</label>
                     </div>
                </div>
           </div>
-          <div class="row mt-2 mb-4"></div>
-          <div class="modal-footer">
-               <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    (click)="tramites.limpiarErroresEditarTramite()">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
-          </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="tramites.limpiarErroresEditarTramite(); edita.cerrarModal('editarTramiteModal')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formEditarTramite">Guardar</button>
+     </div>
 </app-modal-shell>

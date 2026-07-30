@@ -8,6 +8,7 @@ import {
   ConsultaDni,
   CrearMensaje,
   EditExpediente,
+  ExpedienteListar,
   NuevoExpediente,
   RegistroDocumento,
   RepresentanteExpLIstar,
@@ -21,7 +22,9 @@ import { InsidePostCierreService } from '../../../core/service/inside/inside-pos
 import { ExpedientesGridFacade, ExpedientesGridHost } from './expedientes-grid.facade';
 import { ExpedientesInsideFacade, ExpedientesInsideHost } from './expedientes-inside.facade';
 import { applyRepresentanteToNuevoExpediente } from '../helpers/expedientes-representante.helper';
-import { formatearFechaDDMMYYYY } from '../../../core/helper/fecha-legacy.helper';
+import { formatearFechaDDMMYYYY, fechaHoyISO } from '../../../core/helper/fecha-legacy.helper';
+import { JqxGridRowEvent } from '../../../core/helper/jqx-grid-event.model';
+import { MunicipioIne } from '../../../core/models/ine-catalogo.model';
 
 export interface ExpedientesExpedienteHost extends ExpedientesGridHost {
   nuevoexpediente: NuevoExpediente;
@@ -39,10 +42,9 @@ export interface ExpedientesExpedienteHost extends ExpedientesGridHost {
   mostrarValidacionesExpediente: boolean;
   editExpedientes: boolean;
   veoPermisoProcedi: boolean;
-  fechacancelacionexpedi: Date;
+  fechacancelacionexpedi: string;
   fechacierreexpedi: unknown;
   serieDocumental: unknown;
-  recargarpagina(): void;
   limpiarDatosExpediente(): void;
   limpiarDatosAsignarTramitador(): void;
   limpiadatosnuevoexpediente(): void;
@@ -91,14 +93,14 @@ export class ExpedientesExpedienteFacade {
   // Wizard de consulta de DNI / persona / representante para "Nuevo Expediente"
   // (antes solicitadni, selecTipPerso, gestimunicip, cambiamosRepre... en el componente).
   public nombredni: string;
-  public apellido1dni: any;
-  public apellido2dni: any;
+  public apellido1dni: string;
+  public apellido2dni: string;
   public direcciondni: string;
-  public cpdni: any;
-  public provinciadni: any;
-  public nommunicipiodni: any;
-  public idhispersodni: any;
-  public idpersodni: any;
+  public cpdni: string | number | null;
+  public provinciadni: string;
+  public nommunicipiodni: string;
+  public idhispersodni: number | null;
+  public idpersodni: number | null;
 
   public dniok = false;
   public existepersonaentidad = false;
@@ -109,6 +111,7 @@ export class ExpedientesExpedienteFacade {
   public existeRepresentante = false;
   public documrepre = false;
   public cambioRepresentantePideDocu = false;
+  public buscandoInteresado = false;
 
   public InteresadoSolicitud: string;
   public dirPosta: string;
@@ -123,7 +126,7 @@ export class ExpedientesExpedienteFacade {
   public selectCIF = false;
   public selectTRESIDENTE = false;
 
-  public municiflitro: any[] = [];
+  public municiflitro: MunicipioIne[] = [];
 
   constructor(
     private readonly expedientesService: ExpedientesService,
@@ -136,22 +139,45 @@ export class ExpedientesExpedienteFacade {
     private readonly http: HttpClient,
   ) {}
 
-  solicitadni(host: ExpedientesExpedienteHost, dni: string): void {
-    this.expedientesService.getDni2(dni).pipe(
+  buscarInteresado(host: ExpedientesExpedienteHost): void {
+    const documento = String(host.nuevoexpediente.usuario ?? '').trim()
+    if (!documento) {
+      this.notificationService.incompleteFields('El documento del interesado es obligatorio')
+      return
+    }
+
+    this.dniok = false
+    this.existepersonaentidad = false
+    this.buscandoInteresado = true
+    this.nombredni = ''
+    this.direcciondni = ''
+    this.cpdni = ''
+    this.provinciadni = ''
+    this.nommunicipiodni = ''
+    this.InteresadoSolicitud = ''
+    this.dirPosta = ''
+    this.codPosta = ''
+    this.provincia = ''
+    this.Municipio = ''
+    host.nuevoexpediente.idPerso = null
+    host.nuevoexpediente.idHisPerso = null
+
+    this.expedientesService.getDni2(documento).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (response) => {
-        this.nombredni = response.desPerEntid;
-        this.apellido1dni = response.apellido1;
-        this.apellido2dni = response.apellido2;
-        this.direcciondni = response.dirPosta;
-        this.cpdni = response.codPosta;
-        this.provinciadni = response.provincia;
-        this.idhispersodni = response.idHisPerso;
-        this.nommunicipiodni = response.municipio;
-        this.idpersodni = response.idPerso;
-        host.nuevoexpediente.idPerso = response.idPerso;
-        host.nuevoexpediente.idHisPerso = response.idHisPerso;
+        this.buscandoInteresado = false
+        this.nombredni = response.desPerEntid
+        this.apellido1dni = String(response.apellido1 ?? '')
+        this.apellido2dni = String(response.apellido2 ?? '')
+        this.direcciondni = response.dirPosta
+        this.cpdni = response.codPosta
+        this.provinciadni = response.provincia
+        this.idhispersodni = response.idHisPerso
+        this.nommunicipiodni = response.municipio
+        this.idpersodni = response.idPerso
+        host.nuevoexpediente.idPerso = response.idPerso
+        host.nuevoexpediente.idHisPerso = response.idHisPerso
 
         host.sourceListRepre = new jqx.dataAdapter({
           dataType: 'json',
@@ -166,38 +192,71 @@ export class ExpedientesExpedienteFacade {
           id: 'id',
           sortcolumn: 'id',
           sortdirection: 'desc',
-        });
+        })
 
         if (response.nombre) {
-          this.dniok = true;
-          this.InteresadoSolicitud = response.desPerEntid;
-          this.dirPosta = response.dirPosta;
-          this.codPosta = response.codPosta.toString();
-          this.provincia = response.provincia;
-          this.Municipio = response.municipio;
-          this.controlpersonaentidadcrear = true;
-        } else {
-          this.dniok = false;
-          this.existepersonaentidad = true;
-          this.controlpersonaentidadcrear = false;
+          this.dniok = true
+          this.existepersonaentidad = false
+          this.InteresadoSolicitud = response.desPerEntid
+          this.dirPosta = response.dirPosta
+          this.codPosta = response.codPosta?.toString?.() ?? String(response.codPosta ?? '')
+          this.provincia = response.provincia
+          this.Municipio = response.municipio
+          this.controlpersonaentidadcrear = true
+          return
         }
+
+        this.dniok = false
+        this.existepersonaentidad = true
+        this.controlpersonaentidadcrear = false
       },
       error: (err: HttpErrorResponse) => {
+        this.buscandoInteresado = false
+        this.dniok = false
         if (err.status == 404) {
-          this.notificationService.error({ title: 'El interesado no está registrado', text: 'Por favor introduzca los datos para el alta' });
-          this.existepersonaentidad = true;
-          this.dniok = false;
-        } else {
-          this.existepersonaentidad = false;
+          this.existepersonaentidad = true
+          return
         }
+        this.existepersonaentidad = false
+        this.notificationService.error({
+          title: 'Búsqueda',
+          text: 'No se pudo consultar el interesado. Inténtelo de nuevo.',
+        })
       },
-    });
-
-    this.dniok = true;
+    })
   }
 
-  selecTipPerso(valor: any): void {
-    switch (valor) {
+  /** @deprecated Preferir `buscarInteresado`. */
+  solicitadni(host: ExpedientesExpedienteHost, dni: string): void {
+    host.nuevoexpediente.usuario = dni
+    this.buscarInteresado(host)
+  }
+
+  handleFormaNotificacionChange(host: ExpedientesExpedienteHost): void {
+    if (host.nuevoexpediente.formaNotifi !== 1) {
+      host.nuevoexpediente.email = ''
+    }
+  }
+
+  /** Invalida el resultado de búsqueda al editar el documento. */
+  onDocumentoInteresadoInput(host: ExpedientesExpedienteHost): void {
+    if (!this.dniok && !this.existepersonaentidad && !this.buscandoInteresado) {
+      return
+    }
+    this.dniok = false
+    this.existepersonaentidad = false
+    this.nombredni = ''
+    this.direcciondni = ''
+    this.cpdni = ''
+    this.provinciadni = ''
+    this.nommunicipiodni = ''
+    this.InteresadoSolicitud = ''
+    host.nuevoexpediente.idPerso = null
+    host.nuevoexpediente.idHisPerso = null
+  }
+
+  selecTipPerso(valor: string | number): void {
+    switch (String(valor)) {
       case '1':
         this.selectnombre = true;
         this.selectape1 = true;
@@ -219,12 +278,13 @@ export class ExpedientesExpedienteFacade {
     }
   }
 
-  gestimunicip(id: any): void {
+  gestimunicip(id: string | number): void {
     this.municiflitro = [];
+    const prefijo = String(id)
 
     for (let index = 0; index < MUNICIO.length; index++) {
       const element = MUNICIO[index];
-      if (element.id.substring(0, 2) == id) {
+      if (element.id.substring(0, 2) == prefijo) {
         this.municiflitro.push(element);
       }
     }
@@ -256,7 +316,7 @@ export class ExpedientesExpedienteFacade {
     });
   }
 
-  selecrepresentante(host: ExpedientesExpedienteHost, event: any): void {
+  selecrepresentante(host: ExpedientesExpedienteHost, event: JqxGridRowEvent<{ idHisPerso: number; idPerso: number }>): void {
     host.nuevoexpediente.idHisRepre = event.args.row.bounddata.idHisPerso;
     host.nuevoexpediente.idRepre = event.args.row.bounddata.idPerso;
   }
@@ -265,8 +325,29 @@ export class ExpedientesExpedienteFacade {
    * Restablece el wizard de consulta de DNI (antes usado por limpiadatosnuevoexpediente).
    */
   resetSolicitudDni(): void {
-    this.existepersonaentidad = false;
-    this.dniok = false;
+    this.existepersonaentidad = false
+    this.dniok = false
+    this.buscandoInteresado = false
+    this.controlpersonaentidadcrear = false
+    this.nombredni = ''
+    this.apellido1dni = ''
+    this.apellido2dni = ''
+    this.direcciondni = ''
+    this.cpdni = ''
+    this.provinciadni = ''
+    this.nommunicipiodni = ''
+    this.idhispersodni = null
+    this.idpersodni = null
+    this.InteresadoSolicitud = ''
+    this.dirPosta = ''
+    this.codPosta = ''
+    this.provincia = ''
+    this.Municipio = ''
+  }
+
+  isInteresadoSinResolver(host: ExpedientesExpedienteHost): boolean {
+    const documento = String(host.nuevoexpediente.usuario ?? '').trim()
+    return host.mostrarValidacionesExpediente && !!documento && !this.dniok
   }
 
   isFechaExpedienteInvalid(host: ExpedientesExpedienteHost): boolean {
@@ -278,7 +359,8 @@ export class ExpedientesExpedienteFacade {
   }
 
   isFormaNotificacionInvalid(host: ExpedientesExpedienteHost): boolean {
-    return host.mostrarValidacionesExpediente && !host.nuevoexpediente.formaNotifi;
+    const forma = host.nuevoexpediente.formaNotifi
+    return host.mostrarValidacionesExpediente && forma !== 0 && forma !== 1
   }
 
   isEmailExpedienteInvalid(host: ExpedientesExpedienteHost): boolean {
@@ -302,6 +384,9 @@ export class ExpedientesExpedienteFacade {
   onCrearExpedienteSubmit(host: ExpedientesExpedienteHost): void {
     host.mostrarValidacionesExpediente = true;
 
+    const documentoVacio = !String(host.nuevoexpediente.usuario ?? '').trim()
+    const interesadoSinResolver = !documentoVacio && !this.dniok
+
     if (
       this.isFechaExpedienteInvalid(host)
       || this.isFormaAperturaInvalid(host)
@@ -310,8 +395,17 @@ export class ExpedientesExpedienteFacade {
       || this.isInteresadoDNIInvalid(host)
       || this.isProcedimientoExpedienteInvalid(host)
       || this.isEmailExpedienteInvalid(host)
+      || interesadoSinResolver
     ) {
-      this.notificationService.incompleteFields();
+      if (documentoVacio) {
+        this.notificationService.incompleteFields('El documento del interesado es obligatorio')
+      } else if (interesadoSinResolver) {
+        this.notificationService.incompleteFields(
+          'Busca el interesado (botón Buscar) antes de crear el expediente',
+        )
+      } else {
+        this.notificationService.incompleteFields()
+      }
       return;
     }
 
@@ -328,9 +422,15 @@ export class ExpedientesExpedienteFacade {
     host.editexpediente.idPerso = host.consultadni.idPerso;
     this.expedientesService.editarExpediente(host.editexpediente, host.idexpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe();
-
-    setTimeout(() => host.recargarpagina(), 1000);
+    ).subscribe({
+      next: () => {
+        this.gridFacade.refreshExpedientesList(host, this.session.user ?? '', true);
+        this.notificationService.success('Expediente actualizado correctamente');
+      },
+      error: () => {
+        this.notificationService.error('No se pudo actualizar el expediente');
+      },
+    });
   }
 
   abrirExpediente(host: ExpedientesExpedienteHost): void {
@@ -417,12 +517,15 @@ export class ExpedientesExpedienteFacade {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
-        this.notificationService.success('El expediente se ha creado exitosamente');
         host.limpiarDatosExpediente();
-        setTimeout(host.recargarpagina, 1000);
+        this.gridFacade.refreshExpedientesList(host, this.session.user ?? '', true);
+        this.notificationService.success('El expediente se ha creado exitosamente');
       },
-      error: () => {
-        this.notificationService.error('Ha ocurrido un error al crear el expediente');
+      error: (err: HttpErrorResponse) => {
+        this.notificationService.fromHttpError(
+          err,
+          'Ha ocurrido un error al crear el expediente',
+        );
         host.isCreandoExpediente = false;
       },
     });
@@ -456,7 +559,7 @@ export class ExpedientesExpedienteFacade {
 
     this.notificationService.confirmDelete('Al confirmar cancelará el Expediente Seleccionado!').then((result) => {
       if (!result.isConfirmed) {
-        host.fechacancelacionexpedi = new Date();
+        host.fechacancelacionexpedi = fechaHoyISO();
         return;
       }
 
@@ -532,9 +635,9 @@ export class ExpedientesExpedienteFacade {
    * en el componente): carga el registro de documento asociado, los atributos,
    * el índice ENI (si está cerrado) y las fechas formateadas del expediente.
    */
-  marcarExpedienteSeleccionado(host: ExpedientesSeleccionHost, rowData: any): void {
+  marcarExpedienteSeleccionado(host: ExpedientesSeleccionHost, rowData: ExpedienteListar): void {
     host.idExpediente = rowData.id;
-    host.idExpedienteString = rowData.id;
+    host.idExpedienteString = String(rowData.id);
     host.idexpediente = rowData.id;
     this.gridFacade.refrescarSourceAtributo(host);
 
@@ -561,7 +664,7 @@ export class ExpedientesExpedienteFacade {
     host.puedoEditarExpe = true;
 
     if (rowData.estado == 'CERRADO') {
-      this.gridFacade.lanzoIndiceENI(host, rowData.id);
+      this.gridFacade.lanzoIndiceENI(host, String(rowData.id));
     }
 
     host.valorEstado = rowData.estado;
@@ -570,7 +673,7 @@ export class ExpedientesExpedienteFacade {
     if (rowData.email == '0' || rowData.email == 'SinDAtos') {
       host.verEmail = '';
     } else {
-      host.verEmail = rowData.email;
+      host.verEmail = rowData.email ?? '';
     }
 
     if (rowData.estado == 'CERRADO') {
@@ -595,7 +698,7 @@ export class ExpedientesExpedienteFacade {
     host.idProcedimiento = rowData.procedimiento.id;
     this.session.setIdProcedimiento(rowData.procedimiento.id);
     host.lanzaTareaProcedi();
-    host.descripcionProcedimiento = rowData.procedimiento.descripcion;
+    host.descripcionProcedimiento = rowData.procedimiento.descripcion ?? '';
     host.expeSelecDescrip = rowData.titulo;
     host.idexpediente = rowData.id;
     host.ejerexpe = rowData.ejercicio;

@@ -1,23 +1,32 @@
-<!-- Botones de acciones de notificaciones -->
-<div *ngIf="veonotificaciones" class="acciones-botones-container d-flex flex-wrap align-items-center gap-2">
-  <p class="expediente-toolbar__empty mb-0" *ngIf="!showToolbar">
-    Seleccione una notificación en la tabla para ver sus acciones disponibles.
-  </p>
+<!-- Título y acciones de contexto -->
+<div *ngIf="veonotificaciones">
+  <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
+    <div>
+      <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Notificaciones</p>
+      <h2 class="h4 fw-bold mb-0">Acciones de la notificación</h2>
+    </div>
+  </header>
 
-  <ng-container *ngIf="showToolbar">
-    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsBeforeNotifica"
-      (action)="handleAction($event)">
-    </app-modal-action-bar>
+  <div class="acciones-botones-container d-flex flex-wrap align-items-center gap-2">
+    <p class="expediente-toolbar__empty mb-0" *ngIf="!showToolbar">
+      Seleccione una notificación en la tabla para ver sus acciones disponibles.
+    </p>
 
-    <app-notificaciones-notifica-panel [veoEnviarNotifica]="veoEnviarNotifica"
-      [veoSincronizarNotifica]="veoSincronizarNotifica" [envioNotifica]="envioNotifica"
-      (enviar)="handleEnviarANotificaPlataforma()" (sincronizar)="handleSincronizarConNotificaPlataforma()">
-    </app-notificaciones-notifica-panel>
+    <ng-container *ngIf="showToolbar">
+      <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" size="sm" [actions]="actionsBeforeNotifica"
+        (action)="handleAction($event)">
+      </app-modal-action-bar>
 
-    <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" [actions]="actionsAfterNotifica"
-      (action)="handleAction($event)">
-    </app-modal-action-bar>
-  </ng-container>
+      <app-notificaciones-notifica-panel [veoEnviarNotifica]="veoEnviarNotifica"
+        [veoSincronizarNotifica]="veoSincronizarNotifica" [envioNotifica]="envioNotifica"
+        (enviar)="handleEnviarANotificaPlataforma()" (sincronizar)="handleSincronizarConNotificaPlataforma()">
+      </app-notificaciones-notifica-panel>
+
+      <app-modal-action-bar containerClass="d-flex flex-wrap gap-2" size="sm" [actions]="actionsAfterNotifica"
+        (action)="handleAction($event)">
+      </app-modal-action-bar>
+    </ng-container>
+  </div>
 </div>
 
 <!-- Grid de Notificaciones -->

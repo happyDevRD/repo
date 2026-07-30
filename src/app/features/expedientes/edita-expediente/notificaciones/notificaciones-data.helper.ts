@@ -1,5 +1,6 @@
 import { ConsultaDni, CrearNotificacion, LeerNotificacion } from '../../expedientes'
 import { InteresadoListarDto } from '../../../../core/models/interesado.dto'
+import { fechaHoyISO } from '../../../../core/helper/fecha-legacy.helper'
 
 export function prepararDatosNotificacionParaEnvio(
   creanotificacion: CrearNotificacion,
@@ -45,9 +46,9 @@ export function crearNotificacionVacia(params: {
   creanotificacion.ejeExped = params.ejercicioExpediente
   creanotificacion.numExped = params.numeroExpediente
   creanotificacion.forNotif = 0
-  creanotificacion.notificador = 0
+  creanotificacion.notificador = ''
   creanotificacion.motNotif = ''
-  creanotificacion.receptor = 0
+  creanotificacion.receptor = ''
   creanotificacion.observacion = ''
   creanotificacion.dni = ''
   creanotificacion.numNotif = 0
@@ -75,7 +76,7 @@ export function crearNotificacionVacia(params: {
   creanotificacion.codProvi = 0
   creanotificacion.codMunic = 0
   creanotificacion.numRegisSalid = 0
-  creanotificacion.fecNotif = params.fechaActual
+  creanotificacion.fecNotif = fechaHoyISO()
   return creanotificacion
 }
 
@@ -179,19 +180,19 @@ export function aplicarNotificacionVer(
     ejeNotif: notificacionver?.ejeNotif,
     numNotif: notificacionver?.numNotif,
     forNotif: notificacionver?.forNotif,
-    fecNotif: notificacionver?.fecNotif as Date,
+    fecNotif: notificacionver?.fecNotif ?? null,
     situacion: notificacionver?.situacion,
     dni: notificacionver?.personaEntidad?.numDocum || '',
     notificador: notificacionver?.notificador as number,
     notificador2: notificacionver?.notificador as number,
-    fecEnvio: notificacionver?.fecEnvio as Date,
-    fecRecNotif: notificacionver?.fecRecNotif as Date | null,
+    fecEnvio: notificacionver?.fecEnvio ?? null,
+    fecRecNotif: notificacionver?.fecRecNotif ?? null,
     receptor: notificacionver?.receptor || 0,
     motNotif: String(notificacionver?.motNotif ?? ''),
-    fecRegistSalid: notificacionver?.fecRegistSalid as Date,
+    fecRegistSalid: notificacionver?.fecRegistSalid ?? null,
     numEnvioTeu: notificacionver?.numEnvioTeu as number,
     bop: notificacionver?.bop,
-    fecPubBop: notificacionver?.fecPubBop as Date | null,
+    fecPubBop: notificacionver?.fecPubBop ?? null,
     numBop: notificacionver?.numBop,
     observacion: notificacionver?.observacion,
   }

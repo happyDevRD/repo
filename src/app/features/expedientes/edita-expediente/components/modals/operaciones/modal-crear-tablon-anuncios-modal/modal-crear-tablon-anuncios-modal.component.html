@@ -1,47 +1,53 @@
-<app-modal-shell modalId="crearTablonAnunciosModal" title="Nuevo Tablón de anuncios"
-     titleId="crearTablonAnunciosModalLabel" dialogClass="modal-xl" [showFooter]="false">
-     <form modalBody (ngSubmit)="tareas.crearTablonAnuncio(edita)">
-          <div class="col-12">
-               <div class="form-floating">
-                    <input [(ngModel)]="edita.creartablonanuncio.desAnunc" class="form-control" id="Descripción"
-                         name="Descripción" type="text" placeholder=" ">
-                    <label for="municipio">Descripción * </label>
-                    <br>
-               </div>
+<app-modal-shell
+     modalId="crearTablonAnunciosModal"
+     title="Nuevo Tablón de anuncios"
+     titleId="crearTablonAnunciosModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-tablon-anuncios-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
+     (closed)="edita.cerrarModal('crearTablonAnunciosModal')">
+     <form modalBody id="formTablonAnuncios" (ngSubmit)="tareas.crearTablonAnuncio(edita)">
+          <div class="form-floating mb-3">
+               <input [(ngModel)]="edita.creartablonanuncio.desAnunc" class="form-control"
+                    id="desAnuncTablon" name="desAnunc" type="text" placeholder=" ">
+               <label class="required-field" for="desAnuncTablon">Descripción</label>
           </div>
-          <div class="row">
-               <div class="col-3">
+          <div class="row g-3">
+               <div class="col-md-4">
                     <div class="form-floating">
-                         <select [(ngModel)]="edita.creartablonanuncio.tipAnunc" class="form-select " id="tanuncio"
-                              name="tanuncio" required>
-                              <option value=0>Edicto</option>
-                              <option value=1>Anuncio</option>
+                         <select [(ngModel)]="edita.creartablonanuncio.tipAnunc"
+                              class="form-select"
+                              [class.form-select--placeholder]="edita.creartablonanuncio.tipAnunc == null"
+                              id="tipAnunc" name="tipAnunc" required>
+                              <option [ngValue]="null" disabled>Seleccione tipo</option>
+                              <option [ngValue]="0">Edicto</option>
+                              <option [ngValue]="1">Anuncio</option>
                          </select>
-                         <label for="fnotifi">Tipo de anuncio *</label>
+                         <label class="required-field" for="tipAnunc">Tipo de anuncio</label>
                     </div>
                </div>
-               <div class="col-4">
+               <div class="col-md-4">
                     <div class="form-floating">
                          <input [(ngModel)]="edita.creartablonanuncio.fecDesde" class="form-control"
-                              data-mdb-inline="true" id="desde" max="2099-12-31" min="2023-01-01" name="hasta"
-                              type="date" value="{{ edita.selected }}" placeholder=" ">
-                         <label for="desde">Desde</label>
+                              id="fecDesdeTablon" max="2099-12-31" min="2023-01-01" name="fecDesde"
+                              type="date" placeholder=" ">
+                         <label for="fecDesdeTablon">Desde</label>
                     </div>
                </div>
-               <div class="col-4">
+               <div class="col-md-4">
                     <div class="form-floating">
                          <input [(ngModel)]="edita.creartablonanuncio.fecHasta" class="form-control"
-                              data-mdb-inline="true" id="hasta" max="2099-12-31" min="2023-01-01" name="hasta"
-                              type="date" value="{{ edita.selected }}" placeholder=" ">
-                         <label for="hasta">Hasta</label>
-                         <br>
+                              id="fecHastaTablon" max="2099-12-31" min="2023-01-01" name="fecHasta"
+                              type="date" placeholder=" ">
+                         <label for="fecHastaTablon">Hasta</label>
                     </div>
                </div>
           </div>
-          <div class="modal-footer">
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    type="button">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
-          </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="edita.cerrarModal('crearTablonAnunciosModal')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formTablonAnuncios">Guardar</button>
+     </div>
 </app-modal-shell>

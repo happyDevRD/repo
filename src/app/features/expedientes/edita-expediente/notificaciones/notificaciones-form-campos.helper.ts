@@ -83,9 +83,9 @@ export function aplicarClickNotificacionNuevo(
     host.notificacionver.numNotif = rowData.numNotif
     host.notificacionver.fecNotif = rowData.fecNotif ?? null
   }
-  host.creanotificacion.fecRecNotif = (rowData.fecRecNotif as Date | null) ?? null
+  host.creanotificacion.fecRecNotif = rowData.fecRecNotif ?? null
   host.creanotificacion.forNotif = 1
   // Histórico: el form usa notificador con el DNI del interesado en algunos flujos
-  host.creanotificacion.notificador = (rowData.personaEntidad?.numDocum as unknown as number)
+  host.creanotificacion.notificador = rowData.personaEntidad?.numDocum ?? 0
   host.fechasNotifi(rowData.fecEnvio, rowData.fecRecNotif, rowData.fecPubBop, rowData.fecEmiBop)
 }

@@ -42,7 +42,8 @@ export const validarFormularioNuevaTarea = (event: Event): boolean => {
 
   const tareaProcedimientoSelect = form.querySelector('#tprocedi2') as HTMLSelectElement
   if (tareaProcedimientoSelect) {
-    if (!tareaProcedimientoSelect.value) {
+    const valor = tareaProcedimientoSelect.value
+    if (!valor || valor === '-1') {
       tareaProcedimientoSelect.classList.add('is-invalid')
       tareaProcedimientoSelect.classList.remove('is-valid')
     } else {
@@ -63,7 +64,7 @@ export const validarFormularioNuevaTarea = (event: Event): boolean => {
     }
   }
 
-  const fechaInput = form.querySelector('#start') as HTMLInputElement
+  const fechaInput = form.querySelector('#fecInicioNuevaTarea') as HTMLInputElement
   if (fechaInput) {
     if (!fechaInput.value) {
       fechaInput.classList.add('is-invalid')

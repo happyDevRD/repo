@@ -710,3 +710,15 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ================================
+   MODALES MENSAJES (variantes de entidad)
+   ================================ */
+
+.iflow-modal--fit.msg-rechazar-modal .modal-dialog {
+  max-height: min(70vh, 420px);
+}
+
+.iflow-modal--fit.msg-rechazar-modal .modal-content {
+  max-height: min(70vh, 420px);
+}

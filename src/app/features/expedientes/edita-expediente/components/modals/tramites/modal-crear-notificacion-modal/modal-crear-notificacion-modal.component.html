@@ -1,149 +1,133 @@
-<app-modal-shell modalId="CrearNotificacionModal" title="Crear Notificación" titleId="CrearNotificacionModalLabel"
-     dialogClass="modal-xl" [staticBackdrop]="true" [showFooter]="false"
+<app-modal-shell
+     modalId="CrearNotificacionModal"
+     title="Crear Notificación"
+     titleId="CrearNotificacionModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-crear-notificacion-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [dismissOnClose]="false"
      (closed)="notif.borraDatosCrearNotifi(); notif.onModalHidden()">
-     <form modalBody (ngSubmit)="notif.solicitarCreacionNotificacion()" id="creanotificacion">
-          <div class="row g-3">
-
-               <div class="col-sm-2">
+     <form modalBody id="creanotificacion" (ngSubmit)="notif.solicitarCreacionNotificacion()">
+          <div class="row g-3 mb-3">
+               <div class="col-md-3">
                     <div class="form-floating">
                          <input (change)="notif.cambioYearEjercicio()"
                               [(ngModel)]="notif.creanotificacion.fecNotif" class="form-control"
-                              id="fechaNotificacion" name="fechaNotificacion" required type="date" max="2099-12-31"
-                              min="2020-01-01" placeholder=" ">
-                         <label for="fechaNotificacion">Fecha Notificaci�n*</label>
+                              id="fechaNotificacion" name="fechaNotificacion" required type="date"
+                              max="2099-12-31" min="2020-01-01" placeholder=" ">
+                         <label class="required-field" for="fechaNotificacion">Fecha notificación</label>
                     </div>
                </div>
-               <div class="col-sm-5">
+               <div class="col-md-5">
                     <div class="form-floating">
                          <select
                               (change)="notif.cargarDatosInteresado(undefined, notif.creanotificacion.dni)"
-                              [(ngModel)]="notif.creanotificacion.dni" class="form-select " id="IntereDni"
-                              name="IntereDni" required>
-
-                              <option value="" disabled selected>Seleccione un interesado</option>
+                              [(ngModel)]="notif.creanotificacion.dni"
+                              class="form-select"
+                              [class.form-select--placeholder]="!notif.creanotificacion.dni"
+                              id="IntereDni" name="IntereDni" required>
+                              <option value="" disabled>Seleccione un interesado</option>
                               <option *ngFor="let listarinteresado of edita.listarinteresadosdto; trackBy: trackById"
-                                   name="notificadorNotifi" value="{{ listarinteresado.numDocumInter }}"> {{
-                                   listarinteresado.numDocumInter }}
-                                   - {{ listarinteresado.nomInter }}
+                                   [value]="listarinteresado.numDocumInter">
+                                   {{ listarinteresado.numDocumInter }} - {{ listarinteresado.nomInter }}
                               </option>
                          </select>
-                         <label for="IntereDni">Interesado* </label>
-                         <br>
+                         <label class="required-field" for="IntereDni">Interesado</label>
                     </div>
                </div>
-
-               <div class="col-sm-2">
+               <div class="col-md-4">
                     <div class="form-floating">
                          <input class="form-control" id="fnotifi" name="fnotifi"
                               [value]="notif.textoFormaNotif" disabled placeholder=" ">
-                         <label for="fnotifi">Forma Notificacion*</label>
-                         <br>
+                         <label for="fnotifi">Forma notificación</label>
                     </div>
                </div>
-               <div class="col-sm-3">
+               <div class="col-md-6">
                     <div class="form-floating">
                          <select [(ngModel)]="notif.creanotificacion.notificador"
-                              (change)="notif.limpiarCacheValidacion()" class="form-select "
-                              id="notificador" name="notificador" required>
-
-                              <option value="" disabled selected>Seleccione un notificador</option>
+                              (change)="notif.limpiarCacheValidacion()"
+                              class="form-select"
+                              [class.form-select--placeholder]="!notif.creanotificacion.notificador"
+                              id="notificadorCrear" name="notificador" required>
+                              <option value="" disabled>Seleccione un notificador</option>
                               <option
                                    *ngFor="let notificalistar of notif.notificadorlistar; trackBy: trackByNotificador"
-                                   name="notificadorNotifi" value="{{ notificalistar.notificador }}"> {{
-                                   notificalistar.descripcion }}
+                                   [value]="notificalistar.notificador">
+                                   {{ notificalistar.descripcion }}
                               </option>
                          </select>
-                         <label for="notificador">Notificador*</label>
-                         <br>
+                         <label class="required-field" for="notificadorCrear">Notificador</label>
                     </div>
                </div>
-          </div>
-          <div class="row">
-               <div class="col-3">
-                    <div class="form-floating">
-                    </div>
-               </div>
-          </div>
-
-          <br>
-
-          <div class="row">
-               <div *ngIf="lifecycle.dniok" class="col-8 col-sm-6">
-                    <div class="form-floating">
-
-                         <input class="form-control" disabled id="nombre" name="nombre" type="text" value={{
-                              lifecycle.consultadni.nombre }} placeholder=" ">
-                         <label for="representante">Nombre</label>
-                    </div>
-               </div>
-               <div *ngIf="lifecycle.dniok" class="col-8 col-sm-6">
-                    <div class="form-floating">
-
-                         <input class="form-control" disabled id="Apellidos" name="Apellidos" type="text"
-                              value="{{ lifecycle.consultadni.apellido1 }} {{ lifecycle.consultadni.apellido2 }}"
-                              placeholder=" ">
-                         <label for="asignado">Apellidos </label>
-                    </div>
-               </div>
-          </div>
-          <br>
-          <div *ngIf="lifecycle.dniok" class="mb-3">
-               <div class="form-floating">
-
-                    <input class="form-control" disabled id="direccion" name="direccion" type="text"
-                         value="{{ lifecycle.consultadni.dirPosta }}" placeholder=" ">
-                    <label for="direccion">Direccion </label>
-               </div>
-          </div>
-
-          <div class="row">
-               <div *ngIf="lifecycle.dniok" class="col-8 col-sm-4">
-                    <div class="form-floating">
-
-                         <input class="form-control" disabled id="cp" name="cp" type="text"
-                              value="{{ lifecycle.consultadni.codPosta }}" placeholder=" ">
-                         <label for="cp">C�digo Postal</label>
-                    </div>
-               </div>
-               <div *ngIf="lifecycle.dniok" class="col-8 col-sm-4">
-                    <div class="form-floating">
-
-                         <input class="form-control" disabled id="provincia" name="provincia" type="text"
-                              value="{{ lifecycle.consultadni.provincia }}" placeholder=" ">
-                         <label for="provincia">Provincia </label>
-                    </div>
-               </div>
-               <div *ngIf="lifecycle.dniok" class="col-8 col-sm-4">
-                    <div class="form-floating">
-
-                         <input class="form-control" disabled id="Municipio" name="municipio" type="text"
-                              value="{{ lifecycle.consultadni.municipio }}" placeholder=" ">
-                         <label for="municipio">Municipio </label> <br>
-                    </div>
-               </div>
-               <div class="col-12">
+               <div class="col-md-6">
                     <div class="form-floating">
                          <input [(ngModel)]="notif.creanotificacion.observacion" class="form-control"
-                              id="observacion" name="observacion" type="text" placeholder=" ">
-                         <label for="observacion">Observaciones</label>
-                         <br>
+                              id="observacionCrear" name="observacion" type="text" placeholder=" ">
+                         <label for="observacionCrear">Observaciones</label>
                     </div>
                </div>
           </div>
-          <br>
-          <div class="modal-footer">
-               <br>
-               <button (click)="notif.cerrarModalCrearNotificacion()"
-                    class="btn-iflow modal-footer__btn btn-iflow--secondary" type="button">
-                    Cancelar
-               </button>
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" id="botonguardar" role="button"
-                    (click)="notif.solicitarCreacionNotificacion()"
-                    [disabled]="!notif.getFormularioValido(edita)"
-                    [class.btn-disabled]="!notif.getFormularioValido(edita)">
-                    <i class="fas fa-save me-2"></i>
-                    Guardar Notificaci�n
-               </button>
+
+          <div class="exp-crear-notificacion-modal__interesado-slot">
+               <div class="row g-3" *ngIf="lifecycle.dniok">
+                    <div class="col-md-6">
+                         <div class="form-floating">
+                              <input class="form-control" disabled id="nombreCrearNotif" name="nombre" type="text"
+                                   [value]="lifecycle.consultadni.nombre" placeholder=" ">
+                              <label for="nombreCrearNotif">Nombre</label>
+                         </div>
+                    </div>
+                    <div class="col-md-6">
+                         <div class="form-floating">
+                              <input class="form-control" disabled id="apellidosCrearNotif" name="Apellidos" type="text"
+                                   [value]="(lifecycle.consultadni.apellido1 || '') + ' ' + (lifecycle.consultadni.apellido2 || '')"
+                                   placeholder=" ">
+                              <label for="apellidosCrearNotif">Apellidos</label>
+                         </div>
+                    </div>
+                    <div class="col-12">
+                         <div class="form-floating">
+                              <input class="form-control" disabled id="direccionCrearNotif" name="direccion" type="text"
+                                   [value]="lifecycle.consultadni.dirPosta" placeholder=" ">
+                              <label for="direccionCrearNotif">Dirección</label>
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input class="form-control" disabled id="cpCrearNotif" name="cp" type="text"
+                                   [value]="lifecycle.consultadni.codPosta" placeholder=" ">
+                              <label for="cpCrearNotif">Código postal</label>
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input class="form-control" disabled id="provinciaCrearNotif" name="provincia" type="text"
+                                   [value]="lifecycle.consultadni.provincia" placeholder=" ">
+                              <label for="provinciaCrearNotif">Provincia</label>
+                         </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-floating">
+                              <input class="form-control" disabled id="municipioCrearNotif" name="municipio" type="text"
+                                   [value]="lifecycle.consultadni.municipio" placeholder=" ">
+                              <label for="municipioCrearNotif">Municipio</label>
+                         </div>
+                    </div>
+               </div>
+               <p class="text-secondary small mb-0" *ngIf="!lifecycle.dniok">
+                    Seleccione un interesado para ver sus datos de contacto.
+               </p>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="notif.cerrarModalCrearNotificacion()">
+               Cancelar
+          </button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="creanotificacion"
+               [disabled]="!notif.getFormularioValido(edita)">
+               Guardar notificación
+          </button>
+     </div>
 </app-modal-shell>

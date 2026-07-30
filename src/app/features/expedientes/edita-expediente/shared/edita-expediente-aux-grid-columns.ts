@@ -1,4 +1,9 @@
-type GridRenderer = (...args: any[]) => string;
+import {
+  IflowGridCellsRenderer,
+  IflowGridColumns,
+} from '../../../../shared/components/iflow-grid/iflow-grid.types'
+
+type GridRenderer = IflowGridCellsRenderer
 
 export interface TramitadorGridColumnRenderers {
   columnrenderer: GridRenderer;
@@ -7,7 +12,7 @@ export interface TramitadorGridColumnRenderers {
   cellsrendererTRamitadoresPosesion: GridRenderer;
 }
 
-export function createColumnsTramitadores(r: TramitadorGridColumnRenderers): any[] {
+export function createColumnsTramitadores(r: TramitadorGridColumnRenderers): IflowGridColumns {
   return [
     { text: 'Id', datafield: 'idNotif', width: '1%', hidden: true },
     {
@@ -52,7 +57,7 @@ export interface TareaProcediGridColumnRenderers {
   cellsrendererTRamitadores: GridRenderer;
 }
 
-export function createColumnsTareasProcedi(r: TareaProcediGridColumnRenderers): any[] {
+export function createColumnsTareasProcedi(r: TareaProcediGridColumnRenderers): IflowGridColumns {
   return [
     { text: 'Id', datafield: 'id', width: '1%', hidden: true },
     {
@@ -149,7 +154,7 @@ export interface HistoricoGridColumnRenderers {
   cellsrendererFechaHistorico: GridRenderer;
 }
 
-export function createColumnsHistorico(r: HistoricoGridColumnRenderers): any[] {
+export function createColumnsHistorico(r: HistoricoGridColumnRenderers): IflowGridColumns {
   return [
     { text: 'Id', datafield: 'id', width: '1%', hidden: true },
     {

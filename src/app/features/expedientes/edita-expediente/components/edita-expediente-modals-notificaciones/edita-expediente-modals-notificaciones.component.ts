@@ -23,6 +23,7 @@ export class EditaExpedienteModalsNotificacionesComponent implements AfterViewIn
   @Input() isFechaFirmaInvalid = false
 
   @Output() crearModeloTeuFichero = new EventEmitter<void>()
+  @Output() cancelar = new EventEmitter<void>()
 
   readonly trackByIdModel = trackByIdModel
 
@@ -34,5 +35,9 @@ export class EditaExpedienteModalsNotificacionesComponent implements AfterViewIn
 
   handleCrearModeloTeuFichero(): void {
     this.crearModeloTeuFichero.emit()
+  }
+
+  handleCancelar(): void {
+    this.cancelar.emit()
   }
 }

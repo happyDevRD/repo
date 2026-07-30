@@ -1,44 +1,64 @@
-<app-modal-shell modalId="NuevoTramiteModal" title="Nuevo Trámite" titleId="NuevoTramiteModalLabel"
-     dialogClass="modal-xl modal-dialog-centered" bodyClass="p-4" [showFooter]="false"
+<app-modal-shell
+     modalId="NuevoTramiteModal"
+     title="Nuevo Trámite"
+     titleId="NuevoTramiteModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-tramite-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
      (closed)="tramites.limpiarErroresTramite()">
-     <form modalBody id="formNuevoTramite" (ngSubmit)="handleSubmit($event)">
-          <div class="row mb-4">
-               <div class="col-6">
+     <form modalBody id="formNuevoTramite" (ngSubmit)="handleSubmit($event)" novalidate>
+          <p class="exp-tramite-modal__section-title">Datos del trámite</p>
+          <div class="row g-3">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <select class="form-select" id="fase" name="fase" [(ngModel)]="edita.creartramiteexp.fase"
-                              required>
-                              <option value="" disabled selected></option>
+                         <select class="form-select"
+                              [class.form-select--placeholder]="!edita.creartramiteexp.fase"
+                              id="exp-tramite-fase" name="fase"
+                              [(ngModel)]="edita.creartramiteexp.fase"
+                              required aria-required="true"
+                              aria-describedby="exp-tramite-fase-error">
+                              <option value="" disabled>Seleccione fase</option>
                               <option value="INICIO">INICIO</option>
                               <option value="INSTRUCCION">INSTRUCCION</option>
                               <option value="RESOLUCION">RESOLUCION</option>
                          </select>
-                         <label for="fase">Fase *</label>
+                         <label class="required-field" for="exp-tramite-fase">Fase</label>
+                         <div class="invalid-feedback" id="exp-tramite-fase-error">
+                              Seleccione una fase.
+                         </div>
                     </div>
                </div>
-               <div class="col-6">
+               <div class="col-md-6">
                     <div class="form-floating">
-                         <input class="form-control" id="fecTramite" name="fecTramite" type="date"
-                              [(ngModel)]="edita.creartramiteexp.fecTramite" min="2023-01-01" max="2099-12-31"
-                              placeholder=" ">
-                         <label for="fecTramite">Fecha Trámite</label>
+                         <input class="form-control" id="exp-tramite-fecTramite" name="fecTramite" type="date"
+                              [(ngModel)]="edita.creartramiteexp.fecTramite"
+                              min="2023-01-01" max="2099-12-31" placeholder=" ">
+                         <label for="exp-tramite-fecTramite">Fecha trámite</label>
                     </div>
                </div>
-          </div>
-          <div class="row">
                <div class="col-12">
                     <div class="form-floating">
-                         <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
-                              [(ngModel)]="edita.creartramiteexp.descripcion" required minlength="1" maxlength="500"
+                         <textarea class="form-control exp-tramite-modal__descripcion"
+                              id="exp-tramite-descripcion" name="descripcion"
+                              [(ngModel)]="edita.creartramiteexp.descripcion"
+                              required minlength="1" maxlength="500"
+                              aria-required="true"
+                              aria-describedby="exp-tramite-descripcion-error"
                               placeholder=" "></textarea>
-                         <label for="descripcion">Descripción *</label>
+                         <label class="required-field" for="exp-tramite-descripcion">Descripción</label>
+                         <div class="invalid-feedback" id="exp-tramite-descripcion-error">
+                              Indique una descripción (máx. 500 caracteres).
+                         </div>
                     </div>
                </div>
           </div>
-          <div class="row mt-2 mb-4"></div>
-          <div class="modal-footer">
-               <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    (click)="tramites.limpiarErroresTramite()">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
-          </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="handleCancelar()">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formNuevoTramite"
+               [attr.aria-busy]="edita.enviandoTramite ? 'true' : null"
+               [disabled]="edita.enviandoTramite">Guardar</button>
+     </div>
 </app-modal-shell>

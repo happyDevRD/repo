@@ -1,6 +1,7 @@
 import { totalRendererRecibos } from './tareas-recibos.helper';
+import { IflowGridColumns } from '../../../../shared/components/iflow-grid/iflow-grid.types';
 
-export const COLUMNS_RECIBOS = [
+export const COLUMNS_RECIBOS: IflowGridColumns = [
   { text: 'Ejercicio', datafield: 'ejeRecib', width: '10%' },
   { text: 'Recibo', datafield: 'numRecib', width: '15%' },
   { text: 'Padrón', datafield: 'nomPadro', width: '20%' },

@@ -7,6 +7,7 @@ import { ReciboCabeceraDto } from '../../../../core/models/recibo-cabecera.dto'
 import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { NotificationService } from '../../../../core/service/notification.service'
 import { IflowGridComponent } from '../../../../shared/components/iflow-grid/iflow-grid.component'
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 
 export const RECIBOS_GRID_DATA_FIELDS = [
   { name: 'ejeRecib', type: 'number' },
@@ -20,10 +21,10 @@ export const RECIBOS_GRID_DATA_FIELDS = [
 export function totalRendererRecibos(
   row?: number,
   columnfield?: string,
-  value?: any,
+  value?: unknown,
   _defaulthtml?: string,
-  _columnproperties?: any,
-  _rowdata?: any,
+  _columnproperties?: unknown,
+  _rowdata?: unknown,
 ): string {
   if (value === null || value === undefined) {
     return `<div style="text-align: right; margin-top: 4px;">€ 0.00</div>`
@@ -34,9 +35,8 @@ export function totalRendererRecibos(
 
 export interface RecibosPendientesHost {
   introValorConsulta: string
-  /** Fuente/adaptador jqxGrid (tipos del widget son laxos). */
-  sourceRecibos: any
-  dataAdapter: any
+  sourceRecibos: IflowGridSource | null
+  dataAdapter: IflowGridSource | null
   gridRecibos?: IflowGridComponent
   cdr: ChangeDetectorRef
 }

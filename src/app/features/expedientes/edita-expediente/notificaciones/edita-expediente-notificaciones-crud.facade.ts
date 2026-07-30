@@ -145,7 +145,7 @@ export class EditaExpedienteNotificacionesCrudFacade {
       didOpen: () => this.notificationService.showLoading(),
     });
 
-    this.notificacionesService.editarNotificacion(datosParaEnviar as any, this.state.idNotificacion).pipe(
+    this.notificacionesService.editarNotificacion(datosParaEnviar, this.state.idNotificacion).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {

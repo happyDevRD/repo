@@ -7,6 +7,7 @@ import { PersonaEntidadApiService } from '../../../core/service/persona/persona-
 import { NotificationService } from '../../../core/service/notification.service'
 import { SolicitudesGridHost } from './solicitudes-grid.facade'
 import { MUNICIO } from 'src/app/core/constants/datos'
+import { MunicipioIne } from '../../../core/models/ine-catalogo.model'
 
 export interface SolicitudesPersonaHost extends SolicitudesGridHost {
   creasolicitud: CreaSolicitudNuevo
@@ -24,14 +25,14 @@ export class SolicitudesPersonaFacade {
   private readonly destroyRef = inject(DestroyRef)
 
   public nombredni: string
-  public apellido1dni: any
-  public apellido2dni: any
+  public apellido1dni: string
+  public apellido2dni: string
   public direcciondni: string
-  public cpdni: any
-  public provinciadni: any
-  public idhispersodni: any
-  public idpersodni: any
-  public nommunicipiodni: any
+  public cpdni: string | number | null
+  public provinciadni: string
+  public idhispersodni: number | null
+  public idpersodni: number | null
+  public nommunicipiodni: string
 
   public dniok = false
   public existepersonaentidad = false
@@ -43,7 +44,7 @@ export class SolicitudesPersonaFacade {
   public documrepre = false
   public controlpersonaentidadcrear = false
 
-  public InteresadoSolicitud: any
+  public InteresadoSolicitud: string
   public dirPosta: string
   public codPosta: string
   public provincia: string
@@ -72,7 +73,7 @@ export class SolicitudesPersonaFacade {
   public selectCIF = false
   public selectTRESIDENTE = false
 
-  public municiflitro: any[] = []
+  public municiflitro: MunicipioIne[] = []
 
   constructor(
     private readonly personaEntidadApi: PersonaEntidadApiService,
@@ -319,8 +320,8 @@ export class SolicitudesPersonaFacade {
     })
   }
 
-  selecTipPerso(valor: any): void {
-    switch (valor) {
+  selecTipPerso(valor: string | number): void {
+    switch (String(valor)) {
       case '1':
         this.selectnombre = true
         this.selectape1 = true
@@ -342,12 +343,16 @@ export class SolicitudesPersonaFacade {
     }
   }
 
-  gestimunicip(id: any): void {
+  gestimunicip(id: string | number | null | undefined): void {
     this.municiflitro = []
+    if (id === null || id === undefined || id === '') {
+      return
+    }
+    const prefijo = String(id)
 
     for (let index = 0; index < MUNICIO.length; index++) {
       const element = MUNICIO[index]
-      if (element.id.substring(0, 2) == id) {
+      if (element.id.substring(0, 2) == prefijo) {
         this.municiflitro.push(element)
       }
     }
@@ -440,8 +445,8 @@ export class SolicitudesPersonaFacade {
 
   private asignarDatosDni(response: ConsultaDni): void {
     this.nombredni = response.desPerEntid
-    this.apellido1dni = response.apellido1
-    this.apellido2dni = response.apellido2
+    this.apellido1dni = String(response.apellido1 ?? '')
+    this.apellido2dni = String(response.apellido2 ?? '')
     this.direcciondni = response.dirPosta
     this.cpdni = response.codPosta
     this.provinciadni = response.provincia

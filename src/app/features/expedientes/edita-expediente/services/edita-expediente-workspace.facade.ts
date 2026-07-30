@@ -45,7 +45,6 @@ export interface EditaExpedienteTramitadoresHost {
   idExpediente: number;
   idTramitador: number;
   sourceTramitadores: unknown;
-  recargarpagina(): void;
 }
 
 export interface BootstrapModalesHost {
@@ -84,7 +83,7 @@ export interface EditaExpedienteTareaClickHost {
   ejerNumExpedi: string;
   verExpediente: { ejercicio: number; numero: number };
   tareatramiteexpedientever: TareaTramiteExpedienteVer;
-  tareatramiteexpedientelistar: unknown[];
+  tareatramiteexpedientelistar: TareaTramiteSeleccionRow[];
   descargafichero: string;
   getUsuarioListar(id: number): void;
   getTemaDocumentoListar(): void;
@@ -122,10 +121,13 @@ export class EditaExpedienteWorkspaceFacade {
 
   clicktareaNueva(
     host: SeleccionTareaNuevaHost,
-    event: JqxGridRowEvent<TareaTramiteSeleccionRow>,
+    rowData: TareaTramiteSeleccionRow,
     callbacks: SeleccionTareaNuevaCallbacks,
   ): void {
-    aplicarSeleccionTareaNueva(host, event.args.row.bounddata, this.expedientesService, callbacks)
+    if (!rowData?.id) {
+      return
+    }
+    aplicarSeleccionTareaNueva(host, rowData, this.expedientesService, callbacks)
   }
 
   clicktarea(host: EditaExpedienteTareaClickHost, id: number, codArchivo: number | string | null, tareaProcedi: number): void {
@@ -198,8 +200,10 @@ export class EditaExpedienteWorkspaceFacade {
     this.notificationService.info(`Tramitador seleccionado: ${rowData.nombre || 'Sin nombre'}`)
   }
 
-  onTareaDoubleClick(host: EditaExpedienteTareaClickHost, event: JqxGridRowEvent<TareaTramiteSeleccionRow>): void {
-    const rowData = event.args.row.bounddata
+  onTareaDoubleClick(host: EditaExpedienteTareaClickHost, rowData: TareaTramiteSeleccionRow): void {
+    if (!rowData?.id) {
+      return
+    }
     this.clicktarea(host, rowData.id, rowData.archivo ?? null, rowData.tareaProcedimiento)
   }
 
@@ -237,7 +241,6 @@ export class EditaExpedienteWorkspaceFacade {
         next: () => {
           this.notificationService.deleteSuccess('Tramitador');
           this.refrescarGrid(host);
-          setTimeout(host.recargarpagina, 1500);
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 403) {

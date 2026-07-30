@@ -1,70 +1,66 @@
-<app-modal-shell modalId="metadatosModal" title="Metadatos del Documento ENI" titleId="metadatosModalLabel"
-     dialogClass="modal-xl" [showFooter]="false">
-     <form modalBody>
-          <div class="px-3">
-               <div class="row g-3">
-                    <div class="col-12">
-                         <div class="form-floating">
-                              <input [value]="edita.vermetadatos.versionNTI" class="form-control" disabled id="nti"
-                                   name="nti" type="text" placeholder=" ">
-                              <label for="nti">Versión NTI </label>
-                              <br>
-                         </div>
+<app-modal-shell
+     modalId="metadatosModal"
+     title="Metadatos del Documento ENI"
+     titleId="metadatosModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-metadatos-modal"
+     dialogClass="modal-lg"
+     [dismissOnClose]="false"
+     (closed)="edita.cerrarModal('metadatosModal')">
+     <div modalBody>
+          <div class="row g-3">
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input [value]="edita.vermetadatos.versionNTI" class="form-control" disabled
+                              id="ntiMeta" name="nti" type="text" placeholder=" ">
+                         <label for="ntiMeta">Versión NTI</label>
                     </div>
-                    <div class="col-12">
-                         <div class="form-floating">
-                              <input [value]="edita.vermetadatos.identificador" class="form-control" disabled
-                                   id="Identificadord" name="Identificadord" type="text" placeholder=" ">
-                              <label for="Identificadord">Identificador del
-                                   Documento </label>
-                              <br>
-                         </div>
+               </div>
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input [value]="edita.vermetadatos.identificador" class="form-control" disabled
+                              id="identificadorMeta" name="Identificadord" type="text" placeholder=" ">
+                         <label for="identificadorMeta">Identificador del documento</label>
                     </div>
-                    <div class="col-12">
-                         <div class="form-floating">
-                              <input [value]="edita.vermetadatos.organo" class="form-control" disabled id="Órgano"
-                                   name="Órgano" type="text" placeholder=" ">
-                              <label for="Órgano">Órgano </label>
-                              <br>
-                         </div>
+               </div>
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input [value]="edita.vermetadatos.organo" class="form-control" disabled
+                              id="organoMeta" name="Organo" type="text" placeholder=" ">
+                         <label for="organoMeta">Órgano</label>
                     </div>
-                    <div class="col-12">
-                         <div class="form-floating">
-                              <input [value]="edita.fechametadatabuena" class="form-control" disabled id="Captura"
-                                   name="Captura" type="text" placeholder=" ">
-                              <label for="Captura">Fecha de Captura</label>
-                              <br>
-                         </div>
+               </div>
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input [value]="edita.fechametadatabuena" class="form-control" disabled
+                              id="capturaMeta" name="Captura" type="text" placeholder=" ">
+                         <label for="capturaMeta">Fecha de captura</label>
                     </div>
-                    <div class="col-12">
-                         <div class="form-floating">
-                              <input [value]="edita.vermetadatos.origen" class="form-control" disabled id="Origen"
-                                   name="Origen" type="text" placeholder=" ">
-                              <label for="Origen">Origen </label>
-                              <br>
-                         </div>
+               </div>
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input [value]="edita.vermetadatos.origen" class="form-control" disabled
+                              id="origenMeta" name="Origen" type="text" placeholder=" ">
+                         <label for="origenMeta">Origen</label>
                     </div>
-                    <div class="col-12">
-                         <div class="form-floating">
-                              <input [value]="edita.vermetadatos.versionNTI" class="form-control" disabled id="Estado"
-                                   name="Estado" type="text" placeholder=" ">
-                              <label for="Estado">Estado </label>
-                              <br>
-                         </div>
+               </div>
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input [value]="edita.vermetadatos.versionNTI" class="form-control" disabled
+                              id="estadoMeta" name="Estado" type="text" placeholder=" ">
+                         <label for="estadoMeta">Estado</label>
                     </div>
-                    <div class="col-12">
-                         <div class="form-floating">
-                              <input [value]="edita.vermetadatos.tipDocum" class="form-control" disabled id="tDocumento"
-                                   name="tDocumento" type="text" placeholder=" ">
-                              <label for="tDocumento">Tipo de Documento</label>
-                              <br>
-                         </div>
+               </div>
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input [value]="edita.vermetadatos.tipDocum" class="form-control" disabled
+                              id="tDocumentoMeta" name="tDocumento" type="text" placeholder=" ">
+                         <label for="tDocumentoMeta">Tipo de documento</label>
                     </div>
                </div>
           </div>
-          <div class="modal-footer">
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    type="button">Cerrar</button>
-          </div>
-     </form>
+     </div>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="edita.cerrarModal('metadatosModal')">Cerrar</button>
+     </div>
 </app-modal-shell>

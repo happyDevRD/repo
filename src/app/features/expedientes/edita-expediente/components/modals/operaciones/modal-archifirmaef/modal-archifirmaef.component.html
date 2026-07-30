@@ -1,85 +1,68 @@
-<app-modal-shell modalId="archifirmaef" title="Solicitud de Firmado Electrónico" titleId="archifirmaefLabel"
-     dialogClass="modal-xl" [staticBackdrop]="true" [keyboard]="false" [showFooter]="false"
+<app-modal-shell
+     modalId="archifirmaef"
+     title="Solicitud de Firmado Electrónico"
+     titleId="archifirmaefLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-firma-electronica-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
      (closed)="tareas.limpiarArchivoFirmaEF(edita)">
-     <form modalBody (ngSubmit)="tareas.enviarFirmaAtendida(edita)">
+     <form modalBody id="formFirmaElectronica" (ngSubmit)="tareas.enviarFirmaAtendida(edita)">
           <div class="row g-3">
                <div class="col-12">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.archivofirmadoef.asunto" class="form-control" id="asunto"
-                              name="asunto" type="text" placeholder=" ">
-                         <label for="asunto">Asunto * </label>
-                         <br>
-
+                         <input [(ngModel)]="edita.archivofirmadoef.asunto" class="form-control"
+                              id="asuntoFirma" name="asunto" type="text" placeholder=" ">
+                         <label class="required-field" for="asuntoFirma">Asunto</label>
                     </div>
                </div>
                <div class="col-12">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.archivofirmadoef.texto" class="form-control" id="texto" name="texto"
-                              type="text" placeholder=" ">
-                         <label for="asunto">Texto * </label>
-                         <br>
-
+                         <input [(ngModel)]="edita.archivofirmadoef.texto" class="form-control"
+                              id="textoFirma" name="texto" type="text" placeholder=" ">
+                         <label class="required-field" for="textoFirma">Texto</label>
                     </div>
                </div>
-
-               <div class="col-4">
+               <div class="col-md-4">
                     <div class="form-floating">
-                         <select [(ngModel)]="edita.archivofirmadoef.prioridad" class="form-select " id="prioridad"
-                              name="prioridad">
+                         <select [(ngModel)]="edita.archivofirmadoef.prioridad"
+                              class="form-select"
+                              [class.form-select--placeholder]="edita.archivofirmadoef.prioridad == null || edita.archivofirmadoef.prioridad === ''"
+                              id="prioridadFirma" name="prioridad">
+                              <option value="" disabled>Seleccione prioridad</option>
                               <option value="0">Baja</option>
                               <option value="1">Media</option>
                               <option value="2">Alta</option>
-
                          </select>
-                         <label for="prioridad">Prioridad * </label>
-                         <br>
-
-
+                         <label class="required-field" for="prioridadFirma">Prioridad</label>
                     </div>
                </div>
-               <div class="px-3">
-                    <h4 class="modal-title text-start">Firmantes </h4>
-                    <div class="row">
-
-                         <div class="col-1"></div>
-                         <div class="col-10">
-                              <!-- <table class="table table-bordered table-striped table-responsive rounded-3"> -->
-                              <table class="table table-hover">
-                                   <thead>
-                                        <tr>
-
-                                             <th>Cargo</th>
-                                             <th>Nombre</th>
-
-                                        </tr>
-                                   </thead>
-                                   <tbody
-                                        *ngFor="let archivofirmante of edita.archivofirmantes; trackBy: trackByNumDocum">
-                                        <tr>
-
-                                             <td class="fw-normal">{{ archivofirmante.cargo }}</td>
-                                             <td class="fw-normal">{{ archivofirmante.desPerso }}</td>
-
-
-                                        </tr>
-                                   </tbody>
-                              </table>
-                         </div>
-                         <div class="col-1"></div>
+               <div class="col-12" *ngIf="edita.archivofirmantes?.length">
+                    <h3 class="h6 text-primary mb-2">Firmantes</h3>
+                    <div class="table-responsive">
+                         <table class="table table-hover mb-0">
+                              <thead>
+                                   <tr>
+                                        <th>Cargo</th>
+                                        <th>Nombre</th>
+                                   </tr>
+                              </thead>
+                              <tbody>
+                                   <tr *ngFor="let archivofirmante of edita.archivofirmantes; trackBy: trackByNumDocum">
+                                        <td class="fw-normal">{{ archivofirmante.cargo }}</td>
+                                        <td class="fw-normal">{{ archivofirmante.desPerso }}</td>
+                                   </tr>
+                              </tbody>
+                         </table>
                     </div>
-
-
                </div>
-
-
-          </div>
-
-
-          <div class="modal-footer">
-               <button (click)="tareas.limpiarArchivoFirmaEF(edita)" class="btn-iflow modal-footer__btn btn-iflow--secondary"
-                    data-bs-dismiss="modal" type="button">Cancelar
-               </button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="tareas.limpiarArchivoFirmaEF(edita); edita.cerrarModal('archifirmaef')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formFirmaElectronica">Guardar</button>
+     </div>
 </app-modal-shell>

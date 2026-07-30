@@ -3,11 +3,33 @@
   modalId="operacionModal"
   title="Operación"
   titleId="operacionModalLabel"
-  dialogClass="modal-xl"
-  [showFooter]="false"
+  modalClass="iflow-modal iflow-modal--fit exp-operacion-modal"
+  dialogClass="modal-lg"
 >
-  <form modalBody [formGroup]="operacionForm" (ngSubmit)="guardarOperacion()">
+  <form
+    modalBody
+    id="formOperacion"
+    [formGroup]="operacionForm"
+    (ngSubmit)="guardarOperacion()"
+  >
     <app-operacion-form-codigo></app-operacion-form-codigo>
     <app-operacion-form-detalle></app-operacion-form-detalle>
   </form>
+  <div modalFooter class="modal-footer__actions">
+    <button
+      type="button"
+      class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      (click)="closeModal.emit()"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      form="formOperacion"
+      class="btn-iflow modal-footer__btn btn-iflow--primary"
+      [disabled]="operacionForm.invalid"
+    >
+      Guardar Operación
+    </button>
+  </div>
 </app-modal-shell>

@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class TarCursoComponent implements OnInit {
   public tareatramiteexpedienteusuariolistar!: TareaTramiteExpedienteUsuarioListar[];
   public descargafichero!: string;
-  public numeroArchivo!: number;
+  public numeroArchivo!: number | string | null;
   public idtarea!: number;
 
   constructor(
@@ -49,7 +49,7 @@ export class TarCursoComponent implements OnInit {
   }
 
   // Registra la acción de selección de tarea y almacena el id y número de archivo.
-  public pulsaAccionesTarea(id: number, archivo: number): void {
+  public pulsaAccionesTarea(id: number, archivo: number | string | null): void {
     this.idtarea = id;
     this.numeroArchivo = archivo;
   }

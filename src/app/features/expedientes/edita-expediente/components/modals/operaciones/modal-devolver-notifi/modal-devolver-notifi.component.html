@@ -1,47 +1,61 @@
-<app-modal-shell modalId="DevolverNotifi" title="Devolver Notificación" titleId="DevolverNotifiLabel"
-     dialogClass="modal-xl" [staticBackdrop]="true" [keyboard]="false" [showFooter]="false">
-     <form modalBody (ngSubmit)="notif.devolverNotificacion()">
+<app-modal-shell
+     modalId="DevolverNotifi"
+     title="Devolver Notificación"
+     titleId="DevolverNotifiLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-notifi-accion-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
+     (closed)="edita.cerrarModal('DevolverNotifi')">
+     <form modalBody id="formDevolverNotifi" (ngSubmit)="notif.devolverNotificacion()">
           <div class="row g-3">
-               <div class="col-sm-4">
+               <div class="col-md-4">
                     <div class="form-floating">
                          <input [(ngModel)]="notif.creanotificacion.fecRecNotif" class="form-control"
-                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
-                              type="date" value="{{ edita.selected }}" placeholder=" ">
-                         <label for="documento">Fecha de Devolución *</label>
+                              id="fecDevNotifi" max="2099-12-31" min="2023-01-01" name="fecRecNotif"
+                              type="date" placeholder=" ">
+                         <label class="required-field" for="fecDevNotifi">Fecha de devolución</label>
                     </div>
                </div>
-               <div class="col-sm-4">
+               <div class="col-md-4">
                     <div class="form-floating">
-                         <select [(ngModel)]="notif.creanotificacion.motNotif" class="form-select "
+                         <select [(ngModel)]="notif.creanotificacion.motNotif"
+                              class="form-select"
+                              [class.form-select--placeholder]="!notif.creanotificacion.motNotif"
                               id="desMotNotif" name="desMotNotif" required>
+                              <option value="" disabled>Seleccione motivo</option>
                               <option
                                    *ngFor="let motivosnotificacioneslistar of notif.motivonotificacioneslistar; trackBy: trackByMotNotif"
-                                   name="descripcionMotivo" value="{{ motivosnotificacioneslistar.motNotif }}"> {{
-                                   motivosnotificacioneslistar.descripcion }}
+                                   [value]="motivosnotificacioneslistar.motNotif">
+                                   {{ motivosnotificacioneslistar.descripcion }}
                               </option>
                          </select>
-                         <label for="desMotNotif">Motivo Devolución* </label>
+                         <label class="required-field" for="desMotNotif">Motivo devolución</label>
                     </div>
                </div>
-               <div class="col-sm-4">
+               <div class="col-md-4">
                     <div class="form-floating">
-                         <select [(ngModel)]="notif.creanotificacion.notificador" class="form-select "
-                              id="notificador" name="notificador" required>
+                         <select [(ngModel)]="notif.creanotificacion.notificador"
+                              class="form-select"
+                              [class.form-select--placeholder]="!notif.creanotificacion.notificador"
+                              id="notificadorDev" name="notificador" required>
+                              <option value="" disabled>Seleccione notificador</option>
                               <option
                                    *ngFor="let notificalistar of notif.notificadorlistar; trackBy: trackByNotificador"
-                                   name="notificadorNotifi" value="{{ notificalistar.notificador }}"> {{
-                                   notificalistar.descripcion }}
+                                   [value]="notificalistar.notificador">
+                                   {{ notificalistar.descripcion }}
                               </option>
                          </select>
-                         <label for="receptor">Notificador* </label>
+                         <label class="required-field" for="notificadorDev">Notificador</label>
                     </div>
                </div>
           </div>
-          <br>
-          <div class="modal-footer">
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    type="button">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
-          </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="edita.cerrarModal('DevolverNotifi')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formDevolverNotifi">Guardar</button>
+     </div>
 </app-modal-shell>

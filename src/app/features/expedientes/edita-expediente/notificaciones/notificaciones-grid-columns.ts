@@ -1,4 +1,9 @@
-type GridRenderer = (...args: any[]) => string;
+import {
+  IflowGridCellsRenderer,
+  IflowGridColumns,
+} from '../../../../shared/components/iflow-grid/iflow-grid.types'
+
+type GridRenderer = IflowGridCellsRenderer
 
 export interface NotificacionGridColumnRenderers {
   columnseleccionListarNotifi: GridRenderer;
@@ -13,7 +18,7 @@ export interface NotificacionGridColumnRenderers {
   cellsrendererAccionesNotificacion: GridRenderer;
 }
 
-export function createColumnsListarNotifi(r: NotificacionGridColumnRenderers): any[] {
+export function createColumnsListarNotifi(r: NotificacionGridColumnRenderers): IflowGridColumns {
   return [
     { text: 'Id', datafield: 'idNotif', width: '1%', hidden: true },
     { text: 'TareaProcedimiento', datafield: 'tareaProcedimiento', width: '1%', hidden: true },

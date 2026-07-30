@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types';
 
 export const HISTORICO_GRID_DATA_FIELDS = [
   { name: 'fecTarea', type: 'string' },
@@ -27,7 +28,7 @@ export function buildHistoricoGridSource(idTarea: number | string): Record<strin
   };
 }
 
-export function createHistoricoGridAdapter(idTarea?: number | string | null): any {
+export function createHistoricoGridAdapter(idTarea?: number | string | null): IflowGridSource {
   if (idTarea == null || idTarea === '' || idTarea === 0) {
     return new jqx.dataAdapter({
       dataType: 'json',

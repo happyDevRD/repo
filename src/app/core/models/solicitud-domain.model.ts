@@ -13,27 +13,79 @@ export class DocumentosListar {
 }
 
 
+/** Persona/interesado embebido en listados y detalle de solicitud. */
+export interface SolicitudPersonaEntidadResumen {
+  idPerso?: number | string
+  idHisPerso?: number | string
+  numDocum?: string
+  tipPerso?: string
+  nombre?: string
+  particula1?: string
+  apellido1?: string
+  particula2?: string
+  apellido2?: string
+  razSocia?: string
+  razSocReduc?: string
+  desPerEntid?: string
+  localidad?: string
+  desTipVia?: string
+  desVia?: string
+  extInfNumer?: string | number
+  extInfLetra?: string
+  extSupNumer?: string | number
+  extSupLetra?: string
+  kilometro?: string | number
+  bloque?: string
+  portal?: string
+  escalera?: string
+  planta?: string
+  puerta?: string
+  edificio?: string
+  codLocal?: string | number
+  codPosta?: string | number
+  dirPosta?: string
+  municipio?: string
+  provincia?: string
+  observaciones?: string
+  fecMovim?: string
+  codMovim?: string
+  cauMovim?: string
+  regActiv?: string
+  nivAcces?: string
+  domCodif?: string
+  idHisDomic?: string | number
+  idDomic?: string | number
+  codProvi?: string | number
+  codMunic?: string | number
+  usuContr?: string
+  fecContr?: string
+}
+
 export class SolicitudListar {
   id!: number;
   fecInicio!: string;
   ejercicio!: number;
   numero!: number;
-  idHisRepre!: any;
-  idRepre!: any;
+  idHisRepre!: number | string | null;
+  idRepre!: number | string | null;
   estado!: string;
   asunto!: string;
-  idDocum!: any;
-  idHisDocum!: any;
+  idDocum!: number | string | null;
+  idHisDocum!: number | string | null;
   idPerso!: number;
   idHisPerso!: number;
   departamento!: number;
   usuario!: string;
   usuContr!: string;
   fecContr!: string;
-  idExpediente!: any;
-  rdDocumento!: any;
-  ejeNumRegis!: any;
-  expediente: any = [{
+  idExpediente!: number | string | null;
+  rdDocumento!: number | string | null;
+  ejeNumRegis!: string | null;
+  /** Campos del grid (pueden venir en la fila aunque no en el DTO base). */
+  numDocum?: string;
+  nomRepre?: string;
+  dirRepre?: string;
+  expediente: Record<string, unknown> | null = {
     id: "",
     ejercicio: "",
     estado: "",
@@ -55,8 +107,8 @@ export class SolicitudListar {
     idHisRepre: "",
     usuContr: "",
     fecContr: ""
-  }];
-  personaEntidad: any = [{
+  };
+  personaEntidad: SolicitudPersonaEntidadResumen | null = {
     idPerso: "",
     idHisPerso: "",
     fecMovim: "",
@@ -102,7 +154,7 @@ export class SolicitudListar {
     codProvi: "",
     codMunic: "",
 
-  }]
+  }
 
 }
 
@@ -111,9 +163,9 @@ export class ExpedienteListar2 {
   ejercicio!: number;
   estado!: string;
   fase!: string;
-  fecArchivo!: any;
-  fecCancelacion!: any
-  fecFin!: any;
+  fecArchivo!: string | null;
+  fecCancelacion!: string | null
+  fecFin!: string | null;
   fecInicio!: string;
   formaApertura!: string
   numero!: number;
@@ -123,7 +175,7 @@ export class ExpedienteListar2 {
   procedimiento!: string;
   solicitud!: string;
   usuContr!: string;
-  fecContr!: any;
+  fecContr!: string | null;
 
 }
 
@@ -137,13 +189,13 @@ export class EditExpediente {
 export class ExpedienteListar {
 
   id!: number;
-  solicitud!: any;
+  solicitud!: number | string | null;
   ejercicio!: number;
   numero!: number;
   titulo!: string;
   fecInicio!: string;
-  fecFin!: "";
-  departamento: any = [{
+  fecFin!: string | null;
+  departamento: Record<string, unknown>[] = [{
     idOrgEleme: "",
     idOrgan: "",
     cadEleme: "",
@@ -154,7 +206,7 @@ export class ExpedienteListar {
     idOrgElePadre: "",
     fecContr: "",
   }];
-  procedimiento: any = [{
+  procedimiento: Record<string, unknown>[] = [{
     id: "",
     descripcion: "",
     departamento: {
@@ -178,7 +230,7 @@ export class ExpedienteListar {
   estado!: string;
   formaApertura!: string;
   fase!: string;
-  instructor: any = [{
+  instructor: Record<string, unknown>[] = [{
     usuario: "",
     numUsuar: "",
     desUsuario: "",
@@ -350,100 +402,100 @@ export class CreaSolicitud {
   idPerso!: number;
   idHisDocum!: number;
   idDocum!: number;
-  idHisRepre!: any;
-  idRepre!: any;
+  idHisRepre!: number | string | null;
+  idRepre!: number | string | null;
   usuario!: string;
   expediente!: string;
   usuContr!: string;
   dni!: string;
   representante!: string;
-  formaNotifi!: any;
+  formaNotifi!: number | null;
   email!: string;
 
 }
 
 
 export class CreaSolicitudNuevo {
-  id: any;
-  fecInicio: String;
-  ejercicio: string;
-  numero: any;
-  idDocum: any;
-  idHisDocum: any;
-  idPerso: any;
-  idHisPerso: any;
-  idRepre: any;
-  idHisRepre: any;
-  EnumEstadoSolicitud: any;
-  estado: string;
-  asunto: string;
-  motivoRechazo: string;
-  departamento: any;
-  usuario: string;
-  expediente: any;
-  fecMovim: Date;
-  codMovim: string;
-  cauMovim: any;
-  regActiv: boolean;
-  numDocum: string;
-  tipPerso: string;
-  nivAcces: any;
-  nombre: string;
-  particula1: string;
-  representante: string;
-  apellido1: string;
-  particula2: string;
-  apellido2: string;
-  razSocia: string;
-  razSocReduc: string;
-  desPerEntid: string;
-  domCodif: boolean;
-  idHisDomic: any;
-  idDomic: any;
-  localidad: string;
-  desTipVia: string;
-  desVia: string;
-  extInfNumer: number;
-  extInfLetra: any;
-  extSupNumer: any;
-  extSupLetra: string;
-  codLocal: any;
-  codPosta: string;
-  dirPosta: string;
-  observaciones: string;
-  codProvi: any;
-  codMunic: any;
-  fecMovimRepre: any;
-  codMovimRepre: string;
-  cauMovimRepre: any;
-  regActivRepre: boolean;
-  numDocumRepre: string;
-  tipPersoRepre: any;
-  nivAccesRepre: any;
-  nombreRepre: string;
-  particula1Repre: string;
-  apellido1Repre: string;
-  particula2Repre: string;
-  apellido2Repre: string;
-  razSociaRepre: string;
-  razSocReducRepre: string;
-  desPerEntidRepre: string;
-  domCodifRepre: boolean;
-  idHisDomicRepre: any;
-  idDomicRepre: any;
-  localidadRepre: string;
-  desTipViaRepre: string;
-  desViaRepre: string;
-  extInfNumerRepre: any
-  extInfLetraRepre: string;
-  extSupNumerRepre: any;
-  extSupLetraRepre: string;
-  codLocalRepre: any;
-  codPostaRepre: number;
-  dirPostaRepre: string;
-  observacionesRepre: string;
-  codProviRepre: any;
-  codMunicRepre: any;
+  id!: number | string | null;
+  fecInicio!: string;
+  ejercicio!: string;
+  numero!: number | string | null;
+  idDocum!: number | string | null;
+  idHisDocum!: number | string | null;
+  idPerso!: number | string | null;
+  idHisPerso!: number | string | null;
+  idRepre!: number | string | null;
+  idHisRepre!: number | string | null;
+  EnumEstadoSolicitud!: string | number | null;
+  estado!: string;
+  asunto!: string;
+  motivoRechazo!: string;
+  departamento!: number | string | null;
+  usuario!: string;
+  expediente!: number | string | Record<string, unknown> | null;
+  fecMovim!: Date | string | null;
+  codMovim!: string;
+  cauMovim!: string | null;
+  regActiv!: boolean;
+  numDocum!: string;
+  tipPerso!: string;
+  nivAcces!: string | number | null;
+  nombre!: string;
+  particula1!: string;
+  representante!: string;
+  apellido1!: string;
+  particula2!: string;
+  apellido2!: string;
+  razSocia!: string;
+  razSocReduc!: string;
+  desPerEntid!: string;
+  domCodif!: boolean;
+  idHisDomic!: number | string | null;
+  idDomic!: number | string | null;
+  localidad!: string;
+  desTipVia!: string;
+  desVia!: string;
+  extInfNumer!: number | string | null;
+  extInfLetra!: string | null;
+  extSupNumer!: number | string | null;
+  extSupLetra!: string;
+  codLocal!: number | string | null;
+  codPosta!: string;
+  dirPosta!: string;
+  observaciones!: string;
+  codProvi!: number | string | null;
+  codMunic!: number | string | null;
+  fecMovimRepre!: Date | string | null;
+  codMovimRepre!: string;
+  cauMovimRepre!: string | null;
+  regActivRepre!: boolean;
+  numDocumRepre!: string;
+  tipPersoRepre!: string | null;
+  nivAccesRepre!: string | number | null;
+  nombreRepre!: string;
+  particula1Repre!: string;
+  apellido1Repre!: string;
+  particula2Repre!: string;
+  apellido2Repre!: string;
+  razSociaRepre!: string;
+  razSocReducRepre!: string;
+  desPerEntidRepre!: string;
+  domCodifRepre!: boolean;
+  idHisDomicRepre!: number | string | null;
+  idDomicRepre!: number | string | null;
+  localidadRepre!: string;
+  desTipViaRepre!: string;
+  desViaRepre!: string;
+  extInfNumerRepre!: number | string | null;
+  extInfLetraRepre!: string;
+  extSupNumerRepre!: number | string | null;
+  extSupLetraRepre!: string;
+  codLocalRepre!: number | string | null;
+  codPostaRepre!: number | string | null;
+  dirPostaRepre!: string;
+  observacionesRepre!: string;
+  codProviRepre!: number | string | null;
+  codMunicRepre!: number | string | null;
 }
 
 export class ConsultaDni {
@@ -465,23 +517,23 @@ export class ConsultaDni {
 
 export class VerSolicitud {
   id!: number;
-  fecInicio!: Date;
+  fecInicio!: string;
   ejercicio!: number;
   numero!: number;
-  idDocum!: any;
-  idHisDocum!: any;
+  idDocum!: number | string | null;
+  idHisDocum!: number | string | null;
   idPerso!: number;
   idHisPerso!: number;
-  idRepre!: any;
-  idHisRepre!: any;
+  idRepre!: number | string | null;
+  idHisRepre!: number | string | null;
   estado!: string;
   asunto!: string;
   departamento!: number;
   usuario!: string;
   usuContr!: string;
-  fecContr!: Date;
+  fecContr!: string;
   idexpediente!: number;
-  personaEntidad: any = [{
+  personaEntidad: SolicitudPersonaEntidadResumen | SolicitudPersonaEntidadResumen[] | null = [{
     idPerso: "",
     idHisPerso: "",
     numDocum: "",
@@ -500,7 +552,7 @@ export class VerSolicitud {
     municipio: "",
     provincia: ""
   }];
-  expediente: any = [{
+  expediente: Record<string, unknown> | Record<string, unknown>[] | null = [{
     id: "",
     ejercicio: "",
     estado: "",
@@ -541,7 +593,7 @@ export class UsuPermisos {
 
 export class AsignaA {
   idOrgUsuar!: number;
-  usuario: any =
+  usuario: Array<{ usuario: string; numUsuar: string; desUsuario: string }> =
     [
       {
         usuario: "",
@@ -564,7 +616,7 @@ export class ProcediPermisos {
   traUsuar!: number;
   usuContr!: string;
   fecContr!: string;
-  usuarioOLD: any = [{
+  usuarioOLD: Array<{ usuario: string; numUsuar: string; desUsuario: string }> = [{
     usuario: "",
     numUsuar: "",
     desUsuario: ""
@@ -576,10 +628,11 @@ export class EditarSolicitud {
   asunto!: string;
   estado!: string;
   usuario!: string;
-  fecInicio!: Date;
+  /** ISO `YYYY-MM-DD` (input type=date). */
+  fecInicio!: string;
   motivoRechazo!: string;
-  representante!: any;
-  formaNotifi!: any;
+  representante!: number | string | null;
+  formaNotifi!: number | string | null;
   email!: string;
   ejercicio!: string;
   departamento!: string;
@@ -587,8 +640,8 @@ export class EditarSolicitud {
   idPerso!: number;
   idHisDocum!: number;
   idDocum!: number;
-  idHisRepre!: any;
-  idRepre!: any;
+  idHisRepre!: number | string | null;
+  idRepre!: number | string | null;
   expediente!: string;
   usuContr!: string;
   dni!: string;

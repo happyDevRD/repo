@@ -16,6 +16,7 @@ import {
   downloadTeuXml,
   limpiarErroresFormularioTeu,
 } from './notificaciones-modal.helper'
+import { fechaHoyISO } from '../../../../core/helper/fecha-legacy.helper'
 
 /** Template-driven form TEU (#teuForm); submitted se usa para mostrar validaciones. */
 export interface TeuFormRefLike {
@@ -189,10 +190,10 @@ export class EditaExpedienteNotificacionesTeuFacade {
   }
 
   private buildDatosActualizacion(host: EditaExpedienteTeuHost): NotificacionActualizacionTeu {
-    const fechaActual = new Date().toISOString().split('T')[0]
+    const fechaActual = fechaHoyISO()
     return {
       idNotif: this.getIdNotificacion(),
-      fecEnvio: new Date(fechaActual),
+      fecEnvio: fechaActual,
       usuContr: host.usuContrl || '',
       email: this.modeloteucrear.email,
       url: this.modeloteucrear.url,

@@ -6,7 +6,8 @@ export interface ModeloTeuXmlResponse {
 /** Payload de actualización de notificación tras generar TEU (campos usados en editar). */
 export interface NotificacionActualizacionTeu {
   idNotif: number
-  fecEnvio: Date
+  /** ISO `YYYY-MM-DD` (input type=date / payload API). */
+  fecEnvio: string
   usuContr: string
   email: string
   url: string

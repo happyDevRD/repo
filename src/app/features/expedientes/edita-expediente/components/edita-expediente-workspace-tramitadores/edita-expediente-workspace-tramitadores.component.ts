@@ -6,6 +6,7 @@ import {
   IflowGridSource,
 } from '../../../../../shared/components/iflow-grid/iflow-grid.component'
 import { JqxGridRowEvent } from '../../../../../core/helper/jqx-grid-event.model'
+import { TramitadorGridRow } from '../../services/edita-expediente-workspace.facade'
 
 @Component({
   selector: 'app-edita-expediente-workspace-tramitadores',
@@ -17,17 +18,17 @@ export class EditaExpedienteWorkspaceTramitadoresComponent {
   @Input() source: IflowGridSource
   @Input() localization: IflowGridLocalization
 
-  @Output() rowClick = new EventEmitter<JqxGridRowEvent>()
-  @Output() rowDoubleClick = new EventEmitter<JqxGridRowEvent>()
+  @Output() rowClick = new EventEmitter<JqxGridRowEvent<TramitadorGridRow>>()
+  @Output() rowDoubleClick = new EventEmitter<JqxGridRowEvent<TramitadorGridRow>>()
 
   @ViewChild('gridTramitadores') gridTramitadores?: IflowGridComponent
 
-  handleRowClick(event: JqxGridRowEvent): void {
+  handleRowClick(event: JqxGridRowEvent<TramitadorGridRow>): void {
     this.gridTramitadores?.selectRow(event.args.rowindex)
     this.rowClick.emit(event)
   }
 
-  handleRowDoubleClick(event: JqxGridRowEvent): void {
+  handleRowDoubleClick(event: JqxGridRowEvent<TramitadorGridRow>): void {
     this.rowDoubleClick.emit(event)
   }
 }

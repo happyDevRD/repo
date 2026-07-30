@@ -6,6 +6,7 @@ import { ExpedientesService } from '../expedientes.service';
 import { NotificationService } from '../../../core/service/notification.service';
 import { ModalManagerService } from '../../../core/service/modal-manager.service';
 import { ExpedientesGridFacade, ExpedientesGridHost } from './expedientes-grid.facade';
+import { JqxGridRowEvent } from '../../../core/helper/jqx-grid-event.model';
 
 const MODAL_ATRIBUTOS = 'NAtributosModal2';
 
@@ -35,7 +36,7 @@ export class ExpedientesAtributosFacade {
     private readonly cdr: ChangeDetectorRef,
   ) { }
 
-  marcar(host: ExpedientesAtributosHost, event: any): void {
+  marcar(host: ExpedientesAtributosHost, event: JqxGridRowEvent<{ idGrupo: number; etiGruAtrib: string }>): void {
     const rowData = event.args.row.bounddata
     host.veoBorrarAtributo = true
     host.idGrupo = rowData.idGrupo

@@ -1,5 +1,6 @@
 import { DestroyRef, Injectable, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { HttpErrorResponse } from '@angular/common/http'
 import { NuevoExpediente, VerExpediente } from '../../expedientes/expedientes'
 import { EditExpediente, VerSolicitud } from '../models'
 import { ExpedienteApiService } from '../../../core/service/expediente/expediente-api.service'
@@ -16,14 +17,14 @@ export interface SolicitudesExpedienteHost extends SolicitudesGridHost {
   asuntoexpedi: string
   asuntoSolicitud?: string
   idsolicitud: number
-  iddocum: string
-  idhisDocum: string
-  idRepre: string
-  idHisRepre: string
+  iddocum: string | number
+  idhisDocum: string | number
+  idRepre: string | number | null
+  idHisRepre: string | number | null
   idexpediente: number
   idexpedienteAsoc: number
   intructorExpediente: string
-  fechanuevoExpedi: Date
+  fechanuevoExpedi: string
   isIniciandoExpediente: boolean
   activainiciaExpedi: boolean
   expsolicitud: string
@@ -84,8 +85,8 @@ export class SolicitudesExpedienteFacade {
       host.nuevoexpediente.titulo = host.versolicitud.asunto;
     }
 
-    host.nuevoexpediente.idDocum = host.iddocum;
-    host.nuevoexpediente.idHisDocum = host.idhisDocum;
+    host.nuevoexpediente.idDocum = String(host.iddocum ?? '');
+    host.nuevoexpediente.idHisDocum = String(host.idhisDocum ?? '');
     host.nuevoexpediente.idRepre = host.idRepre;
     host.nuevoexpediente.idHisRepre = host.idHisRepre;
     host.nuevoexpediente.idHisPerso = host.versolicitud.idHisPerso;
@@ -123,9 +124,12 @@ export class SolicitudesExpedienteFacade {
             : 'Se ha creado el expediente correctamente',
         );
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
         host.isIniciandoExpediente = false;
-        this.notificationService.error('Ha ocurrido un error al crear el expediente. Inténtelo de nuevo.');
+        this.notificationService.fromHttpError(
+          err,
+          'Ha ocurrido un error al crear el expediente. Inténtelo de nuevo.',
+        );
       },
     });
   }

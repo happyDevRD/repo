@@ -1,5 +1,11 @@
-<app-modal-shell modalId="verExpedienteEditaModal" titleId="verExpedienteEditaModalLabel"
-     dialogClass="modal-lg modal-dialog-centered modal-dialog-scrollable" headingLevel="h5">
+<app-modal-shell
+     modalId="verExpedienteEditaModal"
+     titleId="verExpedienteEditaModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-ver-edita-modal"
+     dialogClass="modal-lg"
+     headingLevel="h5"
+     [dismissOnClose]="false"
+     (closed)="edita.cerrarModal('verExpedienteEditaModal')">
      <span modalTitle>Expediente {{ edita.verExpediente.ejercicio }}/{{ edita.verExpediente.numero }}</span>
      <div modalBody>
           <div class="row g-3 mb-3">
@@ -52,8 +58,8 @@
                </div>
           </div>
      </div>
-     <div modalFooter>
-          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--primary"
-               data-bs-dismiss="modal">Cerrar</button>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="edita.cerrarModal('verExpedienteEditaModal')">Cerrar</button>
      </div>
 </app-modal-shell>

@@ -1,6 +1,7 @@
 import { CrearNotificacion } from '../../expedientes';
 import { InteresadoListarDto } from '../../../../core/models/interesado.dto';
 import { ModeloTeuCrear } from '../../expedientes';
+import { fechaHoyISO } from '../../../../core/helper/fecha-legacy.helper';
 
 export function validarFormularioCreacionNotificacion(params: {
   creanotificacion?: CrearNotificacion;
@@ -45,20 +46,30 @@ export function validarCamposObligatoriosTeu(modelo: ModeloTeuCrear): boolean {
   });
 }
 
-export function isFechaTeuInvalida(mostrarValidaciones: boolean, fecha: Date): boolean {
-  return (
-    mostrarValidaciones &&
-    (!fecha || (fecha instanceof Date && isNaN(fecha.getTime())))
-  );
+export function isFechaTeuInvalida(mostrarValidaciones: boolean, fecha: string | Date | null | undefined): boolean {
+  if (!mostrarValidaciones) {
+    return false
+  }
+  if (fecha == null || fecha === '') {
+    return true
+  }
+  if (fecha instanceof Date) {
+    return isNaN(fecha.getTime())
+  }
+  return false
 }
 
 export function crearModeloTeuInicial(): ModeloTeuCrear {
   const modelo = new ModeloTeuCrear();
+  const hoy = fechaHoyISO()
   modelo.datPerso = true;
   modelo.texPlura = true;
   modelo.incLgt = true;
-  modelo.fecSolic = new Date('');
-  modelo.fecGener = new Date('');
-  modelo.fecFirma = new Date('');
-  return modelo;
+  modelo.fecSolic = hoy;
+  modelo.fecGener = hoy;
+  modelo.fecFirma = hoy;
+  modelo.idMater = ''
+  modelo.idModel = null as unknown as number
+  modelo.forPubli = null as unknown as number
+  return modelo
 }

@@ -281,3 +281,39 @@
   }
 
 }
+
+/* ================================
+   MODALES PROCEDIMIENTOS (variantes de entidad)
+   ================================ */
+
+.iflow-modal--fit.proc-procedimiento-modal .modal-dialog {
+  max-height: min(75vh, 480px);
+}
+
+.iflow-modal--fit.proc-procedimiento-modal .modal-content {
+  max-height: min(75vh, 480px);
+}
+
+.iflow-modal--fit.proc-permiso-modal .modal-dialog {
+  max-height: min(60vh, 360px);
+}
+
+.iflow-modal--fit.proc-permiso-modal .modal-content {
+  max-height: min(60vh, 360px);
+}
+
+.iflow-modal--fit.proc-atributos-modal .modal-dialog {
+  max-height: min(85vh, 560px);
+}
+
+.iflow-modal--fit.proc-atributos-modal .modal-content {
+  max-height: min(85vh, 560px);
+}
+
+.iflow-modal--fit.proc-tareas-modal .modal-dialog {
+  max-height: min(50vh, 280px);
+}
+
+.iflow-modal--fit.proc-tareas-modal .modal-content {
+  max-height: min(50vh, 280px);
+}

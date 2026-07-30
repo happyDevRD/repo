@@ -59,6 +59,10 @@ export class ModalInsideAccionesComponent implements OnChanges, EditaExpedienteI
     this.abrirModal(this.modalId)
   }
 
+  cerrar(): void {
+    this.cerrarModal(this.modalId)
+  }
+
   private cargarExpediente(): void {
     this.expedientesService.getExpediente(this.idExpediente).subscribe({
       next: (expediente) => {

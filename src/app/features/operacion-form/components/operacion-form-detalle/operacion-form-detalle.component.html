@@ -13,7 +13,12 @@
 
           <div class="row g-3 mb-3">
             <div class="col-md-3"><div class="form-floating">
-              <select id="tipoIva" class="form-select" formControlName="tipoIva" required>
+              <select
+                id="tipoIva"
+                class="form-select"
+                formControlName="tipoIva"
+                required
+              >
                 <option *ngFor="let option of op.tipoIvaOptions" [value]="option">
                   {{ option === '' ? 'Sin IVA' : option + '%' }}
                 </option>
@@ -59,10 +64,4 @@
                         placeholder=" " rows="3"></textarea>
               <label for="observaciones">Observaciones</label>
             </div></div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary" [disabled]="op.operacionForm.invalid">
-              Guardar Operación
-            </button>
           </div>

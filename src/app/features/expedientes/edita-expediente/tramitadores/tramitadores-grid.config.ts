@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types';
 
 export const TRAMITADOR_GRID_DATA_FIELDS = [
   { name: 'fecAsignacion', type: 'string' },
@@ -20,6 +21,6 @@ export function buildTramitadorGridSource(idExpediente: number): Record<string, 
   };
 }
 
-export function createTramitadorGridAdapter(idExpediente: number): any {
+export function createTramitadorGridAdapter(idExpediente: number): IflowGridSource {
   return new jqx.dataAdapter(buildTramitadorGridSource(idExpediente));
 }

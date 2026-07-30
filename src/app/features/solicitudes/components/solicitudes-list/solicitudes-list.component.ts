@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ViewChild, inject } from '@angular/core'
 import { IflowGridComponent } from 'src/app/shared/components/iflow-grid/iflow-grid.component'
+import { JqxGridRowEvent } from 'src/app/core/helper/jqx-grid-event.model'
+import { SolicitudListar } from '../../models'
 import { SolicitudesComponent } from '../../solicitudes.component'
 
 @Component({
@@ -16,10 +18,10 @@ export class SolicitudesListComponent implements AfterViewInit {
   }
 
   handleRowClick(event: unknown): void {
-    this.s.selecsolicitudNueva(event)
+    this.s.selecsolicitudNueva(event as JqxGridRowEvent<SolicitudListar>)
   }
 
   handleRowDoubleClick(event: unknown): void {
-    this.s.abrirModalEdicionSolicitud(event)
+    this.s.abrirModalEdicionSolicitud(event as JqxGridRowEvent<SolicitudListar>)
   }
 }

@@ -23,7 +23,6 @@ import {
   RepresentanteExpLIstar,
   TareaTramiteExpedienteCrear,
   TareaTramiteExpedienteEditar,
-  TareaTramiteExpedienteListar,
   TemaDocumentoListar,
   TramiteExpListar,
   VerExpediente,
@@ -45,6 +44,7 @@ import {
 } from '../../../shared/components/iflow-grid/iflow-grid.component';
 import {
   resolveTareaHeaderActions,
+  resolveTareaRowActions,
   resolveTareaToolbarActions,
   TareaToolbarContext,
 } from './tareas/tarea-actions.helper'
@@ -327,8 +327,8 @@ export class EditaExpedienteComponent
   set modeloteucrear(value: ModeloTeuCrear) { this.notifUiFacade.modeloteucrear = value }
 
   public procedipermisolistar!: ProcediPermisosListar[];
-  public tareatramiteexpedientelistar!: TareaTramiteExpedienteListar[];
-  public listarinteresados!: ListarInteresados[];
+  public tareatramiteexpedientelistar: TareaTramiteSeleccionRow[] = [];
+  public tareasCargando = false;  public listarinteresados!: ListarInteresados[];
   public listarinteresadosdto!: InteresadoListarDto[];
   get receptornotifilistar() { return this.notifUiFacade.receptornotifilistar }
   set receptornotifilistar(value: ReceptorNotifiListar[]) { this.notifUiFacade.receptornotifilistar = value }
@@ -729,6 +729,10 @@ export class EditaExpedienteComponent
     return resolveTareaHeaderActions(this.tareaToolbarContext())
   }
 
+  get tareaRowActions() {
+    return resolveTareaRowActions(this.tareaToolbarContext())
+  }
+
   get tareaToolbarActions() {
     return resolveTareaToolbarActions(this.tareaToolbarContext())
   }
@@ -789,8 +793,8 @@ export class EditaExpedienteComponent
     this.workspaceFacade.onTareaTramiteDoubleClick(this, event);
   }
 
-  public clicktareaNueva(event: JqxGridRowEvent<TareaTramiteSeleccionRow>) {
-    this.workspaceFacade.clicktareaNueva(this, event, this.seleccionTareaCallbacks());
+  public clicktareaNueva(row: TareaTramiteSeleccionRow) {
+    this.workspaceFacade.clicktareaNueva(this, row, this.seleccionTareaCallbacks());
   }
 
   public clicktarea(id: number, codArchivo: number | string | null, tareaProcedi: number) {
@@ -841,8 +845,8 @@ export class EditaExpedienteComponent
     this.workspaceFacade.onTramitadorDoubleClick(this, event);
   }
 
-  public onTareaDoubleClick(event: JqxGridRowEvent<TareaTramiteSeleccionRow>) {
-    this.workspaceFacade.onTareaDoubleClick(this, event);
+  public onTareaDoubleClick(row: TareaTramiteSeleccionRow) {
+    this.workspaceFacade.onTareaDoubleClick(this, row);
   }
 
   public fechasNotifi(
@@ -1122,11 +1126,6 @@ export class EditaExpedienteComponent
 
   public habilitaTramiteExp() {
     this.tramitesFacade.habilitaTramiteExp(this);
-  }
-
-  recargarpagina() {
-    window.location.reload();
-
   }
 
   public refrescoSourceTramite() {

@@ -1,24 +1,25 @@
-<app-modal-shell modalId="EnvioNotifi" title="Enviar Notificación" titleId="EnvioNotifiLabel" dialogClass="modal-xl"
-     [staticBackdrop]="true" [keyboard]="false" [showFooter]="false">
-     <form modalBody (ngSubmit)="notif.enviarNotificacion()">
-          <div class="row g-3">
-               <div class="col-6">
-                    <div class="form-floating">
-                         <input [(ngModel)]="notif.creanotificacion.fecEnvio" class="form-control"
-                              data-mdb-inline="true" id="start" max="2099-12-31" min="2023-01-01" name="trip-start"
-                              type="date" value="{{ edita.selected }}" placeholder=" ">
-                         <label for="documento">Fecha de Envio</label>
-                    </div>
-               </div>
-               <div class="col-sm-4">
-                    <div class="form-floating"></div>
-               </div>
-          </div>
-          <br>
-          <div class="modal-footer">
-               <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    type="button">Cancelar</button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
+<app-modal-shell
+     modalId="EnvioNotifi"
+     title="Enviar Notificación"
+     titleId="EnvioNotifiLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-notifi-accion-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
+     (closed)="edita.cerrarModal('EnvioNotifi')">
+     <form modalBody id="formEnvioNotifi" (ngSubmit)="notif.enviarNotificacion()">
+          <div class="form-floating">
+               <input [(ngModel)]="notif.creanotificacion.fecEnvio" class="form-control"
+                    id="fecEnvioNotifi" max="2099-12-31" min="2023-01-01" name="fecEnvio"
+                    type="date" placeholder=" ">
+               <label class="required-field" for="fecEnvioNotifi">Fecha de envío</label>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="edita.cerrarModal('EnvioNotifi')">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formEnvioNotifi">Guardar</button>
+     </div>
 </app-modal-shell>

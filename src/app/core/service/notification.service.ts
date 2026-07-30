@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core'
+import { HttpErrorResponse } from '@angular/common/http'
 import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2'
+import { apiErrorMessage, parseApiError } from '../helper/api-error.helper'
 
 export interface NotificationOptions {
   title?: string
@@ -222,6 +224,32 @@ export class NotificationService {
    */
   showLoading(): void {
     Swal.showLoading()
+  }
+
+  /**
+   * Muestra un error tipado del API ({@code code} + {@code message}).
+   * Preferir frente a mensajes genéricos cuando el backend envía BusinessException.
+   */
+  fromHttpError(
+    error: HttpErrorResponse,
+    fallbackMessage = 'Ha ocurrido un error. Inténtelo de nuevo.',
+  ): Promise<SweetAlertResult> {
+    const parsed = parseApiError(error, fallbackMessage)
+    return this.error({
+      title: 'Error',
+      text: parsed.message,
+      footer: parsed.code ? `Código: ${parsed.code}` : undefined,
+    })
+  }
+
+  /**
+   * Atajo: solo el mensaje del API (sin footer de código).
+   */
+  apiError(
+    error: HttpErrorResponse,
+    fallbackMessage = 'Ha ocurrido un error. Inténtelo de nuevo.',
+  ): Promise<SweetAlertResult> {
+    return this.error(apiErrorMessage(error, fallbackMessage))
   }
 
   /**

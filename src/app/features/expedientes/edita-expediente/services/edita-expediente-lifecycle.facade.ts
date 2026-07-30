@@ -67,12 +67,12 @@ export interface EditaExpedienteCargaHost {
 export interface EditaExpedienteExpedienteHost {
   editexpediente: EditExpediente
   idExpediente: number
-  recargarpagina(): void
 }
 
 export interface EditaExpedienteGridRefreshHost {
   sourceListarNotifi: IflowGridSource & { records?: LeerNotificacion[] }
   verExpediente: { ejercicio: number; numero: number }
+  cdr?: ChangeDetectorRef
 }
 
 export interface EditaExpedienteNotificacionesGridHost extends EditaExpedienteGridRefreshHost {
@@ -239,9 +239,14 @@ export class EditaExpedienteLifecycleFacade {
     this.expedientesService.editarExpediente(host.editexpediente, host.idExpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: () => this.router.navigate(['/expedientes', host.idExpediente, 'tramitar']),
+      next: () => {
+        this.notificationService.saveSuccess('Expediente')
+        this.router.navigate(['/expedientes', host.idExpediente, 'tramitar'])
+      },
+      error: () => {
+        this.notificationService.error('No se pudo guardar el expediente')
+      },
     })
-    setTimeout(host.recargarpagina, 1000)
   }
 
   volverListadoExpedientes(host?: { idExpediente?: number }): void {
@@ -256,11 +261,12 @@ export class EditaExpedienteLifecycleFacade {
   }
 
   refreshListarNotifi(host: EditaExpedienteGridRefreshHost, withId = false): void {
-    host.sourceListarNotifi = this.notifUiFacade.createGridSource(
+    host.sourceListarNotifi = this.notifUiFacade.createGridAdapter(
       host.verExpediente.ejercicio,
       host.verExpediente.numero,
       { withSort: false, ...(withId ? { withId: true } : {}) },
-    )
+    ) as EditaExpedienteGridRefreshHost['sourceListarNotifi']
+    host.cdr?.markForCheck()
   }
 
   inicializarSourceListarNotifi(host: EditaExpedienteNotificacionesGridHost): void {
@@ -372,7 +378,7 @@ export class EditaExpedienteLifecycleFacade {
     const dia = String(hoy.getDate()).padStart(2, '0')
     host.fechaSistema = `${anio}-${mes}-${dia}`
     host.creartramiteexp.fecTramite = host.fechaSistema
-    host.tareatramiteexpedientecrear.fecInicio = new Date()
+    host.tareatramiteexpedientecrear.fecInicio = host.fechaSistema
   }
 
   solicitadni(host: EditaExpedienteCatalogosHost, dni: string): void {

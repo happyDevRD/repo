@@ -1,11 +1,11 @@
 export class Pais {
-  codPais: any;
-  desPais: string;
-  sigLarga: string;
-  sigCorta: string;
-  uniEurop: any;
-  usuContr: string;
-  fecContr: string;
+  codPais!: string | number;
+  desPais!: string;
+  sigLarga!: string;
+  sigCorta!: string;
+  uniEurop!: boolean | string | number | null;
+  usuContr!: string;
+  fecContr!: string;
 }
 
 export class ListaTareaProcedi {
@@ -23,8 +23,8 @@ export class ListaTareaProcedi {
 }
 
 export class RespuestasHttp {
-  error!: any;
-  headers!: any;
+  error!: unknown;
+  headers!: Record<string, unknown> | unknown;
   status!: number;
   statusText!: string;
   url!: string;

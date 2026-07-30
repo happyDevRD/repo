@@ -49,13 +49,17 @@ export interface ConfigurarAccionTareaHost {
     | 'veoModifiDatosPerso'
     | 'veoBajaHabitante'
     | 'veoConsultaObjetoTributario'
+    | 'isConsultaAccionRunning'
+    | 'introValorConsulta'
+    | 'introTObjTrubu'
   >
   abrirModalOperacion(): void
 }
 
 /** Configura la descripción y el label según el valor de data.accion. */
 export function configurarAccionTarea(host: ConfigurarAccionTareaHost, data: TareaProcedimientoDTO): void {
-  host.resetActionState()
+  // Sin detectChanges aquí: el caller refresca la vista al terminar de configurar.
+  resetActionState(host.tareasFacade)
   const ui = host.tareasFacade
 
   if (data.accion === null || data.accion === undefined) {

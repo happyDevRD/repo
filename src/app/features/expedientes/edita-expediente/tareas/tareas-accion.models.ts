@@ -3,6 +3,7 @@ import { ObjetoTributarioDto } from '../../../../core/models/objeto-tributario.d
 import { HabitanteDto, createEmptyHabitante } from '../../../../core/models/habitante.dto'
 import { VehiculoDto, createEmptyVehiculo } from '../../../../core/models/vehiculo.dto'
 import { PersonaEntidad } from '../../../../core/models/personaentidad.model'
+import { IflowGridColumns, IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 
 export type { HabitanteDto as Habitantes } from '../../../../core/models/habitante.dto'
 export type { VehiculoDto as Vehiculo } from '../../../../core/models/vehiculo.dto'
@@ -28,8 +29,8 @@ export interface TareasAccionUiState {
   personaentidad: PersonaEntidad
   objetotributario: ObjetoTributarioDto
   veoDIVBorrarObjetoTRibu: boolean
-  sourceRecibos: any
-  dataAdapter: any
-  columnsRecibos: any[]
+  sourceRecibos: IflowGridSource | null
+  dataAdapter: IflowGridSource | null
+  columnsRecibos: IflowGridColumns
   tipoObjetoSeleccionado: TipoObjetoTributarioDto
 }

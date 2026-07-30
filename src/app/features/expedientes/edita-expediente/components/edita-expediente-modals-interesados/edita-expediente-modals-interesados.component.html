@@ -1,108 +1,120 @@
-    <!-- ======================================== -->
-    <!-- MODALES DE INTERESADOS -->
-    <!-- ======================================== -->
+<!-- ======================================== -->
+<!-- MODALES DE INTERESADOS -->
+<!-- ======================================== -->
 
-    <app-modal-shell
-      modalId="ninteresadoModal"
-      title="Nuevo interesado"
-      titleId="ninteresadoModalLabel"
-      headingLevel="h5"
-      [staticBackdrop]="true"
-      [showFooter]="false"
-    >
-      <div modalBody>
-        <form (ngSubmit)="handleCrear()">
-          <div class="row g-3">
-            <div class="col-8 col-sm-6"><div class="form-floating"></div></div>
-          </div>
-          <div class="mb-3"><div class="form-floating"></div></div>
-
-          <div class="row">
-            <div class="col-8 col-sm-4"><div class="form-floating">
-              <input [(ngModel)]="crearinteresado.fechaInicio" class="form-control" data-mdb-inline="true"
-                id="start" max="2099-12-31" min="2023-01-01" name="trip-start" type="date" value="{{ selected }}" placeholder=" ">
-              <label for="documento">Fecha Inicio*</label>
-            </div></div>
-            <div class="col-8 col-sm-4"><div class="form-floating">
-              <input (change)="handleSolicitarDni(crearinteresado.usuario)" [(ngModel)]="crearinteresado.usuario"
-                class="form-control" id="interesado" name="interesado" type="text" placeholder=" ">
-              <label for="interesado"> Interesado DNI*</label>
-              <br>
-            </div></div>
-            <div class="col-8 col-sm-4"><div class="form-floating">
-              <select [(ngModel)]="crearinteresado.tipForNotif" class="form-select " id="fnotifi" name="fnotifi">
-                <option name="correoP" value=0>Correo postal</option>
-                <option name="telematico" value=1>Telem·tica</option>
-              </select>
-              <label for="asignado">Forma Notificacion </label>
-              <br>
-            </div></div>
-          </div>
-
-          <div *ngIf="crearinteresado.tipForNotif==1" class="mb-3"><div class="form-floating">
-            <input [(ngModel)]="crearinteresado.email" class="form-control" id="email" name="email" type="text" placeholder=" ">
-            <label for="titulo">Correo electrÛnico</label>
-          </div></div>
-
-          <div class="mb-3"><div class="form-floating"></div></div>
-
-          <div class="row">
-            <div class="col-8 col-sm-6"><div class="form-floating"></div></div>
-            <div class="col-8 col-sm-6"><div class="form-floating"></div></div>
-          </div>
-          <br>
-          <div class="row">
-            <div class="col-8 col-sm-6"><div class="form-floating"></div></div>
-            <div class="row">
-              <div class="col-8 col-sm-6"><div class="form-floating"></div></div>
-              <div class="col-8 col-sm-6"><div class="form-floating"></div></div>
-            </div>
-          </div>
-          <br>
-
-          <div class="row">
-            <div *ngIf="dniok" class="col-8 col-sm-6"><div class="form-floating">
-              <input class="form-control" id="nombre" name="nombre" type="text" value={{ consultadni.nombre }} placeholder=" ">
-              <label for="representante">Nombre*</label>
-            </div></div>
-            <div *ngIf="dniok" class="col-8 col-sm-6"><div class="form-floating">
-              <input class="form-control" id="Apellidos" name="Apellidos" type="text"
-                value="{{ consultadni.apellido1 }} {{ consultadni.apellido2 }}" placeholder=" ">
-              <label for="asignado">Apellidos* </label>
-            </div></div>
-          </div>
-          <br>
-          <div *ngIf="dniok" class="mb-3"><div class="form-floating">
-            <input class="form-control" id="direccion" name="direccion" type="text"
-              value="{{ consultadni.dirPosta }}" placeholder=" ">
-            <label for="direccion">Direccion* </label>
-          </div></div>
-
-          <div class="row">
-            <div *ngIf="dniok" class="col-8 col-sm-4"><div class="form-floating">
-              <input class="form-control" id="cp" name="cp" type="text" value="{{ consultadni.codPosta }}" placeholder=" ">
-              <label for="cp">CÛdigo Postal*</label>
-            </div></div>
-            <div *ngIf="dniok" class="col-8 col-sm-4"><div class="form-floating">
-              <input class="form-control" id="provincia" name="provincia" type="text"
-                value="{{ consultadni.provincia }}" placeholder=" ">
-              <label for="provincia">Provincia* </label>
-            </div></div>
-            <div *ngIf="dniok" class="col-8 col-sm-4"><div class="form-floating">
-              <input class="form-control" id="Municipio" name="municipio" type="text"
-                value="{{ consultadni.municipio }}" placeholder=" ">
-              <label for="municipio">Municipio* </label>
-            </div></div>
-          </div>
-          <br>
-          <div class="modal-footer">
-            <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
-            <button class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal" role="button">Guardar</button>
-          </div>
-        </form>
+<app-modal-shell
+  modalId="ninteresadoModal"
+  title="Nuevo interesado"
+  titleId="ninteresadoModalLabel"
+  modalClass="iflow-modal iflow-modal--fit exp-interesado-modal"
+  dialogClass="modal-lg"
+  headingLevel="h5"
+  [staticBackdrop]="true"
+  [dismissOnClose]="false"
+  (closed)="handleCancelar()">
+  <form modalBody id="formNuevoInteresado" (ngSubmit)="handleCrear()">
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input [(ngModel)]="crearinteresado.fechaInicio" class="form-control"
+            id="fechaInicioInteresado" max="2099-12-31" min="2023-01-01" name="fechaInicio"
+            type="date" required aria-required="true" placeholder=" ">
+          <label class="required-field" for="fechaInicioInteresado">Fecha inicio</label>
+        </div>
       </div>
-    </app-modal-shell>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input (change)="handleSolicitarDni(crearinteresado.usuario)"
+            [(ngModel)]="crearinteresado.usuario" class="form-control"
+            id="dniInteresado" name="interesado" type="text" required aria-required="true"
+            aria-describedby="exp-interesado-dni-hint" placeholder=" ">
+          <label class="required-field" for="dniInteresado">Interesado DNI</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <select [(ngModel)]="crearinteresado.tipForNotif"
+            class="form-select"
+            [class.form-select--placeholder]="crearinteresado.tipForNotif == null"
+            id="tipForNotifInteresado" name="fnotifi"
+            (ngModelChange)="handleFormaNotificacionChange($event)">
+            <option [ngValue]="null" disabled>Seleccione forma</option>
+            <option [ngValue]="0">Correo postal</option>
+            <option [ngValue]="1">Telemùtica</option>
+          </select>
+          <label for="tipForNotifInteresado">Forma notificaciùn</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-floating">
+          <input [(ngModel)]="crearinteresado.email" class="form-control"
+            id="emailInteresado" name="email" type="email" placeholder=" "
+            [disabled]="crearinteresado.tipForNotif !== 1">
+          <label for="emailInteresado">Correo electrùnico</label>
+        </div>
+      </div>
+    </div>
 
-    <!-- ======================================== -->
-    <!-- FIN MODALES DE INTERESADOS -->
-    <!-- ======================================== -->
+    <div class="exp-interesado-modal__resultado-slot">
+      <div class="row g-3" *ngIf="dniok">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input class="form-control" id="nombreInteresado" name="nombre" type="text"
+              [value]="consultadni.nombre" readonly placeholder=" ">
+            <label for="nombreInteresado">Nombre</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input class="form-control" id="apellidosInteresado" name="Apellidos" type="text"
+              [value]="(consultadni.apellido1 || '') + ' ' + (consultadni.apellido2 || '')"
+              readonly placeholder=" ">
+            <label for="apellidosInteresado">Apellidos</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input class="form-control" id="direccionInteresado" name="direccion" type="text"
+              [value]="consultadni.dirPosta" readonly placeholder=" ">
+            <label for="direccionInteresado">Direcciùn</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input class="form-control" id="cpInteresado" name="cp" type="text"
+              [value]="consultadni.codPosta" readonly placeholder=" ">
+            <label for="cpInteresado">Cùdigo postal</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input class="form-control" id="provinciaInteresado" name="provincia" type="text"
+              [value]="consultadni.provincia" readonly placeholder=" ">
+            <label for="provinciaInteresado">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input class="form-control" id="municipioInteresado" name="municipio" type="text"
+              [value]="consultadni.municipio" readonly placeholder=" ">
+            <label for="municipioInteresado">Municipio</label>
+          </div>
+        </div>
+      </div>
+      <p class="text-secondary small mb-0" id="exp-interesado-dni-hint"
+        [class.visually-hidden]="dniok">
+        Introduzca el DNI y pulse fuera del campo para buscar al interesado.
+      </p>
+    </div>
+  </form>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      (click)="handleCancelar()">Cancelar</button>
+    <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+      form="formNuevoInteresado">Guardar</button>
+  </div>
+</app-modal-shell>
+
+<!-- ======================================== -->
+<!-- FIN MODALES DE INTERESADOS -->
+<!-- ======================================== -->

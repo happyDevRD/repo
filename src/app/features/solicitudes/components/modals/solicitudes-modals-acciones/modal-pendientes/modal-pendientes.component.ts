@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, inject } from '@angular/core'
+import { JqxGridRowEvent } from 'src/app/core/helper/jqx-grid-event.model'
+import { SolicitudListar } from '../../../../models'
 import { SolicitudesComponent } from '../../../../solicitudes.component'
 
 @Component({
@@ -12,5 +14,9 @@ export class SolicitudesModalPendientesComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.s.content = this.content
+  }
+
+  handleRowClick(event: JqxGridRowEvent): void {
+    this.s.selecsolicitudNueva(event as JqxGridRowEvent<SolicitudListar>)
   }
 }

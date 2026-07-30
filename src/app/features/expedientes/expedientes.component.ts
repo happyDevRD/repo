@@ -27,7 +27,7 @@ import { SolicitudesService } from '../solicitudes/solicitudes.service';
 import { NotificationService } from "../../core/service/notification.service";
 import { ModalManagerService } from "../../core/service/modal-manager.service";
 import { UserSessionService } from "../../core/service/user-session.service";
-import { formatearFechaDDMMYYYY, formatearFechaISODesdeLocale } from '../../core/helper/fecha-legacy.helper';
+import { fechaHoyISO } from '../../core/helper/fecha-legacy.helper';
 import { mostrarRegistroDocumento } from '../../core/helper/registro-documento-notification.helper';
 import * as bootstrap from 'bootstrap';
 import { IflowGridComponent } from 'src/app/shared/components/iflow-grid/iflow-grid.component';
@@ -48,6 +48,7 @@ import { ExpedientesExpedienteFacade } from './services/expedientes-expediente.f
 import { ExpedientesInsideFacade, ExpedientesInsideHost } from './services/expedientes-inside.facade';
 import { ExpedientesAtributosFacade } from './services/expedientes-atributos.facade';
 import { isInsideDryRun } from '../../core/constants/inside-simulacion.constants';
+import { JqxGridRowEvent } from '../../core/helper/jqx-grid-event.model';
 
 
 interface Food {
@@ -229,6 +230,44 @@ export class ExpedientesComponent {// pruebas de formularios
     }
   }
 
+  get verEmailDisplay(): string {
+    const email = this.verexpediente?.email
+    if (!email || email === '0' || email === 'SinDAtos') {
+      return '—'
+    }
+    return email
+  }
+
+  get verFormaNotificacionLabel(): string {
+    const texto = this.verexpediente?.formaNotificacion || this.verexpediente?.forNotifTexto
+    if (texto) {
+      return String(texto)
+    }
+    const codigo = this.verexpediente?.forNotif
+    if (codigo === 0 || codigo === '0') {
+      return 'Correo postal'
+    }
+    if (codigo === 1 || codigo === '1') {
+      return 'Telemática'
+    }
+    return '—'
+  }
+
+  get verInteresadoNombreDisplay(): string {
+    const persona = this.verexpediente?.personaEntidad
+    if (!persona) {
+      return '—'
+    }
+    if (persona.desPerEntid) {
+      return persona.desPerEntid
+    }
+    const nombre = [persona.nombre, persona.apellido1, persona.apellido2]
+      .filter((parte) => !!parte && String(parte).trim() !== '')
+      .join(' ')
+      .trim()
+    return nombre || '—'
+  }
+
   public limpiaDatosEditarExpediente() {
 
     this.editexpediente = new EditExpediente();
@@ -356,7 +395,7 @@ export class ExpedientesComponent {// pruebas de formularios
    * Maneja el doble click en la tabla de expedientes
    * Abre el modal de edici?n del expediente
    */
-  public onExpedienteDoubleClick(event: any): void {
+  public onExpedienteDoubleClick(event: JqxGridRowEvent<ExpedienteListar>): void {
     const rowData = event.args.row.bounddata
     this.idexpediente = rowData.id
     this.expedientesService.getExpediente(this.idexpediente).pipe(
@@ -386,6 +425,7 @@ export class ExpedientesComponent {// pruebas de formularios
     ).subscribe({
       next: (verexpediente) => {
         this.verexpediente = verexpediente;
+        this.veoCorreoVacio();
         this.abrirModal('verexpedienteModal');
       },
       error: () => {
@@ -402,7 +442,7 @@ export class ExpedientesComponent {// pruebas de formularios
     return String(id);
   }
 
-  public marcaExpedienteNuevo(event: any) {
+  public marcaExpedienteNuevo(event: JqxGridRowEvent<ExpedienteListar>) {
     this.expedienteFacade.marcarExpedienteSeleccionado(this, event.args.row.bounddata)
     this.pestanaFlujo = 'tramitacion'
   }
@@ -422,14 +462,10 @@ export class ExpedientesComponent {// pruebas de formularios
 
   }
 
-  recargarpagina() {
-    window.location.reload();
-  }
-
 
   public seleccionoRepre!: string;
 
-  public selecrepresentante(event: any): void {
+  public selecrepresentante(event: JqxGridRowEvent<{ idHisPerso: number; idPerso: number }>): void {
     this.expedienteFacade.selecrepresentante(this, event);
   }
 
@@ -441,6 +477,20 @@ export class ExpedientesComponent {// pruebas de formularios
   public cambiamosRepre(): void {
     this.expedienteFacade.cambiamosRepre();
   }
+
+  public buscarInteresado(): void {
+    this.expedienteFacade.buscarInteresado(this)
+  }
+
+  public handleFormaNotificacionChange(): void {
+    this.expedienteFacade.handleFormaNotificacionChange(this)
+  }
+
+  public onDocumentoInteresadoInput(): void {
+    this.expedienteFacade.onDocumentoInteresadoInput(this)
+  }
+
+  /** @deprecated Preferir `buscarInteresado`. */
   public solicitadni(dni: string): void {
     this.expedienteFacade.solicitadni(this, dni);
   }
@@ -450,6 +500,12 @@ export class ExpedientesComponent {// pruebas de formularios
   }
   public limpiadatosnuevoexpediente() {
     this.nuevoexpediente = new NuevoExpediente();
+    this.nuevoexpediente.forma_apertura = '';
+    this.nuevoexpediente.procedimiento = '';
+    this.nuevoexpediente.formaNotifi = null as unknown as number;
+    this.nuevoexpediente.usuario = '';
+    this.nuevoexpediente.titulo = '';
+    this.nuevoexpediente.email = '';
     this.consultadni = new ConsultaDni();
     this.representanteexplistar = new RepresentanteExpLIstar()
     this.expedienteFacade.resetSolicitudDni();
@@ -458,11 +514,20 @@ export class ExpedientesComponent {// pruebas de formularios
     // Resetear validaciones
     this.mostrarValidacionesExpediente = false;
     this.isCreandoExpediente = false;
+    this.FechaSistema();
 
   }
 
   // Gesti?n de modales
   public abrirModal(modalId: string): void {
+    if (modalId === 'nexpedienteModal') {
+      this.limpiadatosnuevoexpediente();
+    } else if (modalId === 'cancelarExpModal') {
+      this.fechacancelacionexpedi = fechaHoyISO();
+    } else if (modalId === 'cerrarExpModal') {
+      this.fechacierreexpedi = fechaHoyISO();
+      this.serieDocumental = this.serieDocumental ?? '';
+    }
     this.modalManagerService.openModal(modalId);
   }
 
@@ -566,7 +631,7 @@ export class ExpedientesComponent {// pruebas de formularios
     this.onCrearExpedienteSubmit();
   }
 
-  public fechacancelacionexpedi!: Date;
+  public fechacancelacionexpedi!: string;
 
   public cancelarExpediente(): void {
     this.expedienteFacade.cancelar(this);
@@ -641,7 +706,7 @@ export class ExpedientesComponent {// pruebas de formularios
     private cdr: ChangeDetectorRef,
     public session: UserSessionService,
     public gridFacade: ExpedientesGridFacade,
-    private expedienteFacade: ExpedientesExpedienteFacade,
+    public expedienteFacade: ExpedientesExpedienteFacade,
     private insideFacade: ExpedientesInsideFacade,
     private atributosFacade: ExpedientesAtributosFacade,
   ) {
@@ -677,9 +742,8 @@ export class ExpedientesComponent {// pruebas de formularios
 
   public FechaSistema() {
     this.fsistema = new Date().toLocaleDateString()
-    const fechaordenadafenvio = formatearFechaISODesdeLocale(this.fsistema)
-    this.fechaSistema = fechaordenadafenvio
-    this.nuevoexpediente.fechaInicio = fechaordenadafenvio as unknown as Date
+    this.fechaSistema = fechaHoyISO()
+    this.nuevoexpediente.fechaInicio = this.fechaSistema
   }
 
 

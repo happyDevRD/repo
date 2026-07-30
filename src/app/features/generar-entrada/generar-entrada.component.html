@@ -5,12 +5,8 @@
     </div>
   </div>
 
-  <form *ngIf="!loading" (ngSubmit)="onSubmit()" #entradaForm="ngForm">
+  <form *ngIf="!loading" id="formGenerarEntrada" (ngSubmit)="onSubmit()" #entradaForm="ngForm">
     <app-generar-entrada-datos></app-generar-entrada-datos>
     <app-generar-entrada-factura></app-generar-entrada-factura>
-    <div class="modal-footer mt-2 d-flex justify-content-end gap-2">
-      <button type="button" class="btn-iflow btn-iflow--secondary" (click)="closeModal()">Cancelar</button>
-      <button type="submit" class="btn-iflow btn-iflow--primary" [disabled]="entradaForm.invalid">Generar Entrada</button>
-    </div>
   </form>
 </div>

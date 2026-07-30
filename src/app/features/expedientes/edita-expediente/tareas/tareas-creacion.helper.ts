@@ -1,4 +1,5 @@
 import { TareaTramiteExpedienteCrear } from '../../expedientes';
+import { fechaHoyISO } from '../../../../core/helper/fecha-legacy.helper';
 
 export interface PrepararTareaCreacionParams {
   idTramite: number;
@@ -12,7 +13,7 @@ export function prepararTareaParaCreacion(
 ): void {
   tarea.tramite = params.idTramite;
   tarea.visible = true;
-  tarea.fecContr = new Date();
+  tarea.fecContr = fechaHoyISO();
   tarea.usuario = params.usuContrl;
 
   if (params.identificadorFicheroSubido) {

@@ -1,156 +1,281 @@
-    <!-- Modal ninteresadoModal -->
+<!-- Modal ninteresadoModal -->
 <app-modal-shell
   modalId="ninteresadoModal"
   title="Nuevo Interesado"
   titleId="ninteresadoModalLabel"
-  dialogClass="modal-xl"
+  modalClass="iflow-modal iflow-modal--fit exp-interesado-modal"
+  dialogClass="modal-lg"
   [staticBackdrop]="true"
   [keyboard]="false"
-  [showFooter]="false"
+  (closed)="i.cerrarModal('ninteresadoModal')"
 >
-  <form modalBody (ngSubmit)="i.crearInteresado()">
-<div class="row g-3">
-                <div class="col-md-4"><div class="form-floating">
-                  <input type="date" class="form-control" id="fechaInicio" name="fechaInicio"
-                         [(ngModel)]="i.crearinteresado.fechaInicio" [value]="i.selected" placeholder=" ">
-                  <label for="fechaInicio">Fecha inicio *</label>
-                </div></div>
-                <div class="col-md-4"><div class="form-floating">
-                  <input type="text" class="form-control" id="interesado" name="interesado"
-                         [(ngModel)]="i.crearinteresado.usuario" (change)="i.solicitadni(i.crearinteresado.usuario)"
-                         (blur)="i.validateField('interesado', i.crearinteresado.usuario)" placeholder=" ">
-                  <label for="interesado">DNI interesado *</label>
-                </div></div>
-                <div class="col-md-4"><div class="form-floating">
-                  <select class="form-select" id="fnotifi" name="fnotifi" [(ngModel)]="i.crearinteresado.tipForNotif"
-                          (blur)="i.validateField('fnotifi', i.crearinteresado.tipForNotif)">
-                    <option [ngValue]="0">Correo postal</option>
-                    <option [ngValue]="1">Telemática</option>
-                  </select>
-                  <label for="fnotifi">Forma de notificación *</label>
-                </div></div>
-              </div>
+  <form modalBody id="formNuevoInteresadoListado" (ngSubmit)="i.crearInteresado()">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input
+            type="date"
+            class="form-control"
+            id="fechaInicio"
+            name="fechaInicio"
+            [(ngModel)]="i.crearinteresado.fechaInicio"
+            placeholder=" "
+          >
+          <label class="required-field" for="fechaInicio">Fecha inicio</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control"
+            id="interesado"
+            name="interesado"
+            [(ngModel)]="i.crearinteresado.usuario"
+            (change)="i.solicitadni(i.crearinteresado.usuario)"
+            (blur)="i.validateField('interesado', i.crearinteresado.usuario)"
+            placeholder=" "
+          >
+          <label class="required-field" for="interesado">DNI interesado</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="fnotifi"
+            name="fnotifi"
+            [(ngModel)]="i.crearinteresado.tipForNotif"
+            [class.form-select--placeholder]="i.crearinteresado.tipForNotif !== 0 && i.crearinteresado.tipForNotif !== 1"
+            (blur)="i.validateField('fnotifi', i.crearinteresado.tipForNotif)"
+            (ngModelChange)="i.handleFormaNotificacionChange($event)"
+          >
+            <option [ngValue]="null" disabled>Selecciona forma de notificación</option>
+            <option [ngValue]="0">Correo postal</option>
+            <option [ngValue]="1">Telemática</option>
+          </select>
+          <label for="fnotifi">Forma de notificación</label>
+        </div>
+      </div>
+    </div>
 
-              <div class="row g-3 mt-2" *ngIf="i.crearinteresado.tipForNotif == 1">
-                <div class="col-md-6"><div class="form-floating">
-                  <input type="email" class="form-control" id="email" name="email" [(ngModel)]="i.crearinteresado.email" placeholder=" ">
-                  <label for="email">Correo electrónico</label>
-                </div></div>
-              </div>
+    <div class="row g-3 mt-2">
+      <div class="col-12">
+        <div class="form-floating">
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            [(ngModel)]="i.crearinteresado.email"
+            [disabled]="i.crearinteresado.tipForNotif !== 1"
+            placeholder=" "
+          >
+          <label for="email">Correo electrónico</label>
+        </div>
+      </div>
+    </div>
 
-              <div class="row g-3 mt-2" *ngIf="i.dniok">
-                <div class="col-md-6"><div class="form-floating">
-                  <input type="text" class="form-control" id="nombre" name="nombre" [value]="i.nombredni" disabled placeholder=" ">
-                  <label for="nombre">Nombre</label>
-                </div></div>
-                <div class="col-md-6"><div class="form-floating">
-                  <input type="text" class="form-control" id="apellidos" name="apellidos"
-                         [value]="i.apellido1dni + ' ' + i.apellido2dni" disabled placeholder=" ">
-                  <label for="apellidos">Apellidos</label>
-                </div></div>
-                <div class="col-12"><div class="form-floating">
-                  <input type="text" class="form-control" id="direccion" name="direccion" [value]="i.direcciondni" disabled placeholder=" ">
-                  <label for="direccion">Dirección</label>
-                </div></div>
-                <div class="col-md-4"><div class="form-floating">
-                  <input type="text" class="form-control" id="cp" name="cp" [value]="i.cpdni" disabled placeholder=" ">
-                  <label for="cp">Código postal</label>
-                </div></div>
-                <div class="col-md-4"><div class="form-floating">
-                  <input type="text" class="form-control" id="provincia" name="provincia" [value]="i.provinciadni" disabled placeholder=" ">
-                  <label for="provincia">Provincia</label>
-                </div></div>
-                <div class="col-md-4"><div class="form-floating">
-                  <input type="text" class="form-control" id="municipio" name="municipio" [value]="i.nommunicipiodni" disabled placeholder=" ">
-                  <label for="municipio">Municipio</label>
-                </div></div>
-              </div>
+    <div class="exp-interesado-modal__resultado-slot mt-3">
+      <div class="row g-3" *ngIf="i.dniok">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="nombre" name="nombre" [value]="i.nombredni" disabled placeholder=" ">
+            <label for="nombre">Nombre</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="apellidos"
+              name="apellidos"
+              [value]="i.apellido1dni + ' ' + i.apellido2dni"
+              disabled
+              placeholder=" "
+            >
+            <label for="apellidos">Apellidos</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="direccion" name="direccion" [value]="i.direcciondni" disabled placeholder=" ">
+            <label for="direccion">Dirección</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="cp" name="cp" [value]="i.cpdni" disabled placeholder=" ">
+            <label for="cp">Código postal</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="provincia" name="provincia" [value]="i.provinciadni" disabled placeholder=" ">
+            <label for="provincia">Provincia</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="municipio" name="municipio" [value]="i.nommunicipiodni" disabled placeholder=" ">
+            <label for="municipio">Municipio</label>
+          </div>
+        </div>
+      </div>
+      <p class="text-secondary small mb-0" *ngIf="!i.dniok">
+        Introduzca el DNI y pulse fuera del campo para buscar al interesado.
+      </p>
+    </div>
 
-              <div class="row g-3 mt-2" *ngIf="i.veorepresentante">
-                <div class="col-md-8"><div class="form-floating">
-                  <input type="text" class="form-control" id="representante" name="representante"
-                         [value]="i.representanteexplistar.desPerEntid" disabled placeholder=" ">
-                  <label for="representante">Representante</label>
-                </div></div>
-                <div class="col-md-4 form-check d-flex align-items-center">
-                  <input class="form-check-input" type="checkbox" id="seleccionoRepre" name="seleccionoRepre"
-                         [(ngModel)]="i.seleccionoRepre" [ngModelOptions]="{standalone: true}" value="1">
-                  <label class="form-check-label ms-2" for="seleccionoRepre">Asignar representante</label>
-                </div>
-              </div>
-
-              <div class="modal-footer px-0 pb-0">
-                <button type="button" class="btn-iflow btn-iflow--secondary" (click)="i.cerrarModal('ninteresadoModal')">Cancelar</button>
-                <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-              </div>
+    <div class="row g-3 mt-2" *ngIf="i.veorepresentante">
+      <div class="col-md-8">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control"
+            id="representante"
+            name="representante"
+            [value]="i.representanteexplistar.desPerEntid"
+            disabled
+            placeholder=" "
+          >
+          <label for="representante">Representante</label>
+        </div>
+      </div>
+      <div class="col-md-4 form-check d-flex align-items-center">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="seleccionoRepre"
+          name="seleccionoRepre"
+          [(ngModel)]="i.seleccionoRepre"
+          [ngModelOptions]="{standalone: true}"
+          value="1"
+        >
+        <label class="form-check-label ms-2" for="seleccionoRepre">Asignar representante</label>
+      </div>
+    </div>
   </form>
+
+  <div modalFooter class="modal-footer__actions">
+    <button
+      type="button"
+      class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      (click)="i.cerrarModal('ninteresadoModal')"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      form="formNuevoInteresadoListado"
+      class="btn-iflow modal-footer__btn btn-iflow--primary"
+    >
+      Guardar
+    </button>
+  </div>
 </app-modal-shell>
 
-
-    <!-- Modal verInteresadoModal -->
+<!-- Modal verInteresadoModal -->
 <app-modal-shell
   modalId="verInteresadoModal"
   title="Ver Interesado"
   titleId="verInteresadoModalLabel"
-  dialogClass="modal-xl"
+  modalClass="iflow-modal iflow-modal--fit exp-interesado-modal"
+  dialogClass="modal-lg"
   [staticBackdrop]="true"
   [keyboard]="false"
-  [showFooter]="false"
 >
   <div modalBody>
-<div class="row g-3">
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.nombreinteresado" id="verNombre" placeholder=" ">
-                <label for="verNombre">Interesado</label>
-              </div></div>
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.numDocumInter" id="verDocInter" placeholder=" ">
-                <label for="verDocInter">Documento</label>
-              </div></div>
-              <div class="col-md-4"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.veoprincipal ? 'Sí' : 'No'" id="verPrincipal" placeholder=" ">
-                <label for="verPrincipal">Principal</label>
-              </div></div>
-              <div class="col-md-4"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.forNotif" id="verForNotif" placeholder=" ">
-                <label for="verForNotif">Forma notificación</label>
-              </div></div>
-              <div class="col-md-4" *ngIf="i.veoemail"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.emailNotif" id="verEmail" placeholder=" ">
-                <label for="verEmail">Email</label>
-              </div></div>
-              <div class="col-12"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.dirInter" id="verDirInter" placeholder=" ">
-                <label for="verDirInter">Dirección interesado</label>
-              </div></div>
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.desMunicInter" id="verMunicInter" placeholder=" ">
-                <label for="verMunicInter">Municipio</label>
-              </div></div>
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.desProviInter" id="verProviInter" placeholder=" ">
-                <label for="verProviInter">Provincia</label>
-              </div></div>
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.nomRepre" id="verNomRepre" placeholder=" ">
-                <label for="verNomRepre">Representante</label>
-              </div></div>
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.numDocumRepre" id="verDocRepre" placeholder=" ">
-                <label for="verDocRepre">Documento representante</label>
-              </div></div>
-              <div class="col-12"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.dirRepre" id="verDirRepre" placeholder=" ">
-                <label for="verDirRepre">Dirección representante</label>
-              </div></div>
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.desMunicRepre" id="verMunicRepre" placeholder=" ">
-                <label for="verMunicRepre">Municipio representante</label>
-              </div></div>
-              <div class="col-md-6"><div class="form-floating">
-                <input type="text" class="form-control" disabled [value]="i.desProviRepre" id="verProviRepre" placeholder=" ">
-                <label for="verProviRepre">Provincia representante</label>
-              </div></div>
-            </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.nombreinteresado" id="verNombre" placeholder=" ">
+          <label for="verNombre">Interesado</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.numDocumInter" id="verDocInter" placeholder=" ">
+          <label for="verDocInter">Documento</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.veoprincipal ? 'Sí' : 'No'" id="verPrincipal" placeholder=" ">
+          <label for="verPrincipal">Principal</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.forNotif" id="verForNotif" placeholder=" ">
+          <label for="verForNotif">Forma notificación</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.veoemail ? i.emailNotif : ''" id="verEmail" placeholder=" ">
+          <label for="verEmail">Email</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.dirInter" id="verDirInter" placeholder=" ">
+          <label for="verDirInter">Dirección interesado</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.desMunicInter" id="verMunicInter" placeholder=" ">
+          <label for="verMunicInter">Municipio</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.desProviInter" id="verProviInter" placeholder=" ">
+          <label for="verProviInter">Provincia</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.nomRepre" id="verNomRepre" placeholder=" ">
+          <label for="verNomRepre">Representante</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.numDocumRepre" id="verDocRepre" placeholder=" ">
+          <label for="verDocRepre">Documento representante</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.dirRepre" id="verDirRepre" placeholder=" ">
+          <label for="verDirRepre">Dirección representante</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.desMunicRepre" id="verMunicRepre" placeholder=" ">
+          <label for="verMunicRepre">Municipio representante</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating">
+          <input type="text" class="form-control" disabled [value]="i.desProviRepre" id="verProviRepre" placeholder=" ">
+          <label for="verProviRepre">Provincia representante</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div modalFooter class="modal-footer__actions">
+    <button
+      type="button"
+      class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      data-bs-dismiss="modal"
+      (click)="i.cerrarModal('verInteresadoModal')"
+    >
+      Cerrar
+    </button>
   </div>
 </app-modal-shell>

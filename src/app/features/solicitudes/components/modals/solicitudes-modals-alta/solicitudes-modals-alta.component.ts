@@ -7,4 +7,13 @@ import { SolicitudesComponent } from '../../../solicitudes.component'
 })
 export class SolicitudesModalsAltaComponent {
   readonly s = inject(SolicitudesComponent)
+
+  handleCerrar(): void {
+    this.s.limpiarErroresSolicitud()
+    this.s.cerrarModal('nsolicitudModal')
+  }
+
+  handleSubmit(event: Event): void {
+    this.s.validateAndCreateSolicitud(event)
+  }
 }

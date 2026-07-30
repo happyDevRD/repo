@@ -18,6 +18,9 @@ export interface TareaProcedimientoSeleccionHost {
     | 'modifiObjetoTribu'
     | 'veoTipoObjetoTributario'
     | 'veoDIVBorrarObjetoTRibu'
+    | 'isConsultaAccionRunning'
+    | 'introValorConsulta'
+    | 'introTObjTrubu'
   >
 }
 

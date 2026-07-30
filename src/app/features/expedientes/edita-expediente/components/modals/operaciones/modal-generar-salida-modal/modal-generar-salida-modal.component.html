@@ -1,44 +1,50 @@
-<app-modal-shell modalId="GenerarSalidaModal" title="Generar Salida" titleId="GenerarSalidaModalLabel"
-     dialogClass="modal-xl" [staticBackdrop]="true" [showFooter]="false" (closed)="ops.limpiarFormularioGenerarSalida(edita)">
-     <form modalBody (ngSubmit)="ops.prepararCrearGenerarSalida(edita)">
+<app-modal-shell
+     modalId="GenerarSalidaModal"
+     title="Generar Salida"
+     titleId="GenerarSalidaModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-generar-salida-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [dismissOnClose]="false"
+     (closed)="ops.limpiarFormularioGenerarSalida(edita)">
+     <form modalBody id="formGenerarSalida" (ngSubmit)="ops.prepararCrearGenerarSalida(edita)">
           <div class="row g-3">
-               <div class="col-sm-3">
+               <div class="col-md-4">
                     <div class="form-floating">
-                         <select [(ngModel)]="edita.creargenerarsalida.codTema" class="form-select " id="ctema1"
-                              name="ctema1">
+                         <select [(ngModel)]="edita.creargenerarsalida.codTema"
+                              class="form-select"
+                              [class.form-select--placeholder]="!edita.creargenerarsalida.codTema"
+                              id="ctema1" name="ctema1">
+                              <option value="" disabled>Seleccione código</option>
                               <option
                                    *ngFor="let temasdocumentolistar of edita.temadocumentolistar; trackBy: trackByCodTema"
-                                   name="ctemalistar" value="{{ temasdocumentolistar.codTema }}"> {{
-                                   temasdocumentolistar.codTema }}
+                                   [value]="temasdocumentolistar.codTema">
+                                   {{ temasdocumentolistar.codTema }}
                               </option>
                          </select>
-                         <label for="ctema1">Código Tema </label>
+                         <label for="ctema1">Código tema</label>
                     </div>
                </div>
-               <div class="col-sm-4">
+               <div class="col-md-8">
                     <div class="form-floating">
                          <input [(ngModel)]="edita.creargenerarsalida.extracto" class="form-control"
                               id="TextareaGSalida" name="extracto" placeholder=" ">
-                         <label for="TextareaGSalida">Extracto*</label>
-                         <br>
+                         <label class="required-field" for="TextareaGSalida">Extracto</label>
                     </div>
                </div>
-               <div class="col-sm-12">
+               <div class="col-12">
                     <div class="form-floating">
-                         <input [(ngModel)]="edita.creargenerarsalida.observaciones" class="form-control" id="ctema"
-                              name="observaciones" type="text" placeholder=" ">
-                         <label for="observaciones">Observaciones </label>
-                         <br>
+                         <input [(ngModel)]="edita.creargenerarsalida.observaciones" class="form-control"
+                              id="obsGSalida" name="observaciones" type="text" placeholder=" ">
+                         <label for="obsGSalida">Observaciones</label>
                     </div>
                </div>
-          </div>
-          <br>
-          <div class="modal-footer">
-               <button (click)="ops.clickAtrasGenerarSalida(edita)"
-                    class="btn-iflow modal-footer__btn btn-iflow--secondary" data-bs-dismiss="modal"
-                    type="button">Cancelar
-               </button>
-               <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary">Guardar</button>
           </div>
      </form>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="ops.clickAtrasGenerarSalida(edita)">Cancelar</button>
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+               form="formGenerarSalida">Guardar</button>
+     </div>
 </app-modal-shell>

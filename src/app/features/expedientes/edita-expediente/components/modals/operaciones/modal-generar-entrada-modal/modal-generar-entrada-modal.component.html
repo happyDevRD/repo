@@ -1,9 +1,37 @@
-<app-modal-shell modalId="GenerarEntradaModal" title="Generar Entrada" titleId="GenerarEntradaModalLabel"
-     dialogClass="modal-lg" headingLevel="h5" [staticBackdrop]="true" [keyboard]="false" [showFooter]="false"
+<app-modal-shell
+     modalId="GenerarEntradaModal"
+     title="Generar Entrada"
+     titleId="GenerarEntradaModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-generar-entrada-modal"
+     dialogClass="modal-lg"
+     headingLevel="h5"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
      (closed)="edita.closeGenerarEntradaModal()">
      <div modalBody>
-          <app-generar-entrada *ngIf="edita.showGenerarEntrada" [verExpediente]="edita.verExpediente"
-               [numeroArchivo]="edita.numeroArchivo" [idTarea]="edita.idTarea" [idExped]="edita.idExpediente"
-               (modalClosed)="edita.closeGenerarEntradaModal()"></app-generar-entrada>
+          <app-generar-entrada
+               *ngIf="edita.showGenerarEntrada"
+               [verExpediente]="edita.verExpediente"
+               [numeroArchivo]="edita.numeroArchivo"
+               [idTarea]="edita.idTarea"
+               [idExped]="edita.idExpediente"
+               (modalClosed)="edita.closeGenerarEntradaModal()">
+          </app-generar-entrada>
+     </div>
+     <div modalFooter class="modal-footer__actions">
+          <button
+               type="button"
+               class="btn-iflow modal-footer__btn btn-iflow--secondary"
+               (click)="handleCancelar()">
+               Cancelar
+          </button>
+          <button
+               type="button"
+               class="btn-iflow modal-footer__btn btn-iflow--primary"
+               [disabled]="isGenerarDisabled"
+               (click)="handleGenerar()">
+               Generar Entrada
+          </button>
      </div>
 </app-modal-shell>

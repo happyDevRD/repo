@@ -20,6 +20,7 @@ import {
 } from './tareas-accion.helper'
 import { TareasAccionUiState } from './tareas-accion.models'
 import { cargarRecibosPendientes, RecibosPendientesHost } from './tareas-recibos.helper'
+import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 
 /** Evita import circular con el coordinator. */
 export type AccionTareaProcedimientoRef = {
@@ -123,13 +124,17 @@ export class EditaExpedienteTareasAccionFacade {
     return isDNIAction(accion)
   }
 
-  onConsultaAccionClick(host: EditaExpedienteTareasAccionHost, tareaProcedimientoHost: AccionTareaProcedimientoRef): void {
-    this.seleccionarTareaProcedimientoFn(
-      tareaProcedimientoHost,
-      host.tareatramiteexpedientecrear.tareaProcedimiento,
-    )
-
+  onConsultaAccionClick(host: EditaExpedienteTareasAccionHost, _tareaProcedimientoHost?: AccionTareaProcedimientoRef): void {
+    // No re-seleccionar la tarea aquí: getTramiteTarea → resetActionState borraba el resultado de la consulta.
     if (this.ui.isConsultaAccionRunning) {
+      return
+    }
+
+    if (host.tareatramiteprocedimiento?.accion == null || host.tareatramiteprocedimiento.accion === -1) {
+      this.notificationService.warning({
+        title: 'Tarea requerida',
+        text: 'Seleccione primero una tarea del procedimiento.',
+      })
       return
     }
 
@@ -338,18 +343,15 @@ export class EditaExpedienteTareasAccionFacade {
           host.tareasFacade.objetotributario = respuesta;
           host.tareasFacade.modifiObjetoTribu = true;
           host.tareasFacade.veoConsultaObjetoTributario = false;
-          host.tareasFacade.veoTipoObjetoTributario = false;
           if (host.tareasFacade.objetotributario.codMovim === 'BAJA') {
             host.tareasFacade.objetotributario.observaciones = null;
           }
-          host.cdr.detectChanges();
           host.tareasFacade.isConsultaAccionRunning = false;
-          host.resetActionState();
+          host.cdr.detectChanges();
         },
         error: (error) => {
           this.notificationService.error({ title: 'Error', text: error.error?.message });
           host.tareasFacade.isConsultaAccionRunning = false;
-          host.resetActionState();
         },
       });
     }
@@ -507,13 +509,13 @@ export class EditaExpedienteTareasAccionFacade {
         get sourceRecibos() {
           return host.tareasFacade.sourceRecibos
         },
-        set sourceRecibos(value: any) {
+        set sourceRecibos(value: IflowGridSource | null) {
           host.tareasFacade.sourceRecibos = value
         },
         get dataAdapter() {
           return host.tareasFacade.dataAdapter
         },
-        set dataAdapter(value: any) {
+        set dataAdapter(value: IflowGridSource | null) {
           host.tareasFacade.dataAdapter = value
         },
         gridRecibos: host.gridRecibos,

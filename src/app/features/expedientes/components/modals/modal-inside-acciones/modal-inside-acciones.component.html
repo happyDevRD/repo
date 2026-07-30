@@ -1,6 +1,13 @@
-<app-modal-shell [modalId]="modalId" title="Acciones INSIDE" titleId="insideAccionesModalLabel"
-     dialogClass="modal-lg modal-dialog-scrollable" [staticBackdrop]="true" [keyboard]="false"
-     [showFooter]="false">
+<app-modal-shell
+     [modalId]="modalId"
+     title="Acciones INSIDE"
+     titleId="insideAccionesModalLabel"
+     modalClass="iflow-modal iflow-modal--fit exp-inside-acciones-modal"
+     dialogClass="modal-lg"
+     [staticBackdrop]="true"
+     [keyboard]="false"
+     [dismissOnClose]="false"
+     (closed)="cerrar()">
      <div modalBody>
           <p class="text-secondary mb-3" *ngIf="insideDryRun">
                <span class="badge bg-info text-dark">simulación</span>
@@ -51,6 +58,11 @@
                     <i class="bi bi-bank" aria-hidden="true"></i> Remisión Justicia
                </button>
           </div>
+     </div>
+     <div modalFooter class="modal-footer__actions">
+          <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary" (click)="cerrar()">
+               Cerrar
+          </button>
      </div>
 </app-modal-shell>
 
