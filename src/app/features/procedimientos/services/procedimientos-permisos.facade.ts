@@ -6,7 +6,6 @@ import { ProcedimientoService } from '../procedimiento.service';
 import { NotificationService } from '../../../core/service/notification.service';
 import { ModalManagerService } from '../../../core/service/modal-manager.service';
 import { ProcedimientosGridFacade, ProcedimientosGridHost } from './procedimientos-grid.facade';
-import { PermisoProcediCreado } from '../models/procedimientos-internal.models';
 import { clearFormValidation } from '../../../core/helper/bootstrap-form.helper';
 
 export interface ProcedimientosPermisosHost extends ProcedimientosGridHost {
@@ -15,14 +14,8 @@ export interface ProcedimientosPermisosHost extends ProcedimientosGridHost {
   idverTarea: unknown;
   userctrl: string | null;
   idPermisoProcedimiento: unknown;
-  idtrigger: unknown;
   usuarioTarea: unknown;
   veoBorrarTarea: boolean;
-  botonNuevoPermiso: boolean;
-  activoFormNuevoPermiso: boolean;
-  refrescavista: boolean;
-  permisoprocedicreado: PermisoProcediCreado | CreaPermisoProcedi;
-  respuestahttp: unknown;
 }
 
 @Injectable()
@@ -37,15 +30,11 @@ export class ProcedimientosPermisosFacade {
   ) {}
 
   resetFormularioNuevo(host: ProcedimientosPermisosHost): void {
-    host.botonNuevoPermiso = true;
     host.creapermisoprocedi = new CreaPermisoProcedi();
     clearFormValidation('formNuevoPermiso');
   }
 
   crear(host: ProcedimientosPermisosHost): void {
-    host.refrescavista = true;
-    host.activoFormNuevoPermiso = false;
-    host.botonNuevoPermiso = true;
     const usuarioPermiso = host.creapermisoprocedi.usuario;
 
     this.procedimientoService
@@ -58,11 +47,10 @@ export class ProcedimientosPermisosFacade {
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response) => {
-          host.permisoprocedicreado = response;
+        next: () => {
           this.notificationService.saveSuccess('Permiso');
           this.modalManagerService.closeModal('nuevoPermisoModal');
-          this.gridFacade.assignPermisosSourceAfterCreate(host, Number(host.idverTarea));
+          this.gridFacade.cargarPermisos(host, Number(host.idverTarea));
           this.resetFormularioNuevo(host);
         },
         error: (err: HttpErrorResponse) => {
@@ -86,10 +74,9 @@ export class ProcedimientosPermisosFacade {
       this.procedimientoService.deletePermisoProcedimiento(host.idPermisoProcedimiento).pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe({
-        next: (response) => {
-          host.respuestahttp = response;
+        next: () => {
           host.veoBorrarTarea = false;
-          this.gridFacade.assignPermisosSourcePlain(host, host.idtrigger as number | string);
+          this.gridFacade.cargarPermisos(host, host.idverTarea as number | string);
           this.notificationService.success({ title: 'Permiso Eliminado!' });
         },
         error: () => {

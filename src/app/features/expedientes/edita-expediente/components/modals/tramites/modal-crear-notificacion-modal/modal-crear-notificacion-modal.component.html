@@ -7,7 +7,7 @@
      [staticBackdrop]="true"
      [dismissOnClose]="false"
      (closed)="notif.borraDatosCrearNotifi(); notif.onModalHidden()">
-     <form modalBody id="creanotificacion" (ngSubmit)="notif.solicitarCreacionNotificacion()">
+     <form modalBody id="creanotificacion" (ngSubmit)="handleSubmit($event)" novalidate>
           <div class="row g-3 mb-3">
                <div class="col-md-3">
                     <div class="form-floating">
@@ -16,6 +16,7 @@
                               id="fechaNotificacion" name="fechaNotificacion" required type="date"
                               max="2099-12-31" min="2020-01-01" placeholder=" ">
                          <label class="required-field" for="fechaNotificacion">Fecha notificación</label>
+                         <div class="invalid-feedback">Indique la fecha de notificación.</div>
                     </div>
                </div>
                <div class="col-md-5">
@@ -28,11 +29,12 @@
                               id="IntereDni" name="IntereDni" required>
                               <option value="" disabled>Seleccione un interesado</option>
                               <option *ngFor="let listarinteresado of edita.listarinteresadosdto; trackBy: trackById"
-                                   [value]="listarinteresado.numDocumInter">
+                                   [ngValue]="listarinteresado.numDocumInter">
                                    {{ listarinteresado.numDocumInter }} - {{ listarinteresado.nomInter }}
                               </option>
                          </select>
                          <label class="required-field" for="IntereDni">Interesado</label>
+                         <div class="invalid-feedback">Seleccione un interesado.</div>
                     </div>
                </div>
                <div class="col-md-4">
@@ -45,18 +47,19 @@
                <div class="col-md-6">
                     <div class="form-floating">
                          <select [(ngModel)]="notif.creanotificacion.notificador"
-                              (change)="notif.limpiarCacheValidacion()"
+                              (ngModelChange)="notif.limpiarCacheValidacion()"
                               class="form-select"
                               [class.form-select--placeholder]="!notif.creanotificacion.notificador"
                               id="notificadorCrear" name="notificador" required>
-                              <option value="" disabled>Seleccione un notificador</option>
+                              <option [ngValue]="''" disabled>Seleccione un notificador</option>
                               <option
                                    *ngFor="let notificalistar of notif.notificadorlistar; trackBy: trackByNotificador"
-                                   [value]="notificalistar.notificador">
+                                   [ngValue]="notificalistar.notificador">
                                    {{ notificalistar.descripcion }}
                               </option>
                          </select>
                          <label class="required-field" for="notificadorCrear">Notificador</label>
+                         <div class="invalid-feedback">Seleccione un notificador.</div>
                     </div>
                </div>
                <div class="col-md-6">
@@ -125,8 +128,7 @@
                Cancelar
           </button>
           <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
-               form="creanotificacion"
-               [disabled]="!notif.getFormularioValido(edita)">
+               form="creanotificacion">
                Guardar notificación
           </button>
      </div>

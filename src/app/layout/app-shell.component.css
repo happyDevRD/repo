@@ -12,6 +12,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  transition: margin-left 0.22s ease;
 }
 
 .app-layout__content {
@@ -24,20 +25,6 @@
 
 .app-layout__section {
   width: 100%;
-}
-
-:host ::ng-deep .app-layout__footer {
-  display: block;
-  flex-shrink: 0;
-  margin-top: auto;
-  padding: 0.7rem var(--layout-gutter);
-  background: var(--footer-bg);
-  color: rgba(255, 255, 255, 0.92);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-:host ::ng-deep .app-layout__footer .app-footer {
-  justify-content: center;
 }
 
 @media screen and (max-width: 1200px) {

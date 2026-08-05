@@ -5,8 +5,6 @@
       [expedienteNumero]="verExpediente.numero"
       [botonVerNotifi]="botonVerNotifi"
       [vertramite]="vertramite"
-      [veonotificaciones]="veonotificaciones"
-      [veoTramitadores]="veoTramitadores"
       [insideDryRun]="insideDryRun"
       [insideEnviando]="insideEnviando"
       [insideUltimoEnvio]="insideUltimoEnvio"
@@ -19,7 +17,7 @@
       (verNotificaciones)="verNotificaciones()"
       (veotramitadores)="veotramitadores()"
       (volverListadoExpedientes)="volverListadoExpedientes()"
-      (noverNotificaciones)="noverNotificaciones()"
+      (nuevoTramite)="tramitesFacade.abrirModalNuevoTramite(this)"
     ></app-edita-expediente-header>
     <app-edita-expediente-workspace></app-edita-expediente-workspace>
     <app-edita-expediente-modals></app-edita-expediente-modals>

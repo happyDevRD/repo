@@ -957,7 +957,6 @@
   flex-direction: column;
   gap: 0.65rem;
   min-height: 0;
-  height: 100%;
 }
 
 .soli-iniciar-card {
@@ -971,10 +970,10 @@
   overflow: hidden;
 }
 
-.soli-iniciar-card--lg {
-  flex: 1.35 1 0;
-}
-
+/* Con --fit el modal mide según su contenido: las tres tarjetas ocupan
+   su alto natural, no hay espacio sobrante que repartir con flex-grow
+   (usarlo aquí colapsaba la tarjeta 1 al tener flex-basis: 0). */
+.soli-iniciar-card--lg,
 .soli-iniciar-card--md,
 .soli-iniciar-card--sm {
   flex: 0 0 auto;
@@ -1343,16 +1342,31 @@
   padding-bottom: 0.7rem;
 }
 
-/* Tamaños de entidad (no en modals.css general) */
-.iflow-modal--fixed.soli-iniciar-modal .modal-dialog {
-  max-width: 700px;
-  height: min(70vh, 560px);
-  max-height: min(70vh, 560px);
+/* Tamaños de entidad (no en modals.css general).
+   Contenido estático (sin zona de búsqueda que cambie de alto), por eso usa
+   --fit: el modal se ajusta a su contenido en vez de forzar una altura fija
+   que dejaba hueco vacío en la tarjeta "Datos del expediente". */
+.iflow-modal--fit.soli-iniciar-modal .modal-dialog {
+  max-width: 860px;
+  max-height: min(94vh, 920px);
 }
 
+.iflow-modal--fit.soli-iniciar-modal .modal-content {
+  max-height: min(94vh, 920px);
+}
+
+/* Tamaño fijo: ancho de sobra para el grid de 3 columnas del interesado y
+   alto constante para que el modal no "crezca" al aparecer el resultado de
+   la búsqueda (o el aviso de alta manual) — el contenido hace scroll interno. */
 .iflow-modal--fixed.soli-alta-modal .modal-dialog {
-  height: min(70vh, 540px);
-  max-height: min(70vh, 540px);
+  max-width: min(94vw, 1240px);
+  height: min(90vh, 860px);
+  max-height: min(90vh, 860px);
+}
+
+.iflow-modal--fixed.soli-alta-modal .modal-content {
+  height: min(90vh, 860px);
+  max-height: min(90vh, 860px);
 }
 
 .soli-alta-modal .modal-body {

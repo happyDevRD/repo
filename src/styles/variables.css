@@ -11,13 +11,14 @@
 
   /* Sidebar y layout */
   --sidebar-bg: var(--iflow-gradient-vertical);
-  --sidebar-width: 260px;
+  --sidebar-width-expanded: 260px;
+  --sidebar-width-collapsed: 4.5rem;
+  --sidebar-width: var(--sidebar-width-expanded);
   --sidebar-shadow: 2px 0 16px rgba(15, 23, 42, 0.12);
   --layout-gutter: 1.25rem;
   --topbar-height: 3.5rem;
   --z-sidebar: 1000;
   --z-topbar: 900;
-  --footer-bg: linear-gradient(180deg, #2A5298, #162447);
 
   /* UI */
   --toggle-color: var(--iflow-primary);

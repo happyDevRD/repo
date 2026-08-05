@@ -15,7 +15,6 @@ import {
   TareaTramiteExpporExpedi,
   VerExpediente
 } from './expedientes';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ExpedientesService } from './expedientes.service';
 
@@ -30,23 +29,17 @@ import { UserSessionService } from "../../core/service/user-session.service";
 import { fechaHoyISO } from '../../core/helper/fecha-legacy.helper';
 import { mostrarRegistroDocumento } from '../../core/helper/registro-documento-notification.helper';
 import * as bootstrap from 'bootstrap';
-import { IflowGridComponent } from 'src/app/shared/components/iflow-grid/iflow-grid.component';
-import { INICIO_GRID_RENDERERS as R } from '../inicio/shared/inicio-grid-renderers';
 import {
-  buildColumnsAtributo,
-  buildColumnsExpe,
   buildColumnsIndiceENI,
   buildColumnsListRepre,
-  buildColumnsPermi,
-  buildColumnsTareaProcedi,
-  buildColumnsTareasExpediente,
   createExpedientesGridRenderers,
   ExpedientesGridRenderContext,
 } from './config/expedientes-grid.config';
+import { TareaProcedimientoDTO } from '../../core/models/tarea-procedimiento.dto';
 import { ExpedientesGridFacade } from './services/expedientes-grid.facade';
 import { ExpedientesExpedienteFacade } from './services/expedientes-expediente.facade';
 import { ExpedientesInsideFacade, ExpedientesInsideHost } from './services/expedientes-inside.facade';
-import { ExpedientesAtributosFacade } from './services/expedientes-atributos.facade';
+import { AtributoEditable, esTipoFecha, esTipoNumerico, ExpedientesAtributosFacade } from './services/expedientes-atributos.facade';
 import { isInsideDryRun } from '../../core/constants/inside-simulacion.constants';
 import { JqxGridRowEvent } from '../../core/helper/jqx-grid-event.model';
 
@@ -70,9 +63,6 @@ interface Food {
 
 export class ExpedientesComponent {// pruebas de formularios
   private readonly destroyRef = inject(DestroyRef)
-  /** Asignados desde componentes hijos (modales) */
-  gridAtributosExp?: IflowGridComponent
-  gridTareasExpediente?: IflowGridComponent
 
 
   public editExpedientes: boolean = false;
@@ -84,8 +74,12 @@ export class ExpedientesComponent {// pruebas de formularios
   public verExpedientes: boolean = false;
   public title = 'Expedientes';
   public crearmensaje: CrearMensaje = new CrearMensaje();
-  public expedienteslistar!: ExpedienteListar[];
+  public expedientesListado: ExpedienteListar[] = [];
+  public cargandoExpedientesListado: boolean = false;
   public atributosleer!: Atributosleer[];
+  public atributosEditables: AtributoEditable[] = [];
+  public cargandoAtributos: boolean = false;
+  public guardandoAtributos: boolean = false;
   public procedipermisolistar!: ProcediPermisosListar[];
   procedimientos!: Procedimiento[];
   public nuevoexpediente: NuevoExpediente = new NuevoExpediente();
@@ -98,7 +92,6 @@ export class ExpedientesComponent {// pruebas de formularios
   public atributoseditar: AtributosModificar = new AtributosModificar();
   public consultadni: ConsultaDni = new ConsultaDni();
   public variable!: any;
-  public statusGetExpedientes!: number;
 
   // Propiedades de validaci?n para Nuevo Expediente
   public isCreandoExpediente: boolean = false;
@@ -137,16 +130,6 @@ export class ExpedientesComponent {// pruebas de formularios
 
     if (this.session.canManageExpedientes) {
 
-
-      this.expedientesService.getExpedientesListar().pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe({
-        next: (expedienteslistar) => (this.expedienteslistar = expedienteslistar),
-        error: (error: HttpErrorResponse) => {
-          this.statusGetExpedientes = error.status;
-        },
-      });
-
       this.expedientesService.getProcedimientos().pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe(
@@ -160,16 +143,6 @@ export class ExpedientesComponent {// pruebas de formularios
     }
   }
 
-  public verTareasdelTramite: boolean = false
-  public nuevotramitador: boolean = false;
-
-  public atrasNuevoMensaje() {
-    this.verTareasdelTramite = true;
-    this.nuevotramitador = false;
-    this.veoPermisoProcedi = false;
-    this.crearmensaje = new CrearMensaje();
-
-  }
   foods: Food[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
@@ -193,15 +166,15 @@ export class ExpedientesComponent {// pruebas de formularios
   public onAsignarTramitadorSubmit(): void {
     this.mostrarValidacionesAsignarTramitador = true;
 
-    // Validar campos obligatorios
-    if (this.isDescripcionMensajeInvalid()) {
+    if (this.isTareaAsignarInvalid() || this.isPersonaAsignarInvalid() || this.isDescripcionMensajeInvalid()) {
       this.notificationService.incompleteFields();
       return;
     }
 
-    // Confirmar asignaci?n
+    this.crearmensaje.idtarea = this.tareaSeleccionadaAsignar?.id;
+
     this.notificationService.confirm(
-      '?Est? seguro de que desea asignar este tramitador?'
+      `¿Confirma ofrecer este expediente a ${this.usuarioTarea} para la tarea "${this.tareaSeleccionadaAsignar?.descripcion}"?`
     ).then((result) => {
       if (result.isConfirmed) {
         this.ejecutarAsignarTramitador();
@@ -209,14 +182,8 @@ export class ExpedientesComponent {// pruebas de formularios
     });
   }
 
-  // Funci?n de ejecuci?n separada
   private ejecutarAsignarTramitador(): void {
     this.expedienteFacade.ejecutarAsignarTramitador(this);
-  }
-
-  // Funci?n original mantenida para compatibilidad
-  public crearMensaje() {
-    this.onAsignarTramitadorSubmit();
   }
   public insertaBolsaCrear() {
   }
@@ -336,7 +303,6 @@ export class ExpedientesComponent {// pruebas de formularios
   public puedoEditarExpe: boolean = true;
   //pinta ejercicio y n?mero
   public expEjerNum: string;
-  public cargotareasexpedi: boolean = false;
   public cargandoTareasExpediente: boolean = false;
   public tareasExpedienteVacio: boolean = false;
   public tareasExpedienteList: TareaTramiteExpporExpedi[] = [];
@@ -344,34 +310,28 @@ export class ExpedientesComponent {// pruebas de formularios
   public pruebas: boolean = false;
   public veoAtributos: boolean = false;
 
-  public veoBorrarAtributo: boolean = false;
-
-  public idGrupo: any;
-  public etiGruAtrib: any;
-
-  public marcaAtributo(event: any) {
-    this.atributosFacade.marcar(this, event);
-  }
-
-  public borraAtributo() {
-    this.atributosFacade.eliminar(this);
+  public borraAtributo(attr: AtributoEditable) {
+    this.atributosFacade.eliminar(this, attr);
   }
 
   public listarAtributos() {
     this.atributosFacade.listar(this);
   }
 
-  private refrescarSourceAtributo(localData?: Atributosleer[]): void {
-    this.gridFacade.refrescarSourceAtributo(this, localData);
+  public actualizarFechaAtributo(attr: AtributoEditable, isoValue: string): void {
+    this.atributosFacade.actualizarFecha(attr, isoValue);
   }
 
   public borraArrayAtributos() {
-    this.atributosFacade.limpiarFormulario(this);
+    this.atributosFacade.cerrarModal(this);
   }
 
   public envioAtributos() {
-    this.atributosFacade.enviar(this);
+    this.atributosFacade.guardar(this);
   }
+
+  public esTipoFechaAtributo = esTipoFecha;
+  public esTipoNumericoAtributo = esTipoNumerico;
 
   public valor: number = 1
 
@@ -395,8 +355,7 @@ export class ExpedientesComponent {// pruebas de formularios
    * Maneja el doble click en la tabla de expedientes
    * Abre el modal de edici?n del expediente
    */
-  public onExpedienteDoubleClick(event: JqxGridRowEvent<ExpedienteListar>): void {
-    const rowData = event.args.row.bounddata
+  public onExpedienteDoubleClick(rowData: ExpedienteListar): void {
     this.idexpediente = rowData.id
     this.expedientesService.getExpediente(this.idexpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
@@ -442,8 +401,8 @@ export class ExpedientesComponent {// pruebas de formularios
     return String(id);
   }
 
-  public marcaExpedienteNuevo(event: JqxGridRowEvent<ExpedienteListar>) {
-    this.expedienteFacade.marcarExpedienteSeleccionado(this, event.args.row.bounddata)
+  public marcaExpedienteNuevo(rowData: ExpedienteListar) {
+    this.expedienteFacade.marcarExpedienteSeleccionado(this, rowData)
     this.pestanaFlujo = 'tramitacion'
   }
 
@@ -527,38 +486,45 @@ export class ExpedientesComponent {// pruebas de formularios
     } else if (modalId === 'cerrarExpModal') {
       this.fechacierreexpedi = fechaHoyISO();
       this.serieDocumental = this.serieDocumental ?? '';
+    } else if (modalId === 'AsignarTramitadorModal') {
+      this.lanzaTareaProcedi();
     }
     this.modalManagerService.openModal(modalId);
   }
 
   public cerrarModal(modalId: string): void {
-    // Resetear validaciones espec?ficas seg?n el modal
+    // Resetea validaciones específicas según el modal
     if (modalId === 'nexpedienteModal') {
       this.limpiadatosnuevoexpediente();
     } else if (modalId === 'NAtributosModal2') {
       this.borraArrayAtributos();
     } else if (modalId === 'TareaExpedienteModal') {
       this.limpioSourceTareasExpediente();
-    } else if (modalId === 'AsigfnarTramitadorModal') {
+    } else if (modalId === 'AsignarTramitadorModal') {
       this.limpiarDatosAsignarTramitador();
     }
 
     this.modalManagerService.closeModal(modalId);
   }
 
-  // Funci?n de validaci?n para Asignar Tramitador
   public isDescripcionMensajeInvalid(): boolean {
     return this.mostrarValidacionesAsignarTramitador && (!this.crearmensaje.descripcion || this.crearmensaje.descripcion.trim() === '');
   }
 
-  // Funci?n de limpieza para Asignar Tramitador
   limpiarDatosAsignarTramitador(): void {
     this.isAsignandoTramitador = false;
     this.mostrarValidacionesAsignarTramitador = false;
-    this.atrasNuevoMensaje();
+    this.tareasAsignarTramitador = [];
+    this.permisosAsignarTramitador = [];
+    this.tareaSeleccionadaAsignar = null;
+    this.personaSeleccionadaAsignar = null;
+    this.usuarioPermiso = undefined;
+    this.usuarioTarea = undefined;
+    this.veoPermisoProcedi = false;
+    this.crearmensaje = new CrearMensaje();
   }
 
-  // Funciones espec?ficas para modales con l?gica previa
+  // Funciones específicas para modales con lógica previa
   public abrirModalTareasExpediente(): void {
     const idExp = this.getExpedienteIdSeleccionado();
     if (!idExp) {
@@ -567,22 +533,26 @@ export class ExpedientesComponent {// pruebas de formularios
     }
 
     this.expEjerNum = `${this.ejerexpe ?? ''}/${this.numExp ?? ''}`;
-    this.cargotareasexpedi = true;
     this.cargandoTareasExpediente = true;
     this.tareasExpedienteVacio = false;
     this.tareasExpedienteList = [];
-    this.refrescarSourceTareasExpedientePorUrl(idExp);
-    this.cdr.detectChanges();
+    this.numeroArchivo = undefined as unknown as number;
     this.abrirModal('TareaExpedienteModal');
-    this.scheduleTareasExpedienteModalRefresh();
-  }
 
-  public onTareasExpedienteBindingComplete(): void {
-    this.cargandoTareasExpediente = false;
-    const rows = (this.gridTareasExpediente?.getrows() ?? []) as TareaTramiteExpporExpedi[];
-    this.tareasExpedienteList = rows;
-    this.tareasExpedienteVacio = rows.length === 0;
-    this.cdr.detectChanges();
+    this.expedientesService.getTareaTramiteExpeporExpe(idExp).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (tareas) => {
+        this.tareasExpedienteList = tareas ?? [];
+        this.tareasExpedienteVacio = this.tareasExpedienteList.length === 0;
+        this.cargandoTareasExpediente = false;
+      },
+      error: () => {
+        this.tareasExpedienteList = [];
+        this.tareasExpedienteVacio = true;
+        this.cargandoTareasExpediente = false;
+      },
+    });
   }
 
   public abrirModalAtributos(): void {
@@ -654,6 +624,28 @@ export class ExpedientesComponent {// pruebas de formularios
   public insidePendientesCount = 0;
   public insidePendientesErrorCount = 0;
 
+  /** Clase de badge Bootstrap según el estado de envío INSIDE (listado de expedientes). */
+  public insideBadgeClass(estado: string): string {
+    switch (String(estado ?? '').toUpperCase()) {
+      case 'PENDIENTE': return 'bg-warning text-dark';
+      case 'ENVIADO': return 'bg-success';
+      case 'SIMULADO': return 'bg-info text-dark';
+      case 'ERROR': return 'bg-danger';
+      default: return 'bg-secondary';
+    }
+  }
+
+  /** Resalta en el listado la fila del expediente actualmente seleccionado. */
+  public readonly expedienteRowClass = (row: ExpedienteListar): Record<string, boolean> => ({
+    'table-active': row.id === this.idexpediente,
+  });
+
+  public readonly procedimientoDescripcionValue = (row: ExpedienteListar): string =>
+    row.procedimiento?.descripcion ?? '';
+
+  public readonly interesadoNombreValue = (row: ExpedienteListar): string =>
+    row.personaEntidad?.desPerEntid ?? '';
+
   private readonly insideListHost = (): ExpedientesInsideHost => this as unknown as ExpedientesInsideHost;
 
   public get usuario(): string {
@@ -684,7 +676,9 @@ export class ExpedientesComponent {// pruebas de formularios
 
 
   public reenvioEditar() {
-    this.router.navigate(['/expedientes', this.idexpediente, 'tramitar'])
+    this.router.navigate(['/expedientes', this.idexpediente, 'tramitar'], {
+      state: { returnUrl: this.router.url.split('?')[0] || '/expedientes' },
+    })
   }
 
   public idExpedienteParaInteresados: number | null = null;
@@ -716,22 +710,11 @@ export class ExpedientesComponent {// pruebas de formularios
 
   private readonly gridRenderContext: ExpedientesGridRenderContext = {};
   private readonly gridRenderers = createExpedientesGridRenderers(this.gridRenderContext);
-  columnsExpe = buildColumnsExpe(this.gridRenderers);
-  columnsTareaProcedi = buildColumnsTareaProcedi(this.gridRenderers);
-  columnsPermi = buildColumnsPermi(this.gridRenderers);
   columnsListRepre = buildColumnsListRepre(this.gridRenderers);
   columnsIndiceENI = buildColumnsIndiceENI(this.gridRenderers);
-  columnsTareasExpediente = buildColumnsTareasExpediente(this.gridRenderers);
-  columnsAtributo = buildColumnsAtributo(this.gridRenderers);
   public localizationObject: any = jqxGrid_ES;
-  sourceExp!: any;
-  sourceTareaProcedi!: any;
-  sourcePermi!: any;
   sourceListRepre!: any;
-  sourceTramite: any = {};
   sourceIndiceENI!: any;
-  sourceTareasExpediente!: any;
-  sourceAtributo!: any;
 
   public syncGridRenderContext(): void {
     this.gridRenderContext.valorEstado = this.valorEstado;
@@ -755,96 +738,119 @@ export class ExpedientesComponent {// pruebas de formularios
     }
 
 
-    this.gridFacade.refrescarSourceTareasExpediente(this, []);
-
-
     this.verpagina();
     this.insideFacade.actualizarResumenPendientes(this.insideListHost());
   }
 
 
-  public clicktareExpediente(event: any) {
-    this.numeroArchivo = event.args.row.bounddata.archivo
+  public clicktareExpediente(tarea: TareaTramiteExpporExpedi) {
+    this.numeroArchivo = tarea.archivo != null ? Number(tarea.archivo) : undefined as unknown as number;
   }
 
 
   public fechaTramite!: any;
   public fechatramite!: any;
 
-  lanzaSourcePermi(id: number | string): void {
-    this.gridFacade.lanzaSourcePermi(this, id);
-  }
-
-  public veoasignatramitador = false;
-
-  public lanzaTareaProcedi(): void {
-    this.gridFacade.lanzaTareaProcedi(this, this.idProcedimiento);
-    this.veoasignatramitador = true;
-  }
-
-  public actualizaSourceTramite(): void {
-    this.gridFacade.actualizaSourceTramite(this);
-  }
-
-  private refrescarSourceTareasExpedientePorUrl(idExp: string): void {
-    this.gridFacade.refrescarSourceTareasExpedientePorUrl(this, idExp);
-  }
-
-  private refrescarSourceTareasExpediente(localData: TareaTramiteExpporExpedi[]): void {
-    this.gridFacade.refrescarSourceTareasExpediente(this, localData);
-  }
-
-
+  // ===== Asignar Tramitador: paso 1 (tarea del procedimiento) y paso 2 (persona con permiso) =====
+  public tareasAsignarTramitador: TareaProcedimientoDTO[] = [];
+  public permisosAsignarTramitador: ProcediPermisosListar[] = [];
+  public tareaSeleccionadaAsignar: TareaProcedimientoDTO | null = null;
+  public personaSeleccionadaAsignar: ProcediPermisosListar | null = null;
+  public cargandoTareasAsignar = false;
+  public cargandoPermisosAsignar = false;
+  public errorTareasAsignar = false;
+  public errorPermisosAsignar = false;
   public usuarioTarea!: any;
   public usuarioPermiso!: any;
-
-  public idpermisosPermi(event: any) {
-    const rowData = event.args.row.bounddata
-    this.usuarioPermiso = rowData.idOrgUsuar
-    this.usuarioTarea = rowData.usuario
-    this.idPermisoProcedimiento = rowData.id
-  }
-
-  public idPermisoProcedimiento!: any;
-  public idverTarea!: any;
   public veoPermisoProcedi: boolean = false;
 
+  /**
+   * Se llama al abrir el modal (y al seleccionar una fila del listado, para tener
+   * las tareas listas de antemano) — antes esto dependía de un click en el campo
+   * "Asunto", que no tiene relación funcional con cargar tareas.
+   */
+  public lanzaTareaProcedi(): void {
+    this.tareasAsignarTramitador = [];
+    this.permisosAsignarTramitador = [];
+    this.tareaSeleccionadaAsignar = null;
+    this.personaSeleccionadaAsignar = null;
+    this.usuarioPermiso = undefined;
+    this.usuarioTarea = undefined;
+    this.veoPermisoProcedi = false;
+    this.errorTareasAsignar = false;
 
-  public envioTareaProcedi(event: any) {
-    const rowData = event.args.row.bounddata
-    this.veoPermisoProcedi = true
-    this.lanzaSourcePermi(rowData.id)
-    this.idPermisoProcedimiento = rowData.id
-    this.idverTarea = rowData.id
-  }
-
-
-  private scheduleTareasExpedienteModalRefresh(): void {
-    const modalEl = document.getElementById('TareaExpedienteModal')
-    const refresh = (): void => {
-      window.setTimeout(() => this.refreshGridTareasExpediente(), 60)
-      window.setTimeout(() => this.refreshGridTareasExpediente(), 250)
-      window.setTimeout(() => this.refreshGridTareasExpediente(), 500)
+    if (!this.idProcedimiento) {
+      return;
     }
 
-    if (!modalEl) {
-      refresh()
-      return
+    this.cargandoTareasAsignar = true;
+    this.expedientesService.getTareasProcedimientoListar(this.idProcedimiento).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (tareas) => {
+        this.tareasAsignarTramitador = tareas ?? [];
+        this.cargandoTareasAsignar = false;
+      },
+      error: () => {
+        this.tareasAsignarTramitador = [];
+        this.errorTareasAsignar = true;
+        this.cargandoTareasAsignar = false;
+      },
+    });
+  }
+
+  public seleccionarTareaAsignar(tarea: TareaProcedimientoDTO | null): void {
+    if (!tarea || this.tareaSeleccionadaAsignar?.id === tarea.id) {
+      return;
     }
+    this.tareaSeleccionadaAsignar = tarea;
+    this.personaSeleccionadaAsignar = null;
+    this.usuarioPermiso = undefined;
+    this.usuarioTarea = undefined;
+    this.veoPermisoProcedi = true;
+    this.permisosAsignarTramitador = [];
+    this.errorPermisosAsignar = false;
+    this.cargandoPermisosAsignar = true;
 
-    modalEl.addEventListener('shown.bs.modal', refresh, { once: true })
+    this.expedientesService.getPermisosTareaListar(tarea.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (permisos) => {
+        this.permisosAsignarTramitador = permisos ?? [];
+        this.cargandoPermisosAsignar = false;
+      },
+      error: () => {
+        this.permisosAsignarTramitador = [];
+        this.errorPermisosAsignar = true;
+        this.cargandoPermisosAsignar = false;
+      },
+    });
   }
 
-  private refreshGridTareasExpediente(): void {
-    this.gridFacade.refreshGridTareasExpediente(this);
+  public seleccionarPersonaAsignar(persona: ProcediPermisosListar | null): void {
+    if (!persona) {
+      return;
+    }
+    this.personaSeleccionadaAsignar = persona;
+    this.usuarioPermiso = persona.idOrgUsuar;
+    this.usuarioTarea = persona.usuario;
   }
+
+  public isTareaAsignarInvalid(): boolean {
+    return this.mostrarValidacionesAsignarTramitador && !this.tareaSeleccionadaAsignar;
+  }
+
+  public isPersonaAsignarInvalid(): boolean {
+    return this.mostrarValidacionesAsignarTramitador
+      && !!this.tareaSeleccionadaAsignar
+      && !this.personaSeleccionadaAsignar;
+  }
+
 
   public limpioSourceTareasExpediente(): void {
     this.tareasExpedienteList = [];
-    this.cargotareasexpedi = false;
     this.cargandoTareasExpediente = false;
     this.tareasExpedienteVacio = false;
-    this.gridFacade.refrescarSourceTareasExpediente(this, []);
   }
 
   public lanzoIndiceENI(idexpe: string): void {

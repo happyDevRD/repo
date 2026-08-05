@@ -1,80 +1,80 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { DashboardGridModalComponent } from '../dashboard-grid-modal/dashboard-grid-modal.component';
 import { InicioDashboardService } from '../../services/inicio-dashboard.service';
-import {
-  DASHBOARD_EXPEDIENTES_COLUMNS,
-  DASHBOARD_EXPEDIENTES_DATA_FIELDS,
-  DASHBOARD_FIRMAS_COLUMNS,
-  DASHBOARD_FIRMAS_DATA_FIELDS,
-  DASHBOARD_NOTIFICACIONES_COLUMNS,
-  DASHBOARD_NOTIFICACIONES_DATA_FIELDS,
-  DASHBOARD_SOLICITUDES_COLUMNS,
-  DASHBOARD_SOLICITUDES_DATA_FIELDS,
-  DASHBOARD_TAREAS_COLUMNS,
-  DASHBOARD_TAREAS_DATA_FIELDS,
-} from '../../shared/inicio-dashboard-grids.config';
+import { ModalManagerService } from '../../../../core/service/modal-manager.service';
+import { SolicitudListar } from '../../../solicitudes/models';
+import { VerExpedientesInstructor, VerTareaTramiteExpporUsuario } from '../../../expedientes/expedientes';
 
 @Component({
   selector: 'app-dashboard-modals-host',
   templateUrl: './dashboard-modals-host.component.html',
+  styleUrls: ['./dashboard-modals-host.component.css'],
 })
-export class DashboardModalsHostComponent implements AfterViewInit {
-
-  @ViewChild('solicitudesModal') solicitudesModal!: DashboardGridModalComponent;
-  @ViewChild('expedientesModal') expedientesModal!: DashboardGridModalComponent;
-  @ViewChild('tareasModal') tareasModal!: DashboardGridModalComponent;
-  @ViewChild('firmasPendientesModal') firmasPendientesModal!: DashboardGridModalComponent;
-  @ViewChild('firmasTercerosModal') firmasTercerosModal!: DashboardGridModalComponent;
-  @ViewChild('notificacionesModal') notificacionesModal!: DashboardGridModalComponent;
-
-  readonly solicitudesColumns = DASHBOARD_SOLICITUDES_COLUMNS;
-  readonly expedientesColumns = DASHBOARD_EXPEDIENTES_COLUMNS;
-  readonly tareasColumns = DASHBOARD_TAREAS_COLUMNS;
-  readonly firmasColumns = DASHBOARD_FIRMAS_COLUMNS;
-  readonly notificacionesColumns = DASHBOARD_NOTIFICACIONES_COLUMNS;
+export class DashboardModalsHostComponent {
+  private readonly modalManager = inject(ModalManagerService);
 
   constructor(private dashboardService: InicioDashboardService) {}
 
-  ngAfterViewInit(): void {
-    // Diferir la asignación de sources para evitar NG0100 (ExpressionChangedAfterItHasBeenChecked).
-    queueMicrotask(() => {
-      this.solicitudesModal.initSource(DASHBOARD_SOLICITUDES_DATA_FIELDS);
-      this.expedientesModal.initSource(DASHBOARD_EXPEDIENTES_DATA_FIELDS);
-      this.tareasModal.initSource(DASHBOARD_TAREAS_DATA_FIELDS);
-      this.firmasPendientesModal.initSource(DASHBOARD_FIRMAS_DATA_FIELDS);
-      this.firmasTercerosModal.initSource(DASHBOARD_FIRMAS_DATA_FIELDS);
-      this.notificacionesModal.initSource(DASHBOARD_NOTIFICACIONES_DATA_FIELDS);
-    });
+  solicitudesItems: SolicitudListar[] = [];
+  expedientesItems: VerExpedientesInstructor[] = [];
+  tareasItems: VerTareaTramiteExpporUsuario[] = [];
+  firmasPendientesItems: any[] = [];
+  firmasTercerosItems: any[] = [];
+  notificacionesItems: any[] = [];
+
+  readonly interesadoSolicitudValue = (row: SolicitudListar): string => row.personaEntidad?.desPerEntid ?? '';
+
+  readonly expedienteSolicitudValue = (row: SolicitudListar): string => {
+    const expediente = row.expediente as { ejercicio?: unknown; numero?: unknown } | null;
+    if (!expediente?.ejercicio || !expediente?.numero) {
+      return '';
+    }
+    return `${expediente.ejercicio}/${expediente.numero}`;
+  };
+
+  closeModal(modalId: string): void {
+    this.modalManager.closeModal(modalId);
   }
 
   async openSolicitudes(): Promise<number> {
     const data = await firstValueFrom(this.dashboardService.loadSolicitudes());
-    return this.solicitudesModal.openWithData(data);
+    this.solicitudesItems = data ?? [];
+    this.modalManager.openModal('modalSolicitudesPendientes');
+    return this.solicitudesItems.length;
   }
 
   async openExpedientes(): Promise<number> {
     const data = await firstValueFrom(this.dashboardService.loadExpedientesInstructor());
-    return this.expedientesModal.openWithData(data);
+    this.expedientesItems = data ?? [];
+    this.modalManager.openModal('modalExpedientesInstructor');
+    return this.expedientesItems.length;
   }
 
   async openTareas(): Promise<number> {
     const data = await firstValueFrom(this.dashboardService.loadTareasUsuario());
-    return this.tareasModal.openWithData(data);
+    this.tareasItems = data ?? [];
+    this.modalManager.openModal('modalTareasPendientes');
+    return this.tareasItems.length;
   }
 
   async openFirmasPendientes(): Promise<number> {
     const data = await firstValueFrom(this.dashboardService.loadFirmasPendientes());
-    return this.firmasPendientesModal.openWithData(data);
+    this.firmasPendientesItems = data ?? [];
+    this.modalManager.openModal('modalFirmasPendientes');
+    return this.firmasPendientesItems.length;
   }
 
   async openFirmasTerceros(): Promise<number> {
     const data = await firstValueFrom(this.dashboardService.loadFirmasTerceros());
-    return this.firmasTercerosModal.openWithData(data);
+    this.firmasTercerosItems = data ?? [];
+    this.modalManager.openModal('modalFirmasTerceros');
+    return this.firmasTercerosItems.length;
   }
 
   async openNotificaciones(): Promise<number> {
     const data = await firstValueFrom(this.dashboardService.loadNotificaciones());
-    return this.notificacionesModal.openWithData(data);
+    this.notificacionesItems = data ?? [];
+    this.modalManager.openModal('modalNotificaciones');
+    return this.notificacionesItems.length;
   }
 }

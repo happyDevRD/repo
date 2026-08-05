@@ -40,27 +40,48 @@ export class EditaExpedienteTareasFirmaFacade {
   }
 
   cargarTipoFirma(host: FirmaTareaHost): void {
+    if (!Number.isFinite(host.idTarea) || host.idTarea <= 0) {
+      host.firmaAtendida = false
+      host.firmaDesatendida = false
+      return
+    }
     this.expedientesService.getTipoFirma(host.idTarea).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: () => {},
+      next: (tipo) => this.aplicarTipoFirma(host, tipo),
       error: (error: HttpErrorResponse) => {
-        switch (error.error?.text) {
-          case 'ATENDIDA':
-            host.firmaAtendida = true
-            host.firmaDesatendida = false
-            break
-          case 'DESATENDIDA':
-            host.firmaAtendida = false
-            host.firmaDesatendida = true
-            break
-          default:
-            host.firmaAtendida = false
-            host.firmaDesatendida = false
-            break
+        const raw = error.error
+        let valor: string | undefined
+        if (typeof raw === 'string') {
+          try {
+            const parsed = JSON.parse(raw) as { text?: string; message?: string }
+            valor = parsed.text ?? parsed.message
+          } catch {
+            valor = raw
+          }
+        } else {
+          valor = raw?.text ?? raw?.message
         }
+        this.aplicarTipoFirma(host, valor)
       },
     })
+  }
+
+  private aplicarTipoFirma(host: FirmaTareaHost, valor: string | undefined): void {
+    switch (valor) {
+      case 'ATENDIDA':
+        host.firmaAtendida = true
+        host.firmaDesatendida = false
+        break
+      case 'DESATENDIDA':
+        host.firmaAtendida = false
+        host.firmaDesatendida = true
+        break
+      default:
+        host.firmaAtendida = false
+        host.firmaDesatendida = false
+        break
+    }
   }
 
   enviarFirmaAtendida(host: FirmaTareaHost): void {
@@ -72,33 +93,39 @@ export class EditaExpedienteTareasFirmaFacade {
       return
     }
 
+    const ejecutarEnvio = () => {
+      this.expedientesService
+        .postArchivoFirmadoEF(form, host.usuContrl, host.idTarea)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            this.notificationService.success({ title: 'Envio de firma ATENDIDA realizado con exito!' })
+            this.limpiarArchivoFirmaEF(host)
+            this.refrescarGridAdapter(host)
+            host.spinnervisiblefirma = true
+            this.modalManagerService.closeModal('archifirmaef')
+          },
+          error: (err: HttpErrorResponse) => {
+            this.notificationService.warning({ title: err.error?.message })
+            host.spinnervisiblefirma = true
+          },
+        })
+    }
+
     this.expedientesService.getTipoFirma(host.idTarea).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: () => {},
-      error: (error: HttpErrorResponse) => {
-        if (error.error?.text === 'ATENDIDA') {
-          this.expedientesService
-            .postArchivoFirmadoEF(form, host.usuContrl, host.idTarea)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-              next: () => {
-                this.notificationService.success({ title: 'Envio de firma ATENDIDA realizado con exito!' })
-                this.limpiarArchivoFirmaEF(host)
-                this.refrescarGridAdapter(host)
-                host.spinnervisiblefirma = true
-                this.modalManagerService.closeModal('archifirmaef')
-              },
-              error: (err: HttpErrorResponse) => {
-                this.notificationService.warning({ title: err.error?.message })
-                host.spinnervisiblefirma = true
-              },
-            })
+      next: (tipo) => {
+        if (String(tipo).trim() === 'ATENDIDA') {
+          ejecutarEnvio()
+          return
         }
-
-        if (error.error?.text === undefined) {
-          this.notificationService.warning('La Tarea de Procedimiento no tiene Proceso firmado')
-        }
+        this.notificationService.warning('La Tarea de Procedimiento no tiene Proceso firmado')
+        host.spinnervisiblefirma = true
+      },
+      error: () => {
+        this.notificationService.warning('La Tarea de Procedimiento no tiene Proceso firmado')
+        host.spinnervisiblefirma = true
       },
     })
   }

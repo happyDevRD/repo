@@ -1,0 +1,39 @@
+<ng-container *ngIf="visible">
+  <p class="exp-nueva-tarea-modal__section-title">Acción asociada</p>
+
+  <div class="exp-nueva-tarea-modal__accion mb-3" *ngIf="tieneAccion; else sinAccion">
+    <div class="exp-nueva-tarea-modal__accion-meta">
+      <span class="exp-nueva-tarea-modal__accion-badge" *ngIf="tareas.descripcionAccion?.trim()">
+        {{ tareas.descripcionAccion }}
+      </span>
+    </div>
+    <div class="exp-nueva-tarea-modal__accion-controls">
+      <div class="form-floating exp-nueva-tarea-modal__accion-field" *ngIf="necesitaValorConsulta">
+        <input [(ngModel)]="tareas.introValorConsulta" class="form-control"
+          id="introacciones" name="introacciones" type="text" placeholder=" ">
+        <label for="introacciones">{{ tareas.ediquetaValorConsulta }}</label>
+      </div>
+      <div class="form-floating exp-nueva-tarea-modal__accion-field" *ngIf="tareas.veoTipoObjetoTributario">
+        <select [(ngModel)]="tareas.introTObjTrubu" class="form-select" id="tipoObtribu"
+          name="tipoObtribu">
+          <option *ngFor="let tipoobjeto of edita.tipoObjetoTributario; trackBy: trackByTipoObjeto"
+            [ngValue]="tipoobjeto">
+            {{ tipoobjeto.codTipObjTribu }}
+          </option>
+        </select>
+        <label for="tipoObtribu">Tipo objeto tributario</label>
+      </div>
+      <button type="button" class="btn-iflow btn-iflow--primary exp-nueva-tarea-modal__accion-btn"
+        [disabled]="tareas.isConsultaAccionRunning"
+        (click)="onConsultar()">
+        {{ botonTexto }}
+      </button>
+    </div>
+  </div>
+
+  <ng-template #sinAccion>
+    <p class="exp-nueva-tarea-modal__hint text-muted mb-3">
+      Esta tarea del procedimiento no tiene acción asociada.
+    </p>
+  </ng-template>
+</ng-container>

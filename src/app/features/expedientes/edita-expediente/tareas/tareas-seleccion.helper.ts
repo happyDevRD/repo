@@ -116,6 +116,7 @@ export interface SeleccionTareaNuevaHost extends TareaBotonesVisibles {
   FecFinTarea: string | null;
   numeroArchiTarea: number | null;
   veopropuestaresolu: boolean;
+  veoPropuestaResolucion: boolean;
   descripTarea: string;
   numeroArchivo: number;
   tareaProcedi: number;
@@ -123,6 +124,8 @@ export interface SeleccionTareaNuevaHost extends TareaBotonesVisibles {
   descargafichero: string;
   archivofirmantes: unknown;
   errorArchivoFirmantes: string;
+  firmaAtendida: boolean;
+  firmaDesatendida: boolean;
 }
 
 export interface SeleccionTareaNuevaCallbacks {
@@ -159,15 +162,24 @@ export function aplicarSeleccionTareaNueva(
     botonesTareaPorUsuario(rowData.usuario, host.user, host.verExpediente.instructor),
   );
 
-  expedientesService.getArchivoFirmantes(host.usuContrl!, rowData.id).subscribe({
-    next: (archivofirmantes) => (host.archivofirmantes = archivofirmantes),
-    error: (err: HttpErrorResponse) => (host.errorArchivoFirmantes = err.error?.text),
-  });
+  const tareaProcedimientoId = Number(rowData.tareaProcedimiento)
+  const tieneTareaProcedimiento = Number.isFinite(tareaProcedimientoId) && tareaProcedimientoId > 0
+
+  if (tieneTareaProcedimiento) {
+    expedientesService.getArchivoFirmantes(host.usuContrl!, rowData.id).subscribe({
+      next: (archivofirmantes) => (host.archivofirmantes = archivofirmantes),
+      error: (err: HttpErrorResponse) => (host.errorArchivoFirmantes = err.error?.text ?? err.error?.message),
+    })
+  } else {
+    host.archivofirmantes = []
+  }
 
   host.nombreArchivoTarea = nombreArchivo;
   host.nunRegisTarea = rowData.numRegis ?? null;
   host.tareaprocedimientoid = rowData.tareaProcedimiento;
-  callbacks.getTramiteProcedimientoVer(rowData.tareaProcedimiento);
+  if (tieneTareaProcedimiento) {
+    callbacks.getTramiteProcedimientoVer(tareaProcedimientoId);
+  }
   host.anexoTarea = rowData.tipAnexo ?? null;
   host.docAportadaTarea = rowData.docAport ?? null;
   host.DocumentacionTarea = rowData.documentacion ?? null;
@@ -186,6 +198,7 @@ export function aplicarSeleccionTareaNueva(
   host.numeroArchiTarea = archivo != null ? Number(archivo) : null;
   callbacks.getListaTareas();
   host.veopropuestaresolu = !rowData.propuestaResolucion;
+  host.veoPropuestaResolucion = !rowData.propuestaResolucion;
   host.tareatramiteexpedienteeditar.descripcion = rowData.descripcion;
   host.descripTarea = rowData.descripcion;
   host.idTarea = rowData.id;
@@ -194,9 +207,14 @@ export function aplicarSeleccionTareaNueva(
   host.numeroTareaTramite = rowData.numero;
   host.ejerNumExpedi = `${host.verExpediente.ejercicio}/${host.verExpediente.numero}`;
 
-  callbacks.gettipofirma();
+  if (tieneTareaProcedimiento) {
+    callbacks.gettipofirma();
+    callbacks.getUsuarioListar(tareaProcedimientoId);
+  } else {
+    host.firmaAtendida = false
+    host.firmaDesatendida = false
+  }
   callbacks.getTemaDocumentoListar();
-  callbacks.getUsuarioListar(rowData.tareaProcedimiento);
 
   expedientesService.getTareaTramiteExpVer(rowData.id).subscribe({
     next: (ver) => (host.tareatramiteexpedientever = ver),

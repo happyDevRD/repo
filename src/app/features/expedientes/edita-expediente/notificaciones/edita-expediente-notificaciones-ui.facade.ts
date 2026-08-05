@@ -16,7 +16,6 @@ import {
 } from '../../notificaciones/notificacion-actions.helper'
 import { NotificacionesService } from '../../services/notificaciones.service'
 import { fechaHoyISO } from '../../../../core/helper/fecha-legacy.helper'
-import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 import {
   crearNotificacionVacia,
   aplicarNotificacionVer,
@@ -45,11 +44,6 @@ import {
   onModalHiddenBootstrap,
 } from './notificaciones-modal.helper'
 import { NotificacionGridRow, NotificacionSeleccionEstado } from './notificaciones-seleccion.helper'
-import {
-  buildNotificacionGridSource,
-  createNotificacionGridAdapter,
-  NotificacionGridSourceOptions,
-} from './notificaciones-grid.config'
 import { calcularFechasNotificacion, FechaNotificacionRaw, FechasNotificacionOrdenadas } from './notificaciones-fechas.helper'
 import { EditaExpedienteTareasFacade } from '../tareas/edita-expediente-tareas.facade'
 import {
@@ -332,6 +326,9 @@ export class EditaExpedienteNotificacionesUiFacade {
     host.lifecycleFacade.dniok = false
     host.lifecycleFacade.consultadni = nuevaConsultaDni()
     host.limpiarCacheValidacion()
+    if (!this.notificadorlistar?.length) {
+      this.loadCatalogos()
+    }
   }
 
   cambioYearEjercicio(hostParam?: EditaExpedienteNotificacionesUiHost): void {
@@ -458,6 +455,7 @@ export class EditaExpedienteNotificacionesUiFacade {
     const valoresActuales = {
       fecha: this.creanotificacion?.fecNotif,
       dni: this.creanotificacion?.dni,
+      notificador: this.creanotificacion?.notificador,
       observacion: this.creanotificacion?.observacion,
       idTarea: host.idTarea,
       interesadosLength: host.listarinteresadosdto?.length || 0,
@@ -501,35 +499,22 @@ export class EditaExpedienteNotificacionesUiFacade {
     const dest = target ?? this
     this.notificacionesService.getReceptorNofitiListar().pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(
-      (data) => (dest.receptornotifilistar = data),
-    )
+    ).subscribe({
+      next: (data) => (dest.receptornotifilistar = data ?? []),
+      error: () => (dest.receptornotifilistar = []),
+    })
     this.notificacionesService.getMotivoNofitiListar().pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(
-      (data) => (dest.motivonotificacioneslistar = data),
-    )
+    ).subscribe({
+      next: (data) => (dest.motivonotificacioneslistar = data ?? []),
+      error: () => (dest.motivonotificacioneslistar = []),
+    })
     this.notificacionesService.getNotificadorListar().pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(
-      (data) => (dest.notificadorlistar = data),
-    )
-  }
-
-  createGridAdapter(
-    ejercicio: number,
-    numero: number,
-    options?: NotificacionGridSourceOptions,
-  ): IflowGridSource {
-    return createNotificacionGridAdapter(ejercicio, numero, options)
-  }
-
-  createGridSource(
-    ejercicio: number,
-    numero: number,
-    options?: NotificacionGridSourceOptions,
-  ): Record<string, unknown> {
-    return buildNotificacionGridSource(ejercicio, numero, options)
+    ).subscribe({
+      next: (data) => (dest.notificadorlistar = data ?? []),
+      error: () => (dest.notificadorlistar = []),
+    })
   }
 
   registerGridWindowCallbacks(handlers: {

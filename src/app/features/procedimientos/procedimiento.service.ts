@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {
   AtributosCrear,
+  AtributosListar,
   CreaPermisoProcedi,
   CrearProcedi,
   CreaTareaProcedi,
@@ -11,15 +12,15 @@ import {
   PlantillaTarea,
   Procedimiento,
   ProcediPermisos,
-  ProcediPermisosListar,
-  ProcesoFirmadoListar,
-  UsuariosListar
+  ProcediPermisosListar
 } from './procedimiento';
-import {map, Observable, of, tap, catchError, throwError} from 'rxjs';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from '@angular/common/http';
+import { FirmaListar } from './models/procedimientos-internal.models';
+import {map, Observable, of} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from 'src/environments/environment';
 import {UserSessionService} from '../../core/service/user-session.service';
+import {catchNotFoundAsEmpty} from '../../core/helper/rxjs-error.helper';
 import {ReciboCabeceraDto} from "../../core/models/recibo-cabecera.dto";
 import {TareaTramiteExpedienteVer} from "../../core/models/tareaTramite/tarea-tramite-expediente-ver.dto";
 
@@ -44,10 +45,10 @@ export class ProcedimientoService {
   public urlCreaPermisoProcedi: string = `${environment.apiUrl}permiso/crear`;
   public urlborrarPermisoProcedi: string = `${environment.apiUrl}permiso/borrar`;
   public pantillaTareaProcedi: string = `${environment.apiUrl}plantilla/listar/22`;
-  public urlPermisoUsuarioListar: string = `${environment.apiUrl}permiso/listar`;
-  public urlUsuarios: string = `${environment.apiUrl}usuario/listar`;
+  public urlPermisoListar: string = `${environment.apiUrl}permiso/listar`;
   public urlTareaProcedimientoVer: string = `${environment.apiUrl}tareaProcedimiento/ver/`;
   public urlMateriaProcediListar: string = `${environment.apiUrl}materiaProcedimiento/listar`;
+  public urlAtributosListarPorProc: string = `${environment.apiUrl}metadatoGrupoAtrib/listarPorProc`;
 
 
   public response = new Response();
@@ -61,10 +62,6 @@ export class ProcedimientoService {
     public activatedRoute: ActivatedRoute,
     private session: UserSessionService
   ) { }
-
-  get nivAcces(): string | null {
-    return this.session.nivAcces;
-  }
 
   get idOrgElemen(): string | null {
     return this.session.idOrgEleme;
@@ -80,12 +77,12 @@ export class ProcedimientoService {
 
   getProcedimientos(): Observable<Procedimiento[]> {
 
-    if (this.nivAcces == '6') {
+    if (this.session.canManageProcedimientos) {
       return this.http.get(this.urlEndPoint).pipe(
         map(response => response as Procedimiento[])
       );
     } else {
-      return of();
+      return of([]);
     }
   }
 
@@ -122,9 +119,9 @@ export class ProcedimientoService {
     );
   }
 
-  getFirma(plantilla: string): Observable<ProcesoFirmadoListar[]> {
+  getFirma(plantilla: string): Observable<FirmaListar[]> {
     const url = `${environment.apiUrl}procesoFirmado/listar/${plantilla}`;
-    return this.http.get(url).pipe(map(response => response as ProcesoFirmadoListar[]));
+    return this.http.get(url).pipe(map(response => response as FirmaListar[]));
   }
 
   create(crearprocedi: CrearProcedi): Observable<CrearProcedi> {
@@ -258,16 +255,20 @@ export class ProcedimientoService {
     return this.http.delete<CreaTareaProcedi>(`${this.urlborrarTareaProcedi}${id}`, {headers: httpHeaders})
   }
 
-  getUsuarios(): Observable<UsuariosListar[]> {
-    return this.http.get(`${this.urlUsuarios}`).pipe(
-      map(response => response as UsuariosListar[])
+  getPermisosListar(idTarea: number | string): Observable<ProcediPermisosListar[]> {
+    const id = Number(idTarea)
+    if (!Number.isFinite(id) || id <= 0) {
+      return of([])
+    }
+    return this.http.get(`${this.urlPermisoListar}/${id}`).pipe(
+      map(response => response as ProcediPermisosListar[]),
+      catchNotFoundAsEmpty<ProcediPermisosListar[]>(),
     );
   }
 
-
-  getUsuarioListar(id): Observable<ProcediPermisosListar[]> {
-    return this.http.get(`${this.urlPermisoUsuarioListar}/${id}`).pipe(
-      map(response => response as ProcediPermisosListar[])
+  getAtributosListarPorProc(idprocedimiento: number): Observable<AtributosListar[]> {
+    return this.http.get(`${this.urlAtributosListarPorProc}/${idprocedimiento}`).pipe(
+      map(response => response as AtributosListar[])
     );
   }
 
@@ -279,14 +280,14 @@ export class ProcedimientoService {
   }
 
   editaTareaProcedimiento(editartareaprocedi: EditaTareaProcedi, id: number): Observable<EditaTareaProcedi> {
-    // Clonamos el objeto para no mostrar referencias en el log
-
+    // El backend (TareaProcedimientoController.editar) solo limpia plantillaDefecto/procesoFirmadoDefecto
+    // cuando el valor recibido es exactamente "0" — un `null` es un no-op que deja el valor anterior
+    // intacto (verificado contra el backend real). No usar `null` aquí aunque `crear` sí lo use.
     if (editartareaprocedi.plantillaDefecto === "SINPLANTILLA") {
       editartareaprocedi.plantillaDefecto = 0;
       editartareaprocedi.firmaPorDefecto = 0;
     }
 
-    // El objeto que se enviará en la solicitud
     const varios = {
       "descripcion": editartareaprocedi.descripcion,
       "faseTarea": editartareaprocedi.faseTarea,
@@ -301,19 +302,7 @@ export class ProcedimientoService {
     const keys = JSON.stringify(varios);
     const urlEditaT: string = `${environment.apiUrl}tareaProcedimiento/editar/${id}`;
 
-
-    return this.http.put<EditaTareaProcedi>(urlEditaT, keys, { headers: this.httpHeaders }).pipe(
-      tap(response => {
-      }),
-      catchError((error: HttpErrorResponse) => {
-        console.error('--- Error en editaTareaProcedimiento ---');
-        console.error('Error:', error);
-        console.error('Status:', error.status);
-        console.error('Mensaje:', error.message);
-        console.error('Respuesta del error:', error.error);
-        return throwError(() => new Error('Ocurrió un error al editar la tarea del procedimiento.'));
-      })
-    );
+    return this.http.put<EditaTareaProcedi>(urlEditaT, keys, { headers: this.httpHeaders });
   }
 
 

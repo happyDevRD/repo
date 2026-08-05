@@ -100,7 +100,9 @@ export class ExpedienteFichaFacade {
     if (!id) {
       return
     }
-    this.router.navigate(['/expedientes', id, 'tramitar'])
+    this.router.navigate(['/expedientes', id, 'tramitar'], {
+      state: { returnUrl: this.router.url.split('?')[0] || '/expedientes' },
+    })
   }
 
   handleIrInside(): void {

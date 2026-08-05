@@ -149,12 +149,15 @@ export class SolicitudesExpedienteFacade {
   }
 
   getExpediente(host: SolicitudesExpedienteHost): void {
+    host.activainiciaExpedi = false
+    if (!host.idexpedienteAsoc) {
+      return
+    }
     this.expedienteApi.getExpediente2(host.idexpedienteAsoc).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe((verexpediente) => {
       host.verexpediente = verexpediente
     })
-    host.activainiciaExpedi = false
   }
 
   editExpediente(host: SolicitudesExpedienteHost): void {

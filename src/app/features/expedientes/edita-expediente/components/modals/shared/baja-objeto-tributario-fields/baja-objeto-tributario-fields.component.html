@@ -1,0 +1,70 @@
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input type="text" class="form-control" [id]="idPrefix + '-tipo'"
+        [value]="objetoTributario.tipoObjetoTributario" disabled placeholder=" ">
+      <label [for]="idPrefix + '-tipo'">Tipo objeto tributario</label>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input type="text" class="form-control" [id]="idPrefix + '-descripcion'"
+        [value]="objetoTributario.desObjTribu" disabled placeholder=" ">
+      <label [for]="idPrefix + '-descripcion'">Descripción</label>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input type="text" class="form-control" [id]="idPrefix + '-fecAlta'"
+        [value]="objetoTributario.fecAlta" disabled placeholder=" ">
+      <label [for]="idPrefix + '-fecAlta'">Fecha alta</label>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input type="text" class="form-control" [id]="idPrefix + '-numDocum'"
+        [value]="objetoTributario.numDocum" disabled placeholder=" ">
+      <label [for]="idPrefix + '-numDocum'">N.º documento</label>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input type="text" class="form-control" [id]="idPrefix + '-persona'"
+        [value]="objetoTributario.desPerEntid" disabled placeholder=" ">
+      <label [for]="idPrefix + '-persona'">Persona / entidad</label>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input type="text" class="form-control" [id]="idPrefix + '-domFiscal'"
+        [value]="objetoTributario.domFiscal" disabled placeholder=" ">
+      <label [for]="idPrefix + '-domFiscal'">Domicilio fiscal</label>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input type="text" class="form-control" [id]="idPrefix + '-codMovim'"
+        [value]="objetoTributario.codMovim" disabled placeholder=" ">
+      <label [for]="idPrefix + '-codMovim'">Código movimiento</label>
+    </div>
+  </div>
+  <div class="col-md-8 d-flex align-items-center" *ngIf="yaDadoDeBaja">
+    <span class="text-danger fw-bold">Este objeto tributario ya está dado de baja.</span>
+  </div>
+  <div [class.col-md-10]="showInlineAction" [class.col-12]="!showInlineAction" *ngIf="!yaDadoDeBaja">
+    <div class="form-floating">
+      <textarea maxlength="200" class="form-control" [id]="idPrefix + '-observaciones'"
+        [name]="idPrefix + '-observaciones'" placeholder=" "
+        [(ngModel)]="objetoTributario.observaciones"
+        [ngModelOptions]="{standalone: true}"
+        [rows]="showInlineAction ? 2 : 3"></textarea>
+      <label [for]="idPrefix + '-observaciones'">Observaciones (opcional)</label>
+    </div>
+  </div>
+  <div class="col-md-2 d-flex align-items-end" *ngIf="showInlineAction && !yaDadoDeBaja">
+    <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm w-100"
+      (click)="darDeBaja.emit()">
+      Dar de baja
+    </button>
+  </div>
+</div>

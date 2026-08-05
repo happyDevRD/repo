@@ -7,7 +7,16 @@
        class="app-sidebar"
        role="navigation"
        aria-label="Menú principal"
-       [class.app-sidebar--open]="mobileMenuOpen">
+       [class.app-sidebar--open]="mobileMenuOpen"
+       [class.app-sidebar--collapsed]="collapsed">
+
+  <button type="button"
+          class="app-sidebar__collapse-btn"
+          (click)="toggleCollapsed()"
+          [attr.aria-expanded]="!collapsed"
+          aria-label="Contraer o expandir menú">
+    <i class="bi" [ngClass]="collapsed ? 'bi-chevron-right' : 'bi-chevron-left'" aria-hidden="true"></i>
+  </button>
 
   <div class="app-sidebar__header">
     <img [src]="escudo" alt="Escudo del departamento" class="app-sidebar__logo" />
@@ -20,6 +29,7 @@
            [routerLink]="link.path"
            routerLinkActive="app-sidebar__link--active"
            [routerLinkActiveOptions]="{ exact: link.exact !== false }"
+           [attr.title]="collapsed ? link.label : null"
            (click)="closeMobileMenu()">
           <i class="bi app-sidebar__icon" [ngClass]="link.icon" aria-hidden="true"></i>
           <span class="app-sidebar__label">{{ link.label }}</span>
@@ -34,13 +44,25 @@
   </nav>
 
   <div class="app-sidebar__footer">
-    <img src="assets/images/iflow.png" alt="iFlow" class="app-sidebar__brand" />
-    <span class="app-sidebar__footer-user" *ngIf="userName">{{ userName }}</span>
-    <button type="button"
+    <img *ngIf="!collapsed" src="assets/images/iflow.png" alt="iFlow" class="app-sidebar__brand" />
+    <span *ngIf="!collapsed" class="app-sidebar__footer-meta">Greenaall {{ appYear }} · v{{ appVersion }}</span>
+    <span *ngIf="!collapsed && userName" class="app-sidebar__footer-user">{{ userName }}</span>
+
+    <button *ngIf="!collapsed"
+            type="button"
             class="btn-iflow btn-iflow--on-dark btn-iflow--block app-sidebar__logout-btn"
             (click)="logout()">
       <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
       <span>Cerrar sesión</span>
+    </button>
+
+    <button *ngIf="collapsed"
+            type="button"
+            class="app-sidebar__logout-icon-btn"
+            [attr.title]="'Cerrar sesión (' + userName + ')'"
+            aria-label="Cerrar sesión"
+            (click)="logout()">
+      <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
     </button>
   </div>
 </aside>

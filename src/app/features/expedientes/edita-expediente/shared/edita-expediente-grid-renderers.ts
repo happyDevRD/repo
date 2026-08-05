@@ -54,13 +54,6 @@ export const editaExpedienteGridRenderers = {
     return centeredCell(String(value ?? ''), '', true);
   },
 
-  cellsrendererTramitadoresPosesion(_row: unknown, _column: unknown, value: unknown) {
-    if (value == 1) {
-      return centeredCell('Si', 'color: green;', true);
-    }
-    return centeredCell('No', ' color:red;', true);
-  },
-
   cellsrendererTramite(_row: unknown, _column: unknown, value: unknown) {
     return centeredCell(String(value ?? ''));
   },
@@ -117,13 +110,6 @@ export const editaExpedienteGridRenderers = {
       return centeredCell('SIN FECHA');
     }
     return centeredCell(String(value));
-  },
-
-  cellsrendererFechaTramitadores(_row: unknown, _column: unknown, value: string) {
-    if (!value) {
-      return `<div style="font-size: 10px;text-align: center; color:red;margin-top: 5px;"></div>`;
-    }
-    return centeredCell(formatFechaDdMmYyyy(value, '-'));
   },
 
   cellsrendererTareaTramiteAcciones(_row: unknown, _column: unknown, value: unknown) {

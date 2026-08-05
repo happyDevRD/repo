@@ -40,13 +40,11 @@ export interface PanelNotificacionesHost {
   veonotificaciones: boolean;
   notifUiFacade: { verInfoNotifi: boolean };
   idNotificacion: number;
-  verExpediente: { ejercicio: number; numero: number };
-  sourceListarNotifi: unknown;
 }
 
 export function aplicarVistaNotificaciones(
   host: PanelNotificacionesHost,
-  crearGrid: (ejercicio: number, numero: number) => unknown,
+  refrescar: () => void,
 ): void {
   setTituloPanelTramite('Notificaciones');
   host.botonVerNotifi = false;
@@ -58,9 +56,7 @@ export function aplicarVistaNotificaciones(
   host.notifUiFacade.verInfoNotifi = false;
   host.idNotificacion = 0;
 
-  setTimeout(() => {
-    host.sourceListarNotifi = crearGrid(host.verExpediente.ejercicio, host.verExpediente.numero);
-  }, 500);
+  refrescar();
 }
 
 export interface PanelTramiteHost {

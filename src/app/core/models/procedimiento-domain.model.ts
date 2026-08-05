@@ -3,6 +3,10 @@ export class Procedimiento {
   id!: number;
   descripcion!: string;
   codigoSia!: string;
+  siglas?: string;
+  modalidad?: number;
+  idMatProce?: number;
+  desEleme?: string;
   departamento: any = [
     {
       idOrgEleme: '',
@@ -18,10 +22,6 @@ export class Procedimiento {
   ]
 
 
-}
-
-export class PermisProcedi {
-  id!: number;
 }
 
 export class MateriaProcedimiento {
@@ -138,20 +138,6 @@ export class PlantillaTarea {
 
 }
 
-export class ProcesoFirmadoListar {
-  idProFirma!: number;
-  tipFirma!: number;
-  modulo!: number;
-  conDesat!: boolean;
-  activo!: boolean;
-  descripcionCircuito!: string;
-  usuContr!: any;
-  fecContr!: any;
-  codEntid!: number;
-  plantilla!: string
-
-}
-
 export class ListaTareaProcedi {
 
 
@@ -166,6 +152,7 @@ export class ListaTareaProcedi {
   plantillaDefecto!: string;
   procesoFirmadoDefecto!: number;
   usuContr!: string;
+  accion?: unknown;
 
 }
 
@@ -190,17 +177,6 @@ export class ProcediPermisosListar {
   desTareaProce!: string;
   usuario!: string;
   idOrgUsuar!: number
-
-
-}
-
-export class UsuariosListar {
-  usuario!: string;
-  numUsuar!: number;
-  desUsuario!: string;
-  idHisPerso!: number;
-  idPerso!: number;
-  nivAcces!: number
 
 
 }

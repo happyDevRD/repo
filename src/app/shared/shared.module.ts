@@ -8,6 +8,8 @@ import { ModalActionBarComponent } from './components/modal-action-bar/modal-act
 import { IflowGridComponent } from './components/iflow-grid/iflow-grid.component'
 import { BackButtonComponent } from './components/back-button/back-button.component'
 import { PageHeaderComponent } from './components/page-header/page-header.component'
+import { DataTableComponent } from './components/data-table/data-table.component'
+import { TableColumnComponent } from './components/data-table/table-column.component'
 
 /** Layout + librerías UI + pipes compartidos para módulos lazy de features. */
 @NgModule({
@@ -17,6 +19,8 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
     IflowGridComponent,
     BackButtonComponent,
     PageHeaderComponent,
+    DataTableComponent,
+    TableColumnComponent,
   ],
   imports: [CommonModule, LayoutModule, UiLibsModule, SharedPipesModule],
   exports: [
@@ -25,6 +29,8 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
     IflowGridComponent,
     BackButtonComponent,
     PageHeaderComponent,
+    DataTableComponent,
+    TableColumnComponent,
     LayoutModule,
     UiLibsModule,
     SharedPipesModule,

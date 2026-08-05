@@ -1,12 +1,10 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { map, Observable } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CreaTareaProcedi, EditaTareaProcedi, PlantillaTarea } from '../procedimiento';
 import { ProcedimientoService } from '../procedimiento.service';
 import { NotificationService } from '../../../core/service/notification.service';
-import { FirmaListar, TareaProcediCreada } from '../models/procedimientos-internal.models';
+import { FirmaListar } from '../models/procedimientos-internal.models';
 import { resetForm } from '../../../core/helper/bootstrap-form.helper';
 
 export interface ProcedimientosTareasHost {
@@ -19,10 +17,9 @@ export interface ProcedimientosTareasHost {
   firmalistar: FirmaListar[];
   plantillatarea: PlantillaTarea[];
   tpsinfirma: boolean;
-  tareaprocedicreada: TareaProcediCreada | CreaTareaProcedi;
-  lanzaSourceTarea(): void;
-  abrirOffcanvas(id: string): void;
-  cerrarOffcanvas(id: string): void;
+  cargarTareas(): void;
+  abrirModal(id: string): void;
+  cerrarModal(id: string): void;
 }
 
 @Injectable()
@@ -32,13 +29,7 @@ export class ProcedimientosTareasFacade {
   constructor(
     private readonly procedimientoService: ProcedimientoService,
     private readonly notificationService: NotificationService,
-    private readonly http: HttpClient,
   ) {}
-
-  getFirma(plantilla: string): Observable<FirmaListar[]> {
-    const url = `${environment.apiUrl}procesoFirmado/listar/${plantilla}`;
-    return this.http.get(url).pipe(map((response) => response as FirmaListar[]));
-  }
 
   prepararDatosFirma(host: ProcedimientosTareasHost, plantilla: string): void {
     let plantillaResuelta = plantilla;
@@ -49,7 +40,7 @@ export class ProcedimientosTareasFacade {
       host.tpsinfirma = true;
     }
 
-    this.getFirma(plantillaResuelta).pipe(
+    this.procedimientoService.getFirma(plantillaResuelta).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (firmalistar) => {
@@ -77,16 +68,15 @@ export class ProcedimientosTareasFacade {
     this.procedimientoService.createTareaProcedi(host.creatareaprocedi, procedimientoId).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (response) => {
-        host.tareaprocedicreada = response;
+      next: () => {
         this.notificationService.saveSuccess('Tarea');
-        host.cerrarOffcanvas('tareasOffcanvas');
-        host.lanzaSourceTarea();
+        host.cerrarModal('tareasModal');
+        host.cargarTareas();
         this.borrarValoresNuevaTarea(host);
       },
       error: (err: HttpErrorResponse) => {
         this.notificationService.error(err.error.message || 'No se pudo crear la tarea.');
-        host.abrirOffcanvas('tareasOffcanvas');
+        host.abrirModal('tareasModal');
       },
     });
   }
@@ -98,13 +88,13 @@ export class ProcedimientosTareasFacade {
       .subscribe({
       next: () => {
         this.notificationService.saveSuccess('Tarea');
-        host.cerrarOffcanvas('modificarTareaOffcanvas');
-        host.lanzaSourceTarea();
+        host.cerrarModal('modifitareasModalListado');
+        host.cargarTareas();
         host.editatareaprocedi = new EditaTareaProcedi();
       },
       error: (err: HttpErrorResponse) => {
         this.notificationService.error(err.error.message || 'No se pudo editar la tarea.');
-        host.abrirOffcanvas('modificarTareaOffcanvas');
+        host.abrirModal('modifitareasModalListado');
       },
     });
   }
@@ -130,7 +120,7 @@ export class ProcedimientosTareasFacade {
       ).subscribe({
         next: () => {
           this.notificationService.deleteSuccess('Tarea');
-          host.lanzaSourceTarea();
+          host.cargarTareas();
         },
         error: (err: HttpErrorResponse) => {
           console.error('Error eliminando tarea:', err);

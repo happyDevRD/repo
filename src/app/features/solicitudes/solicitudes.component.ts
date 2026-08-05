@@ -16,7 +16,6 @@ import {
   buildColumnsListDoc,
   buildColumnsListExpe,
   buildColumnsListRepre,
-  buildColumnsSolici,
   buildColumnsSoliciPendi,
   createSolicitudesGridRenderers,
   createSolicitudesPendientesLocalSource,
@@ -32,7 +31,7 @@ import { JqxGridRowEvent } from '../../core/helper/jqx-grid-event.model';
 
 import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
-import { IflowGridComponent, IflowGridLocalization, IflowGridSource } from 'src/app/shared/components/iflow-grid/iflow-grid.component';
+import { IflowGridLocalization, IflowGridSource } from 'src/app/shared/components/iflow-grid/iflow-grid.component';
 import { PROVIN, MUNICIO } from 'src/app/core/constants/datos';
 
 @Component({
@@ -49,9 +48,6 @@ import { PROVIN, MUNICIO } from 'src/app/core/constants/datos';
   ],
 })
 export class SolicitudesComponent {
-
-  /** Asignado desde SolicitudesListComponent (#gridSolicitudes) */
-  myGrid: IflowGridComponent | undefined
 
   /** Asignado desde SolicitudesModalsAccionesComponent (#content / #fileInput) */
   content: ElementRef | undefined
@@ -329,22 +325,12 @@ export class SolicitudesComponent {
   private limpiarTodosLosFormularios(): void {
   }
 
-  sortGrid(): void {
-    this.myGrid?.sortby('id', 'desc')
-  }
-
   ngOnInit() {
     this.verpagina();
     this.FechaSolicitud();
 
 
   };
-  ngAfterViewInit(): void {
-    // el código de ordenación se moverá aquí
-    // this.myGrid.onBindingcomplete.subscribe(() => {
-
-    // });
-  }
 
 
 
@@ -698,18 +684,40 @@ export class SolicitudesComponent {
   }
   public iddocum: string;
   public idhisDocum: string;
-  public selecsolicitudNueva(event: JqxGridRowEvent<SolicitudListar>): void {
-    this.solicitudFacade.seleccionarSolicitud(this, event.args.row.bounddata)
+  public selecsolicitudNueva(rowData: SolicitudListar): void {
+    this.solicitudFacade.seleccionarSolicitud(this, rowData)
   }
+
+  readonly solicitudRowClass = (row: SolicitudListar): Record<string, boolean> => ({
+    'table-active': row.id === this.idsolicitud,
+  });
+
+  readonly interesadoSolicitudValue = (row: SolicitudListar): string => row.personaEntidad?.desPerEntid ?? '';
+
+  readonly expedienteSolicitudValue = (row: SolicitudListar): string => {
+    const expediente = row.expediente as { ejercicio?: unknown; numero?: unknown } | null;
+    if (!expediente?.ejercicio || !expediente?.numero) {
+      return '';
+    }
+    return `${expediente.ejercicio}/${expediente.numero}`;
+  };
+
+  estadoSolicitudBadgeClass(estado: string): string {
+    const key = String(estado ?? '').trim().toUpperCase();
+    if (key === 'PENDIENTE') return 'soli-badge soli-badge--pendiente';
+    if (key === 'ACEPTADA') return 'soli-badge soli-badge--aceptada';
+    if (key === 'RECHAZADA') return 'soli-badge soli-badge--rechazada';
+    return 'soli-badge';
+  }
+
   // Método para abrir modal de edición con doble click
-  public abrirModalEdicionSolicitud(event: JqxGridRowEvent<SolicitudListar>) {
-    const rowData = event.args.row.bounddata;
+  public abrirModalEdicionSolicitud(rowData: SolicitudListar) {
+    // Cargar todos los datos de la fila (interesado, representante, editasolicitud, modificoSolicitud...)
+    // igual que al hacer clic simple, ya que el doble clic puede llegar sin selección previa.
+    this.selecsolicitudNueva(rowData);
 
     // Solo abrir el modal si la solicitud es editable
     if (this.modificoSolicitud) {
-      // Cargar datos para edición
-      this.versolici(rowData.id);
-
       // Abrir el modal de edición usando ModalManagerService
       this.modalManagerService.openModal('edicionSolicitudModal');
     } else {
@@ -798,14 +806,14 @@ export class SolicitudesComponent {
 
   private readonly gridRenderContext: SolicitudesGridRenderContext = {};
   private readonly gridRenderers = createSolicitudesGridRenderers(this.gridRenderContext);
-  columnsSolici = buildColumnsSolici(this.gridRenderers);
   columnsSoliciPendi = buildColumnsSoliciPendi(this.gridRenderers);
   columnsListDoc = buildColumnsListDoc(this.gridRenderers);
   columnsListExpe = buildColumnsListExpe(this.gridRenderers);
   columnsListRepre = buildColumnsListRepre(this.gridRenderers);
   public localizationObject: IflowGridLocalization = jqxGrid_ES;
   public valorEspecifico = 'PENDIENTE';
-  sourceSolici!: IflowGridSource;
+  solicitudesListado: SolicitudListar[] = [];
+  cargandoSolicitudesListado = false;
   sourceListDoc!: IflowGridSource;
   sourceListExpe!: IflowGridSource;
   sourceListRepre!: IflowGridSource;

@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { ChangeDetectorRef, DestroyRef, ElementRef, Injectable, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { map, Observable } from 'rxjs'
+import { map, Observable, of } from 'rxjs'
 import { finalize, switchMap } from 'rxjs/operators'
+import { catchNotFoundAsEmpty } from '../../../../core/helper/rxjs-error.helper'
 import { environment } from 'src/environments/environment'
 import { JqxGridRowEvent } from '../../../../core/helper/jqx-grid-event.model'
 import { TareaProcedimientoDTO } from '../../../../core/models/tarea-procedimiento.dto'
@@ -30,7 +31,7 @@ import {
   TareaGridSourceOptions,
 } from './tareas-grid.config'
 import {
-  aplicarGridTareaProcedimiento,
+  aplicarSeleccionTareaProcedimiento,
   esSeleccionTareaProcedimientoVacia,
   limpiarSeleccionTareaProcedimiento,
   normalizarPlantillaDefectoSeleccion,
@@ -184,8 +185,14 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
   }
 
   getListaTareas(idprocedi: string | null, fasetramite: string): Observable<ListaTareaProcedi[]> {
-    const url = `${environment.apiUrl}tareaProcedimiento/listar/${idprocedi}/${fasetramite}`;
-    return this.http.get(url).pipe(map((response) => response as ListaTareaProcedi[]));
+    if (!idprocedi || !fasetramite) {
+      return of([])
+    }
+    const url = `${environment.apiUrl}tareaProcedimiento/listar/${idprocedi}/${fasetramite}`
+    return this.http.get(url).pipe(
+      map((response) => (response ?? []) as ListaTareaProcedi[]),
+      catchNotFoundAsEmpty<ListaTareaProcedi[]>(),
+    )
   }
 
   buildGridSource(idTramite: number, options?: TareaGridSourceOptions): Record<string, unknown> {
@@ -260,14 +267,14 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
       return;
     }
 
-    aplicarGridTareaProcedimiento(host, selectedValue as number | string);
+    aplicarSeleccionTareaProcedimiento(host, selectedValue as number | string);
 
     this.expedientesService.getTramiteTarea(selectedValue as number).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (data: TareaProcedimientoDTO) => {
         host.tareatramiteprocedimiento = data;
-        host.tareasFacade.veoAcciones = true;
+        host.plantillaDefecto = normalizarPlantillaDefectoSeleccion(data.plantillaDefecto);
         configurarAccionTarea(host, data);
         host.cdr?.markForCheck();
         host.cdr?.detectChanges();
@@ -361,10 +368,12 @@ export class EditaExpedienteTareasFacade implements TareasAccionUiState {
 
   crearTarea(host: CrearTareaTramiteHost): void {
     if (tieneArchivoPendienteSubida(host.base64code, host.name, host.identificadorFicheroSubido)) {
-      this.notificationService.error(
-        'El archivo seleccionado no se ha subido correctamente. Por favor, intenta subir el archivo nuevamente.',
+      // No bloquear la creación: continuar sin documento asociado.
+      host.base64code = undefined;
+      host.name = undefined;
+      this.notificationService.warning(
+        'El archivo no se había subido. Se creará la tarea sin documento.',
       );
-      return;
     }
 
     prepararTareaParaCreacion(host.tareatramiteexpedientecrear, {

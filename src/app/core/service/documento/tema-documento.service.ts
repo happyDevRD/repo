@@ -4,6 +4,7 @@ import {map, Observable} from "rxjs";
 import {TemaDocumentoDTO} from "../../models/documento/tema-documento.dto";
 import {environment} from "../../../../environments/environment";
 import {UserSessionService} from "../user-session.service";
+import {catchNotFoundAsEmpty} from "../../helper/rxjs-error.helper";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class TemaDocumentoService {
   getTemaDocumentoListar(): Observable<TemaDocumentoDTO[]> {
     const idOrgElemen = this.session.idOrgEleme;
     return this.http.get(`${environment.apiUrl}temaDocumento/listar/${idOrgElemen}`).pipe(
-      map(response => response as TemaDocumentoDTO[])
+      map(response => response as TemaDocumentoDTO[]),
+      catchNotFoundAsEmpty<TemaDocumentoDTO[]>(),
     );
   }
 }

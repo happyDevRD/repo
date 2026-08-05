@@ -10,5 +10,13 @@
     </button>
 
     <h1 class="app-topbar__title">{{ pageTitle || title }}</h1>
+
+    <div class="app-topbar__user">
+      <i class="bi bi-person-circle app-topbar__user-icon" aria-hidden="true"></i>
+      <div class="app-topbar__user-text">
+        <span class="app-topbar__user-name">{{ userName }}</span>
+        <span class="app-topbar__user-dept" *ngIf="departmentName">{{ departmentName }}</span>
+      </div>
+    </div>
   </div>
 </header>

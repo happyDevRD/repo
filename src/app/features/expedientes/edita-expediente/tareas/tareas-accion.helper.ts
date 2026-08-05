@@ -61,8 +61,9 @@ export function configurarAccionTarea(host: ConfigurarAccionTareaHost, data: Tar
   // Sin detectChanges aquí: el caller refresca la vista al terminar de configurar.
   resetActionState(host.tareasFacade)
   const ui = host.tareasFacade
+  ui.veoAcciones = false
 
-  if (data.accion === null || data.accion === undefined) {
+  if (data.accion === null || data.accion === undefined || data.accion === -1) {
     return
   }
 
@@ -82,9 +83,7 @@ export function configurarAccionTarea(host: ConfigurarAccionTareaHost, data: Tar
     ui.modifiObjetoTribu = true
   }
 
-  if (data.accion !== -1) {
-    ui.veoAcciones = true
-  }
+  ui.veoAcciones = true
   if (data.accion === 11) {
     host.abrirModalOperacion()
   }

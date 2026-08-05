@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   createDocumentosAdapter,
   createDocumentosSourcePlain,
@@ -6,12 +7,13 @@ import {
   createExpedientesSourcePlain,
   createRepresentantesAdapter,
   createRepresentantesSourcePlain,
-  createSolicitudesListAdapter,
-  refreshJqxGrid,
 } from '../config/solicitudes-grid.config';
+import { SolicitudListar } from '../models';
+import { SolicitudesService } from '../solicitudes.service';
 
 export interface SolicitudesGridHost {
-  sourceSolici: unknown;
+  solicitudesListado: SolicitudListar[];
+  cargandoSolicitudesListado: boolean;
   sourceListDoc: unknown;
   sourceListExpe: unknown;
   sourceListRepre: unknown;
@@ -19,13 +21,15 @@ export interface SolicitudesGridHost {
   idsolicitud: number;
   idexpedienteAsoc: number;
   creasolicitud: { idPerso: unknown; idHisPerso: unknown };
-  myGrid?: { updatebounddata?: () => void };
 }
 
 @Injectable()
 export class SolicitudesGridFacade {
+  private readonly solicitudesService = inject(SolicitudesService);
+  private readonly destroyRef = inject(DestroyRef);
+
   initGridSources(host: SolicitudesGridHost): void {
-    host.sourceSolici = createSolicitudesListAdapter(host.idOrgEleme ?? '');
+    this.cargarSolicitudesListado(host);
     host.sourceListDoc = createDocumentosAdapter(host.idsolicitud ?? 0);
     host.sourceListExpe = createExpedientesAdapter(host.idexpedienteAsoc ?? 0);
     host.sourceListRepre = createRepresentantesAdapter(
@@ -35,10 +39,26 @@ export class SolicitudesGridFacade {
   }
 
   refreshSolicitudesList(host: SolicitudesGridHost, sortById = false): void {
-    host.sourceSolici = createSolicitudesListAdapter(host.idOrgEleme ?? '', { sortById });
-    const grid = host.myGrid as { setSource?: (value: unknown) => void; updatebounddata?: () => void } | undefined
-    grid?.setSource?.(host.sourceSolici)
-    refreshJqxGrid(host.myGrid)
+    this.cargarSolicitudesListado(host, sortById);
+  }
+
+  private cargarSolicitudesListado(host: SolicitudesGridHost, sortById = false): void {
+    host.cargandoSolicitudesListado = true;
+    this.solicitudesService.getSolicitudes().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (data) => {
+        const sorted = [...data].sort((a, b) => sortById
+          ? Number(b.id) - Number(a.id)
+          : String(b.fecInicio ?? '').localeCompare(String(a.fecInicio ?? '')));
+        host.solicitudesListado = sorted;
+        host.cargandoSolicitudesListado = false;
+      },
+      error: () => {
+        host.solicitudesListado = [];
+        host.cargandoSolicitudesListado = false;
+      },
+    });
   }
 
   assignDocumentosSource(host: SolicitudesGridHost, idsolicitud?: number): void {
@@ -49,7 +69,6 @@ export class SolicitudesGridFacade {
   refreshDocumentosAdapter(host: SolicitudesGridHost, idsolicitud?: number): void {
     const id = idsolicitud ?? host.idsolicitud;
     host.sourceListDoc = createDocumentosAdapter(id);
-    refreshJqxGrid(host.myGrid);
   }
 
   assignDocumentosSourcePlain(host: SolicitudesGridHost, idsolicitud?: number): void {

@@ -1,48 +1,217 @@
-<app-dashboard-grid-modal
-  #solicitudesModal
+<app-modal-shell
   modalId="modalSolicitudesPendientes"
-  title="Solicitudes pendientes"
-  [columns]="solicitudesColumns"
-  [gridMinWidth]="1050">
-</app-dashboard-grid-modal>
+  titleId="modalSolicitudesPendientesLabel"
+  modalClass="dashboard-grid-modal"
+  dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+  dialogMaxWidth="94vw"
+  contentClass="dashboard-grid-modal__content"
+  headerClass="dashboard-grid-modal__header"
+  bodyClass="dashboard-grid-modal__body"
+  [customHeader]="true"
+  [dismissOnClose]="false"
+  (closed)="closeModal('modalSolicitudesPendientes')">
+  <div modalHeader class="dashboard-grid-modal__header-text">
+    <h4 class="modal-title" id="modalSolicitudesPendientesLabel">Solicitudes pendientes</h4>
+  </div>
+  <div modalBody>
+    <app-data-table [items]="solicitudesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
+      <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" align="center" width="7%"></app-table-column>
+      <app-table-column header="Número" field="numero" [sortable]="true" align="center" width="7%"></app-table-column>
+      <app-table-column header="Fecha solicitud" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="11%">
+        <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
+      </app-table-column>
+      <app-table-column header="Asunto" field="asunto" [sortable]="true" [filterable]="true" filterType="text" width="20%"></app-table-column>
+      <app-table-column header="Estado" field="estado" [sortable]="true" [filterable]="true" align="center" width="9%"></app-table-column>
+      <app-table-column header="Asignado a" field="usuario" [sortable]="true" [filterable]="true" align="center" width="10%"></app-table-column>
+      <app-table-column header="Interesado" [sortValue]="interesadoSolicitudValue" [searchValue]="interesadoSolicitudValue"
+        [sortable]="true" [filterable]="true" filterType="text" width="18%">
+        <ng-template let-row>{{ row.personaEntidad?.desPerEntid }}</ng-template>
+      </app-table-column>
+      <app-table-column header="N. Registro" field="ejeNumRegis" [sortable]="true" align="center" width="9%"></app-table-column>
+      <app-table-column header="Expediente" [sortValue]="expedienteSolicitudValue" [searchValue]="expedienteSolicitudValue" [sortable]="true" align="center" width="9%">
+        <ng-template let-row>{{ expedienteSolicitudValue(row) || '—' }}</ng-template>
+      </app-table-column>
+    </app-data-table>
+  </div>
+  <div modalFooter class="dashboard-grid-modal__footer">
+    <button type="button" class="btn-iflow btn-iflow--secondary" (click)="closeModal('modalSolicitudesPendientes')">Cerrar</button>
+  </div>
+</app-modal-shell>
 
-<app-dashboard-grid-modal
-  #expedientesModal
+<app-modal-shell
   modalId="modalExpedientesInstructor"
-  title="Expedientes del instructor"
-  [columns]="expedientesColumns"
-  [gridMinWidth]="720">
-</app-dashboard-grid-modal>
+  titleId="modalExpedientesInstructorLabel"
+  modalClass="dashboard-grid-modal"
+  dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+  contentClass="dashboard-grid-modal__content"
+  headerClass="dashboard-grid-modal__header"
+  bodyClass="dashboard-grid-modal__body"
+  [customHeader]="true"
+  [dismissOnClose]="false"
+  (closed)="closeModal('modalExpedientesInstructor')">
+  <div modalHeader class="dashboard-grid-modal__header-text">
+    <h4 class="modal-title" id="modalExpedientesInstructorLabel">Expedientes del instructor</h4>
+  </div>
+  <div modalBody>
+    <app-data-table [items]="expedientesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
+      <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" align="center" width="15%"></app-table-column>
+      <app-table-column header="Número" field="numero" [sortable]="true" align="center" width="15%"></app-table-column>
+      <app-table-column header="Título" field="titulo" [sortable]="true"></app-table-column>
+      <app-table-column header="Estado" field="estado" [sortable]="true" [filterable]="true" align="center" width="15%"></app-table-column>
+      <app-table-column header="Fecha inicio" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="14%">
+        <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
+      </app-table-column>
+    </app-data-table>
+  </div>
+  <div modalFooter class="dashboard-grid-modal__footer">
+    <button type="button" class="btn-iflow btn-iflow--secondary" (click)="closeModal('modalExpedientesInstructor')">Cerrar</button>
+  </div>
+</app-modal-shell>
 
-<app-dashboard-grid-modal
-  #tareasModal
+<app-modal-shell
   modalId="modalTareasPendientes"
-  title="Listado de tareas pendientes"
-  [columns]="tareasColumns"
-  [gridMinWidth]="1500"
-  [gridHeight]="420">
-</app-dashboard-grid-modal>
+  titleId="modalTareasPendientesLabel"
+  modalClass="dashboard-grid-modal"
+  dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+  contentClass="dashboard-grid-modal__content"
+  headerClass="dashboard-grid-modal__header"
+  bodyClass="dashboard-grid-modal__body"
+  [customHeader]="true"
+  [dismissOnClose]="false"
+  (closed)="closeModal('modalTareasPendientes')">
+  <div modalHeader class="dashboard-grid-modal__header-text">
+    <h4 class="modal-title" id="modalTareasPendientesLabel">Listado de tareas pendientes</h4>
+  </div>
+  <div modalBody>
+    <app-data-table [items]="tareasItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
+      <app-table-column header="Ejerc. Exp." field="ejeExped" [sortable]="true" align="center" width="6%"></app-table-column>
+      <app-table-column header="Núm. Exp." field="numExped" [sortable]="true" align="center" width="6%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="6%"></app-table-column>
+      <app-table-column header="Descripción Tarea" field="descripcion" [sortable]="true" width="14%"></app-table-column>
+      <app-table-column header="Descripción Trámite" field="desTramite" [sortable]="true" width="14%"></app-table-column>
+      <app-table-column header="Fecha Tarea" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="7%">
+        <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
+      </app-table-column>
+      <app-table-column header="F. Finalización" field="fecFin" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="7%">
+        <ng-template let-row>{{ row.fecFin | date:'dd/MM/yyyy' }}</ng-template>
+      </app-table-column>
+      <app-table-column header="F. Plazo" field="fecPlazo" [sortable]="true" align="center" width="6%">
+        <ng-template let-row>{{ row.fecPlazo || 'SIN FECHA' }}</ng-template>
+      </app-table-column>
+      <app-table-column header="Estado" field="color" align="center" width="4%">
+        <ng-template let-row>
+          <img *ngIf="row.color === 'VERDE'" src="assets/boton_verde.png" width="16" height="16" alt="Verde">
+          <img *ngIf="row.color === 'AMARILLO'" src="assets/boton_amarillo.png" width="16" height="16" alt="Amarillo">
+          <img *ngIf="row.color === 'ROJO'" src="assets/boton_rojo.png" width="16" height="16" alt="Rojo">
+        </ng-template>
+      </app-table-column>
+      <app-table-column header="Archivo" field="archivo" align="center" width="5%">
+        <ng-template let-row>
+          <img [src]="row.archivo ? 'assets/boton_verde.png' : 'assets/boton_rojo.png'" width="16" height="16" alt="">
+        </ng-template>
+      </app-table-column>
+      <app-table-column header="Nom. archivo" field="nombreArchivo" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Firmado" field="firmado" align="center" width="5%">
+        <ng-template let-row>
+          <img [src]="row.firmado === '1' || row.firmado === 1 ? 'assets/boton_verde.png' : 'assets/boton_rojo.png'" width="16" height="16" alt="">
+        </ng-template>
+      </app-table-column>
+      <app-table-column header="Propuesta" field="propuestaResolucion" align="center" width="5%"></app-table-column>
+      <app-table-column header="Salida" field="numRegis" align="center" width="5%"></app-table-column>
+      <app-table-column header="Notif." field="ejeNumNotif" align="center" width="5%"></app-table-column>
+      <app-table-column header="Tablón" field="idAnunc" align="center" width="5%"></app-table-column>
+      <app-table-column header="Usuario" field="usuario" [sortable]="true" [filterable]="true" align="center" width="5%"></app-table-column>
+    </app-data-table>
+  </div>
+  <div modalFooter class="dashboard-grid-modal__footer">
+    <button type="button" class="btn-iflow btn-iflow--secondary" (click)="closeModal('modalTareasPendientes')">Cerrar</button>
+  </div>
+</app-modal-shell>
 
-<app-dashboard-grid-modal
-  #firmasPendientesModal
+<app-modal-shell
   modalId="modalFirmasPendientes"
-  title="Listado de firmas pendientes"
-  [columns]="firmasColumns"
-  [gridMinWidth]="1000">
-</app-dashboard-grid-modal>
+  titleId="modalFirmasPendientesLabel"
+  modalClass="dashboard-grid-modal"
+  dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+  contentClass="dashboard-grid-modal__content"
+  headerClass="dashboard-grid-modal__header"
+  bodyClass="dashboard-grid-modal__body"
+  [customHeader]="true"
+  [dismissOnClose]="false"
+  (closed)="closeModal('modalFirmasPendientes')">
+  <div modalHeader class="dashboard-grid-modal__header-text">
+    <h4 class="modal-title" id="modalFirmasPendientesLabel">Listado de firmas pendientes</h4>
+  </div>
+  <div modalBody>
+    <app-data-table [items]="firmasPendientesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
+      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Número" field="numExped" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Título expediente" field="titulo" [sortable]="true" width="22%"></app-table-column>
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true" width="22%"></app-table-column>
+      <app-table-column header="Archivo" field="nombreArchivo" [sortable]="true" width="18%"></app-table-column>
+      <app-table-column header="Firmante" field="firmante" [sortable]="true" [filterable]="true" align="center" width="12%"></app-table-column>
+    </app-data-table>
+  </div>
+  <div modalFooter class="dashboard-grid-modal__footer">
+    <button type="button" class="btn-iflow btn-iflow--secondary" (click)="closeModal('modalFirmasPendientes')">Cerrar</button>
+  </div>
+</app-modal-shell>
 
-<app-dashboard-grid-modal
-  #firmasTercerosModal
+<app-modal-shell
   modalId="modalFirmasTerceros"
-  title="Listado de firmas solicitadas a terceros"
-  [columns]="firmasColumns"
-  [gridMinWidth]="1000">
-</app-dashboard-grid-modal>
+  titleId="modalFirmasTercerosLabel"
+  modalClass="dashboard-grid-modal"
+  dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+  contentClass="dashboard-grid-modal__content"
+  headerClass="dashboard-grid-modal__header"
+  bodyClass="dashboard-grid-modal__body"
+  [customHeader]="true"
+  [dismissOnClose]="false"
+  (closed)="closeModal('modalFirmasTerceros')">
+  <div modalHeader class="dashboard-grid-modal__header-text">
+    <h4 class="modal-title" id="modalFirmasTercerosLabel">Listado de firmas solicitadas a terceros</h4>
+  </div>
+  <div modalBody>
+    <app-data-table [items]="firmasTercerosItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
+      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Número" field="numExped" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Título expediente" field="titulo" [sortable]="true" width="22%"></app-table-column>
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true" width="22%"></app-table-column>
+      <app-table-column header="Archivo" field="nombreArchivo" [sortable]="true" width="18%"></app-table-column>
+      <app-table-column header="Firmante" field="firmante" [sortable]="true" [filterable]="true" align="center" width="12%"></app-table-column>
+    </app-data-table>
+  </div>
+  <div modalFooter class="dashboard-grid-modal__footer">
+    <button type="button" class="btn-iflow btn-iflow--secondary" (click)="closeModal('modalFirmasTerceros')">Cerrar</button>
+  </div>
+</app-modal-shell>
 
-<app-dashboard-grid-modal
-  #notificacionesModal
+<app-modal-shell
   modalId="modalNotificaciones"
-  title="Listado de notificaciones pendientes"
-  [columns]="notificacionesColumns"
-  [gridMinWidth]="900">
-</app-dashboard-grid-modal>
+  titleId="modalNotificacionesLabel"
+  modalClass="dashboard-grid-modal"
+  dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+  contentClass="dashboard-grid-modal__content"
+  headerClass="dashboard-grid-modal__header"
+  bodyClass="dashboard-grid-modal__body"
+  [customHeader]="true"
+  [dismissOnClose]="false"
+  (closed)="closeModal('modalNotificaciones')">
+  <div modalHeader class="dashboard-grid-modal__header-text">
+    <h4 class="modal-title" id="modalNotificacionesLabel">Listado de notificaciones pendientes</h4>
+  </div>
+  <div modalBody>
+    <app-data-table [items]="notificacionesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
+      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" align="center" width="9%"></app-table-column>
+      <app-table-column header="Número" field="numExped" [sortable]="true" align="center" width="9%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="9%"></app-table-column>
+      <app-table-column header="Título expediente" field="titulo" [sortable]="true" width="28%"></app-table-column>
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true" width="38%"></app-table-column>
+    </app-data-table>
+  </div>
+  <div modalFooter class="dashboard-grid-modal__footer">
+    <button type="button" class="btn-iflow btn-iflow--secondary" (click)="closeModal('modalNotificaciones')">Cerrar</button>
+  </div>
+</app-modal-shell>

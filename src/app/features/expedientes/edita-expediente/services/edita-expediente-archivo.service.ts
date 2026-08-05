@@ -91,6 +91,10 @@ export class EditaExpedienteArchivoService {
         },
         error: (error: HttpErrorResponse) => {
           host.archivoSubidaEnProgreso = false;
+          // Liberar estado pendiente para no bloquear la creación de la tarea.
+          host.base64code = undefined;
+          host.name = undefined;
+          host.identificadorFicheroSubido = undefined;
           let errorMessage = 'Error al subir el archivo';
           if (error.error?.message) {
             errorMessage = error.error.message;
@@ -100,6 +104,10 @@ export class EditaExpedienteArchivoService {
             errorMessage = 'El archivo es demasiado grande';
           } else if (error.status === 400) {
             errorMessage = 'Formato de archivo no válido';
+          } else if (error.status === 403) {
+            errorMessage =
+              error.error?.message
+              || 'No se pudo subir el archivo (puede que ya exista). Puedes crear la tarea sin documento o usar otro nombre.';
           }
           this.notificationService.error({ title: 'Error al subir archivo', text: errorMessage });
           callback?.();

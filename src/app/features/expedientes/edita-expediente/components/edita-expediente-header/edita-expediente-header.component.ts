@@ -11,8 +11,6 @@ export class EditaExpedienteHeaderComponent {
   @Input() expedienteNumero: unknown
   @Input() botonVerNotifi = false
   @Input() vertramite = false
-  @Input() veonotificaciones = false
-  @Input() veoTramitadores = false
   @Input() insideDryRun = false
   @Input() insideEnviando = false
   @Input() insideUltimoEnvio: InsideEnvioRegistro | null = null
@@ -26,12 +24,16 @@ export class EditaExpedienteHeaderComponent {
   @Output() verNotificaciones = new EventEmitter<void>()
   @Output() veotramitadores = new EventEmitter<void>()
   @Output() volverListadoExpedientes = new EventEmitter<void>()
-  @Output() noverNotificaciones = new EventEmitter<void>()
+  @Output() nuevoTramite = new EventEmitter<void>()
 
   pestanaFlujo: 'tramitacion' | 'inside' = 'tramitacion'
 
   handlePestanaFlujo(pestana: 'tramitacion' | 'inside'): void {
     this.pestanaFlujo = pestana
+  }
+
+  handleNuevoTramite(): void {
+    this.nuevoTramite.emit()
   }
 
   handleVerHistorialEnviosInside(): void {
@@ -68,9 +70,5 @@ export class EditaExpedienteHeaderComponent {
 
   handleVolverListadoExpedientes(): void {
     this.volverListadoExpedientes.emit()
-  }
-
-  handleNoverNotificaciones(): void {
-    this.noverNotificaciones.emit()
   }
 }

@@ -29,6 +29,12 @@ import { EditaModalCrearTablonAnunciosModalComponent } from './components/modals
 import { EditaModalVerExpedienteEditaModalComponent } from './components/modals/operaciones/modal-ver-expediente-edita-modal/modal-ver-expediente-edita-modal.component'
 import { EditaModalHistoricoModalComponent } from './components/modals/operaciones/modal-historico-modal/modal-historico-modal.component'
 import { EditaModalNuevaTareaTraComponent } from './components/modals/operaciones/modal-nueva-tarea-tra/modal-nueva-tarea-tra.component'
+import { NuevaTareaDatosComponent } from './components/modals/operaciones/modal-nueva-tarea-tra/sections/nueva-tarea-datos.component'
+import { NuevaTareaAccionAsociadaComponent } from './components/modals/operaciones/modal-nueva-tarea-tra/sections/nueva-tarea-accion-asociada.component'
+import { NuevaTareaDinamicosComponent } from './components/modals/operaciones/modal-nueva-tarea-tra/sections/nueva-tarea-dinamicos.component'
+import { NuevaTareaDocumentacionComponent } from './components/modals/operaciones/modal-nueva-tarea-tra/sections/nueva-tarea-documentacion.component'
+import { BajaObjetoTributarioFieldsComponent } from './components/modals/shared/baja-objeto-tributario-fields/baja-objeto-tributario-fields.component'
+import { ConsultaObjetoTributarioFieldsComponent } from './components/modals/shared/consulta-objeto-tributario-fields/consulta-objeto-tributario-fields.component'
 import { EditaModalInsideRemisionJusticiaModalComponent } from './components/modals/operaciones/modal-inside-remision-justicia-modal/modal-inside-remision-justicia-modal.component'
 import { EditaModalRecibosPendientesModalComponent } from './components/modals/tramites/modal-recibos-pendientes-modal/modal-recibos-pendientes-modal.component'
 import { EditaModalNuevoTramiteModalComponent } from './components/modals/tramites/modal-nuevo-tramite-modal/modal-nuevo-tramite-modal.component'
@@ -37,6 +43,8 @@ import { EditaModalEditarTareaTramiteModalComponent } from './components/modals/
 import { EditaModalGenerarPropuestaResolucionModalComponent } from './components/modals/tramites/modal-generar-propuesta-resolucion-modal/modal-generar-propuesta-resolucion-modal.component'
 import { EditaModalCrearNotificacionModalComponent } from './components/modals/tramites/modal-crear-notificacion-modal/modal-crear-notificacion-modal.component'
 import { EditaModalBajaObjetoTributarioModalComponent } from './components/modals/tramites/modal-baja-objeto-tributario-modal/modal-baja-objeto-tributario-modal.component'
+import { EditaModalListadoNotificacionesComponent } from './components/modals/tramites/modal-listado-notificaciones/modal-listado-notificaciones.component'
+import { EditaModalListadoTramitadoresComponent } from './components/modals/tramites/modal-listado-tramitadores/modal-listado-tramitadores.component'
 
 const PANELS = [
   EditaExpedienteHeaderComponent,
@@ -66,6 +74,12 @@ const PANELS = [
   EditaModalVerExpedienteEditaModalComponent,
   EditaModalHistoricoModalComponent,
   EditaModalNuevaTareaTraComponent,
+  NuevaTareaDatosComponent,
+  NuevaTareaAccionAsociadaComponent,
+  NuevaTareaDinamicosComponent,
+  NuevaTareaDocumentacionComponent,
+  BajaObjetoTributarioFieldsComponent,
+  ConsultaObjetoTributarioFieldsComponent,
   EditaModalInsideRemisionJusticiaModalComponent,
   EditaModalRecibosPendientesModalComponent,
   EditaModalNuevoTramiteModalComponent,
@@ -74,6 +88,8 @@ const PANELS = [
   EditaModalGenerarPropuestaResolucionModalComponent,
   EditaModalCrearNotificacionModalComponent,
   EditaModalBajaObjetoTributarioModalComponent,
+  EditaModalListadoNotificacionesComponent,
+  EditaModalListadoTramitadoresComponent,
 ]
 
 @NgModule({

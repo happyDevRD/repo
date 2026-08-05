@@ -5,10 +5,6 @@ import { CrearTramiteExp, EditarTramiteExp, ListarTramites } from '../../expedie
 import { NotificationService } from '../../../../core/service/notification.service'
 import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { ExpedientesService } from '../../expedientes.service'
-import {
-  buildTramiteGridSourceFromLocal,
-  createTramiteGridAdapter,
-} from './tramites-grid.config'
 import { fechaTramitePorDefecto, validarCrearTramite } from './tramites-validacion.helper'
 import {
   aplicarFechaTramitePorDefecto,
@@ -18,17 +14,11 @@ import {
   limpiarErroresFormulario,
   validarFormularioBootstrap,
 } from '../../../../core/helper/bootstrap-form.helper'
-import {
-  aplicarVistaNotificaciones,
-  aplicarVistaTramitadores,
-  aplicarVistaTramite,
-} from '../shared/edita-expediente-panel-navegacion.helper'
-import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 
 export interface EditaExpedienteTramitesGridHost {
   idExpediente: number
-  sourceTramite: unknown
   listartramites?: ListarTramites[]
+  cargandoTramites?: boolean
   cdr?: ChangeDetectorRef
 }
 
@@ -40,6 +30,8 @@ export interface EditaExpedienteTramitesHost extends EditaExpedienteTramitesGrid
   nuevotramite: boolean
   limpiarFormularioTramite(): void
   borrarDatosTramite(): void
+  /** Simula la selección de fila (carga tareas disponibles, tareas del trámite, notificaciones...). */
+  clickTramiteNuevo?(rowData: ListarTramites): void
 }
 
 /** Host UI/navegación de trámites (antes TramitesUiHost). */
@@ -49,7 +41,6 @@ export interface EditaExpedienteTramitesUiHost {
   creartramiteexp: CrearTramiteExp
   FechaSistema(): void
   verExpediente: { ejercicio: number; numero: number }
-  sourceListarNotifi: unknown
   recargarSourceTramitadores(): void
 }
 
@@ -63,15 +54,36 @@ export class EditaExpedienteTramitesFacade {
     private readonly modalManagerService: ModalManagerService,
   ) {}
 
-  configurarGridTramites(
-    idExpediente: number,
-    onListar: (tramites: ListarTramites[]) => void,
-  ): IflowGridSource {
-    this.expedientesService.getTramitesListar(idExpediente).pipe(
+  cargarTramites(host: EditaExpedienteTramitesGridHost, onLoaded?: (list: ListarTramites[]) => void): void {
+    if (!host.idExpediente) {
+      return
+    }
+
+    if (host.cargandoTramites !== undefined) {
+      host.cargandoTramites = true
+    }
+
+    this.expedientesService.getTramitesListar(host.idExpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (listartramites) => onListar(listartramites),
+      next: (list) => {
+        if (host.listartramites !== undefined) {
+          host.listartramites = list ?? []
+        }
+        if (host.cargandoTramites !== undefined) {
+          host.cargandoTramites = false
+        }
+        host.cdr?.markForCheck()
+        onLoaded?.(list ?? [])
+      },
       error: (err: HttpErrorResponse) => {
+        if (host.listartramites !== undefined) {
+          host.listartramites = []
+        }
+        if (host.cargandoTramites !== undefined) {
+          host.cargandoTramites = false
+        }
+        host.cdr?.markForCheck()
         if (err.status === 0) {
           this.notificationService.error({
             title: 'Oops...',
@@ -79,34 +91,6 @@ export class EditaExpedienteTramitesFacade {
             footer: 'Inténtalo mas tarde ',
           })
         }
-      },
-    })
-
-    return createTramiteGridAdapter(idExpediente)
-  }
-
-  refrescarGrid(host: EditaExpedienteTramitesGridHost): void {
-    if (!host.idExpediente) {
-      return
-    }
-
-    this.expedientesService.getTramitesListar(host.idExpediente).pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (list) => {
-        const rows = list ?? []
-        if (host.listartramites !== undefined) {
-          host.listartramites = rows
-        }
-        host.sourceTramite = buildTramiteGridSourceFromLocal(rows)
-        host.cdr?.markForCheck()
-      },
-      error: () => {
-        if (host.listartramites !== undefined) {
-          host.listartramites = []
-        }
-        host.sourceTramite = buildTramiteGridSourceFromLocal([])
-        host.cdr?.markForCheck()
       },
     })
   }
@@ -136,13 +120,21 @@ export class EditaExpedienteTramitesFacade {
     this.expedientesService.crearTramiteExp(host.creartramiteexp).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: () => {
+      next: (creado) => {
         host.enviandoTramite = false
         this.notificationService.saveSuccess('Trámite')
         this.modalManagerService.closeModal('NuevoTramiteModal')
         host.limpiarFormularioTramite()
         host.nuevotramite = false
-        this.refrescarGrid(host)
+        // Selecciona el trámite recién creado igual que si se clicara su fila,
+        // para que las tareas disponibles (listatareaprocedi) queden cargadas
+        // y "Nueva tarea" funcione sin que el usuario tenga que clicarlo aparte.
+        this.cargarTramites(host, (list) => {
+          const nuevo = creado?.id != null ? list.find((t) => t.id === creado.id) : undefined
+          if (nuevo) {
+            host.clickTramiteNuevo?.(nuevo)
+          }
+        })
       },
       error: (error: HttpErrorResponse) => {
         host.enviandoTramite = false
@@ -167,7 +159,7 @@ export class EditaExpedienteTramitesFacade {
       next: () => {
         this.notificationService.saveSuccess('Trámite')
         this.modalManagerService.closeModal('editarTramiteModal')
-        this.refrescarGrid(host)
+        this.cargarTramites(host)
         host.borrarDatosTramite()
       },
       error: (error: HttpErrorResponse) => {
@@ -183,7 +175,13 @@ export class EditaExpedienteTramitesFacade {
     })
   }
 
-  borrarTramite(host: EditaExpedienteTramitesHost): void {
+  borrarTramite(host: EditaExpedienteTramitesHost, idTramite?: number | null): void {
+    const id = idTramite ?? host.idTramite
+    if (!id) {
+      this.notificationService.warning('Selecciona un trámite para eliminarlo.')
+      return
+    }
+
     this.notificationService.confirm({
       title: '¿ Esta seguro ?',
       text: 'Eliminar Trámite',
@@ -194,11 +192,18 @@ export class EditaExpedienteTramitesFacade {
         return
       }
 
-      this.expedientesService.deleteTramite(host.idTramite).pipe(
+      this.expedientesService.deleteTramite(id).pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe({
         next: () => {
-          this.refrescarGrid(host)
+          if (host.idTramite === id) {
+            host.idTramite = 0
+            const uiHost = host as EditaExpedienteTramitesHost & { verTareasdelTramite?: boolean }
+            if (uiHost.verTareasdelTramite !== undefined) {
+              uiHost.verTareasdelTramite = false
+            }
+          }
+          this.cargarTramites(host)
           this.notificationService.deleteSuccess('Trámite')
         },
         error: (error: HttpErrorResponse) => {
@@ -268,18 +273,53 @@ export class EditaExpedienteTramitesFacade {
     limpiarErroresFormulario('formEditarTramite')
   }
 
-  veotramitadores(host: EditaExpedienteTramitesUiHost): void {
-    aplicarVistaTramitadores(host as never)
+  veotramitadores(host: EditaExpedienteTramitesUiHost & { veoTramitadores?: boolean }): void {
+    host.veoTramitadores = true
+    host.recargarSourceTramitadores()
+    // Diferir la apertura para que Angular pinte el *ngIf del listado antes del show de Bootstrap.
+    window.setTimeout(() => {
+      this.modalManagerService.openModal('ListadoTramitadoresModal')
+    }, 0)
   }
 
   verNotificaciones(
-    host: EditaExpedienteTramitesUiHost,
-    crearGrid: (ejercicio: number, numero: number) => unknown,
+    host: EditaExpedienteTramitesUiHost & {
+      veonotificaciones?: boolean
+      notifUiFacade?: { verInfoNotifi: boolean }
+      idNotificacion?: number
+    },
+    refrescar: () => void,
   ): void {
-    aplicarVistaNotificaciones(host as never, crearGrid)
+    host.veonotificaciones = true
+    if (host.notifUiFacade) {
+      host.notifUiFacade.verInfoNotifi = false
+    }
+    host.idNotificacion = 0
+    refrescar()
+    // Diferir la apertura para que Angular pinte el *ngIf del listado antes del show de Bootstrap.
+    window.setTimeout(() => {
+      this.modalManagerService.openModal('ListadoNotificacionesModal')
+    }, 0)
   }
 
   noverNotificaciones(host: EditaExpedienteTramitesUiHost): void {
-    aplicarVistaTramite(host as never)
+    this.cerrarModalNotificaciones(host as never)
+    this.modalManagerService.closeModal('ListadoNotificacionesModal')
+  }
+
+  cerrarModalNotificaciones(host: {
+    veonotificaciones?: boolean
+    notifUiFacade?: { verInfoNotifi: boolean }
+    idNotificacion?: number
+  }): void {
+    host.veonotificaciones = false
+    if (host.notifUiFacade) {
+      host.notifUiFacade.verInfoNotifi = false
+    }
+    host.idNotificacion = 0
+  }
+
+  cerrarModalTramitadores(host: { veoTramitadores?: boolean }): void {
+    host.veoTramitadores = false
   }
 }

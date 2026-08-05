@@ -7,6 +7,7 @@ import { HabitanteDto } from '../../models/habitante.dto'
 import { BajaHabitantes } from '../../models/baja-habitantes.model'
 import { ConsultaDni, CrearPersonaEntidad, RepresentanteExpLIstar } from '../../models/expediente-domain.model'
 import { Pais } from '../../models/pais.model'
+import { catchNotFoundAsEmpty } from '../../helper/rxjs-error.helper'
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,7 @@ export class PersonaEntidadApiService {
   }
 
   getPersonaEntidad(numDocum: string): Observable<PersonaEntidad> {
-    return this.http.get<PersonaEntidad>(`${environment.apiUrl}/personaEntidad/ver/${numDocum}`)
+    return this.http.get<PersonaEntidad>(`${environment.apiUrl}personaEntidad/ver/${numDocum}`)
   }
 
   crearPersonaEntidad(crearpersonaentidad: CrearPersonaEntidad, dni: string): Observable<CrearPersonaEntidad> {
@@ -65,11 +66,14 @@ export class PersonaEntidadApiService {
   }
 
   getPaises(): Observable<Pais[]> {
-    return this.http.get(`${environment.apiUrl}/pais/listar`).pipe(map((response) => response as Pais[]))
+    return this.http.get(`${environment.apiUrl}pais/listar`).pipe(
+      map((response) => (response as Pais[]) ?? []),
+      catchNotFoundAsEmpty<Pais[]>(),
+    )
   }
 
   getConsultaHabitante(numDocum: string): Observable<HabitanteDto> {
-    return this.http.get<HabitanteDto>(`${environment.apiUrl}/habitante/ver/${numDocum}`)
+    return this.http.get<HabitanteDto>(`${environment.apiUrl}habitante/ver/${numDocum}`)
   }
 
   envioBajaHabitantes(bajahabitantes: BajaHabitantes, documento: string): Observable<unknown> {

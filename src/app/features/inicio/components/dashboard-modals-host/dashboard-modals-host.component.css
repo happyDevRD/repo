@@ -1,0 +1,31 @@
+.dashboard-grid-modal__content {
+  border: 1px solid rgba(105, 120, 255, 0.14);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(34, 54, 120, 0.12);
+}
+
+.dashboard-grid-modal__header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.dashboard-grid-modal__body {
+  padding: 1rem 1.25rem 1.15rem;
+  background: #fafbff;
+  overflow-x: hidden;
+}
+
+.dashboard-grid-modal__header {
+  align-items: flex-start;
+}
+
+.dashboard-grid-modal__footer {
+  background: #f8f9fc !important;
+}
+
+.dashboard-grid-modal .modal-footer {
+  background: #f8f9fc !important;
+}

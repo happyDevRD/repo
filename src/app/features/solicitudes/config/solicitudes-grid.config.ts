@@ -190,25 +190,6 @@ const buildSolicitudTailColumns = (renderers: SolicitudesGridRenderers): IflowGr
   { text: 'idHisRepre', datafield: 'idHisRepre', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
 ];
 
-export const buildColumnsSolici = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
-  { text: 'id', datafield: 'id', hidden: true },
-  { text: 'dirRepre', datafield: 'dirRepre', hidden: true },
-  { text: 'idExpediente', datafield: 'idExpediente', hidden: true },
-  { text: 'Interesado', datafield: 'numDocum', cellsrenderer: renderers.cellsrenderer, renderer: renderers.columnrenderer, hidden: true },
-  { text: 'Nº', datafield: 'ejercicio', width: '8%', cellsrenderer: renderers.cellsrendererEjercicio, renderer: renderers.columnrenderer, align: 'center' },
-  { text: 'Numero', datafield: 'numero', cellsrenderer: renderers.cellsrendererNumero, renderer: renderers.columnrenderer, hidden: true },
-  { text: 'Fecha', datafield: 'fecInicio', width: '11%', cellsrenderer: renderers.cellsrendererFechaSolici, renderer: renderers.columnrenderer, align: 'center' },
-  { text: 'Asunto', datafield: 'asunto', width: '30%', cellsrenderer: renderers.cellsrendererSolicitudes, renderer: renderers.columnrenderer, align: 'left' },
-  { text: 'Estado', datafield: 'estado', width: '12%', cellsrenderer: renderers.cellsrenderer, renderer: renderers.columnrenderer, align: 'center' },
-  { text: 'Asignado', datafield: 'usuario', width: '12%', cellsrenderer: renderers.cellsrenderer, renderer: renderers.columnrenderer, align: 'center' },
-  { text: 'Interesado', datafield: 'personaEntidad', width: '17%', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, align: 'left' },
-  { text: 'Número Registro', datafield: 'ejeNumRegis', cellsrenderer: renderers.cellsrenderer, renderer: renderers.columnrenderer, hidden: true },
-  { text: 'Expediente', datafield: 'expediente', width: '10%', cellsrenderer: renderers.cellsrendererAnidado, renderer: renderers.columnrenderer, align: 'center' },
-  ...buildSolicitudTailColumns(renderers),
-  { text: 'idHisDocum', datafield: 'idHisDocum', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
-  { text: 'iddocum', datafield: 'idDocum', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
-];
-
 export const buildColumnsSoliciPendi = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: 'id', datafield: 'id', hidden: true },
   { text: 'dirRepre', datafield: 'dirRepre', hidden: true },
@@ -253,19 +234,6 @@ export const buildColumnsListRepre = (renderers: SolicitudesGridRenderers): Iflo
   { text: 'Nombre', datafield: 'desPerEntid', cellsrenderer: renderers.cellsrendererRepre, renderer: renderers.columnrenderer },
   { text: 'Dirección', datafield: 'dirPosta', cellsrenderer: renderers.cellsrendererRepre, renderer: renderers.columnrenderer },
 ];
-
-export const createSolicitudesListAdapter = (
-  idOrgEleme: string | number,
-  options?: { sortById?: boolean },
-): IflowGridSource =>
-  new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: SOLICITUDES_DATA_FIELDS,
-    url: `${environment.apiUrl}solicitud/listar/${idOrgEleme}`,
-    id: 'id',
-    sortcolumn: options?.sortById ? 'id' : 'fecInicio',
-    sortdirection: 'desc',
-  });
 
 export const createDocumentosAdapter = (idsolicitud: number | string): IflowGridSource =>
   new jqx.dataAdapter({
@@ -328,9 +296,3 @@ export const createSolicitudesPendientesLocalSource = (data: SolicitudListar[]):
   dataFields: SOLICITUDES_PENDI_DATA_FIELDS,
   id: 'id',
 });
-
-export const refreshJqxGrid = (
-  grid: { updatebounddata?: () => void } | null | undefined,
-): void => {
-  grid?.updatebounddata?.();
-};

@@ -22,6 +22,8 @@ export interface NavLink {
 })
 export class NavComponent implements OnInit, OnDestroy {
   readonly escudo = `assets/${environment.escudo}`;
+  readonly appVersion = '1.1';
+  readonly appYear = new Date().getFullYear();
 
   readonly navLinks: NavLink[] = [
     { path: '/inicio', icon: 'bi-house', label: 'Inicio', exact: true },
@@ -38,6 +40,7 @@ export class NavComponent implements OnInit, OnDestroy {
   nmensajesrechazados = 0;
 
   mobileMenuOpen = false;
+  collapsed = false;
 
   constructor(
     public router: Router,
@@ -51,6 +54,9 @@ export class NavComponent implements OnInit, OnDestroy {
       this.mobileMenuOpen = open;
       document.body.classList.toggle('nav-mobile-open', open);
     });
+    this.navUi.collapsed$.subscribe((collapsed) => {
+      this.collapsed = collapsed;
+    });
     this.navMensajesFacade.startPolling(this);
   }
 
@@ -61,6 +67,10 @@ export class NavComponent implements OnInit, OnDestroy {
 
   closeMobileMenu(): void {
     this.navUi.closeMobileMenu();
+  }
+
+  toggleCollapsed(): void {
+    this.navUi.toggleCollapsed();
   }
 
   @HostListener('document:keydown.escape')

@@ -1,39 +1,38 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { EnvioNotificaInfo } from '../../../notificaciones/notificaciones-notifica-panel.component'
-import { EditaExpedienteRefs } from '../../services/edita-expediente-refs.service'
 import { ModalAction, ModalActionEvent } from '../../../../../shared/modals/modal-action.model'
 import { hasAction } from '../../../../../shared/modals/modal-actions.util'
-import { IflowGridComponent, IflowGridColumns, IflowGridLocalization, IflowGridSource } from '../../../../../shared/components/iflow-grid/iflow-grid.component'
-import { JqxGridRowEvent } from '../../../../../core/helper/jqx-grid-event.model'
-import { NotificacionGridRow } from '../../notificaciones/notificaciones-seleccion.helper'
-import { jqxGrid_ES } from 'src/translations/jqxGrid_translate'
+import { LeerNotificacion } from '../../../expedientes'
+import { bopLabel, situacionLabel } from '../../notificaciones/notificaciones-grid-renderers'
 
 @Component({
   selector: 'app-edita-expediente-workspace-notificaciones',
   templateUrl: './edita-expediente-workspace-notificaciones.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditaExpedienteWorkspaceNotificacionesComponent implements AfterViewInit {
-  private readonly refs = inject(EditaExpedienteRefs)
-
+export class EditaExpedienteWorkspaceNotificacionesComponent {
   @Input() veonotificaciones = false
   @Input() verInfoNotifi = false
   @Input() idNotificacion: number | null = null
   @Input() actions: ModalAction[] = []
   @Input() envioNotifica: EnvioNotificaInfo | null = null
-  @Input() columns: IflowGridColumns = []
-  @Input() source: IflowGridSource
-  @Input() localization: IflowGridLocalization = jqxGrid_ES
+  @Input() notificaciones: LeerNotificacion[] = []
+  @Input() cargando = false
 
   @Output() action = new EventEmitter<ModalActionEvent>()
-  @Output() rowClick = new EventEmitter<JqxGridRowEvent<NotificacionGridRow>>()
-  @Output() rowDoubleClick = new EventEmitter<JqxGridRowEvent<Pick<NotificacionGridRow, 'idNotif'>>>()
+  @Output() rowClick = new EventEmitter<LeerNotificacion>()
+  @Output() rowDoubleClick = new EventEmitter<Pick<LeerNotificacion, 'idNotif'>>()
+  @Output() verNotificacion = new EventEmitter<number>()
 
-  @ViewChild('gridNotificaciones') gridNotificaciones?: IflowGridComponent
+  readonly situacionLabel = situacionLabel
+  readonly bopLabel = bopLabel
 
-  ngAfterViewInit(): void {
-    this.refs.gridNotificaciones = this.gridNotificaciones
-  }
+  readonly rowClassFor = (row: LeerNotificacion): Record<string, boolean> => ({
+    'table-active': row.idNotif === this.idNotificacion,
+  })
+
+  readonly situacionValue = (row: LeerNotificacion): string => situacionLabel(row.situacion)
+  readonly bopValue = (row: LeerNotificacion): string => bopLabel(row.bop)
 
   get showToolbar(): boolean {
     return !!(this.veonotificaciones && this.verInfoNotifi && this.idNotificacion)
@@ -73,14 +72,5 @@ export class EditaExpedienteWorkspaceNotificacionesComponent implements AfterVie
 
   handleSincronizarConNotificaPlataforma(): void {
     this.action.emit({ id: 'sincronizar' })
-  }
-
-  handleRowClick(event: JqxGridRowEvent<NotificacionGridRow>): void {
-    this.gridNotificaciones?.selectRow(event.args.rowindex)
-    this.rowClick.emit(event)
-  }
-
-  handleRowDoubleClick(event: JqxGridRowEvent<Pick<NotificacionGridRow, 'idNotif'>>): void {
-    this.rowDoubleClick.emit(event)
   }
 }

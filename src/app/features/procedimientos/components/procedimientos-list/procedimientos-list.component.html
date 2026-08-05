@@ -14,18 +14,21 @@
     </button>
   </header>
 
-  <div class="grid-container proc-list-grid">
-    <app-iflow-grid #gridProcedimientos
-      id="gridProcedimientos"
-      selectionMode="radio"
-      radioName="Procedimientos"
-      (rowClick)="p.enviamos($event)"
-      (rowDoubleClick)="p.onProcedimientoDoubleClick($event)"
-      [columns]="p.columnsPro"
-      [columnsresize]="true"
-      [showfilterrow]="true"
-      [localization]="p.localizationObject"
-      [source]="p.sourcePro">
-    </app-iflow-grid>
-  </div>
+  <app-data-table [items]="p.procedimientos" [loading]="p.cargandoProcedimientos"
+    emptyMessage="No hay procedimientos configurados en este departamento."
+    searchPlaceholder="Buscar por descripción, código SIA o siglas…"
+    exportFileName="procedimientos"
+    (rowClick)="p.abrirProcedimiento($event.id)">
+    <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
+    <app-table-column header="Código SIA" field="codigoSia" [sortable]="true"></app-table-column>
+    <app-table-column header="Siglas" field="siglas" [sortable]="true"></app-table-column>
+    <app-table-column header="Modalidad" [sortValue]="modalidadValue" [searchValue]="modalidadValue" [sortable]="true"
+      [filterable]="true">
+      <ng-template let-row>{{ p.getModalidadLabelFor(row.modalidad) }}</ng-template>
+    </app-table-column>
+    <app-table-column header="Materia" [sortValue]="materiaValue" [searchValue]="materiaValue" [sortable]="true"
+      [filterable]="true">
+      <ng-template let-row>{{ p.getMateriaLabelFor(row.idMatProce) }}</ng-template>
+    </app-table-column>
+  </app-data-table>
 </div>

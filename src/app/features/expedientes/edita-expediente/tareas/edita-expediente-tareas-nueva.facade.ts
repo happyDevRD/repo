@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, ElementRef, Injectable, inject } from '@angular/core'
+import { Observable } from 'rxjs'
 import { TareaTramiteExpedienteCrear } from '../../expedientes'
 import { TipoObjetoTributarioDto } from '../../../../core/models/tipo-objeto-tributario.dto'
 import { NotificationService } from '../../../../core/service/notification.service'
 import { ModalManagerService } from '../../../../core/service/modal-manager.service'
 import { EditaExpedienteArchivoService, ArchivoUploadHost } from '../services/edita-expediente-archivo.service'
+import { ListaTareaProcedi } from '../edita-expediente.models'
 import { tieneArchivoPendienteSubida } from './tareas-creacion.helper'
 import { resetActionState } from './tareas-accion.helper'
 import { cerrarModalesNuevaTarea } from './tareas-modal.helper'
@@ -32,6 +34,10 @@ export interface EditaExpedienteNuevaTareaHost {
   archivoSubidaEnProgreso: boolean
   plantillaDefecto: string | null
   tareatramiteexpedientecrear: TareaTramiteExpedienteCrear
+  listatareaprocedi: ListaTareaProcedi[]
+  idTramite: number
+  fasetramite: string
+  getListaTareas(): Observable<ListaTareaProcedi[]>
   FechaSistema(): void
   cerrarModalNuevaTareaSeguro(): void
 }
@@ -142,7 +148,11 @@ export class EditaExpedienteTareasNuevaFacade {
         if (host.identificadorFicheroSubido) {
           this.crearTareaFn(tareasHost)
         } else {
-          this.notificationService.error('No se pudo crear la tarea porque el archivo no se subió correctamente.')
+          // Subida fallida: crear la tarea sin documento (el estado pendiente ya se limpia en el servicio).
+          this.notificationService.warning(
+            'No se pudo asociar el archivo. Se creará la tarea sin documento.',
+          )
+          this.crearTareaFn(tareasHost)
         }
       })
       return
@@ -188,10 +198,39 @@ export class EditaExpedienteTareasNuevaFacade {
   }
 
   abrirModalNuevaTarea(host: EditaExpedienteNuevaTareaHost, fileInput?: ElementRef): void {
+    if (!host.idTramite) {
+      this.notificationService.warning('Selecciona un trámite antes de crear una nueva tarea.')
+      return
+    }
+    if (!host.fasetramite) {
+      this.notificationService.warning('El trámite seleccionado no tiene fase. No se pueden cargar las tareas del procedimiento.')
+      return
+    }
+
     this.resetFormularioNuevaTarea(host)
     this.limpiarEstadoModal(host, fileInput)
     this.limpiarErroresNuevaTarea()
-    this.modalManagerService.openModal('NuevaTareaTra')
+
+    // Recarga siempre al abrir: la lista depende del procedimiento + fase del trámite
+    // y puede haberse quedado vacía/desfasada tras navegar o crear trámites.
+    host.getListaTareas().subscribe({
+      next: (lista) => {
+        host.listatareaprocedi = lista ?? []
+        host.cdr.markForCheck()
+        this.modalManagerService.openModal('NuevaTareaTra')
+        if (!host.listatareaprocedi.length) {
+          this.notificationService.warning(
+            'No hay tareas de procedimiento manuales para esta fase. Configúralas en el procedimiento (Procedimientos → Tareas).',
+          )
+        }
+      },
+      error: () => {
+        host.listatareaprocedi = []
+        host.cdr.markForCheck()
+        this.modalManagerService.openModal('NuevaTareaTra')
+        this.notificationService.error('No se pudieron cargar las tareas del procedimiento.')
+      },
+    })
   }
 
   /** Resetea el modelo del formulario sin cerrar el modal. */
@@ -241,7 +280,11 @@ export class EditaExpedienteTareasNuevaFacade {
     host.plantillaDefecto = null
 
     if (fileInput?.nativeElement) {
-      fileInput.nativeElement.value = ''
+      try {
+        fileInput.nativeElement.value = ''
+      } catch {
+        // input type=file solo admite vacío; ignorar si el DOM no lo permite
+      }
     }
 
     setTimeout(() => {
@@ -255,7 +298,7 @@ export class EditaExpedienteTareasNuevaFacade {
       })
     }, 50)
 
-    this.changeDetector.detectChanges()
+    this.changeDetector.markForCheck()
   }
 
 

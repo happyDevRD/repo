@@ -11,7 +11,6 @@ export class EditaExpedienteRefs {
   teuFormRef?: TeuFormRefLike
   fileInputOperaciones?: ElementRef
   fileInputTramites?: ElementRef
-  gridNotificaciones?: IflowGridComponent
   gridRecibos?: IflowGridComponent
 
   get fileInput(): ElementRef | undefined {

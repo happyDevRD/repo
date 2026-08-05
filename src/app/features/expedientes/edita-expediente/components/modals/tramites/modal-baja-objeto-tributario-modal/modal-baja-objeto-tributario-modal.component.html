@@ -10,70 +10,11 @@
      (closed)="edita.cerrarModalBajaObjetoTributario()">
      <div modalBody>
           <ng-container *ngIf="tareas.objetotributario && edita.tareatramiteprocedimiento?.accion === 5">
-               <div class="row g-3">
-                    <div class="col-md-4">
-                         <div class="form-floating">
-                              <input type="text" class="form-control" id="tipoObjetoBaja"
-                                   [value]="tareas.objetotributario.tipoObjetoTributario" disabled placeholder=" ">
-                              <label for="tipoObjetoBaja">Tipo objeto tributario</label>
-                         </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-floating">
-                              <input type="text" class="form-control" id="descripcionBaja"
-                                   [value]="tareas.objetotributario.desObjTribu" disabled placeholder=" ">
-                              <label for="descripcionBaja">Descripción</label>
-                         </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-floating">
-                              <input type="text" class="form-control" id="fecAltaBaja"
-                                   [value]="tareas.objetotributario.fecAlta" disabled placeholder=" ">
-                              <label for="fecAltaBaja">Fecha alta</label>
-                         </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-floating">
-                              <input type="text" class="form-control" id="numDocumBaja"
-                                   [value]="tareas.objetotributario.numDocum" disabled placeholder=" ">
-                              <label for="numDocumBaja">N.º documento</label>
-                         </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-floating">
-                              <input type="text" class="form-control" id="personaBaja"
-                                   [value]="tareas.objetotributario.desPerEntid" disabled placeholder=" ">
-                              <label for="personaBaja">Persona / entidad</label>
-                         </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-floating">
-                              <input type="text" class="form-control" id="domFiscalBaja"
-                                   [value]="tareas.objetotributario.domFiscal" disabled placeholder=" ">
-                              <label for="domFiscalBaja">Domicilio fiscal</label>
-                         </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-floating">
-                              <input type="text" class="form-control" id="codMovimBaja"
-                                   [value]="tareas.objetotributario.codMovim" disabled placeholder=" ">
-                              <label for="codMovimBaja">Código movimiento</label>
-                         </div>
-                    </div>
-                    <div class="col-md-8 d-flex align-items-center"
-                         *ngIf="tareas.objetotributario.codMovim === 'BAJA'">
-                         <span class="text-danger fw-bold">Este objeto tributario ya está dado de baja.</span>
-                    </div>
-                    <div class="col-12" *ngIf="tareas.objetotributario.codMovim !== 'BAJA'">
-                         <div class="form-floating">
-                              <textarea maxlength="200" class="form-control" id="observacionesBaja"
-                                   name="observacionesBaja" placeholder=" "
-                                   [(ngModel)]="tareas.objetotributario.observaciones"
-                                   rows="3"></textarea>
-                              <label for="observacionesBaja">Observaciones (opcional)</label>
-                         </div>
-                    </div>
-               </div>
+               <app-baja-objeto-tributario-fields
+                    [objetoTributario]="tareas.objetotributario"
+                    idPrefix="bajaObjModal"
+                    [showInlineAction]="false">
+               </app-baja-objeto-tributario-fields>
           </ng-container>
      </div>
      <div modalFooter class="modal-footer__actions">

@@ -14,6 +14,7 @@ import {
   InsertaBolsaCrear,
   LeerNotificacion,
   ListarInteresados,
+  ListarTramitador,
   ListarTramites,
   ModeloTeuCrear,
   ModeloTeuListar,
@@ -186,10 +187,6 @@ export class EditaExpedienteComponent
     return this.refs.fileInput;
   }
 
-  public get gridNotificaciones(): IflowGridComponent | undefined {
-    return this.refs.gridNotificaciones;
-  }
-
   get teuFormRef(): TeuFormRefLike | null {
     return this.refs.teuFormRef ?? null;
   }
@@ -219,20 +216,17 @@ export class EditaExpedienteComponent
   }
 
   public localizationObject: IflowGridLocalization = jqxGrid_ES;
-  public nombreApe = '';
   public descripTarea!: string;
   public veonotificaciones = false;
   /** @deprecated ownership en notifUiFacade; bridge para Hosts/templates */
   get modoVerNotificacion() { return this.notifUiFacade.modoVerNotificacion }
   set modoVerNotificacion(value: boolean) { this.notifUiFacade.modoVerNotificacion = value }
-  columnsTramite!: IflowGridColumns;
-  sourceTramite!: IflowGridSource;
   columnsTareasTramite!: IflowGridColumns;
   sourceTareasTramite!: IflowGridSource;
-  columnsListarNotifi!: IflowGridColumns;
-  sourceListarNotifi!: IflowGridSource & { records?: LeerNotificacion[] };
-  columnsTramitadores!: IflowGridColumns;
-  sourceTramitadores!: IflowGridSource;
+  leernotificacion: LeerNotificacion[] = [];
+  cargandoNotificaciones = false;
+  tramitadoresListado: ListarTramitador[] = [];
+  cargandoTramitadores = false;
   columnsTareasProcedi!: IflowGridColumns;
   sourceTareasProcedi: IflowGridSource = null;
   columnsHistorico!: IflowGridColumns;
@@ -243,9 +237,6 @@ export class EditaExpedienteComponent
       idExpediente: this.idExpediente ?? 0,
       idTarea: this.idTarea ?? 0,
       getFecIniTarea: () => this.FecIniTarea,
-      setNombreApe: (nombre) => { this.nombreApe = nombre; },
-      getNombreApe: () => this.nombreApe,
-      setDescripTarea: (value) => { this.descripTarea = String(value ?? ''); },
     }));
   }
 
@@ -262,7 +253,11 @@ export class EditaExpedienteComponent
   }
 
   get idprocedi(): string | null {
-    return this.session.idProcedimiento;
+    // El procedimiento del expediente cargado (verExpediente.idProc) es la fuente
+    // fiable: session.idProcedimiento solo se rellena al navegar aquí desde el
+    // listado de Expedientes, quedando vacío para expedientes creados/abiertos
+    // por otras vías y dejando "Tarea procedimiento" sin opciones.
+    return this.verExpediente.idProc != null ? String(this.verExpediente.idProc) : null;
   }
 
   /**
@@ -309,7 +304,7 @@ export class EditaExpedienteComponent
   public tareatramiteexpedientever: TareaTramiteExpedienteVer = new TareaTramiteExpedienteVer();
   public creartablonanuncio: CrearTablonAnuncio = new CrearTablonAnuncio();
 
-  public temadocumentolistar: TemaDocumentoListar[];
+  public temadocumentolistar: TemaDocumentoListar[] = [];
   public tipoObjetoTributario: TipoObjetoTributarioDto[];
 
   get modeloteulistar() { return this.notifUiFacade.modeloteulistar }
@@ -317,10 +312,10 @@ export class EditaExpedienteComponent
   get creanotificacion() { return this.notifUiFacade.creanotificacion }
   set creanotificacion(value: CrearNotificacion) { this.notifUiFacade.creanotificacion = value }
   public creargenerarsalida: CrearGenerarSalida = new CrearGenerarSalida();
-  public leernotificacion!: LeerNotificacion[];
   public vermetadatos: VerMetadatos = new VerMetadatos();
-  public listatareaprocedi!: ListaTareaProcedi[];
-  public listartramites!: ListarTramites[];
+  public listatareaprocedi: ListaTareaProcedi[] = [];
+  public listartramites: ListarTramites[] = [];
+  public cargandoTramites = false;
   public procedipermiso!: ProcediPermisos[];
   public pais!: Pais[];
   get modeloteucrear() { return this.notifUiFacade.modeloteucrear }
@@ -520,9 +515,7 @@ export class EditaExpedienteComponent
   }
 
   public getListarTramites(idexp: number) {
-    this.sourceTramite = this.tramitesFacade.configurarGridTramites(idexp, (tramites) => {
-      this.listartramites = tramites;
-    });
+    this.tramitesFacade.cargarTramites(this);
   }
 
   public getTareaTramiteExpedienteListar() {
@@ -580,8 +573,8 @@ export class EditaExpedienteComponent
     this.workspaceFacade.refrescarGrid(this);
   }
 
-  public clickTramitadores(event: JqxGridRowEvent<TramitadorGridRow>) {
-    this.workspaceFacade.clickTramitadores(this, event);
+  public clickTramitadores(rowData: TramitadorGridRow) {
+    this.workspaceFacade.clickTramitadores(this, rowData);
   }
 
   public fechaTramite!: string;
@@ -656,8 +649,8 @@ export class EditaExpedienteComponent
     this.FechaSistema();
   }
 
-  public clickTramiteNuevo(event: JqxGridRowEvent<TramiteGridRow>) {
-    this.workspaceFacade.clickTramiteNuevo(this, event);
+  public clickTramiteNuevo(rowData: TramiteGridRow) {
+    this.workspaceFacade.clickTramiteNuevo(this, rowData);
   }
 
   public verAccionesdeTarea: boolean = false;
@@ -822,28 +815,28 @@ export class EditaExpedienteComponent
     this.notifUiFacade.cambioYearEjercicio(this);
   }
 
-  public clicknotificacionNuevo(event: JqxGridRowEvent<NotificacionGridRow>) {
-    this.workspaceFacade.clicknotificacionNuevo(this, event);
+  public clicknotificacionNuevo(rowData: NotificacionGridRow) {
+    this.workspaceFacade.clicknotificacionNuevo(this, rowData);
   }
 
-  public onNotificacionClick(event: JqxGridRowEvent<NotificacionGridRow>) {
-    this.workspaceFacade.onNotificacionClick(this, event);
+  public onNotificacionClick(rowData: NotificacionGridRow) {
+    this.workspaceFacade.onNotificacionClick(this, rowData);
   }
 
-  public onNotificacionDoubleClick(event: JqxGridRowEvent<Pick<NotificacionGridRow, 'idNotif'>>) {
-    this.workspaceFacade.onNotificacionDoubleClick(this, event);
+  public onNotificacionDoubleClick(rowData: Pick<NotificacionGridRow, 'idNotif'>) {
+    this.workspaceFacade.onNotificacionDoubleClick(this, rowData);
   }
 
   habilitarBotonesNotificacion(rowData: NotificacionGridRow) {
     this.workspaceFacade.habilitarBotonesNotificacion(this, rowData);
   }
 
-  public onTramiteDoubleClick(event: JqxGridRowEvent<TramiteGridRow>) {
-    this.workspaceFacade.onTramiteDoubleClick(this, event);
+  public onTramiteDoubleClick(rowData: TramiteGridRow) {
+    this.workspaceFacade.onTramiteDoubleClick(this, rowData);
   }
 
-  public onTramitadorDoubleClick(event: JqxGridRowEvent<TramitadorGridRow>) {
-    this.workspaceFacade.onTramitadorDoubleClick(this, event);
+  public onTramitadorDoubleClick(rowData: TramitadorGridRow) {
+    this.workspaceFacade.onTramitadorDoubleClick(this, rowData);
   }
 
   public onTareaDoubleClick(row: TareaTramiteSeleccionRow) {
@@ -879,9 +872,7 @@ export class EditaExpedienteComponent
   }
 
   public verNotificaciones() {
-    this.tramitesFacade.verNotificaciones(this, (ejercicio, numero) =>
-      this.notifUiFacade.createGridAdapter(ejercicio, numero),
-    );
+    this.tramitesFacade.verNotificaciones(this, () => this.refresSourceListarNotifi());
     this.sincronizarVistaEnUrl('notificaciones');
   }
 
@@ -918,7 +909,18 @@ export class EditaExpedienteComponent
   private seleccionTareaCallbacks = () => ({
     cargaHistorico: (id: number) => this.cargaHistorico(id),
     getTramiteProcedimientoVer: (id: number) => this.getTramiteProcedimientoVer(id),
-    getListaTareas: () => this.getListaTareas(),
+    getListaTareas: () => {
+      this.getListaTareas().subscribe({
+        next: (lista) => {
+          this.listatareaprocedi = lista ?? []
+          this.cdr.markForCheck()
+        },
+        error: () => {
+          this.listatareaprocedi = []
+          this.cdr.markForCheck()
+        },
+      })
+    },
     leoMetadatos: (archivo: number) => this.leoMetadatos(archivo),
     gettipofirma: () => this.gettipofirma(),
     getTemaDocumentoListar: () => this.getTemaDocumentoListar(),
@@ -1130,7 +1132,7 @@ export class EditaExpedienteComponent
   }
 
   public refrescoSourceTramite() {
-    this.tramitesFacade.refrescarGrid(this);
+    this.tramitesFacade.cargarTramites(this);
   }
 
   public refrescoSourceTareasTramite(id: number) {
@@ -1138,11 +1140,11 @@ export class EditaExpedienteComponent
   }
 
   public refresSourceListarNotifi() {
-    this.lifecycleFacade.refreshListarNotifi(this, false);
+    this.lifecycleFacade.refreshListarNotifi(this);
   }
 
   public refresSourceListarNotifiPRE() {
-    this.lifecycleFacade.refreshListarNotifi(this, true);
+    this.lifecycleFacade.refreshListarNotifi(this);
   }
 
   public vacio() {

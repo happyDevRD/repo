@@ -1,13 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
-import { ModalAction, ModalActionEvent } from '../../../../../shared/modals/modal-action.model'
-import {
-  IflowGridComponent,
-  IflowGridColumns,
-  IflowGridLocalization,
-  IflowGridSource,
-} from '../../../../../shared/components/iflow-grid/iflow-grid.component'
-import { JqxGridRowEvent } from '../../../../../core/helper/jqx-grid-event.model'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { TramiteGridRow } from '../../tramites/tramites-edicion.helper'
+
+export interface TramiteRowActionEvent {
+  tramite: TramiteGridRow
+  actionId: 'borrarTramite'
+}
 
 @Component({
   selector: 'app-edita-expediente-workspace-tramites',
@@ -16,30 +13,21 @@ import { TramiteGridRow } from '../../tramites/tramites-edicion.helper'
 })
 export class EditaExpedienteWorkspaceTramitesComponent {
   @Input() vertramite = false
-  @Input() botonVerNotifi = false
-  @Input() veonotificaciones = false
-  @Input() veoTramitadores = false
-  @Input() toolbarActions: ModalAction[] = []
-  @Input() columns: IflowGridColumns = []
-  @Input() source: IflowGridSource
-  @Input() localization: IflowGridLocalization
+  @Input() puedeBorrar = false
+  @Input() tramites: TramiteGridRow[] = []
+  @Input() cargando = false
+  @Input() idTramiteSeleccionado: number | null = null
 
-  @Output() action = new EventEmitter<ModalActionEvent>()
-  @Output() rowClick = new EventEmitter<JqxGridRowEvent<TramiteGridRow>>()
-  @Output() rowDoubleClick = new EventEmitter<JqxGridRowEvent<TramiteGridRow>>()
+  @Output() rowClick = new EventEmitter<TramiteGridRow>()
+  @Output() rowDoubleClick = new EventEmitter<TramiteGridRow>()
+  @Output() rowAction = new EventEmitter<TramiteRowActionEvent>()
 
-  @ViewChild('grid') grid?: IflowGridComponent
+  readonly rowClassFor = (row: TramiteGridRow): Record<string, boolean> => ({
+    'table-active': row.id === this.idTramiteSeleccionado,
+  })
 
-  handleAction(event: ModalActionEvent): void {
-    this.action.emit(event)
-  }
-
-  handleRowClick(event: JqxGridRowEvent<TramiteGridRow>): void {
-    this.grid?.selectRow(event.args.rowindex)
-    this.rowClick.emit(event)
-  }
-
-  handleRowDoubleClick(event: JqxGridRowEvent<TramiteGridRow>): void {
-    this.rowDoubleClick.emit(event)
+  handleBorrar(event: Event, row: TramiteGridRow): void {
+    event.stopPropagation()
+    this.rowAction.emit({ tramite: row, actionId: 'borrarTramite' })
   }
 }

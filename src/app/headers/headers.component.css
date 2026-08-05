@@ -51,6 +51,7 @@
 .app-topbar__title {
   margin: 0;
   min-width: 0;
+  flex: 1 1 auto;
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -58,6 +59,48 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.app-topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 0.85rem;
+  border-left: 1px solid rgba(105, 120, 255, 0.16);
+}
+
+.app-topbar__user-icon {
+  font-size: 1.6rem;
+  color: var(--iflow-primary);
+  opacity: 0.85;
+}
+
+.app-topbar__user-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.app-topbar__user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 12rem;
+}
+
+.app-topbar__user-dept {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 12rem;
 }
 
 @media screen and (max-width: 1200px) {
@@ -69,5 +112,9 @@
 @media (max-width: 480px) {
   .app-topbar__title {
     font-size: 0.95rem;
+  }
+
+  .app-topbar__user-dept {
+    display: none;
   }
 }

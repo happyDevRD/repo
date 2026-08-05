@@ -39,8 +39,8 @@
                <div class="col-md-6">
                     <div class="form-floating">
                          <input #fileInput (change)="edita.upload($event, edita.idTramite)"
-                              [(ngModel)]="edita.tareatramiteexpedienteeditar.archivo" accept=".pdf"
-                              class="form-control" id="formFileEditTarea" name="doc" type="file">
+                              accept=".pdf,.docx,.odt,.jpg"
+                              class="form-control" id="formFileEditTarea" type="file">
                          <label for="formFileEditTarea">Seleccione documento</label>
                     </div>
                </div>

@@ -16,7 +16,7 @@ export class SolicitudesModalPendientesComponent implements AfterViewInit {
     this.s.content = this.content
   }
 
-  handleRowClick(event: JqxGridRowEvent): void {
-    this.s.selecsolicitudNueva(event as JqxGridRowEvent<SolicitudListar>)
+  handleRowClick(event: JqxGridRowEvent<SolicitudListar>): void {
+    this.s.selecsolicitudNueva(event.args.row.bounddata)
   }
 }

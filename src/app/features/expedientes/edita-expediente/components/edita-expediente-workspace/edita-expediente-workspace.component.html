@@ -1,33 +1,68 @@
-﻿<app-edita-expediente-workspace-tramites [vertramite]="edita.vertramite" [botonVerNotifi]="edita.botonVerNotifi"
-  [veonotificaciones]="edita.veonotificaciones" [veoTramitadores]="edita.veoTramitadores"
-  [toolbarActions]="edita.tramiteToolbarActions" [columns]="edita.columnsTramite" [source]="edita.sourceTramite"
-  [localization]="edita.localizationObject" (action)="handleTramiteAction($event)"
-  (rowClick)="edita.clickTramiteNuevo($event)"
-  (rowDoubleClick)="edita.onTramiteDoubleClick($event)"></app-edita-expediente-workspace-tramites>
-<app-edita-expediente-workspace-notificaciones [veonotificaciones]="edita.veonotificaciones"
-  [verInfoNotifi]="edita.notifUiFacade.verInfoNotifi" [idNotificacion]="edita.notifUiFacade.idNotificacion"
-  [actions]="edita.notifUiFacade.notificacionActions" [envioNotifica]="edita.notifUiFacade.envioNotifica"
-  [columns]="edita.columnsListarNotifi" [source]="edita.sourceListarNotifi" [localization]="edita.localizationObject"
-  (action)="handleNotificacionAction($event)" (rowClick)="edita.onNotificacionClick($event)"
-  (rowDoubleClick)="edita.onNotificacionDoubleClick($event)"></app-edita-expediente-workspace-notificaciones>
-<app-edita-expediente-workspace-tramitadores [visible]="edita.veoTramitadores" [columns]="edita.columnsTramitadores"
-  [source]="edita.sourceTramitadores" [localization]="edita.localizationObject"
-  (rowClick)="edita.clickTramitadores($event)"
-  (rowDoubleClick)="edita.onTramitadorDoubleClick($event)"></app-edita-expediente-workspace-tramitadores>
-<app-edita-expediente-workspace-tareas [verTareasdelTramite]="edita.verTareasdelTramite"
-  [verAccionesdeTarea]="edita.verAccionesdeTarea" [headerActions]="edita.tareaHeaderActions"
-  [toolbarActions]="edita.tareaToolbarActions" [rowActions]="edita.tareaRowActions"
-  [tareas]="edita.tareatramiteexpedientelistar" [idTarea]="edita.idTarea"
-  [tareasCargando]="edita.tareasCargando"
-  (action)="handleTareaAction($event)" (rowAction)="handleTareaRowAction($event)"
-  (tareaSelect)="edita.clicktareaNueva($event)"
-  (tareaOpen)="edita.onTareaDoubleClick($event)"></app-edita-expediente-workspace-tareas>
-<app-edita-expediente-workspace-tabs [expedienteEjercicio]="edita.verExpediente.ejercicio"
-  [expedienteNumero]="edita.verExpediente.numero" [idExpediente]="edita.idExpediente"
-  [verojointeresado]="edita.verojointeresado" [verborrarinteresado]="edita.verborrarinteresado"
-  [listarinteresadosdto]="edita.listarinteresadosdto" [verxml]="edita.verxml"
-  [verEditartareatramite]="edita.verEditartareatramite" [tareaDescripcion]="edita.tareatramiteexpedientever.descripcion"
-  [verNuevaNotifi]="edita.verNuevaNotifi" [verformnuevatarea]="edita.verformnuevatarea"
-  [cargando]="edita.tareasFacade.cargando" (nuevoInteresado)="handleNuevoInteresado()"
-  (borrarInteresados)="edita.borrarInteresados()" (seleccionaInteresado)="edita.seleccionaInteresado($event)"
-  (verHistoricoExpediente)="edita.abrirModal('verExpedienteEditaModal')"></app-edita-expediente-workspace-tabs>
+﻿<section class="exp-workspace" aria-label="Espacio de trabajo del expediente">
+  <!-- Trámites + Tareas: mismo patrón master-detail que solicitudes -->
+  <div class="exp-split">
+    <section class="exp-panel exp-split__list" aria-label="Listado de trámites">
+      <app-edita-expediente-workspace-tramites
+        [vertramite]="edita.vertramite"
+        [puedeBorrar]="true"
+        [tramites]="edita.listartramites"
+        [cargando]="edita.cargandoTramites"
+        [idTramiteSeleccionado]="edita.idTramite"
+        (rowClick)="edita.clickTramiteNuevo($event)"
+        (rowDoubleClick)="edita.onTramiteDoubleClick($event)"
+        (rowAction)="handleTramiteRowAction($event)">
+      </app-edita-expediente-workspace-tramites>
+    </section>
+
+    <aside class="exp-split__detail" aria-label="Tareas del trámite">
+      <app-edita-expediente-workspace-tareas
+        *ngIf="edita.verTareasdelTramite; else tareasPlaceholder"
+        [verTareasdelTramite]="edita.verTareasdelTramite"
+        [verAccionesdeTarea]="edita.verAccionesdeTarea"
+        [headerActions]="edita.tareaHeaderActions"
+        [toolbarActions]="edita.tareaToolbarActions"
+        [rowActions]="edita.tareaRowActions"
+        [tareas]="edita.tareatramiteexpedientelistar"
+        [idTarea]="edita.idTarea"
+        [tareasCargando]="edita.tareasCargando"
+        (action)="handleTareaAction($event)"
+        (rowAction)="handleTareaRowAction($event)"
+        (tareaSelect)="edita.clicktareaNueva($event)"
+        (tareaOpen)="edita.onTareaDoubleClick($event)">
+      </app-edita-expediente-workspace-tareas>
+
+      <ng-template #tareasPlaceholder>
+        <section class="exp-tareas-panel exp-tareas-panel--placeholder" aria-label="Sin trámite seleccionado">
+          <p class="exp-tareas-panel__eyebrow">Tareas</p>
+          <h2 class="exp-tareas-panel__title">Listado de Tareas del Trámite</h2>
+          <div class="exp-tareas-empty">
+            <i class="bi bi-list-task exp-tareas-empty__icon" aria-hidden="true"></i>
+            <p class="exp-tareas-empty__title">Selecciona un trámite</p>
+            <p class="exp-tareas-empty__desc">
+              Haz clic en un trámite del listado para ver y gestionar sus tareas.
+            </p>
+          </div>
+        </section>
+      </ng-template>
+    </aside>
+  </div>
+
+  <app-edita-expediente-workspace-tabs
+    [expedienteEjercicio]="edita.verExpediente.ejercicio"
+    [expedienteNumero]="edita.verExpediente.numero"
+    [idExpediente]="edita.idExpediente"
+    [verojointeresado]="edita.verojointeresado"
+    [verborrarinteresado]="edita.verborrarinteresado"
+    [listarinteresadosdto]="edita.listarinteresadosdto"
+    [verxml]="edita.verxml"
+    [verEditartareatramite]="edita.verEditartareatramite"
+    [tareaDescripcion]="edita.tareatramiteexpedientever.descripcion"
+    [verNuevaNotifi]="edita.verNuevaNotifi"
+    [verformnuevatarea]="edita.verformnuevatarea"
+    [cargando]="edita.tareasFacade.cargando"
+    (nuevoInteresado)="handleNuevoInteresado()"
+    (borrarInteresados)="edita.borrarInteresados()"
+    (seleccionaInteresado)="edita.seleccionaInteresado($event)"
+    (verHistoricoExpediente)="edita.abrirModal('verExpedienteEditaModal')">
+  </app-edita-expediente-workspace-tabs>
+</section>

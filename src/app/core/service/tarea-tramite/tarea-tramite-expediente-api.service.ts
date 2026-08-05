@@ -28,7 +28,10 @@ export class TareaTramiteExpedienteApiService {
   listarPorExpediente(idExpe: number | string): Observable<TareaTramiteExpporExpedi[]> {
     return this.http
       .get(`${this.urlListarPorExpediente}/${idExpe}`)
-      .pipe(map((response) => response as TareaTramiteExpporExpedi[]))
+      .pipe(
+        map((response) => response as TareaTramiteExpporExpedi[]),
+        catchNotFoundAsEmpty<TareaTramiteExpporExpedi[]>(),
+      )
   }
 
   listarUsuario(): Observable<TareaTramiteExpedienteUsuarioListar[]> {

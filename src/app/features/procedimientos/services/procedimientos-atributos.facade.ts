@@ -10,14 +10,13 @@ import { clearFormValidation } from '../../../core/helper/bootstrap-form.helper'
 export interface ProcedimientosAtributosHost {
   atributoscrear: AtributosCrear;
   idprocedi: number;
-  idProcedi: number;
   idAtrib: unknown;
   idGrupo: unknown;
   etiGruAtrib: unknown;
   nuevaetiqueta?: string;
   veoborraratributo: boolean;
   disabledAtrib: boolean;
-  actualizaSourceAtributo(id: number): void;
+  cargarAtributos(id: number): void;
 }
 
 @Injectable()
@@ -45,13 +44,13 @@ export class ProcedimientosAtributosFacade {
       host.atributoscrear.requerido = 0;
     }
 
-    this.procedimientoService.crearAtributo(host.atributoscrear, host.idProcedi).pipe(
+    this.procedimientoService.crearAtributo(host.atributoscrear, host.idprocedi).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
         this.notificationService.saveSuccess('Atributo');
         this.modalManagerService.closeModal('NAtributosModal');
-        host.actualizaSourceAtributo(host.idProcedi);
+        host.cargarAtributos(host.idprocedi);
         host.atributoscrear = new AtributosCrear();
       },
       error: (err) => {
@@ -80,7 +79,7 @@ export class ProcedimientosAtributosFacade {
         next: () => {
           this.notificationService.saveSuccess('Atributo');
           this.modalManagerService.closeModal('EditoAtributosModal');
-          host.actualizaSourceAtributo(host.idprocedi);
+          host.cargarAtributos(host.idprocedi);
           host.atributoscrear = new AtributosCrear();
         },
         error: (err) => {
@@ -106,7 +105,7 @@ export class ProcedimientosAtributosFacade {
       ).subscribe({
         next: () => {
           host.disabledAtrib = false;
-          host.actualizaSourceAtributo(host.idprocedi);
+          host.cargarAtributos(host.idprocedi);
           this.notificationService.success({ title: 'Atributo Eliminado!' });
           host.veoborraratributo = false;
           host.atributoscrear = new AtributosCrear();

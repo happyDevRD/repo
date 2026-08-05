@@ -16,13 +16,6 @@ export interface ProcedimientosWorkspaceHost {
   isWorkspaceMode: boolean;
   activeWorkspaceTab: ProcedimientoWorkspaceTab;
   idprocedi: number;
-  idProcedi: number;
-  idProcedimiento: number;
-  edicion: boolean;
-  veoTarea: boolean;
-  veoPermiso: boolean;
-  veoAtributos: boolean;
-  veoeliminaProcedimiento: boolean;
   idverTarea: unknown;
   descripProcedimiento: string;
   siaProcedimiento: string;
@@ -33,9 +26,8 @@ export interface ProcedimientosWorkspaceHost {
   editarprocedi: EditarProcedi;
   materiaprocedimiento: MateriaProcedimiento[];
   departamento: string | null;
-  getListaTareas(id: number): void;
-  lanzaSourceTarea(): void;
-  actualizaSourceAtributo(id: number): void;
+  cargarTareas(): void;
+  cargarAtributos(id: number): void;
 }
 
 @Injectable()
@@ -51,10 +43,6 @@ export class ProcedimientosWorkspaceFacade {
   ) {}
 
   resetWorkspaceFlags(host: ProcedimientosWorkspaceHost): void {
-    host.veoTarea = false;
-    host.veoPermiso = false;
-    host.veoAtributos = false;
-    host.veoeliminaProcedimiento = false;
     host.idverTarea = undefined;
   }
 
@@ -63,13 +51,7 @@ export class ProcedimientosWorkspaceFacade {
       return;
     }
 
-    host.idProcedi = id;
     host.idprocedi = id;
-    host.idProcedimiento = id;
-    host.edicion = true;
-    host.veoTarea = true;
-    host.veoAtributos = true;
-    host.veoeliminaProcedimiento = true;
     this.session.setIdProcedimiento(id);
 
     this.procedimientoService.getProcedimiento(id).pipe(
@@ -99,9 +81,8 @@ export class ProcedimientosWorkspaceFacade {
       },
     });
 
-    host.getListaTareas(id);
-    host.lanzaSourceTarea();
-    host.actualizaSourceAtributo(id);
+    host.cargarTareas();
+    host.cargarAtributos(id);
   }
 
   setWorkspaceTab(host: ProcedimientosWorkspaceHost, tab: ProcedimientoWorkspaceTab): void {

@@ -42,6 +42,44 @@ export class EditaExpedienteWorkspaceTareasComponent {
     return (this.tareas ?? []).filter((t) => !!t.fecFin).length
   }
 
+  private static readonly DOC_IDS = new Set([
+    'descargaXml',
+    'conviertePDF',
+    'metadatos',
+    'enviarInside',
+    'altaXmlDoc',
+  ])
+
+  private static readonly FIRMA_IDS = new Set([
+    'firmaAtendida',
+    'firmaDesatendida',
+  ])
+
+  private static readonly TRAMITE_IDS = new Set([
+    'propuestaResolucion',
+    'crearNotificacion',
+    'generarSalida',
+    'tablonAnuncios',
+  ])
+
+  get accionesDocumento(): ModalAction[] {
+    return (this.toolbarActions ?? []).filter((a) =>
+      EditaExpedienteWorkspaceTareasComponent.DOC_IDS.has(a.id),
+    )
+  }
+
+  get accionesFirma(): ModalAction[] {
+    return (this.toolbarActions ?? []).filter((a) =>
+      EditaExpedienteWorkspaceTareasComponent.FIRMA_IDS.has(a.id),
+    )
+  }
+
+  get accionesTramite(): ModalAction[] {
+    return (this.toolbarActions ?? []).filter((a) =>
+      EditaExpedienteWorkspaceTareasComponent.TRAMITE_IDS.has(a.id),
+    )
+  }
+
   trackByTareaId(_index: number, tarea: TareaTramiteSeleccionRow): number {
     return tarea.id
   }
@@ -120,7 +158,10 @@ export class EditaExpedienteWorkspaceTareasComponent {
   }
 
   estadoLabel(tarea: TareaTramiteSeleccionRow): string {
-    switch (tarea.color) {
+    if (tarea.fecFin) {
+      return 'Finalizada'
+    }
+    switch (this.resolverColorEstado(tarea)) {
       case 'VERDE':
         return 'En plazo'
       case 'AMARILLO':
@@ -128,12 +169,15 @@ export class EditaExpedienteWorkspaceTareasComponent {
       case 'ROJO':
         return 'Fuera de plazo'
       default:
-        return tarea.fecFin ? 'Finalizada' : 'Sin estado'
+        return 'Sin plazo'
     }
   }
 
   estadoBadgeClass(tarea: TareaTramiteSeleccionRow): string {
-    switch (tarea.color) {
+    if (tarea.fecFin) {
+      return 'exp-tarea-badge--ok'
+    }
+    switch (this.resolverColorEstado(tarea)) {
       case 'VERDE':
         return 'exp-tarea-badge--ok'
       case 'AMARILLO':
@@ -143,5 +187,43 @@ export class EditaExpedienteWorkspaceTareasComponent {
       default:
         return 'exp-tarea-badge--muted'
     }
+  }
+
+  /** Color de estado: API o derivado de fecPlazo (dd/MM/yyyy). */
+  private resolverColorEstado(tarea: TareaTramiteSeleccionRow): string | null {
+    const color = String(tarea.color ?? '').toUpperCase()
+    if (color === 'VERDE' || color === 'AMARILLO' || color === 'ROJO') {
+      return color
+    }
+    return this.colorDesdeFecPlazo(tarea.fecPlazo)
+  }
+
+  private colorDesdeFecPlazo(fecPlazo: string | null | undefined): string | null {
+    if (!fecPlazo) {
+      return null
+    }
+    const parts = String(fecPlazo).trim().split(/[/-]/)
+    if (parts.length !== 3) {
+      return null
+    }
+    const [d, m, y] = parts.map((p) => Number(p))
+    if (!d || !m || !y) {
+      return null
+    }
+    const plazo = new Date(y, m - 1, d)
+    if (Number.isNaN(plazo.getTime())) {
+      return null
+    }
+    const hoy = new Date()
+    hoy.setHours(0, 0, 0, 0)
+    plazo.setHours(0, 0, 0, 0)
+    const diferencia = Math.round((plazo.getTime() - hoy.getTime()) / 86_400_000)
+    if (diferencia >= 7 && diferencia <= 10) {
+      return 'AMARILLO'
+    }
+    if (diferencia < 7) {
+      return 'ROJO'
+    }
+    return 'VERDE'
   }
 }

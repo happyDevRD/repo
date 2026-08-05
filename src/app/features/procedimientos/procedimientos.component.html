@@ -4,8 +4,6 @@
   </app-access-denied>
 
   <ng-container *ngIf="session.canManageProcedimientos">
-    <app-menuprocedimiento></app-menuprocedimiento>
-
     <ng-container *ngIf="!isWorkspaceMode">
       <app-procedimientos-list></app-procedimientos-list>
       <app-procedimientos-modals-alta></app-procedimientos-modals-alta>

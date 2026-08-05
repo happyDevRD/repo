@@ -1,7 +1,7 @@
 <div *ngIf="verTareasdelTramite" class="exp-tareas seccion-tareas-tramite">
   <section class="exp-tareas-panel" aria-labelledby="exp-tareas-title">
     <header class="exp-tareas-panel__head">
-      <div>
+      <div class="exp-tareas-panel__intro">
         <p class="exp-tareas-panel__eyebrow">Tareas</p>
         <h2 id="exp-tareas-title" class="exp-tareas-panel__title">Listado de Tareas del Trámite</h2>
         <p class="exp-tareas-panel__desc">
@@ -67,14 +67,6 @@
             </ng-container>
           </div>
         </div>
-        <div class="exp-tarea-context__actions" *ngIf="verAccionesdeTarea && toolbarActions?.length">
-          <app-modal-action-bar
-            containerClass="d-flex flex-wrap gap-2"
-            size="sm"
-            [actions]="toolbarActions"
-            (action)="handleAction($event)">
-          </app-modal-action-bar>
-        </div>
       </ng-container>
       <ng-template #contextEmpty>
         <div class="exp-tarea-context__main">
@@ -87,6 +79,41 @@
         </div>
       </ng-template>
     </section>
+
+    <!-- Acciones de la tarea seleccionada, agrupadas por tipo -->
+    <nav
+      *ngIf="verAccionesdeTarea && toolbarActions?.length"
+      class="exp-tarea-ops"
+      aria-label="Operaciones de la tarea"
+    >
+      <div class="exp-tarea-ops__group" *ngIf="accionesDocumento.length">
+        <span class="exp-tarea-ops__label">Documento</span>
+        <app-modal-action-bar
+          containerClass="exp-tarea-ops__bar"
+          size="sm"
+          [actions]="accionesDocumento"
+          (action)="handleAction($event)">
+        </app-modal-action-bar>
+      </div>
+      <div class="exp-tarea-ops__group" *ngIf="accionesFirma.length">
+        <span class="exp-tarea-ops__label">Firma</span>
+        <app-modal-action-bar
+          containerClass="exp-tarea-ops__bar"
+          size="sm"
+          [actions]="accionesFirma"
+          (action)="handleAction($event)">
+        </app-modal-action-bar>
+      </div>
+      <div class="exp-tarea-ops__group" *ngIf="accionesTramite.length">
+        <span class="exp-tarea-ops__label">Trámite</span>
+        <app-modal-action-bar
+          containerClass="exp-tarea-ops__bar"
+          size="sm"
+          [actions]="accionesTramite"
+          (action)="handleAction($event)">
+        </app-modal-action-bar>
+      </div>
+    </nav>
 
     <div class="exp-tareas-body">
       <div *ngIf="tareasCargando" class="exp-tareas-loading" role="status">
@@ -144,7 +171,7 @@
               <button
                 *ngFor="let item of acciones; trackBy: trackByActionId"
                 type="button"
-                class="btn-iflow btn-iflow--sm btn-iflow--icon"
+                class="btn-iflow btn-iflow--sm"
                 [class.btn-iflow--secondary]="(item.tone || 'secondary') === 'secondary'"
                 [class.btn-iflow--primary]="item.tone === 'primary'"
                 [class.btn-iflow--danger]="item.tone === 'danger'"
@@ -165,7 +192,7 @@
         <i class="bi bi-list-task exp-tareas-empty__icon" aria-hidden="true"></i>
         <p class="exp-tareas-empty__title">Sin tareas</p>
         <p class="exp-tareas-empty__desc">
-          Este trámite aún no tiene tareas. Cree una con el botón de la cabecera.
+          Este trámite aún no tiene tareas. Cree una con el botón «Nueva tarea».
         </p>
       </div>
     </div>

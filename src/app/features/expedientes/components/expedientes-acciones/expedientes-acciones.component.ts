@@ -78,7 +78,7 @@ export class ExpedientesAccionesComponent {
       case 'tramitar': e.reenvioEditar(); break
       case 'interesados': e.abrirModalInteresadosDesdeListado(e.idexpediente); break
       case 'registro': e.CargoRegistroDocu(); break
-      case 'tramitador': e.abrirModal('AsigfnarTramitadorModal'); break
+      case 'tramitador': e.abrirModal('AsignarTramitadorModal'); break
       case 'tareas': e.abrirModalTareasExpediente(); break
       case 'atributo': e.abrirModalAtributos(); break
       case 'devolver': e.DevolverExpe(); break

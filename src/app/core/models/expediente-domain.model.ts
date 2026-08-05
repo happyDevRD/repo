@@ -46,6 +46,7 @@ export class ExpedienteListar {
   email?: string | null;
   idHisDocum?: number | string | null;
   insideEstado?: string;
+  personaEntidad?: Pick<PersonaEntidadDto, 'desPerEntid'> | null;
   procedimiento: ExpedienteListarProcedimiento = {
     id: "",
     descripcion: "",
@@ -720,7 +721,7 @@ export class ArchivoFirmantes {
 
 export class InsertaBolsaCrear {
   prioridad!: string;
-  tipSesion!: number;
+  tipSesion!: number | null;
   /** ISO `YYYY-MM-DD` (input type=date). */
   fecAlta!: string;
   /** ISO `YYYY-MM-DD` (input type=date). */
@@ -732,7 +733,7 @@ export class InsertaBolsaCrear {
   usuContr!: string;
   /** ISO `YYYY-MM-DD` (input type=date). */
   fecMaxResol!: string;
-  tipPunto!: number;
+  tipPunto!: number | null;
   estado!: number;
   idOrgEleme!: string;
   dictamen!: string
@@ -981,6 +982,12 @@ export class LeerNotificacion {
   codArchi!: number | null;
   codArchiAcuse!: number | null;
   usuContr!: string | null;
+  /** Presentes en filas del grid (no siempre en el DTO base). */
+  numDocum?: string;
+  tareaProcedimiento?: string | number;
+  numTarea?: string | number;
+  usuario?: string;
+  desPerEntid?: string;
 }
 
 export class EditarNotificacion {
@@ -1054,6 +1061,8 @@ export class ListarTramitador {
   estadoTramitacion!: string;
   usuContr!: string;
   fecContr!: Date
+  /** Presente en filas del grid (no siempre en el DTO base): indica si el tramitador posee actualmente el expediente. */
+  posesion?: number | string | null;
 
 }
 

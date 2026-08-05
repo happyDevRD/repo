@@ -1,25 +1,3 @@
-export class RespuestasHttp {
-  error!: unknown;
-  headers!: unknown;
-  status!: number;
-  statusText!: string;
-  url!: string;
-}
-
-export class TareaProcediCreada {
-  id!: number;
-  procedimiento!: number;
-  descripcion!: string;
-  faseTarea!: string;
-  plazo!: number;
-  tipoPlazo!: string;
-  tareaAutomatica!: string;
-  plantillaDefectoModulo!: number;
-  plantillaDefecto!: string;
-  procesoFirmadoDefecto!: string;
-  usuContr!: string;
-}
-
 export class FirmaListar {
   idProFirma!: number;
   tipFirma!: number;
@@ -32,13 +10,6 @@ export class FirmaListar {
   codEntid!: number;
   plantilla!: string;
   procesoFirmadoDefecto!: number;
-}
-
-export class PermisoProcediCreado {
-  idproceso!: number;
-  idtarea!: number;
-  usuario!: string;
-  usuctrl!: string;
 }
 
 export type ProcedimientoWorkspaceTab = 'datos' | 'tareas' | 'permisos' | 'atributos';

@@ -153,7 +153,7 @@
                     </div>
                     <div class="proc-panel__actions">
                          <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
-                              (click)="p.borravaloresNuevaTarea(); p.abrirOffcanvas('tareasOffcanvas')">
+                              (click)="p.borravaloresNuevaTarea(); p.abrirModal('tareasModal')">
                               <i class="bi bi-plus-lg" aria-hidden="true"></i> Nueva tarea
                          </button>
                          <button *ngIf="p.verEliminaTarea" class="btn-iflow btn-iflow--danger btn-iflow--sm"
@@ -162,12 +162,23 @@
                          </button>
                     </div>
                </header>
-               <div class="proc-panel__body proc-panel__body--grid">
-                    <app-iflow-grid #gridTareas id="gridTareas" selectionMode="radio" radioName="Tareas"
-                         (rowClick)="p.envioTareaProcedi($event)" (rowDoubleClick)="p.onRowDoubleClick($event)"
-                         [columns]="p.columnsTarea" [columnsresize]="true" [height]="440"
-                         [localization]="p.localizationObject" [source]="p.sourceTarea">
-                    </app-iflow-grid>
+               <div class="proc-panel__body">
+                    <app-data-table [items]="p.tareas" [loading]="p.cargandoTareas"
+                         emptyMessage="Este procedimiento no tiene tareas configuradas."
+                         searchPlaceholder="Buscar por descripción, fase o acción…"
+                         exportFileName="tareas-procedimiento"
+                         [rowClass]="tareaRowClass"
+                         (rowClick)="p.envioTareaProcedi($event)" (rowDblClick)="p.onRowDoubleClick($event)">
+                         <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
+                         <app-table-column header="Acciones" [sortValue]="accionValue" [searchValue]="accionValue"
+                              [sortable]="true" [filterable]="true">
+                              <ng-template let-row>{{ p.getAccionLabel(row.accion) }}</ng-template>
+                         </app-table-column>
+                         <app-table-column header="Fase" field="faseTarea" [sortable]="true" [filterable]="true"></app-table-column>
+                         <app-table-column header="Plazo" field="plazo" [sortable]="true" [filterable]="true"
+                              filterType="numberRange"></app-table-column>
+                         <app-table-column header="Tipo plazo" field="tipoPlazo" [sortable]="true" [filterable]="true"></app-table-column>
+                    </app-data-table>
                </div>
           </section>
 
@@ -203,11 +214,17 @@
                               </button>
                          </div>
                     </header>
-                    <div class="proc-panel__body proc-panel__body--grid">
-                         <app-iflow-grid #gridPermisos id="gridPermisos" selectionMode="radio" radioName="Permisos"
-                              (rowClick)="p.idpermisosPermi($event)" [columns]="p.columnsPermi" [columnsresize]="true"
-                              [height]="440" [localization]="p.localizationObject" [source]="p.sourcePermi">
-                         </app-iflow-grid>
+                    <div class="proc-panel__body">
+                         <app-data-table [items]="p.permisos" [loading]="p.cargandoPermisos"
+                              emptyMessage="Esta tarea no tiene permisos asignados."
+                              searchPlaceholder="Buscar por usuario…"
+                              exportFileName="permisos-tarea"
+                              [rowClass]="permisoRowClass"
+                              (rowClick)="p.idpermisosPermi($event)">
+                              <app-table-column header="Usuario" field="usuario" [sortable]="true"></app-table-column>
+                              <app-table-column header="Procedimiento" field="desProce" [sortable]="true"></app-table-column>
+                              <app-table-column header="Tarea" field="desTareaProce" [sortable]="true"></app-table-column>
+                         </app-data-table>
                     </div>
                </ng-container>
           </section>
@@ -231,12 +248,31 @@
                          </button>
                     </div>
                </header>
-               <div class="proc-panel__body proc-panel__body--grid">
-                    <app-iflow-grid #gridAtributos id="gridAtributos" selectionMode="radio" radioName="Atributos"
-                         (rowClick)="p.marcoAtributos($event)" (rowDoubleClick)="p.onAtributoDoubleClick($event)"
-                         [columns]="p.columnsAtributos" [columnsresize]="true" [height]="440"
-                         [localization]="p.localizationObject" [source]="p.sourceAtributos">
-                    </app-iflow-grid>
+               <div class="proc-panel__body">
+                    <app-data-table [items]="p.atributosList" [loading]="p.cargandoAtributosList"
+                         emptyMessage="Este procedimiento no tiene atributos configurados."
+                         searchPlaceholder="Buscar por etiqueta o descripción…"
+                         exportFileName="atributos-procedimiento"
+                         [rowClass]="atributoRowClass"
+                         (rowClick)="p.marcoAtributos($event)" (rowDblClick)="p.onAtributoDoubleClick($event)">
+                         <app-table-column header="Etiqueta" field="etiGruAtrib" [sortable]="true"></app-table-column>
+                         <app-table-column header="Descripción" field="desGruAtrib" [sortable]="true"></app-table-column>
+                         <app-table-column header="Requerido" [sortValue]="requeridoValue" [searchValue]="requeridoValue"
+                              align="center" [sortable]="true" [filterable]="true" filterType="boolean"
+                              filterTrueLabel="Si" filterFalseLabel="No">
+                              <ng-template let-row>
+                                   <span class="badge" [class.bg-success]="row.requerido == 1"
+                                        [class.bg-secondary]="row.requerido != 1">
+                                        {{ row.requerido == 1 ? 'SI' : 'NO' }}
+                                   </span>
+                              </ng-template>
+                         </app-table-column>
+                         <app-table-column header="Val.Inici" field="valInici"></app-table-column>
+                         <app-table-column header="Val.Minim" field="valMinim"></app-table-column>
+                         <app-table-column header="Val.Maxim" field="valMaxim"></app-table-column>
+                         <app-table-column header="Tipo" field="tipo" [sortable]="true" [filterable]="true"></app-table-column>
+                         <app-table-column header="Longitud" field="longitud" [sortable]="true"></app-table-column>
+                    </app-data-table>
                </div>
           </section>
 

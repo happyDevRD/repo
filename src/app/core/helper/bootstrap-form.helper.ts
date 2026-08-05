@@ -54,3 +54,37 @@ export const limpiarErroresFormulario = (formId: string, reset = false): void =>
   }
   clearFormValidation(formId)
 }
+
+/** Fuerza was-validated + is-invalid en campos required vacíos (útil con selects ngValue). */
+export const marcarCamposObligatoriosInvalidos = (
+  formId: string,
+  extraInvalidIds: string[] = [],
+): void => {
+  const form = document.getElementById(formId) as HTMLFormElement | null
+  if (!form) {
+    return
+  }
+  form.classList.add('was-validated')
+  const required = Array.from(
+    form.querySelectorAll<HTMLInputElement | HTMLSelectElement>(
+      'input[required], select[required], textarea[required]',
+    ),
+  )
+  for (const field of required) {
+    const empty =
+      field.value === '' ||
+      field.value == null ||
+      (field instanceof HTMLSelectElement && field.selectedIndex >= 0 && field.options[field.selectedIndex]?.disabled)
+    if (empty || !field.checkValidity()) {
+      field.classList.add('is-invalid')
+    } else {
+      field.classList.remove('is-invalid')
+    }
+  }
+  for (const id of extraInvalidIds) {
+    const field = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null
+    if (field) {
+      field.classList.add('is-invalid')
+    }
+  }
+}

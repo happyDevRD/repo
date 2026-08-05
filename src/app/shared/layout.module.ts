@@ -4,14 +4,12 @@ import { RouterModule } from '@angular/router';
 
 import { NavComponent } from '../nav/nav.component';
 import { HeadersComponent } from '../headers/headers.component';
-import { FooterComponent } from '../footer/footer.component';
 import { AppShellComponent } from '../layout/app-shell.component';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
 const LAYOUT_DECLARATIONS = [
   NavComponent,
   HeadersComponent,
-  FooterComponent,
   AppShellComponent,
   AccessDeniedComponent,
 ];

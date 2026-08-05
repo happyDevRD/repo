@@ -1,21 +1,34 @@
-<div class="edita-toolbar" *ngIf="veonotificaciones || veoTramitadores">
-  <nav class="expediente-acciones" aria-label="Navegación de vista">
-    <div class="expediente-acciones__fila">
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Volver a Trámites"
-              (click)="handleNoverNotificaciones()">
-        <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a Trámites
-      </button>
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Volver"
-              (click)="handleVolverListadoExpedientes()">
-        <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
-      </button>
-    </div>
-  </nav>
-</div>
+<!-- Cabecera de página: título + acción primaria (como solicitudes) -->
+<header
+  *ngIf="botonVerNotifi && vertramite"
+  class="edita-page-head d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom"
+>
+  <div>
+    <p class="text-uppercase small fw-semibold text-secondary mb-1" style="letter-spacing:.06em">Trámite</p>
+    <h2 class="h4 fw-bold mb-0">Listado de Trámites</h2>
+    <p class="small text-secondary mb-0 mt-1">
+      Clic para ver tareas · Doble clic para editar
+    </p>
+  </div>
+  <div class="d-flex flex-wrap gap-2 align-items-center">
+    <button
+      type="button"
+      class="btn-iflow btn-iflow--primary"
+      title="Nuevo Trámite"
+      (click)="handleNuevoTramite()"
+    >
+      <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo trámite
+    </button>
+    <button
+      type="button"
+      class="btn-iflow btn-iflow--secondary"
+      title="Volver"
+      (click)="handleVolverListadoExpedientes()"
+    >
+      <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
+    </button>
+  </div>
+</header>
 
 <section *ngIf="botonVerNotifi && vertramite" class="edita-toolbar" aria-label="Acciones de tramitación">
   <div class="edita-toolbar__top">
@@ -50,12 +63,6 @@
         {{ insideUltimoEnvio?.estadoEnvio === 'SIMULADO' ? 'simulado' : 'enviado' }}
       </span>
       <span *ngIf="insideUltimoEnvio?.estadoEnvio === 'ERROR'" class="badge bg-danger">error</span>
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Volver"
-              (click)="handleVolverListadoExpedientes()">
-        <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
-      </button>
     </div>
   </div>
 

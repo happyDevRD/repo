@@ -10,13 +10,17 @@ export function validarFormularioCreacionNotificacion(params: {
 }): boolean {
   const { creanotificacion, idTarea, interesados } = params;
   const tieneFecha = !!creanotificacion?.fecNotif;
-  const tieneDni = !!creanotificacion?.dni && creanotificacion.dni.trim() !== '';
+  const tieneDni = !!creanotificacion?.dni && String(creanotificacion.dni).trim() !== '';
   const interesadoExiste = !!interesados?.some(
     (inter) => inter.numDocumInter === creanotificacion?.dni,
   );
   const tieneTarea = !!idTarea;
+  const notificador = creanotificacion?.notificador as string | number | null | undefined;
   const tieneNotificador =
-    !!creanotificacion?.notificador && creanotificacion.notificador !== 0;
+    notificador != null &&
+    notificador !== '' &&
+    notificador !== 0 &&
+    String(notificador).trim() !== '';
 
   return tieneFecha && tieneDni && interesadoExiste && tieneTarea && tieneNotificador;
 }

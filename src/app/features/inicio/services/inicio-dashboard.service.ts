@@ -131,25 +131,6 @@ export class InicioDashboardService {
       .pipe(catchError(() => of([])));
   }
 
-  firmasPendientesUrl(): string {
-    return `${environment.apiUrl}tareaTramiteExpediente/listarFirmaPendiente/${this.session.user}`;
-  }
-
-  firmasTercerosUrl(): string {
-    return `${environment.apiUrl}tareaTramiteExpediente/listarFirmaPendienteTerceros/${this.session.user}`;
-  }
-
-  notificacionesUrl(): string {
-    return `${environment.apiUrl}tareaTramiteExpediente/listarNotificacionPendiente/${this.session.user}`;
-  }
-
-  countFromUrl(url: string): Observable<number> {
-    return this.http.get<unknown[]>(url).pipe(
-      map(data => data?.length ?? 0),
-      catchError(() => of(0)),
-    );
-  }
-
   emptyCounts(): DashboardCounts {
     return {
       solicitudes: null,

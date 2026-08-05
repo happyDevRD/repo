@@ -19,6 +19,11 @@ import {
   InsideAccionesFacade,
   InsideRemisionForm,
 } from '../../../../core/service/inside/inside-acciones.facade'
+import {
+  limpiarErroresFormulario,
+  marcarCamposObligatoriosInvalidos,
+  validarFormularioBootstrap,
+} from '../../../../core/helper/bootstrap-form.helper'
 
 export type { EditaExpedienteInsideHost, InsideRemisionForm }
 
@@ -93,6 +98,7 @@ export class EditaExpedienteOperacionesFacade {
 
   limpiarFormularioBolsa(host: EditaExpedienteBolsaHost): void {
     host.insertabolsacrear = new InsertaBolsaCrear()
+    limpiarErroresFormulario('formPropuestaResolucion')
   }
 
   clickAtrasBolsaCrear(host: EditaExpedienteBolsaHost): void {
@@ -112,22 +118,55 @@ export class EditaExpedienteOperacionesFacade {
     host.verInsertarBolsa = true
   }
 
+  validateAndCrearInsertaBolsa(event: Event, host: EditaExpedienteBolsaHost): void {
+    event.preventDefault()
+    const htmlOk = validarFormularioBootstrap(event, this.notificationService)
+    const modelOk = this.camposObligatoriosBolsaOk(host)
+    if (!htmlOk || !modelOk) {
+      const extras: string[] = []
+      if (host.insertabolsacrear.prioridad == null || host.insertabolsacrear.prioridad === '') {
+        extras.push('prioridadBolsa')
+      }
+      if (host.insertabolsacrear.tipSesion == null) {
+        extras.push('tipSesionBolsa')
+      }
+      if (host.insertabolsacrear.tipPunto == null) {
+        extras.push('tipPuntoBolsa')
+      }
+      marcarCamposObligatoriosInvalidos('formPropuestaResolucion', extras)
+      if (htmlOk && !modelOk) {
+        this.notificationService.incompleteFields()
+      }
+      return
+    }
+    this.crearInsertaBolsa(host)
+  }
+
+  private camposObligatoriosBolsaOk(host: EditaExpedienteBolsaHost): boolean {
+    const b = host.insertabolsacrear
+    return !!(
+      b.fecAlta &&
+      b.fecPrefe &&
+      b.fecMaxResol &&
+      b.prioridad != null &&
+      b.prioridad !== '' &&
+      b.tipSesion != null &&
+      b.tipPunto != null
+    )
+  }
+
   crearInsertaBolsa(host: EditaExpedienteBolsaHost): void {
     host.insertabolsacrear.usuContr = host.usuContrl!
     host.insertabolsacrear.idOrgEleme = host.idOrgElemen!
     host.insertabolsacrear.refExped = host.ejerNumExpedi
     host.insertabolsacrear.estado = 0
 
-    const camposObligatorios =
-      host.insertabolsacrear.fecAlta &&
-      host.insertabolsacrear.fecPrefe &&
-      host.insertabolsacrear.fecMaxResol &&
-      host.insertabolsacrear.prioridad != null &&
-      host.insertabolsacrear.prioridad !== '' &&
-      host.insertabolsacrear.tipSesion != null &&
-      host.insertabolsacrear.tipPunto != null
-
-    if (!camposObligatorios) {
+    if (!this.camposObligatoriosBolsaOk(host)) {
+      marcarCamposObligatoriosInvalidos('formPropuestaResolucion', [
+        'prioridadBolsa',
+        'tipSesionBolsa',
+        'tipPuntoBolsa',
+      ])
       this.notificationService.incompleteFields()
       return
     }
@@ -149,31 +188,54 @@ export class EditaExpedienteOperacionesFacade {
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response) => {
-          if (response == null) {
-            this.notificationService.saveSuccess('Propuesta de resolución')
-            this.limpiarFormularioBolsa(host)
-            host.verTareasdelTramite = true
-            host.verInsertarBolsa = false
-            host.refrescoSourceTareasTramite(host.idTramite)
-            this.modalManagerService.closeModal('GenerarPropuestaResolucionModal')
-          }
-        },
+        next: () => this.onPropuestaResolucionCreada(host),
         error: (response: HttpErrorResponse) => {
+          if (response.status === 200 || response.status === 201) {
+            this.onPropuestaResolucionCreada(host)
+            return
+          }
+          const msg = response?.error?.message as string | undefined
+          if (msg && /propuesta de resoluci/i.test(msg)) {
+            this.marcarPropuestaYaExistente(host)
+            this.notificationService.warning(msg)
+            this.modalManagerService.closeModal('GenerarPropuestaResolucionModal')
+            return
+          }
           this.notificationService.fromHttpError(
             response,
             'No se ha generado la propuesta de resolución.',
           )
-          this.limpiarFormularioBolsa(host)
         },
       })
+  }
+
+  private onPropuestaResolucionCreada(host: EditaExpedienteBolsaHost): void {
+    this.notificationService.saveSuccess('Propuesta de resolución')
+    this.limpiarFormularioBolsa(host)
+    this.marcarPropuestaYaExistente(host)
+    host.verTareasdelTramite = true
+    host.verInsertarBolsa = false
+    host.refrescoSourceTareasTramite(host.idTramite)
+    this.modalManagerService.closeModal('GenerarPropuestaResolucionModal')
+  }
+
+  private marcarPropuestaYaExistente(host: EditaExpedienteBolsaHost): void {
+    const flags = host as EditaExpedienteBolsaHost & {
+      veopropuestaresolu?: boolean
+      veoPropuestaResolucion?: boolean
+    }
+    flags.veopropuestaresolu = false
+    flags.veoPropuestaResolucion = false
   }
 
   // --- Generar salida ---
 
   limpiarFormularioGenerarSalida(host: EditaExpedienteSalidaHost): void {
     host.creargenerarsalida = new CrearGenerarSalida()
-    host.temadocumentolistar = new TemaDocumentoListar[0]
+    host.creargenerarsalida.codTema = ''
+    host.creargenerarsalida.extracto = ''
+    host.creargenerarsalida.observaciones = ''
+    limpiarErroresFormulario('formGenerarSalida')
   }
 
   clickAtrasGenerarSalida(host: EditaExpedienteSalidaHost): void {
@@ -181,12 +243,46 @@ export class EditaExpedienteOperacionesFacade {
     host.verGenerarSalida = false
     host.sourceTareasTramite = this.tareasFacade.createGridAdapter(host.idTramite)
     this.limpiarFormularioGenerarSalida(host)
+    this.modalManagerService.closeModal('GenerarSalidaModal')
+  }
+
+  onTemaDocumentoChange(host: EditaExpedienteSalidaHost): void {
+    const cod = host.creargenerarsalida?.codTema
+    if (!cod) {
+      return
+    }
+    const tema = (host.temadocumentolistar ?? []).find((t) => t.codTema === cod)
+    if (tema?.extracto && !host.creargenerarsalida.extracto) {
+      host.creargenerarsalida.extracto = tema.extracto
+    } else if (tema?.desTema && !host.creargenerarsalida.extracto) {
+      host.creargenerarsalida.extracto = tema.desTema
+    }
+  }
+
+  validateAndPrepararCrearGenerarSalida(event: Event, host: EditaExpedienteSalidaHost): void {
+    event.preventDefault()
+    if (!validarFormularioBootstrap(event, this.notificationService)) {
+      return
+    }
+    this.prepararCrearGenerarSalida(host)
   }
 
   prepararCrearGenerarSalida(host: EditaExpedienteSalidaHost): void {
     host.creargenerarsalida.ejeExped = host.verExpediente.ejercicio
     host.creargenerarsalida.numExped = host.verExpediente.numero
     host.creargenerarsalida.usuContr = host.usuContrl!
+
+    if (!host.creargenerarsalida.extracto?.trim()) {
+      this.notificationService.warning('Debe rellenar el extracto.')
+      return
+    }
+
+    if (!host.numeroArchivo) {
+      this.notificationService.error(
+        'Esta tarea no tiene archivo asociado por lo que no se puede generar la salida.',
+      )
+      return
+    }
 
     if (host.nunRegisTarea) {
       this.notificationService.confirm({
@@ -207,39 +303,53 @@ export class EditaExpedienteOperacionesFacade {
   }
 
   ejecutarCrearGenerarSalida(host: EditaExpedienteSalidaHost): void {
-    if (
-      host.creargenerarsalida.codTema ||
-      host.creargenerarsalida.extracto ||
-      host.creargenerarsalida.observaciones
-    ) {
-      this.expedientesService
-        .crearGenerarSalida(
-          host.creargenerarsalida,
-          host.verExpediente.personaEntidad.idPerso as number,
-          host.verExpediente.personaEntidad.idHisPerso as number,
-          host.numeroArchivo,
-          host.idTarea,
-        )
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {},
-          error: (err: HttpErrorResponse) => {
-            host.identificadorGenerarSalida = err.error?.text
-            if (err.status === 201) {
-              this.notificationService.saveSuccess(`Registro de salida: ${host.identificadorGenerarSalida}`)
-              host.sourceTareasTramite = this.tareasFacade.createGridAdapter(host.idTramite, {
-                sortColumn: 'numero',
-                sortDirection: 'desc',
-              })
-              this.modalManagerService.closeModal('GenerarSalidaModal')
-            }
-          },
-        })
-    } else {
-      this.notificationService.warning('Debe rellenar todos los campos obligatorios.')
-    }
-
-    this.limpiarFormularioGenerarSalida(host)
+    this.expedientesService
+      .crearGenerarSalida(
+        host.creargenerarsalida,
+        host.verExpediente.personaEntidad.idPerso as number,
+        host.verExpediente.personaEntidad.idHisPerso as number,
+        host.numeroArchivo,
+        host.idTarea,
+      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          const id =
+            typeof response === 'string'
+              ? response
+              : (response as { text?: string } | null)?.text
+          this.notificationService.saveSuccess(
+            id ? `Registro de salida: ${id}` : 'Registro de salida',
+          )
+          this.limpiarFormularioGenerarSalida(host)
+          host.sourceTareasTramite = this.tareasFacade.createGridAdapter(host.idTramite, {
+            sortColumn: 'numero',
+            sortDirection: 'desc',
+          })
+          this.modalManagerService.closeModal('GenerarSalidaModal')
+        },
+        error: (err: HttpErrorResponse) => {
+          // Algunos endpoints devuelven texto plano con 201 y Angular lo trata como error de parseo.
+          if (err.status === 200 || err.status === 201) {
+            host.identificadorGenerarSalida =
+              typeof err.error === 'string' ? err.error : err.error?.text ?? err.error
+            this.notificationService.saveSuccess(
+              `Registro de salida: ${host.identificadorGenerarSalida ?? ''}`.trim(),
+            )
+            this.limpiarFormularioGenerarSalida(host)
+            host.sourceTareasTramite = this.tareasFacade.createGridAdapter(host.idTramite, {
+              sortColumn: 'numero',
+              sortDirection: 'desc',
+            })
+            this.modalManagerService.closeModal('GenerarSalidaModal')
+            return
+          }
+          this.notificationService.fromHttpError(
+            err,
+            'No se ha podido generar el registro de salida.',
+          )
+        },
+      })
   }
 
   // --- Interesados ---

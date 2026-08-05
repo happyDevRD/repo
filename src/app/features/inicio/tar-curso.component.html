@@ -14,46 +14,27 @@
           </div>
         </header>
 
-        <div class="table-responsive grid-container">
-          <table class="table table-iflow table-hover">
-            <thead>
-              <tr>
-                <th scope="col" class="col-select"></th>
-                <th scope="col">Expediente</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Interesado</th>
-                <th scope="col">Procedimiento</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Fecha apertura</th>
-                <th scope="col">Fecha calculada</th>
-                <th scope="col">Alerta</th>
-                <th scope="col">Usuario</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let tarea of tareatramiteexpedienteusuariolistar"
-                  [class.table-row-selected]="idtarea === tarea.id">
-                <td>
-                  <input type="radio" class="form-check-input" name="RadioId"
-                         [checked]="idtarea === tarea.id"
-                         (click)="pulsaAccionesTarea(tarea.id, tarea.archivo)"
-                         [attr.aria-label]="'Seleccionar tarea ' + tarea.id">
-                </td>
-                <td>{{ tarea.id }}</td>
-                <td>—</td>
-                <td>—</td>
-                <td>—</td>
-                <td>{{ tarea.descripcion }}</td>
-                <td>{{ tarea.fecInicio }}</td>
-                <td>{{ tarea.propuestaResolucion }}</td>
-                <td>—</td>
-                <td>{{ tarea.usuario }}</td>
-              </tr>
-              <tr *ngIf="!tareatramiteexpedienteusuariolistar?.length">
-                <td colspan="10" class="table-empty">No hay tareas en curso</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <app-data-table [items]="tareatramiteexpedienteusuariolistar" [loading]="cargando"
+          emptyMessage="No hay tareas en curso."
+          [rowClass]="rowClassFor"
+          (rowClick)="pulsaAccionesTarea($event.id, $event.archivo)">
+          <app-table-column header="Expediente" field="id" [sortable]="true" align="center"></app-table-column>
+          <app-table-column header="Estado" align="center">
+            <ng-template>—</ng-template>
+          </app-table-column>
+          <app-table-column header="Interesado" align="center">
+            <ng-template>—</ng-template>
+          </app-table-column>
+          <app-table-column header="Procedimiento" align="center">
+            <ng-template>—</ng-template>
+          </app-table-column>
+          <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
+          <app-table-column header="Fecha apertura" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center"></app-table-column>
+          <app-table-column header="Fecha calculada" field="propuestaResolucion" [sortable]="true" align="center"></app-table-column>
+          <app-table-column header="Alerta" align="center">
+            <ng-template>—</ng-template>
+          </app-table-column>
+          <app-table-column header="Usuario" field="usuario" [sortable]="true" [filterable]="true" align="center"></app-table-column>
+        </app-data-table>
       </div>
 </app-shell>

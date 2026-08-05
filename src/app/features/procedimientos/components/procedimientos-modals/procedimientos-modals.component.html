@@ -191,16 +191,15 @@
 
 
 <!-- procedimientos-modals-tareas -->
-<!-- Offcanvas: Modificar Tarea -->
-<div class="offcanvas offcanvas-end offcanvas-iflow" id="modificarTareaOffcanvas" tabindex="-1"
-  aria-labelledby="modificarTareaOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h4 class="offcanvas-title" id="modificarTareaOffcanvasLabel">Modificar Tarea</h4>
-    <button type="button" class="btn-close" aria-label="Cerrar"
-      (click)="p.limpiarErroresModificarTarea(); p.cerrarOffcanvas('modificarTareaOffcanvas')"></button>
-  </div>
-  <div class="offcanvas-body">
-    <form id="formModificarTarea" (ngSubmit)="p.validateAndEditTarea($event)">
+<app-modal-shell
+  modalId="modifitareasModalListado"
+  title="Modificar Tarea"
+  titleId="modifitareasModalListadoLabel"
+  modalClass="iflow-modal iflow-modal--fit proc-tarea-modal"
+  dialogClass="modal-lg"
+  [dismissOnClose]="false"
+  (closed)="p.limpiarErroresModificarTarea(); p.cerrarModal('modifitareasModalListado')">
+  <form modalBody id="formModificarTarea" (ngSubmit)="p.validateAndEditTarea($event)">
       <div class="mb-3">
         <div class="form-floating">
           <input class="form-control" id="descripcionModTarea" name="descripcion" type="text"
@@ -292,25 +291,24 @@
           <label class="required-field" for="firmaModificar">Firma por defecto</label>
         </div>
       </div>
-      <div class="offcanvas-iflow__actions">
-        <button type="button" class="btn-iflow btn-iflow--secondary"
-          (click)="p.limpiarErroresModificarTarea(); p.cerrarOffcanvas('modificarTareaOffcanvas')">Cancelar</button>
-        <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-      </div>
-    </form>
+  </form>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      (click)="p.limpiarErroresModificarTarea(); p.cerrarModal('modifitareasModalListado')">Cancelar</button>
+    <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+      form="formModificarTarea">Guardar</button>
   </div>
-</div>
+</app-modal-shell>
 
-<!-- Offcanvas: Nueva Tarea -->
-<div class="offcanvas offcanvas-end offcanvas-iflow" id="tareasOffcanvas" tabindex="-1"
-  aria-labelledby="tareasOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h4 class="offcanvas-title" id="tareasOffcanvasLabel">Nueva Tarea</h4>
-    <button type="button" class="btn-close" aria-label="Cerrar"
-      (click)="p.borravaloresNuevaTarea(); p.cerrarOffcanvas('tareasOffcanvas')"></button>
-  </div>
-  <div class="offcanvas-body">
-    <form id="formNuevaTarea" (ngSubmit)="p.validateAndCreateTarea($event)">
+<app-modal-shell
+  modalId="tareasModal"
+  title="Nueva Tarea"
+  titleId="tareasModalLabel"
+  modalClass="iflow-modal iflow-modal--fit proc-tarea-modal"
+  dialogClass="modal-lg"
+  [dismissOnClose]="false"
+  (closed)="p.borravaloresNuevaTarea(); p.cerrarModal('tareasModal')">
+  <form modalBody id="formNuevaTarea" (ngSubmit)="p.validateAndCreateTarea($event)">
       <div class="mb-3">
         <div class="form-floating">
           <textarea class="form-control" id="descripcionTarea" name="descripcion"
@@ -403,11 +401,11 @@
           <label class="required-field" for="firmaTarea">Firma por defecto</label>
         </div>
       </div>
-      <div class="offcanvas-iflow__actions">
-        <button type="button" class="btn-iflow btn-iflow--secondary"
-          (click)="p.borravaloresNuevaTarea(); p.cerrarOffcanvas('tareasOffcanvas')">Cancelar</button>
-        <button type="submit" class="btn-iflow btn-iflow--primary">Guardar</button>
-      </div>
-    </form>
+  </form>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+      (click)="p.borravaloresNuevaTarea(); p.cerrarModal('tareasModal')">Cancelar</button>
+    <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+      form="formNuevaTarea">Guardar</button>
   </div>
-</div>
+</app-modal-shell>

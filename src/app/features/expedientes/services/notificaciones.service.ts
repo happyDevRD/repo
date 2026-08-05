@@ -7,9 +7,10 @@ import {
   MotivoNotificacionesListar,
   NotificadorListar
 } from "../expedientes";
-import {map, Observable, catchError, of, throwError} from "rxjs";
+import {map, Observable, catchError, of} from "rxjs";
 import {HttpClient, HttpHeaders, HttpErrorResponse} from "@angular/common/http";
 import {UserSessionService} from "../../../core/service/user-session.service";
+import {catchNotFoundAsEmpty} from "../../../core/helper/rxjs-error.helper";
 
 @Injectable({
   providedIn: 'root'
@@ -27,30 +28,24 @@ export class NotificacionesService {
     return this.session.user;
   }
 
-  public getReceptorNofitiListar(): Observable<any> {
-    let url: string = `${environment.apiUrl}receptorNotificacion/listar`;
-    return this.http.get(url);
-  }
-
-
-  // public getMotivoNofitiListar(): Observable<any> {
-  //   let url: string = `${environment.apiUrl}notificador/listar`;
-  //   return this.http.get(url);
-  // }
-  public getMotivoNofitiListar(): Observable<MotivoNotificacionesListar[]> {
-    return this.http.get(`${environment.apiUrl}motivoNotificacion/listar`).pipe(
-      map(response => response as MotivoNotificacionesListar[])
+  public getReceptorNofitiListar(): Observable<any[]> {
+    return this.http.get(`${environment.apiUrl}receptorNotificacion/listar`).pipe(
+      map((response) => (response as any[]) ?? []),
+      catchNotFoundAsEmpty<any[]>(),
     );
   }
 
+  public getMotivoNofitiListar(): Observable<MotivoNotificacionesListar[]> {
+    return this.http.get(`${environment.apiUrl}motivoNotificacion/listar`).pipe(
+      map(response => (response as MotivoNotificacionesListar[]) ?? []),
+      catchNotFoundAsEmpty<MotivoNotificacionesListar[]>(),
+    );
+  }
 
-  // public getNotificadorListar(): Observable<any> {
-  //   let url: string = `${environment.apiUrl}notificador/listar`;
-  //   return this.http.get(url);
-  // }
   public getNotificadorListar(): Observable<NotificadorListar[]> {
     return this.http.get(`${environment.apiUrl}notificador/listar`).pipe(
-      map(response => response as NotificadorListar[])
+      map(response => (response as NotificadorListar[]) ?? []),
+      catchNotFoundAsEmpty<NotificadorListar[]>(),
     );
   }
 
@@ -66,13 +61,8 @@ export class NotificacionesService {
     }
 
     return this.http.get(`${environment.apiUrl}notificacion/listar/${ejer}/${nume}`).pipe(
-      map(response => response as LeerNotificacion[]),
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 404) {
-          return of([]);
-        }
-        return throwError(() => error);
-      }),
+      map(response => (response as LeerNotificacion[]) ?? []),
+      catchNotFoundAsEmpty<LeerNotificacion[]>(),
     );
   }
 

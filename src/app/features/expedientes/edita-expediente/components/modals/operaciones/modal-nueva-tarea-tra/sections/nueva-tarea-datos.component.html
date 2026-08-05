@@ -1,0 +1,62 @@
+<p class="exp-nueva-tarea-modal__section-title">Datos de la tarea</p>
+<div class="row g-3 mb-3">
+  <div class="col-12">
+    <div class="form-floating">
+      <input [(ngModel)]="edita.tareatramiteexpedientecrear.descripcion" class="form-control"
+        id="descriptara" name="descriptarea" type="text" required aria-required="true"
+        aria-describedby="descriptara-error"
+        (input)="tareas.validarCampo($event, 'descriptara')" placeholder=" ">
+      <label class="required-field" for="descriptara">Descripción</label>
+      <div class="invalid-feedback" id="descriptara-error">
+        Por favor, ingresa una descripción para la tarea.
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-floating">
+      <input [(ngModel)]="edita.tareatramiteexpedientecrear.fecInicio" class="form-control"
+        id="fecInicioNuevaTarea" max="2099-12-31" min="2023-01-01" name="fecInicio"
+        type="date" required aria-required="true"
+        aria-describedby="fecInicioNuevaTarea-error"
+        (change)="tareas.validarCampo($event, 'fecInicioNuevaTarea')" placeholder=" ">
+      <label class="required-field" for="fecInicioNuevaTarea">Fecha tarea</label>
+      <div class="invalid-feedback" id="fecInicioNuevaTarea-error">
+        Por favor, selecciona una fecha para la tarea.
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="form-floating">
+      <select
+        (change)="onTareaProcedimientoChange(); tareas.validarTareaProcedimiento($event)"
+        [(ngModel)]="edita.tareatramiteexpedientecrear.tareaProcedimiento"
+        class="form-select"
+        [class.form-select--placeholder]="edita.tareatramiteexpedientecrear.tareaProcedimiento == null || edita.tareatramiteexpedientecrear.tareaProcedimiento === -1"
+        id="tprocedi2" name="tprocedi2" required aria-required="true"
+        aria-describedby="tprocedi2-error">
+        <option [ngValue]="-1" disabled>Seleccione una tarea del procedimiento</option>
+        <option *ngIf="!edita.listatareaprocedi?.length" [ngValue]="-1" disabled>
+          No hay tareas disponibles para esta fase
+        </option>
+        <option
+          *ngFor="let listatareaprocedimiento of edita.listatareaprocedi; trackBy: trackById"
+          [ngValue]="listatareaprocedimiento.id">
+          {{ listatareaprocedimiento.descripcion }}
+        </option>
+      </select>
+      <label class="required-field" for="tprocedi2">Tarea procedimiento</label>
+      <div class="invalid-feedback" id="tprocedi2-error">
+        Por favor, selecciona una tarea del procedimiento.
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="form-floating">
+      <input #fileInput (change)="edita.upload($event, edita.idTramite)"
+        [disabled]="edita.disabledArchivoTareaTramite"
+        accept=".pdf,.docx,.odt,.jpg"
+        class="form-control" id="formFileNuevaTarea" type="file">
+      <label for="formFileNuevaTarea">Documento (docx, odt, pdf, jpg)</label>
+    </div>
+  </div>
+</div>

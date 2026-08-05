@@ -11,10 +11,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./tar-curso.component.css']
 })
 export class TarCursoComponent implements OnInit {
-  public tareatramiteexpedienteusuariolistar!: TareaTramiteExpedienteUsuarioListar[];
+  public tareatramiteexpedienteusuariolistar: TareaTramiteExpedienteUsuarioListar[] = [];
+  public cargando = false;
   public descargafichero!: string;
   public numeroArchivo!: number | string | null;
   public idtarea!: number;
+
+  readonly rowClassFor = (tarea: TareaTramiteExpedienteUsuarioListar): Record<string, boolean> => ({
+    'table-active': this.idtarea === tarea.id,
+  });
 
   constructor(
     private http: HttpClient,
@@ -26,13 +31,16 @@ export class TarCursoComponent implements OnInit {
   // Se realiza una única suscripción para obtener las tareas y, al recibir la respuesta,
   // se formatea la fecha de apertura de cada tarea.
   public getTareasTramiteExpedienteListar(): void {
+    this.cargando = true;
     this.tareaTramiteApi.listarUsuario().subscribe(
       (data: TareaTramiteExpedienteUsuarioListar[]) => {
         this.tareatramiteexpedienteusuariolistar = data;
         this.formatoFechaTareas();
+        this.cargando = false;
       },
       error => {
         console.error('Error al obtener las tareas:', error);
+        this.cargando = false;
       }
     );
   }

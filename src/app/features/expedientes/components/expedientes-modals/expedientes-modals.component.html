@@ -1,43 +1,69 @@
 <!-- expedientes-modals-atributos -->
 <!-- *********************** MODALES *********************** -->
 
-<!-- NUEVOS ATRIBUTOS INPUT DINAMICOS BIS -->
+<!-- Atributos del expediente -->
 <app-modal-shell
      modalId="NAtributosModal2"
+     title="Atributos del expediente"
      titleId="NAtributosModal2Label"
      modalClass="iflow-modal iflow-modal--fit exp-atributos-modal"
      dialogClass="modal-lg"
      [dismissOnClose]="false"
      (closed)="e.cerrarModal('NAtributosModal2')">
-     <ng-container modalTitle>Atributos EXP: {{ e.tituloExp }}</ng-container>
      <form modalBody id="dynamicForm" (ngSubmit)="e.envioAtributos()">
-          <div *ngIf="e.atributosleer?.length" class="mb-3">
-               <h5 class="text-primary mb-3">Valores editables</h5>
-               <div id="divform" class="row gx-3 gy-2 mb-3"></div>
+
+          <p *ngIf="e.tituloExp" class="text-secondary small mb-3">
+               <i class="bi bi-folder2-open me-1" aria-hidden="true"></i>{{ e.tituloExp }}
+          </p>
+
+          <div *ngIf="e.cargandoAtributos" class="text-center text-secondary py-4" role="status">
+               <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+               Cargando atributos…
           </div>
 
-          <div *ngIf="e.veoAtributos && !e.atributosleer?.length" class="alert alert-light border mb-3" role="status">
+          <div *ngIf="!e.cargandoAtributos && e.atributosEditables.length === 0"
+               class="alert alert-light border mb-0" role="status">
                <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
                Este expediente no tiene atributos configurados.
           </div>
 
-          <div class="row align-items-center mb-3" *ngIf="e.veoAtributos && e.atributosleer?.length">
-               <div class="col">
-                    <h5 class="text-primary mb-0">Listado de atributos</h5>
-               </div>
-               <div class="col text-end">
-                    <button *ngIf="e.veoBorrarAtributo" type="button" class="btn-iflow btn-iflow--danger btn-iflow--sm"
-                         title="Eliminar Atributo" (click)="e.borraAtributo()">
-                         <i class="bi bi-trash-fill" aria-hidden="true"></i> Eliminar
-                    </button>
-               </div>
-          </div>
-
-          <div *ngIf="e.veoAtributos && e.atributosleer?.length" class="mb-0 grid-container proc-atributos-grid">
-               <app-iflow-grid #gridAtributosExp selectionMode="radio" radioName="Atributos" [columnsresize]="true"
-                    [source]="e.sourceAtributo" [pagesize]="5" (rowClick)="e.marcaAtributo($event)"
-                    [columns]="e.columnsAtributo" [localization]="e.localizationObject">
-               </app-iflow-grid>
+          <div *ngIf="!e.cargandoAtributos && e.atributosEditables.length > 0" class="table-responsive">
+               <table class="table align-middle mb-0">
+                    <thead>
+                         <tr>
+                              <th>Atributo</th>
+                              <th>Valor</th>
+                              <th class="text-end">Acciones</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                         <tr *ngFor="let attr of e.atributosEditables; let i = index">
+                              <td>
+                                   <div class="fw-semibold">{{ attr.desGruAtrib }}</div>
+                                   <div class="text-secondary small" *ngIf="attr.requerido">Obligatorio</div>
+                              </td>
+                              <td>
+                                   <input *ngIf="e.esTipoFechaAtributo(attr.tipo)"
+                                        type="date" class="form-control form-control-sm"
+                                        [id]="'atributoValor' + i"
+                                        [ngModel]="attr.fechaInput" name="fecha{{i}}"
+                                        (ngModelChange)="e.actualizarFechaAtributo(attr, $event)">
+                                   <input *ngIf="!e.esTipoFechaAtributo(attr.tipo)"
+                                        type="text" class="form-control form-control-sm"
+                                        [id]="'atributoValor' + i"
+                                        [attr.inputmode]="e.esTipoNumericoAtributo(attr.tipo) ? 'numeric' : null"
+                                        [attr.maxlength]="attr.longitud || 255"
+                                        [(ngModel)]="attr.valor" name="valor{{i}}">
+                              </td>
+                              <td class="text-end">
+                                   <button type="button" class="btn-iflow btn-iflow--danger btn-iflow--sm"
+                                        title="Eliminar atributo" (click)="e.borraAtributo(attr)">
+                                        <i class="bi bi-trash-fill" aria-hidden="true"></i>
+                                   </button>
+                              </td>
+                         </tr>
+                    </tbody>
+               </table>
           </div>
      </form>
      <div modalFooter class="modal-footer__actions">
@@ -45,8 +71,10 @@
                (click)="e.cerrarModal('NAtributosModal2')">
                Cerrar
           </button>
-          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary" form="dynamicForm">
-               Guardar
+          <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary" form="dynamicForm"
+               [disabled]="e.guardandoAtributos">
+               <span *ngIf="e.guardandoAtributos" class="spinner-border spinner-border-sm me-2" role="status"></span>
+               {{ e.guardandoAtributos ? 'Guardando…' : 'Guardar' }}
           </button>
      </div>
 </app-modal-shell>
@@ -396,7 +424,7 @@
                     <div class="col-md-4">
                          <div class="form-floating">
                               <input type="text" class="form-control" id="procedimientoVer"
-                                   [value]="e.verexpediente.procedimiento?.descripcion || ''" readonly placeholder=" ">
+                                   [value]="e.verexpediente.procedimiento.descripcion || ''" readonly placeholder=" ">
                               <label for="procedimientoVer">Procedimiento</label>
                          </div>
                     </div>
@@ -433,7 +461,7 @@
                <div class="mb-3">
                     <div class="form-floating">
                          <input type="text" class="form-control" id="dniVer"
-                              [value]="e.verexpediente.personaEntidad?.numDocum || ''" readonly placeholder=" ">
+                              [value]="e.verexpediente.personaEntidad.numDocum || ''" readonly placeholder=" ">
                          <label for="dniVer">Documento (DNI / CIF / NIE)</label>
                     </div>
                </div>
@@ -453,19 +481,19 @@
                          </div>
                          <div class="soli-alta__resultado-item soli-alta__resultado-item--full">
                               <dt>Dirección</dt>
-                              <dd>{{ e.verexpediente.personaEntidad?.dirPosta || '—' }}</dd>
+                              <dd>{{ e.verexpediente.personaEntidad.dirPosta || '—' }}</dd>
                          </div>
                          <div class="soli-alta__resultado-item">
                               <dt>Código postal</dt>
-                              <dd>{{ e.verexpediente.personaEntidad?.codPosta || '—' }}</dd>
+                              <dd>{{ e.verexpediente.personaEntidad.codPosta || '—' }}</dd>
                          </div>
                          <div class="soli-alta__resultado-item">
                               <dt>Provincia</dt>
-                              <dd>{{ e.verexpediente.personaEntidad?.provincia || '—' }}</dd>
+                              <dd>{{ e.verexpediente.personaEntidad.provincia || '—' }}</dd>
                          </div>
                          <div class="soli-alta__resultado-item">
                               <dt>Municipio</dt>
-                              <dd>{{ e.verexpediente.personaEntidad?.municipio || '—' }}</dd>
+                              <dd>{{ e.verexpediente.personaEntidad.municipio || '—' }}</dd>
                          </div>
                          <div class="soli-alta__resultado-item soli-alta__resultado-item--full" *ngIf="e.verexpediente.nomRepre">
                               <dt>Representante</dt>
@@ -558,54 +586,93 @@
 
 <!-- expedientes-modals-tramitador -->
 
-<!-- Modal asignar tramitador -->
+<!-- Modal asignar tramitador: en realidad ofrece el expediente a alguien (ver ejecutarAsignarTramitador) -->
 <app-modal-shell
-     modalId="AsigfnarTramitadorModal"
+     modalId="AsignarTramitadorModal"
      title="Asignar Tramitador"
-     titleId="AsigfnarTramitadorModalLabel"
+     titleId="AsignarTramitadorModalLabel"
      modalClass="iflow-modal iflow-modal--fit exp-asignar-tramitador-modal"
-     dialogClass="modal-xl"
+     dialogClass="modal-lg"
      [keyboard]="false"
      [dismissOnClose]="false"
-     (closed)="e.cerrarModal('AsigfnarTramitadorModal')">
+     (closed)="e.cerrarModal('AsignarTramitadorModal')">
      <form modalBody id="formAsignarTramitador" (ngSubmit)="e.onAsignarTramitadorSubmit()">
-          <div class="form-floating mb-3">
-               <input type="text" class="form-control" (click)="e.lanzaTareaProcedi()"
-                    name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="e.crearmensaje.descripcion"
-                    required [class.is-invalid]="e.isDescripcionMensajeInvalid()" placeholder=" ">
-               <label class="required-field" for="descripcionMensaje">Asunto</label>
-          </div>
-          <div *ngIf="e.isDescripcionMensajeInvalid()" class="invalid-feedback d-block mb-3">
-               El asunto es obligatorio
-          </div>
-
-          <div *ngIf="e.veoasignatramitador" class="row g-3">
-               <div class="col-lg-8">
-                    <h5 class="h6 text-primary mb-2">Tareas del procedimiento</h5>
-                    <app-iflow-grid selectionMode="radio" radioName="TareaProcedi" [height]="332"
-                         [source]="e.sourceTareaProcedi" [pagesize]="5"
-                         (rowClick)="e.envioTareaProcedi($event)" [localization]="e.localizationObject"
-                         [autoloadstate]="true" [columns]="e.columnsTareaProcedi" #grid>
-                    </app-iflow-grid>
+          <div class="row g-3">
+               <div class="col-md-6">
+                    <div class="form-floating">
+                         <select class="form-select" id="asignarTramitadorTarea" name="tarea"
+                              [ngModel]="e.tareaSeleccionadaAsignar"
+                              (ngModelChange)="e.seleccionarTareaAsignar($event)"
+                              required [disabled]="e.cargandoTareasAsignar"
+                              [class.form-select--placeholder]="!e.tareaSeleccionadaAsignar"
+                              [class.is-invalid]="e.isTareaAsignarInvalid()">
+                              <option [ngValue]="null" disabled>
+                                   {{ e.cargandoTareasAsignar ? 'Cargando tareas…' : 'Selecciona una tarea' }}
+                              </option>
+                              <option *ngFor="let tarea of e.tareasAsignarTramitador" [ngValue]="tarea">{{ tarea.descripcion }}</option>
+                         </select>
+                         <label class="required-field" for="asignarTramitadorTarea">Tarea</label>
+                    </div>
+                    <div *ngIf="e.isTareaAsignarInvalid()" class="invalid-feedback d-block">
+                         Selecciona una tarea
+                    </div>
+                    <div *ngIf="!e.cargandoTareasAsignar && e.errorTareasAsignar" class="invalid-feedback d-block">
+                         No se han podido cargar las tareas del procedimiento
+                    </div>
+                    <p *ngIf="!e.cargandoTareasAsignar && !e.errorTareasAsignar && e.tareasAsignarTramitador.length === 0"
+                         class="form-text mb-0">
+                         Este procedimiento no tiene tareas definidas
+                    </p>
                </div>
-               <div *ngIf="e.veoPermisoProcedi" class="col-lg-4">
-                    <h5 class="h6 text-primary mb-2">Permisos</h5>
-                    <app-iflow-grid selectionMode="radio" radioName="Permisos" [height]="332"
-                         [source]="e.sourcePermi" [pagesize]="5"
-                         (rowClick)="e.idpermisosPermi($event)" [localization]="e.localizationObject"
-                         [columns]="e.columnsPermi" #grid>
-                    </app-iflow-grid>
+
+               <div class="col-md-6">
+                    <div class="form-floating">
+                         <select class="form-select" id="asignarTramitadorPersona" name="persona"
+                              [ngModel]="e.personaSeleccionadaAsignar"
+                              (ngModelChange)="e.seleccionarPersonaAsignar($event)"
+                              required [disabled]="!e.tareaSeleccionadaAsignar || e.cargandoPermisosAsignar"
+                              [class.form-select--placeholder]="!e.personaSeleccionadaAsignar"
+                              [class.is-invalid]="e.isPersonaAsignarInvalid()">
+                              <option [ngValue]="null" disabled>
+                                   {{ !e.tareaSeleccionadaAsignar ? 'Selecciona antes una tarea' : (e.cargandoPermisosAsignar ? 'Cargando personas…' : 'Selecciona una persona') }}
+                              </option>
+                              <option *ngFor="let persona of e.permisosAsignarTramitador" [ngValue]="persona">{{ persona.usuario }}</option>
+                         </select>
+                         <label class="required-field" for="asignarTramitadorPersona">Persona</label>
+                    </div>
+                    <div *ngIf="e.isPersonaAsignarInvalid()" class="invalid-feedback d-block">
+                         Selecciona una persona
+                    </div>
+                    <div *ngIf="e.tareaSeleccionadaAsignar && !e.cargandoPermisosAsignar && e.errorPermisosAsignar" class="invalid-feedback d-block">
+                         No se han podido cargar las personas con permiso para esta tarea
+                    </div>
+                    <p *ngIf="e.tareaSeleccionadaAsignar && !e.cargandoPermisosAsignar && !e.errorPermisosAsignar && e.permisosAsignarTramitador.length === 0"
+                         class="form-text mb-0">
+                         Nadie tiene permiso para esta tarea. Revisa los permisos del procedimiento.
+                    </p>
+               </div>
+
+               <div class="col-12">
+                    <div class="form-floating">
+                         <input type="text" class="form-control"
+                              name="descripcionMensaje" id="descripcionMensaje" [(ngModel)]="e.crearmensaje.descripcion"
+                              required [class.is-invalid]="e.isDescripcionMensajeInvalid()" placeholder=" ">
+                         <label class="required-field" for="descripcionMensaje">Asunto</label>
+                    </div>
+                    <div *ngIf="e.isDescripcionMensajeInvalid()" class="invalid-feedback d-block">
+                         El asunto es obligatorio
+                    </div>
                </div>
           </div>
      </form>
      <div modalFooter class="modal-footer__actions">
           <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
-               (click)="e.cerrarModal('AsigfnarTramitadorModal')">Cancelar</button>
+               (click)="e.cerrarModal('AsignarTramitadorModal')">Cancelar</button>
           <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
                form="formAsignarTramitador"
                [disabled]="e.isAsignandoTramitador">
                <span *ngIf="e.isAsignandoTramitador" class="spinner-border spinner-border-sm me-2" role="status"></span>
-               {{ e.isAsignandoTramitador ? 'Asignando…' : 'Asignar' }}
+               {{ e.isAsignandoTramitador ? 'Enviando…' : 'Ofrecer expediente' }}
           </button>
      </div>
 </app-modal-shell>
@@ -642,14 +709,38 @@
                Este expediente no tiene tareas registradas.
           </div>
 
-          <div *ngIf="e.cargotareasexpedi && (!e.tareasExpedienteVacio || e.cargandoTareasExpediente)"
-               class="grid-container tareas-expediente-grid">
-               <app-iflow-grid #gridTareasExpediente selectionMode="radio" radioName="TareasExpediente"
-                    [height]="420" [columnsresize]="true" [source]="e.sourceTareasExpediente" [pagesize]="15"
-                    (rowClick)="e.clicktareExpediente($event)"
-                    (bindingComplete)="e.onTareasExpedienteBindingComplete()" [columns]="e.columnsTareasExpediente"
-                    [localization]="e.localizationObject">
-               </app-iflow-grid>
+          <div *ngIf="!e.cargandoTareasExpediente && !e.tareasExpedienteVacio" class="table-responsive">
+               <table class="table table-hover mb-0">
+                    <thead>
+                         <tr>
+                              <th>Número</th>
+                              <th>Descripción</th>
+                              <th>Trámite</th>
+                              <th>Fecha inicio</th>
+                              <th>Fecha fin</th>
+                              <th>Usuario</th>
+                              <th>Firmado</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                         <tr *ngFor="let tarea of e.tareasExpedienteList"
+                              [class.table-active]="tarea.archivo && e.numeroArchivo === +tarea.archivo"
+                              [style.cursor]="tarea.archivo ? 'pointer' : null"
+                              (click)="e.clicktareExpediente(tarea)">
+                              <td class="fw-normal">{{ tarea.numero }}</td>
+                              <td class="fw-normal">{{ tarea.descripcion }}</td>
+                              <td class="fw-normal">{{ tarea.desTramite || '—' }}</td>
+                              <td class="fw-normal">{{ (tarea.fecInicio || '') | slice:0:10 }}</td>
+                              <td class="fw-normal">{{ tarea.fecFin ? (tarea.fecFin | slice:0:10) : '—' }}</td>
+                              <td class="fw-normal">{{ tarea.usuario }}</td>
+                              <td>
+                                   <span class="badge" [class.bg-success]="tarea.firmado" [class.bg-secondary]="!tarea.firmado">
+                                        {{ tarea.firmado ? 'Sí' : 'No' }}
+                                   </span>
+                              </td>
+                         </tr>
+                    </tbody>
+               </table>
           </div>
      </div>
      <div modalFooter class="modal-footer__actions">

@@ -1,0 +1,27 @@
+<div class="exp-nueva-tarea-modal__dinamicos">
+  <div *ngIf="tareas.veoBajaHabitante" class="mb-3">
+    <app-baja-habitante [documento]="tareas.personaentidad.numDocum || ''"></app-baja-habitante>
+  </div>
+
+  <div *ngIf="tareas.veoModifiDatosPerso" class="mb-3">
+    <app-modificar-datos-persona [persona]="tareas.personaentidad"></app-modificar-datos-persona>
+  </div>
+
+  <div *ngIf="mostrarBajaObjeto" class="mb-3">
+    <p class="exp-nueva-tarea-modal__section-title">Baja objeto tributario</p>
+    <app-baja-objeto-tributario-fields
+      [objetoTributario]="tareas.objetotributario!"
+      idPrefix="bajaObjNueva"
+      [showInlineAction]="true"
+      (darDeBaja)="onDarDeBaja()">
+    </app-baja-objeto-tributario-fields>
+  </div>
+
+  <div *ngIf="mostrarConsultaObjeto" class="mb-3">
+    <p class="exp-nueva-tarea-modal__section-title">Consulta objeto tributario</p>
+    <app-consulta-objeto-tributario-fields
+      [objetoTributario]="tareas.objetotributario!"
+      idPrefix="consultaObjNueva">
+    </app-consulta-objeto-tributario-fields>
+  </div>
+</div>

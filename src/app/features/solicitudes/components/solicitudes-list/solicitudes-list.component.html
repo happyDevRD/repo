@@ -1,19 +1,30 @@
-<div class="grid-container soli-list-grid">
-  <app-iflow-grid
-    #gridSolicitudes
-    selectionmode="singlerow"
-    width="100%"
+<div class="soli-list-grid">
+  <app-data-table [items]="s.solicitudesListado" [loading]="s.cargandoSolicitudesListado"
+    emptyMessage="No hay solicitudes."
+    searchPlaceholder="Buscar…"
+    exportFileName="solicitudes"
+    [rowClass]="s.solicitudRowClass"
     (rowClick)="handleRowClick($event)"
-    (rowDoubleClick)="handleRowDoubleClick($event)"
-    [columns]="s.columnsSolici"
-    [showfilterrow]="true"
-    [columnsresize]="true"
-    [columnsautoresize]="false"
-    [autoheight]="false"
-    [height]="480"
-    [pagesize]="10"
-    [pagesizeoptions]="['5', '10', '20']"
-    [localization]="s.localizationObject"
-    [source]="s.sourceSolici">
-  </app-iflow-grid>
+    (rowDblClick)="handleRowDoubleClick($event)">
+    <app-table-column header="Nº" field="ejercicio" [sortable]="true" align="center" width="8%">
+      <ng-template let-row>{{ row.ejercicio }}/{{ row.numero }}</ng-template>
+    </app-table-column>
+    <app-table-column header="Fecha" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="11%">
+      <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
+    </app-table-column>
+    <app-table-column header="Asunto" field="asunto" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+    <app-table-column header="Estado" field="estado" [sortable]="true" [filterable]="true" align="center" width="12%">
+      <ng-template let-row>
+        <span [ngClass]="s.estadoSolicitudBadgeClass(row.estado)">{{ row.estado || '-' }}</span>
+      </ng-template>
+    </app-table-column>
+    <app-table-column header="Asignado" field="usuario" [sortable]="true" [filterable]="true" align="center" width="12%"></app-table-column>
+    <app-table-column header="Interesado" [sortValue]="s.interesadoSolicitudValue" [searchValue]="s.interesadoSolicitudValue"
+      [sortable]="true" [filterable]="true" filterType="text" width="17%">
+      <ng-template let-row>{{ row.personaEntidad?.desPerEntid }}</ng-template>
+    </app-table-column>
+    <app-table-column header="Expediente" [sortValue]="s.expedienteSolicitudValue" [searchValue]="s.expedienteSolicitudValue" [sortable]="true" align="center" width="10%">
+      <ng-template let-row>{{ s.expedienteSolicitudValue(row) || '—' }}</ng-template>
+    </app-table-column>
+  </app-data-table>
 </div>

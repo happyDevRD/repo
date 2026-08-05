@@ -5,52 +5,6 @@ import {
 
 type GridRenderer = IflowGridCellsRenderer
 
-export interface TramitadorGridColumnRenderers {
-  columnrenderer: GridRenderer;
-  cellsrendererTRamitadores: GridRenderer;
-  cellsrendererFechaTRamitadores: GridRenderer;
-  cellsrendererTRamitadoresPosesion: GridRenderer;
-}
-
-export function createColumnsTramitadores(r: TramitadorGridColumnRenderers): IflowGridColumns {
-  return [
-    { text: 'Id', datafield: 'idNotif', width: '1%', hidden: true },
-    {
-      text: '',
-      width: '1%',
-      datafield: '',
-      cellsrenderer: r.cellsrendererTRamitadores,
-      hidden: true,
-      renderer: r.columnrenderer,
-    },
-    {
-      text: 'Usuario',
-      datafield: 'usuario',
-      cellsrenderer: r.cellsrendererTRamitadores,
-      renderer: r.columnrenderer,
-    },
-    {
-      text: 'Fecha asignación',
-      width: '35%',
-      datafield: 'fecAsignacion',
-      cellsrenderer: r.cellsrendererFechaTRamitadores,
-      renderer: r.columnrenderer,
-    },
-    {
-      text: 'Estado',
-      datafield: 'estadoTramitacion',
-      cellsrenderer: r.cellsrendererTRamitadores,
-      renderer: r.columnrenderer,
-    },
-    {
-      text: 'Posee Expediente',
-      datafield: 'posesion',
-      cellsrenderer: r.cellsrendererTRamitadoresPosesion,
-      renderer: r.columnrenderer,
-    },
-  ];
-}
-
 export interface TareaProcediGridColumnRenderers {
   columnseleccionTareaProcedi: GridRenderer;
   columnrenderer: GridRenderer;

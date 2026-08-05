@@ -7,19 +7,20 @@
      [staticBackdrop]="true"
      [dismissOnClose]="false"
      (closed)="ops.limpiarFormularioGenerarSalida(edita)">
-     <form modalBody id="formGenerarSalida" (ngSubmit)="ops.prepararCrearGenerarSalida(edita)">
+     <form modalBody id="formGenerarSalida" (ngSubmit)="ops.validateAndPrepararCrearGenerarSalida($event, edita)" novalidate>
           <div class="row g-3">
                <div class="col-md-4">
                     <div class="form-floating">
                          <select [(ngModel)]="edita.creargenerarsalida.codTema"
+                              (ngModelChange)="ops.onTemaDocumentoChange(edita)"
                               class="form-select"
                               [class.form-select--placeholder]="!edita.creargenerarsalida.codTema"
                               id="ctema1" name="ctema1">
                               <option value="" disabled>Seleccione código</option>
                               <option
                                    *ngFor="let temasdocumentolistar of edita.temadocumentolistar; trackBy: trackByCodTema"
-                                   [value]="temasdocumentolistar.codTema">
-                                   {{ temasdocumentolistar.codTema }}
+                                   [ngValue]="temasdocumentolistar.codTema">
+                                   {{ temasdocumentolistar.codTema }}{{ temasdocumentolistar.desTema ? ' — ' + temasdocumentolistar.desTema : '' }}
                               </option>
                          </select>
                          <label for="ctema1">Código tema</label>
@@ -28,8 +29,9 @@
                <div class="col-md-8">
                     <div class="form-floating">
                          <input [(ngModel)]="edita.creargenerarsalida.extracto" class="form-control"
-                              id="TextareaGSalida" name="extracto" placeholder=" ">
+                              id="TextareaGSalida" name="extracto" required placeholder=" ">
                          <label class="required-field" for="TextareaGSalida">Extracto</label>
+                         <div class="invalid-feedback">Indique el extracto.</div>
                     </div>
                </div>
                <div class="col-12">

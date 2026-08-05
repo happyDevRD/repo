@@ -477,6 +477,7 @@ export class SolicitudesSolicitudFacade {
     host.usuarioSolicitud = rowData.usuario;
     host.asuntoSolicitud = rowData.asunto;
     host.personaFacade.representanteSolicitud = rowData.nomRepre ?? '';
+    host.seleccionoRepre = (rowData.idRepre && rowData.idHisRepre) ? '1' : '';
     host.persoEntiDocu = personaEntidad.numDocum;
 
     host.editasolicitud.dni = personaEntidad.numDocum ?? '';

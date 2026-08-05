@@ -1,10 +1,10 @@
 import { TareaTramiteExpedienteCrear } from '../../expedientes'
-import { createTareaProcedimientoGridAdapter } from './tarea-procedimiento-grid.config'
 import { TareasAccionUiState } from './tareas-accion.models'
 
 export interface TareaProcedimientoSeleccionHost {
   disabledArchivoTareaTramite: boolean
   idlistatareaProcedi: number | string | null
+  plantillaDefecto: string | null
   sourceTareasProcedi: unknown
   tareatramiteexpedientecrear: TareaTramiteExpedienteCrear
   tareasFacade: Pick<
@@ -32,6 +32,7 @@ export function limpiarSeleccionTareaProcedimiento(host: TareaProcedimientoSelec
   const ui = host.tareasFacade
   host.disabledArchivoTareaTramite = false
   host.idlistatareaProcedi = null
+  host.plantillaDefecto = null
   host.sourceTareasProcedi = null
   host.tareatramiteexpedientecrear.tareaProcedimiento = -1
   ui.veoAcciones = false
@@ -42,13 +43,22 @@ export function limpiarSeleccionTareaProcedimiento(host: TareaProcedimientoSelec
   ui.ediquetaValorConsulta = ''
 }
 
-export function aplicarGridTareaProcedimiento(
+/** Marca la tarea procedimiento elegida (sin grid jqx). */
+export function aplicarSeleccionTareaProcedimiento(
   host: TareaProcedimientoSeleccionHost,
   selectedValue: number | string,
 ): void {
   host.disabledArchivoTareaTramite = false
   host.idlistatareaProcedi = selectedValue
-  host.sourceTareasProcedi = createTareaProcedimientoGridAdapter(selectedValue)
+  host.sourceTareasProcedi = null
+}
+
+/** @deprecated Usar aplicarSeleccionTareaProcedimiento */
+export function aplicarGridTareaProcedimiento(
+  host: TareaProcedimientoSeleccionHost,
+  selectedValue: number | string,
+): void {
+  aplicarSeleccionTareaProcedimiento(host, selectedValue)
 }
 
 export function normalizarPlantillaDefectoSeleccion(plantilla: unknown): string | null {

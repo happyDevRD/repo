@@ -49,6 +49,7 @@ import {UserSessionService} from '../../core/service/user-session.service';
 import {NotificationService} from '../../core/service/notification.service';
 import {catchNotFoundAsEmpty} from '../../core/helper/rxjs-error.helper';
 import {TareaProcedimientoDTO} from "../../core/models/tarea-procedimiento.dto";
+import {ProcediPermisosListar} from "../procedimientos/procedimiento";
 import {PersonaEntidad} from "../../core/models/personaentidad.model";
 import {HabitanteDto} from "../../core/models/habitante.dto";
 import {VehiculoDto} from "../../core/models/vehiculo.dto";
@@ -168,6 +169,16 @@ export class ExpedientesService {
     return this.http.get<TareaProcedimientoDTO>(`${environment.apiUrl}tareaProcedimiento/ver/${idlistatareap}`);
   }
 
+  /** Tareas del procedimiento del expediente, para el paso 1 del modal Asignar Tramitador. */
+  getTareasProcedimientoListar(idProcedimiento: number | string): Observable<TareaProcedimientoDTO[]> {
+    return this.http.get<TareaProcedimientoDTO[]>(`${environment.apiUrl}tareaProcedimiento/listar/${idProcedimiento}`);
+  }
+
+  /** Personas con permiso para una tarea del procedimiento, para el paso 2 del modal Asignar Tramitador. */
+  getPermisosTareaListar(idTarea: number | string): Observable<ProcediPermisosListar[]> {
+    return this.http.get<ProcediPermisosListar[]>(`${environment.apiUrl}permiso/listar/${idTarea}`);
+  }
+
   getVolanteEmpadronamiento(numDocum: string, idExpediente: number, usuario: string) {
     const url = `${environment.apiUrl}habitante/volante/${numDocum}/${idExpediente}/${usuario}`;
     return this.http.get(url, {responseType: 'blob'});
@@ -178,11 +189,10 @@ export class ExpedientesService {
     return this.http.get(url, {responseType: 'blob'});
   }
 
-  getTipoFirma(idtarea: any): Observable<any> {
-    return this.http.get(`${environment.apiUrl}archivo/tipoFirma/${idtarea}`).pipe(
-      map(response => response)
-    );
-
+  getTipoFirma(idtarea: any): Observable<string> {
+    return this.http.get(`${environment.apiUrl}archivo/tipoFirma/${idtarea}`, {
+      responseType: 'text',
+    });
   }
 
   envioBajaHabitantes(bajahabitantes: BajaHabitantes, documento: string): Observable<unknown> {
@@ -231,16 +241,10 @@ export class ExpedientesService {
     return this.http.delete<any>(`${this.urlBorrarAtributo}${idGrupo}/${etiGruAtrib}/${idExped}`, {headers: httpHeaders})
   }
 
+  // Nota: la conversión dd/MM/yyyy <-> yyyy-MM-dd para atributos de tipo fecha
+  // ya la hace ExpedientesAtributosFacade (solo para ese tipo); aquí se manda
+  // el valor tal cual llega, sin reinterpretarlo por la presencia de un guion.
   modificaAtributo(atributomodificar: any, idExpedi: any): Observable<any> {
-    if (atributomodificar.valor.includes('-')) {
-      let dia = atributomodificar.valor.substring(8, 10)//ok
-      let mes = atributomodificar.valor.substring(5, 7)//ok
-      let year = atributomodificar.valor.substring(0, 4)//ok
-      let nuevafecha = dia + '/' + mes + '/' + year
-      atributomodificar.valor = nuevafecha;
-
-    }
-    JSON.stringify(atributomodificar);
     let varios = {
       "etiGruAtrib": atributomodificar.etiGruAtrib,
       "idGrupo": atributomodificar.idGrupo,
@@ -260,11 +264,10 @@ export class ExpedientesService {
   }
 
   getModeloTeuListar(): Observable<ModeloTeuListar[]> {
-
     return this.http.get(`${this.urlModeloTeuListar}`).pipe(
-      map(response => response as ModeloTeuListar[])
+      map(response => (response as ModeloTeuListar[]) ?? []),
+      catchNotFoundAsEmpty<ModeloTeuListar[]>(),
     );
-
   }
 
   postArchivoFirmadoEF(archivofirmadoef: ArchivoFirmadoEF, usuario: any, idTarea: any): Observable<any> {
@@ -417,7 +420,8 @@ export class ExpedientesService {
 
   getArchivoFirmantes(usuario: string, idtarea: any): Observable<ArchivoFirmantes[]> {
     return this.http.get(`${environment.apiUrl}archivo/firmantes/${usuario}/${idtarea}`).pipe(
-      map(response => response as ArchivoFirmantes[])
+      map(response => response as ArchivoFirmantes[]),
+      catchError(() => of([] as ArchivoFirmantes[])),
     );
   }
 
@@ -471,9 +475,8 @@ export class ExpedientesService {
       "EstadoMensaje": crearmensaje.EstadoMensaje,
       "informativo": crearmensaje.informativo,
       "descripcionRechazo": crearmensaje.descripcionRechazo,
-      "posesion": crearmensaje.posesion
-
-
+      "posesion": crearmensaje.posesion,
+      "idtarea": crearmensaje.idtarea
     }
     let keys = JSON.stringify(varios);
     return this.http.post<CrearMensaje>(this.urlMensajeCrear, keys, {headers: this.httpHeaders});
@@ -632,7 +635,8 @@ export class ExpedientesService {
 
   getTramitesListar(idexpe: number): Observable<ListarTramites[]> {
     return this.http.get(`${this.urltramitelistar}/${idexpe}`).pipe(
-      map(response => response as ListarTramites[])
+      map(response => response as ListarTramites[]),
+      catchNotFoundAsEmpty<ListarTramites[]>(),
     );
   }
 
@@ -669,7 +673,7 @@ export class ExpedientesService {
     );
   }
 
-  crearTramiteExp(creartramitexp: CrearTramiteExp): Observable<any> {
+  crearTramiteExp(creartramitexp: CrearTramiteExp): Observable<ListarTramites> {
     let varios = {
       "fase": creartramitexp.fase,
       "fecTramite": creartramitexp.fecTramite,
@@ -678,7 +682,7 @@ export class ExpedientesService {
       "usuContr": this.usuContrl,
     }
     let keys = JSON.stringify(varios);
-    return this.http.post<CrearTramiteExp>(this.urlexpeditramitecrear, keys, {headers: this.httpHeaders});
+    return this.http.post<ListarTramites>(this.urlexpeditramitecrear, keys, {headers: this.httpHeaders});
 
   }
 
@@ -767,7 +771,8 @@ export class ExpedientesService {
   // public idOrgElemen = sessionStorage.getItem('idOrgEleme');
   getTemaDocumentoListar(): Observable<TemaDocumentoListar[]> {
     return this.http.get(`${environment.apiUrl}temaDocumento/listar/${this.idOrgElemen}`).pipe(
-      map(response => response as TemaDocumentoListar[])
+      map(response => response as TemaDocumentoListar[]),
+      catchNotFoundAsEmpty<TemaDocumentoListar[]>(),
     );
   }
 

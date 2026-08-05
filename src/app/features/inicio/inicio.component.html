@@ -1,24 +1,36 @@
 <app-shell contentId="hanging-icons">
       <section class="dashboard">
         <header class="dashboard__header">
+          <div class="dashboard__header-icon" aria-hidden="true">
+            <i class="bi bi-speedometer2"></i>
+          </div>
           <div class="dashboard__header-text">
             <p class="dashboard__eyebrow">Panel principal</p>
             <h2 class="dashboard__title">Tus consultas pendientes</h2>
           </div>
-          <div class="dashboard__total" [class.dashboard__total--loading]="isLoadingSummary">
-            <span class="dashboard__total-value" *ngIf="!isLoadingSummary">{{ totalPendientes }}</span>
-            <span class="dashboard__total-skeleton" *ngIf="isLoadingSummary" aria-hidden="true"></span>
-            <span class="dashboard__total-label">en total</span>
+          <div class="dashboard__stats">
+            <div class="dashboard__stat">
+              <span class="dashboard__stat-value" *ngIf="!isLoadingSummary">{{ totalPendientes }}</span>
+              <span class="dashboard__stat-skeleton" *ngIf="isLoadingSummary" aria-hidden="true"></span>
+              <span class="dashboard__stat-label">pendientes en total</span>
+            </div>
+            <div class="dashboard__stat-divider" aria-hidden="true"></div>
+            <div class="dashboard__stat">
+              <span class="dashboard__stat-value" *ngIf="!isLoadingSummary">{{ sectionsWithPending }}</span>
+              <span class="dashboard__stat-skeleton" *ngIf="isLoadingSummary" aria-hidden="true"></span>
+              <span class="dashboard__stat-label">secciones activas</span>
+            </div>
           </div>
         </header>
 
         <div class="dashboard__grid">
           <article *ngFor="let card of dashboardCards"
                    class="dashboard-tile"
+                   [attr.data-accent]="card.accent"
                    [class.dashboard-tile--active]="(getCardCount(card.countKey) ?? 0) > 0">
             <div class="dashboard-tile__content">
               <div class="dashboard-tile__icon-wrap" aria-hidden="true">
-                <img [src]="card.icon" alt="" class="dashboard-tile__icon">
+                <i class="bi dashboard-tile__icon" [ngClass]="card.icon"></i>
               </div>
               <div class="dashboard-tile__body">
                 <div class="dashboard-tile__row">

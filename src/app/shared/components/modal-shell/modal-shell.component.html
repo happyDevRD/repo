@@ -8,12 +8,13 @@
   [attr.data-bs-backdrop]="staticBackdrop ? 'static' : null"
   [attr.data-bs-keyboard]="keyboard ? null : 'false'"
 >
-  <div class="modal-dialog modal-dialog-centered" [ngClass]="dialogClass">
+  <div class="modal-dialog modal-dialog-centered" [ngClass]="dialogClass" [style.max-width]="dialogMaxWidth">
     <div class="modal-content" [ngClass]="contentClass">
       <div class="modal-header" [ngClass]="headerClass">
         <ng-container *ngIf="!customHeader">
           <h4
             class="modal-title"
+            tabindex="-1"
             [class.fs-5]="headingLevel === 'h5'"
             [id]="resolvedTitleId"
           >

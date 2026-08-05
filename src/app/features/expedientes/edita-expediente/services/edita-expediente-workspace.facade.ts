@@ -15,7 +15,7 @@ import { calcularSeleccionNotificacion, NotificacionGridRow } from '../notificac
 import { EditaExpedienteNotificacionesUiFacade } from '../notificaciones/edita-expediente-notificaciones-ui.facade';
 import { aplicarEdicionTramiteDesdeFila, EdicionTramiteHost, TramiteGridRow } from '../tramites/tramites-edicion.helper';
 import { calcularSeleccionTramite } from '../tramites/tramites-seleccion.helper';
-import { buildTramitadorGridSource } from '../tramitadores/tramitadores-grid.config';
+import { ListarTramitador } from '../../expedientes';
 import { abrirModalEditarTareaTramite, TareaTramiteGridRow } from '../tareas/tareas-modal.helper';
 import {
   aplicarSeleccionTareaNueva,
@@ -26,10 +26,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { TareaTramiteExpedienteVer } from '../../../../core/models/tareaTramite/tarea-tramite-expediente-ver.dto';
 
-export interface TramitadorGridRow {
-  id: number
-  nombre?: string
-}
+export type TramitadorGridRow = ListarTramitador
 
 export interface TareaGridRow {
   id: number
@@ -44,7 +41,8 @@ export interface HistoricoGridRow {
 export interface EditaExpedienteTramitadoresHost {
   idExpediente: number;
   idTramitador: number;
-  sourceTramitadores: unknown;
+  tramitadoresListado: ListarTramitador[];
+  cargandoTramitadores: boolean;
 }
 
 export interface BootstrapModalesHost {
@@ -100,9 +98,7 @@ export class EditaExpedienteWorkspaceFacade {
     private readonly expedientesService: ExpedientesService,
   ) { }
 
-  clickTramiteNuevo(host: EditaExpedienteTramiteGridHost, event: JqxGridRowEvent<TramiteGridRow>): void {
-    const rowData = event.args.row.bounddata;
-
+  clickTramiteNuevo(host: EditaExpedienteTramiteGridHost, rowData: TramiteGridRow): void {
     const estado = calcularSeleccionTramite(rowData, (fecha) => host.formatearFechaParaInput(fecha));
     Object.assign(host, estado);
     host.editartramiteexp.fecTramite = estado.fecTramiteEdicion;
@@ -110,8 +106,11 @@ export class EditaExpedienteWorkspaceFacade {
     host.getListaTareas().pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (listaTareaProcedimiento) => (host.listatareaprocedi = listaTareaProcedimiento),
+      next: (listaTareaProcedimiento) => {
+        host.listatareaprocedi = listaTareaProcedimiento ?? []
+      },
       error: (_err: HttpErrorResponse) => {
+        host.listatareaprocedi = []
       },
     });
 
@@ -134,7 +133,9 @@ export class EditaExpedienteWorkspaceFacade {
     host.idTarea = id;
     host.numeroArchivo = Number(codArchivo ?? 0);
     host.tareaProcedi = tareaProcedi;
-    host.getUsuarioListar(tareaProcedi);
+    if (Number.isFinite(tareaProcedi) && tareaProcedi > 0) {
+      host.getUsuarioListar(tareaProcedi);
+    }
     host.ejerNumExpedi = `${host.verExpediente.ejercicio}/${host.verExpediente.numero}`;
     host.getTemaDocumentoListar();
     this.expedientesService.getTareaTramiteExpVer(id).pipe(
@@ -147,22 +148,20 @@ export class EditaExpedienteWorkspaceFacade {
 
   clickTramitadores(
     host: EditaExpedienteTramitadoresHost,
-    event: JqxGridRowEvent<TramitadorGridRow>,
+    rowData: TramitadorGridRow,
   ): void {
-    this.seleccionarTramitador(host, event.args.row.bounddata);
+    this.seleccionarTramitador(host, rowData);
   }
 
   clicknotificacionNuevo(
     host: ClickNotificacionNuevoHost & EditaExpedienteNotificacionGridHost,
-    event: JqxGridRowEvent<NotificacionGridRow>,
+    rowData: NotificacionGridRow,
   ): void {
-    aplicarClickNotificacionNuevo(host, event.args.row.bounddata);
-    void this.notifUiFacadeService.vernotifi(undefined, event.args.row.bounddata.idNotif, false);
+    aplicarClickNotificacionNuevo(host, rowData);
+    void this.notifUiFacadeService.vernotifi(undefined, rowData.idNotif, false);
   }
 
-  onNotificacionClick(host: EditaExpedienteNotificacionGridHost, event: JqxGridRowEvent<NotificacionGridRow>): void {
-    const rowData = event.args.row.bounddata;
-
+  onNotificacionClick(host: EditaExpedienteNotificacionGridHost, rowData: NotificacionGridRow): void {
     if (!rowData) {
       return;
     }
@@ -171,8 +170,7 @@ export class EditaExpedienteWorkspaceFacade {
     host.notifUiFacade.fechNotifi = formatearFechaNotificacionSeleccionada(rowData.fecNotif) ?? null;
   }
 
-  onNotificacionDoubleClick(host: EditaExpedienteNotificacionGridHost, event: JqxGridRowEvent<Pick<NotificacionGridRow, 'idNotif'>>): void {
-    const rowData = event.args.row.bounddata
+  onNotificacionDoubleClick(host: EditaExpedienteNotificacionGridHost, rowData: Pick<NotificacionGridRow, 'idNotif'>): void {
     if (rowData?.idNotif != null) {
       this.notifUiFacadeService.editarNotificacion(undefined, rowData.idNotif)
     }
@@ -189,15 +187,14 @@ export class EditaExpedienteWorkspaceFacade {
     })
   }
 
-  onTramiteDoubleClick(host: EdicionTramiteHost, event: JqxGridRowEvent<TramiteGridRow>): void {
-    aplicarEdicionTramiteDesdeFila(host, event.args.row.bounddata)
+  onTramiteDoubleClick(host: EdicionTramiteHost, rowData: TramiteGridRow): void {
+    aplicarEdicionTramiteDesdeFila(host, rowData)
     this.modalManagerService.openModal('editarTramiteModal')
   }
 
-  onTramitadorDoubleClick(host: { idTramitador: number }, event: JqxGridRowEvent<TramitadorGridRow>): void {
-    const rowData = event.args.row.bounddata
+  onTramitadorDoubleClick(host: { idTramitador: number }, rowData: TramitadorGridRow): void {
     host.idTramitador = rowData.id
-    this.notificationService.info(`Tramitador seleccionado: ${rowData.nombre || 'Sin nombre'}`)
+    this.notificationService.info(`Tramitador seleccionado: ${rowData.usuario ?? 'Sin nombre'}`)
   }
 
   onTareaDoubleClick(host: EditaExpedienteTareaClickHost, rowData: TareaTramiteSeleccionRow): void {
@@ -221,7 +218,19 @@ export class EditaExpedienteWorkspaceFacade {
   }
 
   refrescarGrid(host: EditaExpedienteTramitadoresHost): void {
-    host.sourceTramitadores = buildTramitadorGridSource(host.idExpediente);
+    host.cargandoTramitadores = true;
+    this.expedientesService.getTramitadorListar(host.idExpediente).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (list) => {
+        host.tramitadoresListado = list ?? [];
+        host.cargandoTramitadores = false;
+      },
+      error: () => {
+        host.tramitadoresListado = [];
+        host.cargandoTramitadores = false;
+      },
+    });
   }
 
   borrarTramitador(host: EditaExpedienteTramitadoresHost): void {

@@ -8,14 +8,10 @@
       </div>
     </header>
 
-    <div class="grid-container">
-      <app-iflow-grid
-        #grid
-        selectionMode="checkbox"
-        [source]="source"
-        [columns]="columns"
-        [localization]="localizationObject">
-      </app-iflow-grid>
-    </div>
+    <app-data-table [items]="items" emptyMessage="No hay pendientes de firma.">
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
+      <app-table-column header="Departamento" field="departamento" [sortable]="true"></app-table-column>
+      <app-table-column header="Código SIA" field="codsia" [sortable]="true"></app-table-column>
+    </app-data-table>
   </div>
 </app-shell>

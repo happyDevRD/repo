@@ -7,7 +7,7 @@
      [staticBackdrop]="true"
      [dismissOnClose]="false"
      (closed)="ops.limpiarFormularioBolsa(edita)">
-     <form modalBody id="formPropuestaResolucion" (ngSubmit)="ops.crearInsertaBolsa(edita)">
+     <form modalBody id="formPropuestaResolucion" (ngSubmit)="ops.validateAndCrearInsertaBolsa($event, edita)" novalidate>
           <div class="row g-3">
                <div class="col-md-4">
                     <div class="form-floating">
@@ -15,6 +15,7 @@
                               id="fecAltaBolsa" max="2099-12-31" min="2023-01-01" name="fecAlta"
                               required type="date" placeholder=" ">
                          <label class="required-field" for="fecAltaBolsa">Fecha alta</label>
+                         <div class="invalid-feedback">Indique la fecha de alta.</div>
                     </div>
                </div>
                <div class="col-md-4">
@@ -23,6 +24,7 @@
                               id="fecPrefeBolsa" max="2099-12-31" min="2023-01-01" name="fecPrefe"
                               required type="date" placeholder=" ">
                          <label class="required-field" for="fecPrefeBolsa">Fecha preferente</label>
+                         <div class="invalid-feedback">Indique la fecha preferente.</div>
                     </div>
                </div>
                <div class="col-md-4">
@@ -31,6 +33,7 @@
                               id="fecMaxResolBolsa" max="2099-12-31" min="2023-01-01" name="fecMaxResol"
                               required type="date" placeholder=" ">
                          <label class="required-field" for="fecMaxResolBolsa">Fecha máx. resolución</label>
+                         <div class="invalid-feedback">Indique la fecha máxima de resolución.</div>
                     </div>
                </div>
                <div class="col-md-6">
@@ -74,6 +77,7 @@
                               <option value="3">MUY ALTA</option>
                          </select>
                          <label class="required-field" for="prioridadBolsa">Prioridad</label>
+                         <div class="invalid-feedback">Seleccione la prioridad.</div>
                     </div>
                </div>
                <div class="col-md-6">
@@ -90,6 +94,7 @@
                               <option [ngValue]="4">PLENO Y COMISION INFORMATIVA</option>
                          </select>
                          <label class="required-field" for="tipSesionBolsa">Tipo sesión</label>
+                         <div class="invalid-feedback">Seleccione el tipo de sesión.</div>
                     </div>
                </div>
                <div class="col-md-6">
@@ -103,6 +108,7 @@
                               <option [ngValue]="1">RUEGOS Y PREGUNTAS</option>
                          </select>
                          <label class="required-field" for="tipPuntoBolsa">Tipo punto</label>
+                         <div class="invalid-feedback">Seleccione el tipo de punto.</div>
                     </div>
                </div>
           </div>

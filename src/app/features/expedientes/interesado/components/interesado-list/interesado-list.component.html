@@ -29,17 +29,52 @@
     </div>
   </header>
 
-  <div class="grid-container">
-    <app-iflow-grid
-      #grid
-      selectionMode="radio"
-      radioName="Interesados"
-      (rowClick)="i.clickInteresado($event)"
-      (rowDoubleClick)="i.abrirModalVerInteresado($event)"
-      [columns]="i.columnsInteresado"
-      [showfilterrow]="true"
-      [localization]="i.localizationObject"
-      [source]="i.sourceInteresado">
-    </app-iflow-grid>
+  <div *ngIf="i.cargandoInteresados" class="text-center text-secondary py-4" role="status">
+    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+    Cargando interesados…
+  </div>
+
+  <div *ngIf="!i.cargandoInteresados && i.interesados.length === 0" class="alert alert-light border mb-0"
+       role="status">
+    <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+    Este expediente no tiene interesados registrados.
+  </div>
+
+  <div *ngIf="!i.cargandoInteresados && i.interesados.length > 0" class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Interesado</th>
+          <th>Documento</th>
+          <th>Principal</th>
+          <th>Representante</th>
+          <th>Documento representante</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let interesado of i.interesados"
+            [class.table-active]="i.idInteresado === interesado.id"
+            style="cursor: pointer;"
+            (click)="i.clickInteresado(interesado)"
+            (dblclick)="i.abrirModalVerInteresado(interesado)">
+          <td class="fw-normal">
+            <i class="bi bi-person me-1 text-secondary" aria-hidden="true"></i>{{ interesado.nomInter }}
+          </td>
+          <td class="fw-normal">{{ interesado.numDocumInter }}</td>
+          <td>
+            <span class="badge" [class.bg-success]="interesado.principal == 1" [class.bg-secondary]="interesado.principal != 1">
+              {{ interesado.principal == 1 ? 'Sí' : 'No' }}
+            </span>
+          </td>
+          <td class="fw-normal">
+            <ng-container *ngIf="interesado.nomRepre">
+              <i class="bi bi-person-badge me-1 text-secondary" aria-hidden="true"></i>{{ interesado.nomRepre }}
+            </ng-container>
+            <span *ngIf="!interesado.nomRepre">—</span>
+          </td>
+          <td class="fw-normal">{{ interesado.numDocumRepre || '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

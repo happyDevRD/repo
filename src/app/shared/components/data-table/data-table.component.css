@@ -1,0 +1,392 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.data-table__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+}
+
+.data-table__toolbar-start {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.data-table__toolbar-end {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.data-table__count {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.data-table__clear-filters {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0.4rem 0;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.data-table__clear-filters:hover {
+  color: var(--iflow-primary);
+}
+
+.data-table__export {
+  position: relative;
+}
+
+.data-table__export-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.data-table__export-trigger:hover:not(:disabled) {
+  color: var(--iflow-primary-dark);
+  background: rgba(105, 120, 255, 0.08);
+}
+
+.data-table__export-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.data-table__export-chevron {
+  font-size: 0.65rem;
+  margin-left: 0.15rem;
+  opacity: 0.75;
+}
+
+.data-table__export-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 20;
+  min-width: 10rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--btn-radius);
+  box-shadow: var(--shadow-md);
+}
+
+.data-table__export-menu button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  background: none;
+  border: none;
+  border-radius: calc(var(--btn-radius) - 4px);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.data-table__export-menu button:hover {
+  background: rgba(105, 120, 255, 0.08);
+  color: var(--iflow-primary-dark);
+}
+
+.data-table__scroll {
+  max-height: 34rem;
+  overflow-y: auto;
+}
+
+.data-table__table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: rgba(105, 120, 255, 0.09);
+  color: var(--iflow-primary-dark);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid var(--iflow-primary-light);
+  box-shadow: 0 1px 0 0 var(--iflow-primary-light);
+  white-space: nowrap;
+}
+
+/* Filtro por columna, estilo Excel: un icono en la cabecera que abre un
+   popover con el control de esa columna, en vez de una fila/barra de
+   filtros siempre visible. */
+.data-table__filter-cell {
+  position: relative;
+}
+
+.data-table__th-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.data-table__filter-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+.data-table__filter-icon-btn:hover {
+  opacity: 1;
+  background: rgba(105, 120, 255, 0.12);
+}
+
+.data-table__filter-icon-btn .bi {
+  font-size: 0.72rem;
+}
+
+.data-table__filter-icon-btn--active {
+  opacity: 1;
+  color: var(--iflow-primary);
+}
+
+.data-table__filter-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  margin-top: 0.3rem;
+  min-width: 12rem;
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--surface-card, #fff);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--btn-radius);
+  box-shadow: var(--shadow-md);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  white-space: normal;
+  color: var(--text-primary);
+  cursor: default;
+}
+
+.data-table__filter-range {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.data-table__filter-range label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.data-table__filter-popover-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.data-table__filter-popover-clear:hover {
+  color: var(--iflow-primary);
+}
+
+.data-table__sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.data-table__sort-btn:hover {
+  color: var(--iflow-primary);
+}
+
+.data-table__sort-btn .bi {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.data-table__sort-btn:hover .bi {
+  opacity: 1;
+}
+
+.data-table__empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+}
+
+.data-table__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.data-table__page-size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.data-table__page-size .form-select {
+  width: auto;
+}
+
+.data-table__pager {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.data-table__pager-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  background: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.data-table__pager-btn:hover:not(:disabled) {
+  color: var(--iflow-primary-dark);
+  border-color: var(--iflow-primary-light);
+  background: rgba(105, 120, 255, 0.08);
+}
+
+.data-table__pager-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.data-table__page-indicator {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.data-table__row {
+  transition: box-shadow 0.15s ease;
+}
+
+.data-table__row td {
+  transition: background-color 0.15s ease;
+}
+
+.data-table__row--clickable {
+  cursor: pointer;
+}
+
+.data-table__row--clickable:focus-visible {
+  outline: none;
+  box-shadow: inset var(--focus-ring);
+}
+
+/* Hover: un tinte suave y distinto del de selección, para que se note la
+   diferencia entre "fila bajo el cursor" y "fila activa". Bootstrap pinta el
+   fondo de cada <td> por encima de cualquier estilo en el <tr>, así que va
+   sobre las celdas (mismo motivo que la selección, ver abajo). */
+.data-table__table tbody tr.data-table__row--clickable:hover > td {
+  background-color: rgba(105, 120, 255, 0.045);
+}
+
+/* Selección de fila: acento de marca en vez del gris plano de Bootstrap.
+   Bootstrap pinta el fondo/sombra de cada <td> con var(--bs-table-bg) y
+   var(--bs-table-accent-bg) (truco box-shadow: inset 0 0 0 9999px), lo que
+   tapa cualquier background-color puesto en el <tr> — por eso el estilo va
+   sobre las celdas, no sobre la fila. */
+.data-table__table tbody tr.table-active > td {
+  box-shadow: inset 0 0 0 9999px rgba(105, 120, 255, 0.1);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.data-table__table tbody tr.table-active > td:first-child {
+  box-shadow: inset 3px 0 0 0 var(--iflow-primary), inset 0 0 0 9999px rgba(105, 120, 255, 0.1);
+}
+
+.data-table__table tbody tr.table-active.data-table__row--clickable:hover > td {
+  box-shadow: inset 0 0 0 9999px rgba(105, 120, 255, 0.16);
+}
+
+.data-table__table tbody tr.table-active.data-table__row--clickable:hover > td:first-child {
+  box-shadow: inset 3px 0 0 0 var(--iflow-primary), inset 0 0 0 9999px rgba(105, 120, 255, 0.16);
+}

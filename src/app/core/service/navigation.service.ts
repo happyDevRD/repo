@@ -54,8 +54,34 @@ export class NavigationService {
       this.location.back()
       return
     }
-    const commands = Array.isArray(fallbackRoute) ? fallbackRoute : [fallbackRoute]
-    void this.router.navigate(commands)
+    this.navigateTo(fallbackRoute)
+  }
+
+  /**
+   * Navega a una ruta concreta (un solo salto). Usar cuando "Volver" debe ir
+   * siempre al listado / destino fijo, sin recorrer entradas intermedias del historial
+   * (ficha, redirects, etc.).
+   */
+  navigateTo(route: string | unknown[]): void {
+    if (typeof route === 'string') {
+      void this.router.navigateByUrl(route)
+      return
+    }
+    void this.router.navigate(route)
+  }
+
+  /** Lee `returnUrl` del state del historial (si se pasó al entrar en la pantalla). */
+  readReturnUrl(opts?: { rejectIfIncludes?: string }): string | null {
+    const state = (typeof history !== 'undefined' ? history.state : null) as { returnUrl?: unknown } | null
+    const url = state?.returnUrl
+    if (typeof url !== 'string' || !url.trim()) {
+      return null
+    }
+    const reject = opts?.rejectIfIncludes
+    if (reject && url.includes(reject)) {
+      return null
+    }
+    return url
   }
 
   /** Cierra el modal indicado (delega en ModalManagerService, sin duplicar su lógica). */

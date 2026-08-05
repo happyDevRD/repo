@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { NavUiService } from '../nav/nav-ui.service';
 import { resolvePageTitle } from '../layout/page-titles';
 import { filter, Subscription } from 'rxjs';
+import { UserSessionService } from '../core/service/user-session.service';
 
 @Component({
   selector: 'app-headers',
@@ -22,8 +23,17 @@ export class HeadersComponent implements OnInit, OnDestroy {
 
   constructor(
     private navUi: NavUiService,
-    private router: Router
+    private router: Router,
+    private session: UserSessionService,
   ) { }
+
+  get userName(): string {
+    return this.session.user || 'Usuario';
+  }
+
+  get departmentName(): string {
+    return this.session.department || '';
+  }
 
   ngOnInit(): void {
     this.navSub = this.navUi.mobileOpen$.subscribe(open => {

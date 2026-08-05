@@ -23,7 +23,9 @@ export interface CloseModalOptions {
 const MODAL_CONFIG: bootstrap.Modal.Options = {
   backdrop: false,
   keyboard: false,
-  focus: true,
+  // Evita FocusTrap de Bootstrap sobre nodos aún no estables (p. ej. *ngIf en el body).
+  // El foco se gestiona en shown.bs.modal vía focusModalTitle.
+  focus: false,
 }
 
 const CLOSE_SAFETY_MS = 450
@@ -81,7 +83,12 @@ export class ModalManagerService {
     }
     modalElement.addEventListener('shown.bs.modal', onShown)
 
-    modal.show()
+    try {
+      modal.show()
+    } catch (err) {
+      console.warn(`[ModalManager] Error al abrir ${modalId}`, err)
+      this.focusModalTitle(modalElement)
+    }
   }
 
   public closeModal(modalId: string, options?: CloseModalOptions): void {
@@ -198,9 +205,15 @@ export class ModalManagerService {
   }
 
   private getManagedInstance(modalElement: HTMLElement): bootstrap.Modal {
+    // Recrear siempre con MODAL_CONFIG: una instancia previa (p. ej. focus:true)
+    // hace fallar el FocusTrap de Bootstrap con "Cannot read properties of null (reading 'focus')".
     const existing = bootstrap.Modal.getInstance(modalElement)
     if (existing) {
-      return existing
+      try {
+        existing.dispose()
+      } catch {
+        /* instancia ya destruida */
+      }
     }
     return new bootstrap.Modal(modalElement, MODAL_CONFIG)
   }
@@ -313,26 +326,36 @@ export class ModalManagerService {
     }
 
     form.classList.remove('was-validated')
-    if (modalId !== 'NprocediModal') {
+    // Los modales de edición se rellenan con datos del registro seleccionado
+    // ANTES de abrirse; form.reset() los dejaría en blanco (dispara eventos
+    // nativos que el ngModel de Angular vuelve a capturar como valor real).
+    const prefilledModals = new Set([
+      'NprocediModal', 'EditoAtributosModal', 'modifitareasModalListado', 'nuevoPermisoModal',
+    ])
+    if (!prefilledModals.has(modalId)) {
       form.reset()
     }
   }
 
   private focusModalTitle(modalElement: HTMLElement): void {
     const title = modalElement.querySelector<HTMLElement>('.modal-title')
-    if (!title) {
+    if (!title || typeof title.focus !== 'function') {
       return
     }
     if (!title.hasAttribute('tabindex')) {
       title.setAttribute('tabindex', '-1')
     }
-    title.focus({ preventScroll: true })
+    try {
+      title.focus({ preventScroll: true })
+    } catch {
+      /* elemento no enfocable en este momento */
+    }
   }
 
   private restoreOpenerFocus(modalId: string): void {
     const opener = this.modalOpeners.get(modalId)
     this.modalOpeners.delete(modalId)
-    if (!opener || !opener.isConnected) {
+    if (!opener || !opener.isConnected || typeof opener.focus !== 'function') {
       return
     }
     if (getVisibleModals().length > 0) {
@@ -340,7 +363,11 @@ export class ModalManagerService {
     }
     window.setTimeout(() => {
       if (opener.isConnected && getVisibleModals().length === 0) {
-        opener.focus({ preventScroll: true })
+        try {
+          opener.focus({ preventScroll: true })
+        } catch {
+          /* opener ya no enfocable */
+        }
       }
     }, 0)
   }

@@ -1,0 +1,160 @@
+<div class="data-table">
+  <div class="data-table__toolbar" *ngIf="filterableColumns.length || availableExportFormats.length">
+    <div class="data-table__toolbar-start">
+      <button *ngIf="hasActiveFilters" type="button" class="data-table__clear-filters" (click)="clearAllFilters()">
+        <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar filtros
+      </button>
+    </div>
+
+    <div class="data-table__toolbar-end">
+      <span class="data-table__count" *ngIf="!loading">
+        {{ filteredItems.length }} {{ filteredItems.length === 1 ? 'resultado' : 'resultados' }}
+      </span>
+
+      <div class="data-table__export" *ngIf="availableExportFormats.length">
+        <ng-container *ngIf="availableExportFormats.length === 1; else exportMenuTpl">
+          <button type="button" class="data-table__export-trigger" [disabled]="!filteredItems.length"
+            (click)="runExport(availableExportFormats[0])">
+            <i class="bi" [class]="exportFormatMeta(availableExportFormats[0]).icon" aria-hidden="true"></i>
+            {{ exportFormatMeta(availableExportFormats[0]).label }}
+          </button>
+        </ng-container>
+        <ng-template #exportMenuTpl>
+          <button type="button" class="data-table__export-trigger" [disabled]="!filteredItems.length"
+            (click)="toggleExportMenu()" [attr.aria-expanded]="exportMenuOpen">
+            <i class="bi bi-download" aria-hidden="true"></i> Exportar
+            <i class="bi bi-chevron-down data-table__export-chevron" aria-hidden="true"></i>
+          </button>
+          <ul class="data-table__export-menu" *ngIf="exportMenuOpen">
+            <li *ngFor="let format of availableExportFormats">
+              <button type="button" (click)="runExport(format)">
+                <i class="bi" [class]="exportFormatMeta(format).icon" aria-hidden="true"></i>
+                {{ exportFormatMeta(format).label }}
+              </button>
+            </li>
+          </ul>
+        </ng-template>
+      </div>
+
+      <ng-content select="[tableActions]"></ng-content>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-secondary py-4" role="status">
+    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+    Cargando…
+  </div>
+
+  <div *ngIf="!loading" class="table-responsive data-table__scroll">
+    <table class="table mb-0 data-table__table">
+      <thead>
+        <tr>
+          <th *ngFor="let col of columns" [style.width]="col.width || null"
+            class="data-table__filter-cell"
+            [class.text-center]="col.align === 'center'" [class.text-end]="col.align === 'end'">
+            <div class="data-table__th-content">
+              <button *ngIf="col.sortable" type="button" class="data-table__sort-btn" (click)="toggleSort(col)">
+                {{ col.header }}
+                <i class="bi" [class]="sortIcon(col)" aria-hidden="true"></i>
+              </button>
+              <span *ngIf="!col.sortable">{{ col.header }}</span>
+
+              <button *ngIf="col.filterable" type="button" class="data-table__filter-icon-btn"
+                [class.data-table__filter-icon-btn--active]="isFilterActive(col)"
+                [attr.aria-label]="'Filtrar por ' + col.header" [attr.aria-expanded]="openFilterColumn === col"
+                (click)="toggleColumnFilter(col)">
+                <i class="bi bi-funnel-fill" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div class="data-table__filter-popover" *ngIf="openFilterColumn === col" (keydown.escape)="openFilterColumn = null">
+              <!-- select / boolean: un único desplegable -->
+              <select *ngIf="col.filterType === 'select' || col.filterType === 'boolean'"
+                class="form-select form-select-sm" [attr.aria-label]="'Filtrar por ' + col.header"
+                [ngModel]="getSimpleFilterValue(col)" (ngModelChange)="setSimpleFilter(col, $event)">
+                <option value="">Todos</option>
+                <option *ngFor="let option of filterOptionsFor(col)" [value]="option">{{ option }}</option>
+              </select>
+
+              <!-- texto libre: caja de texto, filtra por "contiene" -->
+              <input *ngIf="col.filterType === 'text'" type="search" class="form-control form-control-sm"
+                placeholder="Filtrar…" [attr.aria-label]="'Filtrar por ' + col.header" [ngModel]="getSimpleFilterValue(col)"
+                (ngModelChange)="setSimpleFilter(col, $event)">
+
+              <!-- rango de fechas: desde/hasta -->
+              <div *ngIf="col.filterType === 'dateRange'" class="data-table__filter-range">
+                <label>Desde
+                  <input type="date" class="form-control form-control-sm"
+                    [ngModel]="getRangeFilter(col).from ?? ''" (ngModelChange)="setRangeFilter(col, 'from', $event)">
+                </label>
+                <label>Hasta
+                  <input type="date" class="form-control form-control-sm"
+                    [ngModel]="getRangeFilter(col).to ?? ''" (ngModelChange)="setRangeFilter(col, 'to', $event)">
+                </label>
+              </div>
+
+              <!-- rango numérico: mínimo/máximo -->
+              <div *ngIf="col.filterType === 'numberRange'" class="data-table__filter-range">
+                <label>Mínimo
+                  <input type="number" class="form-control form-control-sm"
+                    [ngModel]="getRangeFilter(col).from ?? ''" (ngModelChange)="setRangeFilter(col, 'from', $event)">
+                </label>
+                <label>Máximo
+                  <input type="number" class="form-control form-control-sm"
+                    [ngModel]="getRangeFilter(col).to ?? ''" (ngModelChange)="setRangeFilter(col, 'to', $event)">
+                </label>
+              </div>
+
+              <button *ngIf="isFilterActive(col)" type="button" class="data-table__filter-popover-clear"
+                (click)="clearFilter(col)">
+                <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar
+              </button>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of pagedItems; trackBy: trackByRow" [ngClass]="rowClass(row)"
+          class="data-table__row" [class.data-table__row--clickable]="isRowActivatable"
+          [attr.tabindex]="isRowActivatable ? 0 : null" [attr.role]="isRowActivatable ? 'button' : null"
+          (click)="rowClick.emit(row)" (dblclick)="rowDblClick.emit(row)" (keydown)="onRowKeydown($event, row)">
+          <td *ngFor="let col of columns" class="fw-normal" [class.text-center]="col.align === 'center'"
+            [class.text-end]="col.align === 'end'">
+            <ng-container *ngIf="col.template; else plainCell"
+              [ngTemplateOutlet]="col.template" [ngTemplateOutletContext]="{ $implicit: row, row: row }">
+            </ng-container>
+            <ng-template #plainCell>{{ displayValue(row, col.field) }}</ng-template>
+          </td>
+        </tr>
+        <tr *ngIf="filteredItems.length === 0">
+          <td [attr.colspan]="columns.length" class="data-table__empty">
+            <i class="bi bi-info-circle me-2" aria-hidden="true"></i>{{ emptyMessage }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="data-table__footer" *ngIf="showPagination && !loading && filteredItems.length > 0">
+    <div class="data-table__page-size">
+      <label for="dataTablePageSize">Mostrar</label>
+      <select id="dataTablePageSize" class="form-select form-select-sm" [ngModel]="pageSize"
+        (ngModelChange)="setPageSize($event)">
+        <option *ngFor="let size of pageSizeOptions" [ngValue]="size">{{ size }}</option>
+      </select>
+      <span>por página</span>
+    </div>
+
+    <div class="data-table__pager" *ngIf="totalPages > 1">
+      <button type="button" class="data-table__pager-btn" [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)" aria-label="Página anterior">
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      </button>
+      <span class="data-table__page-indicator">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button type="button" class="data-table__pager-btn" [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)" aria-label="Página siguiente">
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>

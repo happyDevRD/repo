@@ -1,0 +1,24 @@
+<app-modal-shell
+  modalId="ListadoTramitadoresModal"
+  title="Listado de Tramitadores"
+  titleId="ListadoTramitadoresModalLabel"
+  modalClass="iflow-modal iflow-modal--fit exp-listado-modal"
+  dialogClass="modal-lg modal-dialog-scrollable"
+  [dismissOnClose]="true"
+  (closed)="handleClosed()">
+  <div modalBody class="exp-listado-modal__body">
+    <app-edita-expediente-workspace-tramitadores
+      [visible]="edita.veoTramitadores"
+      [tramitadores]="edita.tramitadoresListado"
+      [cargando]="edita.cargandoTramitadores"
+      [idTramitadorSeleccionado]="edita.idTramitador"
+      (rowClick)="edita.clickTramitadores($event)"
+      (rowDoubleClick)="edita.onTramitadorDoubleClick($event)">
+    </app-edita-expediente-workspace-tramitadores>
+  </div>
+  <div modalFooter class="modal-footer">
+    <button type="button" class="btn-iflow btn-iflow--secondary" (click)="handleCerrar()">
+      Cerrar
+    </button>
+  </div>
+</app-modal-shell>

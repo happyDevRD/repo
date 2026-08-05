@@ -1,0 +1,79 @@
+<p class="exp-nueva-tarea-modal__section-title">Documentación</p>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="form-floating">
+      <select [(ngModel)]="edita.tareatramiteexpedientecrear.anexo"
+        class="form-select"
+        [class.form-select--placeholder]="edita.tareatramiteexpedientecrear.anexo == null || edita.tareatramiteexpedientecrear.anexo === ''"
+        id="anexoNuevaTarea" name="anexo" required aria-required="true">
+        <option [ngValue]="null" disabled>Seleccione anexo</option>
+        <option value="1">Documentación física requerida</option>
+        <option value="2">Fichero enlace</option>
+        <option value="3">Documentación física complementaria</option>
+      </select>
+      <label class="required-field" for="anexoNuevaTarea">Anexo</label>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-floating">
+      <select [(ngModel)]="edita.tareatramiteexpedientecrear.documAportada"
+        class="form-select"
+        [class.form-select--placeholder]="edita.tareatramiteexpedientecrear.documAportada == null || edita.tareatramiteexpedientecrear.documAportada === ''"
+        id="docaporNuevaTarea" name="docapor" required aria-required="true">
+        <option [ngValue]="null" disabled>Seleccione documentación aportada</option>
+        <option value="0">Ninguno</option>
+        <option value="1">Copia</option>
+        <option value="2">Compulsado</option>
+        <option value="3">Copia original</option>
+        <option value="4">Original</option>
+      </select>
+      <label class="required-field" for="docaporNuevaTarea">Documentación aportada</label>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-floating">
+      <select [(ngModel)]="edita.tareatramiteexpedientecrear.tipoDocumEni"
+        class="form-select"
+        [class.form-select--placeholder]="!edita.tareatramiteexpedientecrear.tipoDocumEni"
+        id="tipoDocumEniNuevaTarea" name="tipoDocumEni" required aria-required="true">
+        <option [ngValue]="null" disabled>Seleccione tipo ENI</option>
+        <option value="TD01">Resolución</option>
+        <option value="TD02">Acuerdo</option>
+        <option value="TD03">Contrato</option>
+        <option value="TD04">Convenio</option>
+        <option value="TD05">Declaración</option>
+        <option value="TD06">Comunicación</option>
+        <option value="TD07">Notificación</option>
+        <option value="TD08">Publicación</option>
+        <option value="TD09">Acuse de recibo</option>
+        <option value="TD10">Acta</option>
+        <option value="TD11">Certificado</option>
+        <option value="TD12">Diligencia</option>
+        <option value="TD13">Informe</option>
+        <option value="TD14">Solicitud</option>
+        <option value="TD15">Denuncia</option>
+        <option value="TD16">Alegación</option>
+        <option value="TD17">Recursos</option>
+        <option value="TD18">Comunicación ciudadano</option>
+        <option value="TD19">Factura</option>
+        <option value="TD20">Otros incautados</option>
+        <option value="TD21">Otros</option>
+      </select>
+      <label class="required-field" for="tipoDocumEniNuevaTarea">Tipo documento ENI</label>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-floating">
+      <select [(ngModel)]="edita.tareatramiteexpedientecrear.documentacion"
+        class="form-select"
+        [class.form-select--placeholder]="!edita.tareatramiteexpedientecrear.documentacion"
+        id="documentacionNuevaTarea" name="documentacion" required aria-required="true">
+        <option [ngValue]="null" disabled>Seleccione una opción</option>
+        <option value="1">Documentación adjunta digitalizada</option>
+        <option value="2">Documentación adjunta en soporte papel</option>
+        <option value="3">Documentación adjunta digitalizada y en papel</option>
+      </select>
+      <label class="required-field" for="documentacionNuevaTarea">Documentación</label>
+    </div>
+  </div>
+</div>

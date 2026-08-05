@@ -621,7 +621,7 @@ export class ExpedientesExpedienteFacade {
         this.notificationService.success('El tramitador fue asignado');
         host.veoPermisoProcedi = false;
         host.limpiarDatosAsignarTramitador();
-        host.cerrarModal('AsigfnarTramitadorModal');
+        host.cerrarModal('AsignarTramitadorModal');
       },
       error: (err: HttpErrorResponse) => {
         this.notificationService.error(err.error.message);
@@ -639,7 +639,6 @@ export class ExpedientesExpedienteFacade {
     host.idExpediente = rowData.id;
     host.idExpedienteString = String(rowData.id);
     host.idexpediente = rowData.id;
-    this.gridFacade.refrescarSourceAtributo(host);
 
     if (rowData.idHisDocum) {
       this.expedientesService.getRegistroDocVer(rowData.idHisDocum).pipe(
@@ -707,7 +706,6 @@ export class ExpedientesExpedienteFacade {
     host.verExpedientes = true;
 
     host.getExpediente();
-    this.gridFacade.actualizaSourceTramite(host);
 
     // Fechas formateadas DD/MM/AAAA (antes cierre/cancelación usaban por error
     // los componentes de fecInicio en vez de su propia fecha).

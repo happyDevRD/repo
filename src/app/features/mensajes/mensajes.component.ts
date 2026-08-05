@@ -50,8 +50,8 @@ export class MensajesComponent implements OnInit {
   idTarea = 0
   selectedKey = ''
 
-  filtroDireccion: MensajeFiltroDireccion = 'todos'
-  filtroEstado: MensajeFiltroEstado = 'TODOS'
+  filtroDireccion: MensajeFiltroDireccion = 'recibido'
+  filtroEstado: MensajeFiltroEstado = 'PENDIENTE'
   filtroTexto = ''
 
   canRechazar = false

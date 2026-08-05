@@ -1,13 +1,11 @@
 import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { environment } from 'src/environments/environment';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { jqxGrid_ES } from 'src/translations/jqxGrid_translate'
 import { ExpedientesService } from '../expedientes.service';
 import { ProcedimientoService } from 'src/app/features/procedimientos/procedimiento.service';
 import { ConsultaDni, CrearInteresado, RepresentanteExpLIstar, VerExpediente } from '../expedientes';
-import { GridRadioSelector } from '../../../core/helper/grid-radio-selector';
+import { InteresadoListarDto } from '../../../core/models/interesado.dto';
 import { NotificationService } from '../../../core/service/notification.service';
 import { FormValidatorHelper } from '../../../core/helper/form-validator.helper';
 import { ModalManagerService } from '../../../core/service/modal-manager.service';
@@ -211,28 +209,7 @@ export class InteresadoComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
-        this.sourceInteresado = ({
-          dataType: 'json',
-          dataFields: [
-            { name: 'nomInter', type: 'string' },
-            { name: 'numDocumInter', type: 'string' },
-            { name: 'principal', type: 'any' },
-            { name: 'nomRepre', type: 'string' },
-            { name: 'numDocumRepre', type: 'string' },
-            { name: 'id', type: 'any' },
-            { name: 'forNotif', type: 'any' },
-            { name: 'dirInter', type: 'any' },
-            { name: 'dirRepre', type: 'any' },
-            { name: 'desProviInter', type: 'any' },
-            { name: 'desProviRepre', type: 'any' },
-            { name: 'desMunicInter', type: 'any' },
-            { name: 'desMunicRepre', type: 'any' },
-            { name: 'emailNotif', type: 'any' },
-          ],
-          url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
-          id: 'id',
-        })
-
+        this.cargarInteresados();
         this.notificationService.saveSuccess('Interesado')
         this.cerrarModal('ninteresadoModal')
       },
@@ -250,51 +227,22 @@ export class InteresadoComponent implements OnInit {
       if (result.isConfirmed) {
         this.expedientesService.deleteInteresado(this.idInteresado).pipe(
           takeUntilDestroyed(this.destroyRef),
-        ).subscribe(response => {
-          this.notificationService.deleteSuccess('Interesado');
-          this.sourceInteresado = ({
-            dataType: 'json',
-            dataFields: [
-              { name: 'nomInter', type: 'string' },
-              { name: 'numDocumInter', type: 'string' },
-              { name: 'principal', type: 'any' },
-              { name: "nomRepre", type: 'string' },
-              { name: "numDocumRepre", type: 'string' },
-              { name: 'id', type: 'any' },
-              { name: 'forNotif', type: 'any' },
-              { name: 'dirInter', type: 'any' },
-              { name: 'dirRepre', type: 'any' },
-              { name: 'desProviInter', type: 'any' },
-              { name: 'desProviRepre', type: 'any' },
-              { name: 'desMunicInter', type: 'any' },
-              { name: 'desMunicRepre', type: 'any' },
-              { name: 'emailNotif', type: 'any' },
-
-
-
-            ],
-
-            //url: `${environment.apiUrl}interesado/listar/104}`,
-            url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
-            id: 'id',
-            // sortcolumn: 'id',
-            //  sortdirection: 'desc'
-
-          });
-
-        }, (error: HttpErrorResponse) => {
-          if (error.status == 403) {
-            this.notificationService.error('No se ha podido borrar el elemento. Existen elementos dependientes asociados.');
-          } else {
-            this.notificationService.error('Error al eliminar el interesado.');
-          }
-        }
-
-        );
-
+        ).subscribe({
+          next: () => {
+            this.notificationService.deleteSuccess('Interesado');
+            this.veoBorraInteresado = false;
+            this.cargarInteresados();
+          },
+          error: (error: HttpErrorResponse) => {
+            if (error.status == 403) {
+              this.notificationService.error('No se ha podido borrar el elemento. Existen elementos dependientes asociados.');
+            } else {
+              this.notificationService.error('Error al eliminar el interesado.');
+            }
+          },
+        });
       }
     })
-
   }
 
 
@@ -320,160 +268,59 @@ export class InteresadoComponent implements OnInit {
 
 
 
-  public clickInteresado(event: any): void {
-    const rowData = event.args.row.bounddata
+  public seleccionarInteresado(rowData: InteresadoListarDto): void {
     this.veoBorraInteresado = true
     this.emailNotif = rowData.emailNotif
     this.numDocumInter = rowData.numDocumInter
-    this.principal = rowData.principal
-    this.nomRepre = rowData.nomRepre
-    this.numDocumRepre = rowData.numDocumRepre
+    this.principal = String(rowData.principal)
+    this.nomRepre = rowData.nomRepre ?? ''
+    this.numDocumRepre = rowData.numDocumRepre ?? ''
     this.forNotif = rowData.forNotif
     this.dirInter = rowData.dirInter
-    this.dirRepre = rowData.dirRepre
+    this.dirRepre = rowData.dirRepre ?? ''
     this.desProviInter = rowData.desProviInter
-    this.desProviRepre = rowData.desProviRepre
+    this.desProviRepre = rowData.desProviRepre ?? ''
     this.desMunicInter = rowData.desMunicInter
-    this.desMunicRepre = rowData.desMunicRepre
+    this.desMunicRepre = rowData.desMunicRepre ?? ''
     this.nombreinteresado = rowData.nomInter
     this.idInteresado = rowData.id
 
-    if (rowData.principal == 1) {
-      this.veoprincipal = true
-    } else {
-      this.veoprincipal = false
+    this.veoprincipal = rowData.principal == 1
+    this.veoemail = rowData.forNotif == 'TELEMÁTICO'
+  }
+
+  /** Clic simple: selecciona (habilita borrar). Doble clic: abre el detalle de solo lectura. */
+  public clickInteresado(rowData: InteresadoListarDto): void {
+    this.seleccionarInteresado(rowData)
+  }
+
+  public abrirModalVerInteresado(rowData: InteresadoListarDto): void {
+    this.seleccionarInteresado(rowData)
+    this.abrirModal('verInteresadoModal')
+  }
+
+
+  public interesados: InteresadoListarDto[] = [];
+  public cargandoInteresados: boolean = false;
+
+  public cargarInteresados(): void {
+    if (!this.idExpediente) {
+      return;
     }
-
-    if (rowData.forNotif == 'TELEMÁTICO') {
-      this.veoemail = true
-    } else {
-      this.veoemail = false
-    }
+    this.cargandoInteresados = true;
+    this.expedientesService.getInteresadoListarDto(this.idExpediente).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (interesados) => {
+        this.interesados = interesados ?? [];
+        this.cargandoInteresados = false;
+      },
+      error: () => {
+        this.interesados = [];
+        this.cargandoInteresados = false;
+      },
+    });
   }
-  // Método para abrir modal de visualización con doble click
-  public abrirModalVerInteresado(event: any) {
-    const rowData = event.args.row.bounddata;
-
-    // Cargar datos del interesado para visualización
-    this.veoBorraInteresado = true;
-    this.emailNotif = rowData.emailNotif;
-    this.numDocumInter = rowData.numDocumInter;
-    this.principal = rowData.principal;
-    this.nomRepre = rowData.nomRepre;
-    this.numDocumRepre = rowData.numDocumRepre;
-    this.forNotif = rowData.forNotif;
-    this.dirInter = rowData.dirInter;
-    this.dirRepre = rowData.dirRepre;
-    this.desProviInter = rowData.desProviInter;
-    this.desProviRepre = rowData.desProviRepre;
-    this.desMunicInter = rowData.desMunicInter;
-    this.desMunicRepre = rowData.desMunicRepre;
-    this.nombreinteresado = rowData.nomInter;
-    this.idInteresado = rowData.id;
-
-    if (rowData.principal == 1) {
-      this.veoprincipal = true;
-    } else {
-      this.veoprincipal = false;
-    }
-
-    if (rowData.forNotif == "TELEMÁTICO") {
-      this.veoemail = true;
-    } else {
-      this.veoemail = false;
-    }
-
-    // Abrir el modal de visualización
-    this.abrirModal('verInteresadoModal');
-  }
-
-  // Renderer de radio button para selección de interesados usando GridRadioSelector
-  public columnseleccion = GridRadioSelector.createRadioRenderer('Interesados', 'Selecciona Interesado');
-
-  public columnrenderer = function (value) {
-    return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">' + value + '</div>';
-  }
-  public columnrendererInteresado = function (value) {
-    return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">' + '<img  src="assets/interesado.svg" width="20" height="20"/>' + value + '</div>';
-  }
-  public columnrendererRepresentante = function (value) {
-    return '<div style="text-align: center; margin-top: 5px; font-weight: bold; font-family: Verdana;">' + '<img  src="assets/representante.svg" width="20" height="20"/>' + value + '</div>';
-  }
-  public cellsrenderer = function (row, column, value) {
-    return `<div style="text-align: center; margin-top: 5px;">` + value + '</div>';
-  }
-  public cellsrendererPrincipal = function (row, column, value) {
-    if (value == 1) {
-      return `<div style="text-align: center; margin-top: 5px;" title="Interesado Principal">` + '<img  src="assets/boton_verde.png" width="20" height="20"/>' + '</div>';
-    } else {
-      return `<div style="text-align: center; margin-top: 5px;">` + '<img  src="assets/boton_rojo.png" width="20" height="20"/>' + '</div>';
-    }
-  }
-
-
-  columnsInteresado = [
-    { text: 'id', datafield: 'id', width: '1%', hidden: true },
-    { text: '', datafield: '', cellsrenderer: this.columnseleccion, renderer: this.columnrenderer },
-    { text: 'Interesado', width: '30%', datafield: 'nomInter', cellsrenderer: this.cellsrenderer, renderer: this.columnrendererInteresado },
-    { text: 'Doc. Interesado', datafield: 'numDocumInter', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer },
-    { text: 'Principal', datafield: 'principal', cellsrenderer: this.cellsrendererPrincipal, renderer: this.columnrenderer },
-    { text: 'Representante', width: '30%', datafield: 'nomRepre', cellsrenderer: this.cellsrenderer, renderer: this.columnrendererRepresentante },
-    { text: 'Doc. Representante', datafield: 'numDocumRepre', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer },
-
-    { text: 'idHisRepre', datafield: 'idHisRepre', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'idRepre', datafield: 'idRepre', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'ejeExped', datafield: 'ejeExped', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'numExped', datafield: 'numExped', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'idexpediente', datafield: 'expediente', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'forNotif', datafield: 'forNotif', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'dirInter', datafield: 'dirInter', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'dirRepre', datafield: 'dirRepre', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'desProviInter', datafield: 'desProviInter', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'desProviRepre', datafield: 'desProviRepre', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'desMunicInter', datafield: 'desMunicInter', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'desMunicRepre', datafield: 'desMunicRepre', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-    { text: 'emailNotif', datafield: 'emailNotif', cellsrenderer: this.cellsrenderer, renderer: this.columnrenderer, hidden: true },
-
-
-
-
-
-
-
-  ];
-  public localizationObject: any = jqxGrid_ES;
-
-
-
-
-  sourceInteresado = new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      { name: 'nomInter', type: 'string' },
-      { name: 'numDocumInter', type: 'string' },
-      { name: 'principal', type: 'any' },
-      { name: "nomRepre", type: 'string' },
-      { name: "numDocumRepre", type: 'string' },
-      { name: 'id', type: 'any' },
-      { name: 'forNotif', type: 'any' },
-      { name: 'dirInter', type: 'any' },
-      { name: 'dirRepre', type: 'any' },
-      { name: 'desProviInter', type: 'any' },
-      { name: 'desProviRepre', type: 'any' },
-      { name: 'desMunicInter', type: 'any' },
-      { name: 'desMunicRepre', type: 'any' },
-      { name: 'emailNotif', type: 'any' },
-
-
-    ],
-
-    //url: `${environment.apiUrl}interesado/listar/104}`,
-    url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
-    id: 'id',
-    // sortcolumn: 'id',
-    //  sortdirection: 'desc'
-
-  });
 
   async cargarexpediente() {
     this.activatedRoute.params.pipe(
@@ -484,32 +331,11 @@ export class InteresadoComponent implements OnInit {
     })
   }
 
-  /** Núcleo de carga (fuente del grid + datos del expediente), reutilizado tanto
+  /** Núcleo de carga (interesados + datos del expediente), reutilizado tanto
    *  por la ruta propia (id vía params) como por el uso embebido como modal (id vía Input). */
   cargarPorId(id: number): void {
     this.idExpediente = id;
-
-    this.sourceInteresado = ({
-      dataType: 'json',
-      dataFields: [
-        { name: 'nomInter', type: 'string' },
-        { name: 'numDocumInter', type: 'string' },
-        { name: 'principal', type: 'any' },
-        { name: "nomRepre", type: 'string' },
-        { name: "numDocumRepre", type: 'string' },
-        { name: 'id', type: 'any' },
-        { name: 'forNotif', type: 'any' },
-        { name: 'dirInter', type: 'any' },
-        { name: 'dirRepre', type: 'any' },
-        { name: 'desProviInter', type: 'any' },
-        { name: 'desProviRepre', type: 'any' },
-        { name: 'desMunicInter', type: 'any' },
-        { name: 'desMunicRepre', type: 'any' },
-        { name: 'emailNotif', type: 'any' },
-      ],
-      url: `${environment.apiUrl}interesado/listar/${this.idExpediente}`,
-      id: 'id',
-    });
+    this.cargarInteresados();
 
     if (id) {
       this.expedientesService.getExpediente(id).pipe(
@@ -530,7 +356,6 @@ export class InteresadoComponent implements OnInit {
     public procedimientoService: ProcedimientoService,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public http: HttpClient,
     private notificationService: NotificationService,
     private modalManagerService: ModalManagerService,
     public session: UserSessionService

@@ -30,10 +30,7 @@ import {
   EditaExpedienteWorkspaceGridsBundle,
   EditaExpedienteWorkspaceGridsContext,
 } from '../config/edita-expediente-workspace-grids.config'
-import { buildNotificacionGridSourceFromLocal } from '../notificaciones/notificaciones-grid.config'
-import { actualizarSourceNotificacionesGrid } from '../notificaciones/notificaciones-grid-refresh.helper'
 import { EditaExpedienteNotificacionesUiFacade } from '../notificaciones/edita-expediente-notificaciones-ui.facade'
-import { IflowGridSource } from '../../../../shared/components/iflow-grid/iflow-grid.types'
 
 export interface EditaExpedienteInitHost {
   procedipermiso: ProcediPermisos[]
@@ -70,19 +67,14 @@ export interface EditaExpedienteExpedienteHost {
 }
 
 export interface EditaExpedienteGridRefreshHost {
-  sourceListarNotifi: IflowGridSource & { records?: LeerNotificacion[] }
+  leernotificacion?: LeerNotificacion[]
+  cargandoNotificaciones?: boolean
   verExpediente: { ejercicio: number; numero: number }
   cdr?: ChangeDetectorRef
 }
 
 export interface EditaExpedienteNotificacionesGridHost extends EditaExpedienteGridRefreshHost {
-  leernotificacion?: LeerNotificacion[]
   idNotificacion: number
-  gridNotificaciones?: {
-    updatebounddata(): void
-    refreshdata(): void
-    getrowdata(id: number): unknown
-  }
   cdr: ChangeDetectorRef
   habilitarBotonesNotificacion(rowData: unknown): void
 }
@@ -140,7 +132,10 @@ export class EditaExpedienteLifecycleFacade {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (pais) => {
-        host.pais = pais
+        host.pais = pais ?? []
+      },
+      error: () => {
+        host.pais = []
       },
     })
 
@@ -148,7 +143,10 @@ export class EditaExpedienteLifecycleFacade {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (modeloteulistar) => {
-        this.notifUiFacade.modeloteulistar = modeloteulistar
+        this.notifUiFacade.modeloteulistar = modeloteulistar ?? []
+      },
+      error: () => {
+        this.notifUiFacade.modeloteulistar = []
       },
     })
 
@@ -249,9 +247,14 @@ export class EditaExpedienteLifecycleFacade {
     })
   }
 
-  volverListadoExpedientes(host?: { idExpediente?: number }): void {
-    const fallback = host?.idExpediente ? ['/expedientes', host.idExpediente] : ['/expedientes']
-    this.navigationService.goBack(fallback)
+  /**
+   * Sale de tramitar al listado de origen en un solo salto.
+   * No usa Location.back(): el historial suele tener ficha/redirects intermedios
+   * y obligaba a pulsar Volver varias veces.
+   */
+  volverListadoExpedientes(_host?: { idExpediente?: number }): void {
+    const returnUrl = this.navigationService.readReturnUrl({ rejectIfIncludes: '/tramitar' })
+    this.navigationService.navigateTo(returnUrl ?? '/expedientes')
   }
 
   // --- Grids ---
@@ -260,32 +263,61 @@ export class EditaExpedienteLifecycleFacade {
     return buildEditaExpedienteWorkspaceGrids(context)
   }
 
-  refreshListarNotifi(host: EditaExpedienteGridRefreshHost, withId = false): void {
-    host.sourceListarNotifi = this.notifUiFacade.createGridAdapter(
-      host.verExpediente.ejercicio,
-      host.verExpediente.numero,
-      { withSort: false, ...(withId ? { withId: true } : {}) },
-    ) as EditaExpedienteGridRefreshHost['sourceListarNotifi']
-    host.cdr?.markForCheck()
+  refreshListarNotifi(host: EditaExpedienteGridRefreshHost): void {
+    const { ejercicio, numero } = host.verExpediente
+    if (!ejercicio || !numero) {
+      return
+    }
+
+    if (host.cargandoNotificaciones !== undefined) {
+      host.cargandoNotificaciones = true
+    }
+
+    this.notificacionesService.getNotificacionListar(ejercicio, numero).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (leerNotificacion) => {
+        host.leernotificacion = leerNotificacion ?? []
+        if (host.cargandoNotificaciones !== undefined) {
+          host.cargandoNotificaciones = false
+        }
+        host.cdr?.markForCheck()
+      },
+      error: () => {
+        host.leernotificacion = []
+        if (host.cargandoNotificaciones !== undefined) {
+          host.cargandoNotificaciones = false
+        }
+        host.cdr?.markForCheck()
+      },
+    })
   }
 
   inicializarSourceListarNotifi(host: EditaExpedienteNotificacionesGridHost): void {
-    host.sourceListarNotifi = buildNotificacionGridSourceFromLocal([], {
-      withSort: false,
-      withId: true,
-    })
+    host.leernotificacion = []
   }
 
   actualizarGridNotificaciones(host: EditaExpedienteNotificacionesGridHost, leerNotificacion: LeerNotificacion[]): void {
     host.leernotificacion = leerNotificacion
-    host.sourceListarNotifi = buildNotificacionGridSourceFromLocal(leerNotificacion, {
-      withSort: false,
-      withId: true,
-    })
   }
 
   actualizarSourceNotificaciones(host: EditaExpedienteNotificacionesGridHost): void {
-    actualizarSourceNotificacionesGrid(host, this.notifUiFacade)
+    this.refreshListarNotifi(host)
+
+    if (!host.idNotificacion) {
+      return
+    }
+
+    // Reaplicar botones de fila tras el refresco de la lista.
+    setTimeout(() => {
+      const rowData = host.leernotificacion?.find(
+        (record) => record.idNotif === host.idNotificacion,
+      )
+      if (rowData) {
+        host.habilitarBotonesNotificacion(rowData)
+      }
+      host.cdr?.detectChanges()
+    }, 150)
   }
 
   // --- UI helpers ---
@@ -395,7 +427,8 @@ export class EditaExpedienteLifecycleFacade {
     this.expedientesService.getTemaDocumentoListar().pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (temadocumentolistar) => (host.temadocumentolistar = temadocumentolistar),
+      next: (temadocumentolistar) => (host.temadocumentolistar = temadocumentolistar ?? []),
+      error: () => (host.temadocumentolistar = []),
     })
   }
 
@@ -438,10 +471,15 @@ export class EditaExpedienteLifecycleFacade {
   }
 
   getUsuarioListar(host: EditaExpedienteCatalogosHost, id: number): void {
-    this.procedimientoService.getUsuarioListar(id).pipe(
+    if (!Number.isFinite(id) || id <= 0) {
+      host.procedipermisolistar = []
+      return
+    }
+    this.procedimientoService.getPermisosListar(id).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (procedimientoPermisoListar) => (host.procedipermisolistar = procedimientoPermisoListar),
+      next: (procedimientoPermisoListar) => (host.procedipermisolistar = procedimientoPermisoListar ?? []),
+      error: () => (host.procedipermisolistar = []),
     })
   }
 }

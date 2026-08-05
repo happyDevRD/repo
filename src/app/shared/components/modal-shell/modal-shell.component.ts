@@ -12,6 +12,14 @@ export class ModalShellComponent {
   @Input() title = ''
   @Input() titleId = ''
   @Input() dialogClass = ''
+  /**
+   * Ancho máximo del diálogo (p.ej. `'90vw'`, `'1400px'`) para modales que
+   * necesiten más espacio que `modal-xl`. Se aplica como `[style]` porque las
+   * clases CSS propias del componente que usa `app-modal-shell` no llegan al
+   * `.modal-dialog` (vive en la plantilla de este componente, fuera del
+   * alcance del `ViewEncapsulation` del componente que lo declara).
+   */
+  @Input() dialogMaxWidth: string | null = null
   @Input() bodyClass = ''
   @Input() headerClass = ''
   @Input() contentClass = ''

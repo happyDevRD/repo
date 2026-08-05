@@ -1,33 +1,18 @@
-import { EditaTareaProcedi } from '../procedimiento';
+import { EditaTareaProcedi, ListaTareaProcedi } from '../procedimiento';
 
-export interface TareaRowData {
-  id?: number;
-  accion?: unknown;
-  plantillaDefecto?: string;
-  descripcion?: string;
-  faseTarea?: string;
-  plazo?: unknown;
-  tipoPlazo?: string;
-  procesoFirmadoDefecto?: string;
-}
+export type TareaRowData = Partial<ListaTareaProcedi>;
 
 export interface TareaSelectionHost {
-  accionTarea: unknown;
   plantillaT: unknown;
   idPermisoProcedimiento: unknown;
   idverTarea: unknown;
-  idtrigger: unknown;
   descripcionT: unknown;
   faseT: unknown;
   plazot: unknown;
   tipoPlazoT: unknown;
   firmaT: unknown;
-  veoPermiso: boolean;
-  veoAccionesPermiso: boolean;
-  veoAtributos: boolean;
   verEliminaTarea: boolean;
   veoBorrarTarea: boolean;
-  vermenu: boolean;
   usuarioTarea: unknown;
   editatareaprocedi: EditaTareaProcedi;
 }
@@ -37,27 +22,19 @@ export const applyTareaGridSelection = (
   rowData: TareaRowData,
   callbacks: {
     setIdPermiso: (id: number) => void;
-    lanzaSourcePermi: (id: number) => void;
+    cargarPermisos: (id: number) => void;
     peparadatosfirma: (plantilla: string) => void;
-    actualizaSourceAtributo: (id: number) => void;
-    idProcedi: number;
   },
 ): void => {
-  host.accionTarea = rowData.accion;
   host.plantillaT = rowData.plantillaDefecto || 'Sin plantilla';
   if (rowData.id) {
-    callbacks.lanzaSourcePermi(rowData.id);
+    callbacks.cargarPermisos(rowData.id);
   }
   host.verEliminaTarea = true;
-  host.veoPermiso = true;
-  host.veoAccionesPermiso = true;
-  host.veoAtributos = true;
   host.usuarioTarea = '';
-  host.vermenu = true;
   host.veoBorrarTarea = false;
   host.idPermisoProcedimiento = rowData.id;
   host.idverTarea = rowData.id;
-  host.idtrigger = rowData.id;
   host.descripcionT = rowData.descripcion;
   host.faseT = rowData.faseTarea;
   host.plazot = rowData.plazo;
@@ -67,14 +44,11 @@ export const applyTareaGridSelection = (
     callbacks.setIdPermiso(rowData.id);
   }
   callbacks.peparadatosfirma(rowData.plantillaDefecto ?? '');
-  callbacks.actualizaSourceAtributo(callbacks.idProcedi);
 };
 
 export const populateTareaEditForm = (host: TareaSelectionHost, rowData: TareaRowData): void => {
-  host.accionTarea = rowData.accion;
   host.plantillaT = rowData.plantillaDefecto || 'Sin plantilla';
   host.idverTarea = rowData.id;
-  host.idtrigger = rowData.id;
   host.descripcionT = rowData.descripcion;
   host.faseT = rowData.faseTarea;
   host.plazot = rowData.plazo;

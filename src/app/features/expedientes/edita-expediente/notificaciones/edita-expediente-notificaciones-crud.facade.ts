@@ -31,7 +31,7 @@ export interface EditaExpedienteNotificacionesCrudHost {
   listadodeNotificaciones(): void
   borrarDatosPublicacion(): void
   habilitarBotonesNotificacion?(rowData: NotificacionGridRow): void
-  sourceListarNotifi?: { records?: LeerNotificacion[] }
+  leernotificacion?: LeerNotificacion[]
 }
 
 export interface CrearNotificacionConfirmadaHost extends EditaExpedienteNotificacionesCrudHost {
@@ -292,11 +292,11 @@ export class EditaExpedienteNotificacionesCrudFacade {
   }
 
   refrescarBotonesTrasAccion(host: EditaExpedienteNotificacionesCrudHost): void {
-    if (!host.habilitarBotonesNotificacion || !host.sourceListarNotifi?.records) {
+    if (!host.habilitarBotonesNotificacion || !host.leernotificacion) {
       return;
     }
     setTimeout(() => {
-      const rowData = host.sourceListarNotifi!.records!.find(
+      const rowData = host.leernotificacion!.find(
         (record: LeerNotificacion) => record.idNotif === this.state.idNotificacion,
       );
       if (rowData) {
@@ -567,9 +567,13 @@ export class EditaExpedienteNotificacionesCrudFacade {
       if (!this.state.creanotificacion.dni) {
         camposFaltantes.push('Interesado');
       }
+      if (!this.state.creanotificacion.notificador || this.state.creanotificacion.notificador === 0) {
+        camposFaltantes.push('Notificador');
+      }
       this.notificationService.warning({
         title: 'Error',
-        text: 'Debe rellenar todos los campos obligatorios: ' + camposFaltantes.join(', '),
+        text: 'Debe rellenar todos los campos obligatorios'
+          + (camposFaltantes.length ? ': ' + camposFaltantes.join(', ') : ''),
       });
       return;
     }

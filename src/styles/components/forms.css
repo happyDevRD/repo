@@ -249,7 +249,13 @@ textarea.is-invalid {
 .was-validated .form-floating>.form-control:invalid~.invalid-feedback,
 .was-validated .form-floating>.form-select:invalid~.invalid-feedback,
 .form-floating>.form-control.is-invalid~.invalid-feedback,
-.form-floating>.form-select.is-invalid~.invalid-feedback {
+.form-floating>.form-select.is-invalid~.invalid-feedback,
+.was-validated .form-floating>.form-control.is-invalid~.invalid-feedback,
+.was-validated .form-floating>.form-select.is-invalid~.invalid-feedback,
+.form-floating>.form-control.is-invalid~label~.invalid-feedback,
+.form-floating>.form-select.is-invalid~label~.invalid-feedback,
+.was-validated .form-floating>.form-control:invalid~label~.invalid-feedback,
+.was-validated .form-floating>.form-select:invalid~label~.invalid-feedback {
   display: block;
 }
 

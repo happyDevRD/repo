@@ -1,4 +1,4 @@
-﻿import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AtributosCrear,
@@ -9,31 +9,23 @@ import {
   EditaTareaProcedi,
   ListaTareaProcedi,
   MateriaProcedimiento,
-  PermisProcedi,
   PlantillaTarea,
   Procedimiento,
-  ProcediPermisos
+  ProcediPermisos,
+  ProcediPermisosListar,
+  AtributosListar,
 } from './procedimiento';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { jqxGrid_ES } from 'src/translations/jqxGrid_translate'
-import { IflowGridLocalization, IflowGridSource } from 'src/app/shared/components/iflow-grid/iflow-grid.component'
 import { ACCIONES } from "../../core/helper/tarea-acciones";
-import { ReciboCabeceraDto } from "../../core/models/recibo-cabecera.dto";
-import * as bootstrap from 'bootstrap';
 import { ProcedimientoService } from "./procedimiento.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Location } from "@angular/common";
-import { ModalService } from "../../core/service/modal.service";
 import { NotificationService } from "../../core/service/notification.service";
 import { ModalManagerService } from "../../core/service/modal-manager.service";
-import { ProcedimientoUiService } from './procedimiento-ui.service';
 import { UserSessionService } from '../../core/service/user-session.service';
 import {
   FirmaListar,
-  PermisoProcediCreado,
+  MATERIA_LABELS,
+  MODALIDAD_LABELS,
   ProcedimientoWorkspaceTab,
-  RespuestasHttp,
-  TareaProcediCreada,
 } from './models/procedimientos-internal.models';
 import {
   applyTipoAtributo,
@@ -41,19 +33,12 @@ import {
   toggleRequeridoAtributo,
 } from './helpers/procedimientos-atributos.helper';
 import { ProcedimientosWorkspaceFacade } from './services/procedimientos-workspace.facade';
-import {
-  buildColumnsAtributos,
-  buildColumnsPermi,
-  buildColumnsPro,
-  buildColumnsTarea,
-  createProcedimientosGridRenderers,
-} from './config/procedimientos-grid.config';
 import { ProcedimientosGridFacade } from './services/procedimientos-grid.facade';
 import { ProcedimientosAtributosFacade } from './services/procedimientos-atributos.facade';
 import { ProcedimientosProcedimientoFacade } from './services/procedimientos-procedimiento.facade';
 import { ProcedimientosTareasFacade } from './services/procedimientos-tareas.facade';
 import { ProcedimientosPermisosFacade } from './services/procedimientos-permisos.facade';
-import { validateBootstrapForm } from '../../core/helper/bootstrap-form.helper';
+import { validateBootstrapForm, clearFormValidation } from '../../core/helper/bootstrap-form.helper';
 import { populateAtributoFromRow } from './helpers/procedimientos-atributos-row.helper';
 import { applyTareaGridSelection, populateTareaEditForm } from './helpers/procedimientos-tarea-row.helper';
 
@@ -72,28 +57,12 @@ import { applyTareaGridSelection, populateTareaEditForm } from './helpers/proced
 })
 export class ProcedimientosComponent {
   private readonly destroyRef = inject(DestroyRef)
-  // Referencias a los grids
-  /** Asignados desde list / workspace hijos */
-  gridProcedimientos: any
-  gridTareas: any
-  gridPermisos: any
-  gridAtributos: any
 
-
-  public headers = new HttpResponse;
-  public edicion: boolean = false;
   public idver!: number;
   public procedimiento: Procedimiento = new Procedimiento();
-  public respuestahttp: any = new RespuestasHttp;
-  public respuesta = new Response;
-  public vermenu: boolean = false; // para ver el menu tiene que cambiar a true
   public editarprocedi: EditarProcedi = new EditarProcedi();
   public atributoscrear: AtributosCrear = new AtributosCrear();
   public firmaT!: string;
-
-  get nivAcces(): string | null {
-    return this.session.nivAcces;
-  }
 
   get idOrgElemen(): string | null {
     return this.session.idOrgEleme;
@@ -101,10 +70,6 @@ export class ProcedimientosComponent {
 
   get departamento(): string | null {
     return this.session.department;
-  }
-
-  get idpermis(): string | null {
-    return this.session.idPermiso;
   }
 
   get userctrl(): string | null {
@@ -127,13 +92,8 @@ export class ProcedimientosComponent {
   public isWorkspaceMode = false;
   public activeWorkspaceTab: ProcedimientoWorkspaceTab = 'datos';
   materiaprocedimiento!: MateriaProcedimiento[];
-  procedimientos!: Procedimiento[];
-  permisprocedi!: PermisProcedi[];
-
-  // Datos para la paginación sin uso
-  public page!: number;
-
-  public npagina: number = 4;
+  procedimientos: Procedimiento[] = [];
+  cargandoProcedimientos: boolean = false;
 
   // GESTIÓN DE ATRIBUTOS DE TAREAS
 
@@ -160,12 +120,8 @@ export class ProcedimientosComponent {
     public procedimientoService: ProcedimientoService,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public http: HttpClient,
-    public _location: Location,
-    private modalService: ModalService,
     private notificationService: NotificationService,
     private modalManagerService: ModalManagerService,
-    private procedimientoUi: ProcedimientoUiService,
     public session: UserSessionService,
     private workspaceFacade: ProcedimientosWorkspaceFacade,
     private gridFacade: ProcedimientosGridFacade,
@@ -173,10 +129,7 @@ export class ProcedimientosComponent {
     private procedimientoFacade: ProcedimientosProcedimientoFacade,
     private tareasFacade: ProcedimientosTareasFacade,
     private permisosFacade: ProcedimientosPermisosFacade,
-  ) {
-    this.refresco = this._location.getState();
-    this.gridFacade.initGridSources(this);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.procedimientoService.getMateriaProcedi().pipe(
@@ -194,21 +147,8 @@ export class ProcedimientosComponent {
     ).subscribe(
       plantillatarea => this.plantillatarea = plantillatarea
     );
-    if (this.nivAcces === '6' || this.session.canManageProcedimientos) {
-      this.procedimientoService.getProcedimientos().pipe(
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe(
-        procedimientos => this.procedimientos = procedimientos
-      );
-    }
-    this.procedimientoUi.onOpenNuevoProcedimiento.pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe(() => {
-      setTimeout(() => this.abrirNuevoProcedimientoModal(), 0);
-    });
-
-    if (this.procedimientoUi.consumePendingOpen()) {
-      setTimeout(() => this.abrirNuevoProcedimientoModal(), 0);
+    if (this.session.canManageProcedimientos) {
+      this.cargarProcedimientos();
     }
 
     this.activatedRoute.params.pipe(
@@ -228,7 +168,7 @@ export class ProcedimientosComponent {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(query => {
       const tab = query['tab'] as ProcedimientoWorkspaceTab | undefined;
-      if (tab && ['datos', 'tareas', 'permisos', 'atributos'].includes(tab)) {
+      if (this.workspaceFacade.isValidTab(tab)) {
         this.activeWorkspaceTab = tab;
       }
     });
@@ -250,30 +190,22 @@ export class ProcedimientosComponent {
     return this.workspaceFacade.getMateriaLabel(this.materia, this.editarprocedi, this.materiaprocedimiento);
   }
 
+  public getModalidadLabelFor(modalidad: unknown): string {
+    return MODALIDAD_LABELS[Number(modalidad)] ?? '—';
+  }
+
+  public getMateriaLabelFor(idMatProce: unknown): string {
+    const id = Number(idMatProce);
+    const found = this.materiaprocedimiento?.find((item) => Number(item.idMatProce) === id);
+    return found?.descripcion ?? MATERIA_LABELS[id] ?? '—';
+  }
+
   private resetWorkspaceState(): void {
     this.workspaceFacade.resetWorkspaceFlags(this);
   }
 
   public loadWorkspace(id: number): void {
     this.workspaceFacade.loadWorkspace(this, id);
-  }
-
-  public abrirOffcanvas(offcanvasId: string): void {
-    const element = document.getElementById(offcanvasId);
-    if (!element) {
-      return;
-    }
-    const instance = bootstrap.Offcanvas.getOrCreateInstance(element);
-    instance.show();
-  }
-
-  public cerrarOffcanvas(offcanvasId: string): void {
-    const element = document.getElementById(offcanvasId);
-    if (!element) {
-      return;
-    }
-    const instance = bootstrap.Offcanvas.getInstance(element);
-    instance?.hide();
   }
 
   public prepararFormularioNuevoProcedimiento(): void {
@@ -284,26 +216,21 @@ export class ProcedimientosComponent {
   public abrirNuevoProcedimientoModal(): void {
     this.prepararFormularioNuevoProcedimiento();
     this.abrirModal('NprocediModal');
-    setTimeout(() => this.prepararFormularioNuevoProcedimiento(), 0);
   }
 
   public idAtrib: any;
   public idGrupo: any;
   public etiGruAtrib;
-  public desGruAtrib;
-  public valInici;
-  public valMinim;
-  public valMaxim;
-  public longitud;
-
 
   public veoborraratributo: boolean = false;
   public EtiquetaatributosActual: any;
   public Requerido: any;
 
+  public atributosList: AtributosListar[] = [];
+  public cargandoAtributosList: boolean = false;
 
-  public marcoAtributos(event: any): void {
-    populateAtributoFromRow(this, event.args.row.bounddata)
+  public marcoAtributos(rowData: AtributosListar): void {
+    populateAtributoFromRow(this, rowData)
   }
 
   public deleteatributo(): void {
@@ -319,10 +246,6 @@ export class ProcedimientosComponent {
     this.atributosFacade.editar(this);
   }
 
-  public editoAtributo(): void {
-    this.atributosFacade.editar(this);
-  }
-
   public limpioAtributosformulario(): void {
     this.atributosFacade.limpiarAtributos(this);
   }
@@ -334,8 +257,8 @@ export class ProcedimientosComponent {
     this.atributosFacade.crear(this);
   }
 
-  public creoAtributo(): void {
-    this.atributosFacade.crear(this);
+  public cargarProcedimientos(): void {
+    this.gridFacade.cargarProcedimientos(this);
   }
 
   public refrescaProcedimientos() {
@@ -343,11 +266,7 @@ export class ProcedimientosComponent {
       return;
     }
 
-    this.veoeliminaProcedimiento = false;
-    this.veoTarea = false;
-    this.veoPermiso = false;
-    this.veoAtributos = false;
-    this.gridFacade.refreshProcedimientosList(this);
+    this.cargarProcedimientos();
   }
 
 
@@ -359,18 +278,13 @@ export class ProcedimientosComponent {
     this.procedimientoFacade.editar(this);
   }
 
-  public editaProcedi(): void {
-    this.procedimientoFacade.editar(this);
-  }
-
   //---------------------Eleazar
-  lanzaSourcePermi(id: any) {
-    this.gridFacade.lanzaSourcePermi(this, id);
+  cargarPermisos(id: any) {
+    this.gridFacade.cargarPermisos(this, id);
   }
 
 
   public idverTarea!: any;
-  public idtrigger!: any;
   public descripcionT!: string;
   public faseT!: any;
   public plazot!: any;
@@ -381,20 +295,12 @@ export class ProcedimientosComponent {
 
 
   public activaFormNuevoPermiso() {
-    this.veoAccionesPermiso = false;
-    this.activoFormNuevoPermiso = true;
     this.veoBorrarTarea = false;
-
-
+    this.creapermisoprocedi = new CreaPermisoProcedi();
+    this.creapermisoprocedi.usuario = this.procedipermiso?.[0]?.usuario ?? '';
   }
 
-  public refrescavista: boolean = true;
-  public idProcedimiento!: number;
-
-
   public creapermisoprocedi: CreaPermisoProcedi = new CreaPermisoProcedi();
-  public permisoprocedicreado: any = new PermisoProcediCreado;
-  public procedipermisos: any = new ProcediPermisos();
   procedipermiso!: ProcediPermisos[];
 
 
@@ -405,32 +311,21 @@ export class ProcedimientosComponent {
     this.permisosFacade.crear(this);
   }
 
-  public createPermisoProcedi(): void {
-    this.permisosFacade.crear(this);
-  }
-
-  public activoFormNuevoPermiso: boolean = false;
-  public botonNuevoPermiso: boolean = true;
-  public veoAccionesPermiso: boolean = false;
-  public accionTarea: any;
   public verEliminaTarea: boolean = false;
 
-  enviamos(event: any) {
-    const rowData = event.args.row.bounddata
-    this.router.navigate(['/procedimientos', rowData.id])
+  public abrirProcedimiento(id: number): void {
+    this.router.navigate(['/procedimientos', id])
   }
 
   /**
-   * Maneja el click en una fila del grid de tareas
+   * Maneja el click en una fila de la tabla de tareas
    * Selecciona la fila y carga los datos de la tarea
    */
-  public envioTareaProcedi(event: any): void {
-    applyTareaGridSelection(this, event.args.row.bounddata, {
+  public envioTareaProcedi(rowData: ListaTareaProcedi): void {
+    applyTareaGridSelection(this, rowData, {
       setIdPermiso: (id) => this.session.setIdPermiso(id),
-      lanzaSourcePermi: (id) => this.lanzaSourcePermi(id),
+      cargarPermisos: (id) => this.cargarPermisos(id),
       peparadatosfirma: (plantilla) => this.peparadatosfirma(plantilla),
-      actualizaSourceAtributo: (id) => this.actualizaSourceAtributo(id),
-      idProcedi: this.idProcedi,
     })
   }
 
@@ -440,14 +335,13 @@ export class ProcedimientosComponent {
 
 
   public idprocedi!: any;
-  public veoTarea: boolean = false;
-  public veoeliminaProcedimiento: boolean = false
+  public tareas: ListaTareaProcedi[] = [];
+  public cargandoTareas: boolean = false;
   public descripProcedimiento!: string;
   public departProcedimiento!: string;
   public siaProcedimiento!: string;
   public materia!: any;
   public modalidad!: any;
-  public idProcedi!: any;
   public siglas!: any;
 
 
@@ -457,13 +351,14 @@ export class ProcedimientosComponent {
   public veoBorrarTarea: boolean = false;
   public usuarioTarea!: any;
   public idPermisoProcedimiento!: any;
+  public permisos: ProcediPermisosListar[] = [];
+  public cargandoPermisos: boolean = false;
 
   /**
-   * Maneja el click en una fila del grid de permisos
+   * Maneja el click en una fila de la tabla de permisos
    * Selecciona la fila y carga los datos del permiso
    */
-  public idpermisosPermi(event: any): void {
-    const rowData = event.args.row.bounddata
+  public idpermisosPermi(rowData: ProcediPermisosListar): void {
     this.veoBorrarTarea = true
     this.usuarioTareaDescrip = this.usuarioTarea = rowData.usuario
     this.idPermisoProcedimiento = rowData.id
@@ -474,13 +369,10 @@ export class ProcedimientosComponent {
   }
 
   /**
-   * Limpia los errores visuales del formulario
+   * Limpia los errores visuales del formulario de Nuevo Procedimiento
    */
   public limpiarErrores(): void {
-    const form = document.getElementById('formNuevoProcedimiento') as HTMLFormElement;
-    if (form) {
-      form.classList.remove('was-validated');
-    }
+    clearFormValidation('formNuevoProcedimiento');
     this.prepararFormularioNuevoProcedimiento();
   }
 
@@ -499,44 +391,16 @@ export class ProcedimientosComponent {
     this.procedimientoFacade.crear(this);
   }
 
-  public create(_descrip: string, _sia: string, _depart: string, _siglas: string): void {
-    this.procedimientoFacade.crear(this);
-  }
-
   public deleteProcedimiento(dato: number): void {
     this.procedimientoFacade.eliminar(this, dato);
   }
 
-
-  public abrirModalEditarTarea(event: any): void {
-    const target = event.originalEvent?.target as HTMLElement;
-    if (target && target.closest('input[type="radio"]')) {
-      return;
-    }
-    this.envioTareaProcedi(event);
-    this.abrirOffcanvas('modificarTareaOffcanvas');
+  public cargarTareas(): void {
+    this.gridFacade.cargarTareas(this);
   }
 
-
-
-  private readonly gridRenderers = createProcedimientosGridRenderers();
-  columnsPro = buildColumnsPro(this.gridRenderers);
-  columnsTarea = buildColumnsTarea(this.gridRenderers);
-  columnsPermi = buildColumnsPermi(this.gridRenderers);
-  columnsAtributos = buildColumnsAtributos(this.gridRenderers);
-  public localizationObject: IflowGridLocalization = jqxGrid_ES;
-  refresco: unknown;
-  public sourcePro: IflowGridSource;
-  public sourceTarea: IflowGridSource;
-  public sourcePermi: IflowGridSource;
-  public sourceAtributos: IflowGridSource;
-
-  public lanzaSourceTarea(): void {
-    this.gridFacade.lanzaSourceTarea(this);
-  }
-
-  public actualizaSourceAtributo(idprocedimiento: any): void {
-    this.gridFacade.actualizaSourceAtributo(this, idprocedimiento);
+  public cargarAtributos(idprocedimiento: any): void {
+    this.gridFacade.cargarAtributos(this, idprocedimiento);
   }
 
   public deletePermisoProcedimiento(): void {
@@ -547,8 +411,6 @@ export class ProcedimientosComponent {
   plantillatarea!: PlantillaTarea[];
 
   public tpsinfirma: boolean = true;
-  public veoPermiso: boolean = false;
-  public veoAtributos: boolean = false;
   public accionDescripcion: string;
 
   preparoAccion(event: Event): void {
@@ -556,6 +418,14 @@ export class ProcedimientosComponent {
     const accion = selectElement.value;
     const accionEncontrada = ACCIONES.find((a) => a.valor === Number(accion));
     this.accionDescripcion = accionEncontrada ? accionEncontrada.descripcion : 'ACCIÓN NO RECONOCIDA';
+  }
+
+  public getAccionLabel(valor: unknown): string {
+    if (valor === null || valor === undefined || valor === '' || valor === -1) {
+      return '—';
+    }
+    const accionEncontrada = ACCIONES.find((a) => a.valor === Number(valor));
+    return accionEncontrada ? accionEncontrada.descripcion : String(valor);
   }
 
   public peparadatosfirma(plantilla: string): void {
@@ -569,49 +439,15 @@ export class ProcedimientosComponent {
     this.tareasFacade.editar(this);
   }
 
-  public editaTareaProcedim(): void {
-    this.tareasFacade.editar(this);
-  }
-
-  public getListaTareas(idproce: any): void {
-    this.procedimientoService.getTareaProcedimiento(idproce).pipe(
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe(
-      listatareaprocedi => this.listatareaprocedi = listatareaprocedi
-    );
-  }
-
-  listatareaprocedi!: ListaTareaProcedi[];
-
   // CREAR NUEVA TAREA PROCEDIMIENTO
-  public verListProcedi: boolean = true;
-  public httpHeaders = new HttpHeaders(
-    { 'Content-Type': 'application/json' }
-  );
   public creatareaprocedi: CreaTareaProcedi = new CreaTareaProcedi();
-  public tareaprocedicreada: any = new TareaProcediCreada;
 
   public borravaloresNuevaTarea(): void {
     this.tareasFacade.borrarValoresNuevaTarea(this);
   }
 
   public limpiarErroresModificarTarea(): void {
-    const form = document.getElementById('formModificarTarea') as HTMLFormElement;
-    if (form) {
-      form.classList.remove('was-validated');
-    }
-  }
-
-  public limpiarErroresEditarProcedimiento(): void {
-    const form = document.getElementById('formEditarProcedimiento') as HTMLFormElement;
-    if (form) {
-      form.classList.remove('was-validated');
-      form.reset();
-    }
-  }
-
-  public limpiarErroresAlAbrirModal(): void {
-    // El servicio ModalManagerService se encarga de limpiar los errores automáticamente
+    clearFormValidation('formModificarTarea');
   }
 
   public abrirModal(modalId: string): void {
@@ -619,61 +455,24 @@ export class ProcedimientosComponent {
       this.prepararFormularioNuevoProcedimiento();
     }
     this.modalManagerService.openModal(modalId);
-    if (modalId === 'NprocediModal') {
-      setTimeout(() => this.prepararFormularioNuevoProcedimiento(), 0);
-    }
   }
 
   public cerrarModal(modalId: string): void {
     this.modalManagerService.closeModal(modalId);
   }
 
-  /**
-   * Limpia todos los formularios de modales
-   */
-  private limpiarTodosLosFormularios(): void {
-    const formIds = [
-      'formNuevoProcedimiento',
-      'formEditarProcedimiento',
-      'formNuevoPermiso',
-      'formEditarAtributos',
-      'formNuevosAtributos',
-      'formModificarTarea',
-      'formNuevaTarea'
-    ];
-
-    formIds.forEach(formId => {
-      const form = document.getElementById(formId) as HTMLFormElement;
-      if (form) {
-        form.classList.remove('was-validated');
-        form.reset();
-      }
-    });
-  }
-
-
-
-
-
-  public onRowDoubleClick(event: any): void {
-    const rowData = event.args.row.bounddata
+  public onRowDoubleClick(rowData: ListaTareaProcedi): void {
     populateTareaEditForm(this, rowData)
     if (rowData.plantillaDefecto) {
       this.peparadatosfirma(rowData.plantillaDefecto)
     }
-    this.abrirOffcanvas('modificarTareaOffcanvas')
-  }
-
-  public onProcedimientoDoubleClick(event: any): void {
-    const rowData = event.args.row.bounddata
-    this.router.navigate(['/procedimientos', rowData.id], { queryParams: { tab: 'datos' } })
+    this.abrirModal('modifitareasModalListado')
   }
 
   /**
    * Maneja el doble click en la tabla de atributos
    */
-  public onAtributoDoubleClick(event: any): void {
-    const rowData = event.args.row.bounddata
+  public onAtributoDoubleClick(rowData: AtributosListar): void {
     populateAtributoFromRow(this, rowData)
     this.modalManagerService.openModal('EditoAtributosModal')
   }
@@ -687,10 +486,6 @@ export class ProcedimientosComponent {
       return;
     }
     this.tareasFacade.crear(this, this.idprocedi);
-  }
-
-  public createTareaProcedi(procedimientoId: number): void {
-    this.tareasFacade.crear(this, procedimientoId);
   }
 
 }
