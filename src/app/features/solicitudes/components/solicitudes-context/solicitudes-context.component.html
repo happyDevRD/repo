@@ -39,54 +39,12 @@
 
     <div class="soli-context__actions">
       <button
-        *ngIf="s.canEditarSolicitud"
-        type="button"
-        class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-        (click)="handleEditarSolicitud()"
-      >
-        <i class="bi bi-pencil" aria-hidden="true"></i> Editar
-      </button>
-      <button
-        *ngIf="s.VeoRegDoc"
-        type="button"
-        class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-        (click)="handleVerRegistroDocumento()"
-      >
-        <i class="bi bi-file-earmark-text" aria-hidden="true"></i> Registro
-      </button>
-      <button
-        *ngIf="s.canAsignarInstructor"
         type="button"
         class="btn-iflow btn-iflow--primary btn-iflow--sm"
-        (click)="handleAsignarInstructor()"
-      >
-        <i class="bi bi-person-fill-add" aria-hidden="true"></i> Asignar
-      </button>
-      <button
-        *ngIf="s.canRechazarSolicitud"
-        type="button"
-        class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-        (click)="handleRechazarSolicitud()"
-      >
-        <i class="bi bi-x-circle" aria-hidden="true"></i> Rechazar
-      </button>
-      <button
-        *ngIf="s.canIniciarExpediente"
-        type="button"
-        class="btn-iflow btn-iflow--primary btn-iflow--sm"
+        [disabled]="!s.canIniciarExpediente"
         (click)="handleIniciarExpediente()"
       >
         <i class="bi bi-play-fill" aria-hidden="true"></i> Iniciar expediente
-      </button>
-      <button
-        *ngIf="s.canEliminarSolicitud"
-        type="button"
-        class="btn-iflow btn-iflow--danger btn-iflow--sm"
-        (click)="handleEliminarSolicitud()"
-        aria-label="Eliminar solicitud"
-        title="Eliminar solicitud"
-      >
-        <i class="bi bi-trash" aria-hidden="true"></i>
       </button>
     </div>
   </ng-container>
@@ -97,9 +55,17 @@
         <h3 class="soli-context__title">Ninguna solicitud seleccionada</h3>
       </div>
       <div class="soli-context__meta">
-        <span class="soli-context__hint">Selecciona una fila del listado para ver el detalle y las acciones.</span>
+        <span class="soli-context__hint">Selecciona una fila del listado para ver el detalle, documentos y activar las acciones.</span>
       </div>
     </div>
-    <div class="soli-context__actions soli-context__actions--placeholder" aria-hidden="true"></div>
+    <div class="soli-context__actions">
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--primary btn-iflow--sm"
+        disabled
+      >
+        <i class="bi bi-play-fill" aria-hidden="true"></i> Iniciar expediente
+      </button>
+    </div>
   </ng-template>
 </section>

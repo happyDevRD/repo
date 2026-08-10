@@ -4,46 +4,102 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  /* Ocupa el alto útil bajo la topbar + padding del main */
+  min-height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  margin-bottom: 0;
+  box-sizing: border-box;
+}
+
+.solicitudes-page > app-solicitudes-header {
+  flex-shrink: 0;
+  display: block;
+}
+
+.solicitudes-page > app-solicitudes-workspace {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .soli-workspace {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.soli-workspace > app-solicitudes-context {
+  flex-shrink: 0;
+  display: block;
+}
+
+.soli-panel--master {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.soli-panel--master > .soli-panel__head {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.soli-panel__actions--toolbar {
+  padding-bottom: 0.55rem;
+  flex-shrink: 0;
 }
 
 .soli-split {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(17rem, 0.9fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(19rem, 1fr);
   gap: 1rem;
   align-items: stretch;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.soli-split--nested {
+  gap: 0.85rem;
+  padding-top: 0.15rem;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .soli-split__list,
 .soli-split__detail {
   min-width: 0;
   min-height: 0;
+  height: 100%;
 }
 
 .soli-split__detail {
   display: flex;
   flex-direction: column;
+  /* Documentos un poco más abajo, mismo espacio lateral */
+  padding-top: 1.35rem;
 }
 
 .soli-split__detail > .soli-panel--documentos,
+.soli-split__detail > .soli-docs-nested,
 .soli-split__detail > app-solicitudes-documentos {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  min-height: 16rem;
+  min-height: 0;
+  height: 100%;
 }
 
-.soli-split__detail > app-solicitudes-documentos > .soli-panel--documentos {
+.soli-split__detail > app-solicitudes-documentos > .soli-panel--documentos,
+.soli-split__detail > app-solicitudes-documentos > .soli-docs-nested {
   flex: 1 1 auto;
+  min-height: 0;
 }
 
 .soli-panel__head--compact {
-  margin-bottom: 0.65rem;
+  margin-bottom: 0;
 }
 
 .soli-list-grid.grid-container {
@@ -59,6 +115,43 @@
   max-width: 100%;
 }
 
+.soli-list-grid {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.soli-list-grid > app-data-table {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.soli-list-grid .data-table {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.soli-list-grid .data-table__toolbar {
+  flex-shrink: 0;
+}
+
+.soli-list-grid .data-table__footer {
+  flex-shrink: 0;
+}
+
+.soli-list-grid .data-table__scroll {
+  flex: 1 1 auto;
+  max-height: none !important;
+  min-height: 0;
+}
+
 /* No forzar width en .jqx-grid-header/.jqx-grid-content: rompe el sync cabecera↔celdas */
 .soli-list-grid .jqx-grid,
 .soli-list-grid > app-iflow-grid {
@@ -71,6 +164,18 @@
   width: 100%;
   overflow: hidden;
   padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.soli-panel__body--grid > app-solicitudes-list {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
 }
 
 .soli-split__list {
@@ -137,10 +242,45 @@
   min-height: 16rem;
 }
 
+.soli-docs-nested {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  padding: 0.75rem 0.85rem 0.85rem;
+  border-radius: calc(var(--border-radius) - 2px);
+  border: 1px solid var(--border-subtle);
+  background: rgba(105, 120, 255, 0.03);
+}
+
+.soli-docs-nested__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.soli-docs-nested__title {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.soli-docs-nested__desc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
 .soli-docs-body {
-  min-height: 6rem;
+  min-height: 0;
   flex: 1 1 auto;
-  max-height: min(52vh, 28rem);
+  max-height: none;
   overflow-y: auto;
 }
 
@@ -553,6 +693,13 @@
   min-height: 0;
 }
 
+.soli-alta__fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
 .soli-alta .row.g-3 {
   --bs-gutter-x: 0.75rem;
   --bs-gutter-y: 0.65rem;
@@ -926,19 +1073,38 @@
     min-height: 10rem;
   }
 
+  .soli-split__list {
+    min-height: 22rem;
+  }
+
+  .soli-split__detail {
+    padding-top: 0.5rem;
+    min-height: 16rem;
+  }
+
   .soli-docs-body {
-    max-height: none;
+    max-height: min(50vh, 22rem);
   }
 }
 
 @media (max-width: 768px) {
-  .soli-context__actions {
+  .soli-context__actions,
+  .soli-panel--master .soli-panel__actions {
     width: 100%;
   }
 
-  .soli-context__actions .btn-iflow {
+  .soli-context__actions .btn-iflow,
+  .soli-panel--master .soli-panel__actions .btn-iflow {
     flex: 1 1 auto;
     justify-content: center;
+  }
+
+  .soli-panel__actions--toolbar {
+    width: 100%;
+  }
+
+  .soli-split__detail {
+    padding-top: 0.5rem;
   }
 }
 

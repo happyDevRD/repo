@@ -1,23 +1,63 @@
 <section class="soli-workspace" aria-label="Espacio de trabajo de solicitudes">
   <app-solicitudes-context></app-solicitudes-context>
 
-  <div class="soli-split">
-    <section class="soli-panel soli-split__list" aria-labelledby="soli-listado-title">
-      <header class="soli-panel__head soli-panel__head--compact">
-        <div>
-          <h3 id="soli-listado-title" class="soli-panel__title">Solicitudes</h3>
-          <p class="soli-panel__desc">
-            Clic para seleccionar · Doble clic para editar
-          </p>
-        </div>
-      </header>
-      <div class="soli-panel__body soli-panel__body--grid">
-        <app-solicitudes-list></app-solicitudes-list>
+  <section class="soli-panel soli-panel--master" aria-labelledby="soli-listado-title">
+    <header class="soli-panel__head soli-panel__head--compact">
+      <div>
+        <h3 id="soli-listado-title" class="soli-panel__title">Solicitudes</h3>
+        <p class="soli-panel__desc">
+          Clic para seleccionar · Doble clic para editar
+        </p>
       </div>
-    </section>
+    </header>
 
-    <aside class="soli-split__detail" aria-label="Documentos de la solicitud">
-      <app-solicitudes-documentos></app-solicitudes-documentos>
-    </aside>
-  </div>
+    <div class="soli-panel__actions soli-panel__actions--toolbar" role="toolbar" aria-label="Acciones de la solicitud seleccionada">
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+        [disabled]="!s.VeoRegDoc"
+        (click)="handleVerRegistroDocumento()"
+      >
+        <i class="bi bi-file-earmark-text" aria-hidden="true"></i> Registro
+      </button>
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--primary btn-iflow--sm"
+        [disabled]="!s.canAsignarInstructor"
+        (click)="handleAsignarInstructor()"
+      >
+        <i class="bi bi-person-fill-add" aria-hidden="true"></i> Instructor
+      </button>
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+        [disabled]="!s.canRechazarSolicitud"
+        (click)="handleRechazarSolicitud()"
+      >
+        <i class="bi bi-x-circle" aria-hidden="true"></i> Rechazar
+      </button>
+      <button
+        type="button"
+        class="btn-iflow btn-iflow--danger btn-iflow--sm"
+        [disabled]="!s.canEliminarSolicitud"
+        (click)="handleEliminarSolicitud()"
+        aria-label="Eliminar solicitud"
+        title="Eliminar solicitud"
+      >
+        <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+      </button>
+    </div>
+
+    <div class="soli-split soli-split--nested">
+      <section class="soli-split__list" aria-label="Listado de solicitudes">
+        <div class="soli-panel__body soli-panel__body--grid">
+          <app-solicitudes-list></app-solicitudes-list>
+        </div>
+      </section>
+
+      <aside class="soli-split__detail" aria-label="Documentos de la solicitud">
+        <app-solicitudes-documentos></app-solicitudes-documentos>
+      </aside>
+    </div>
+  </section>
 </section>

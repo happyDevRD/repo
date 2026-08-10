@@ -1,8 +1,8 @@
-<section class="soli-panel soli-panel--documentos" aria-labelledby="soli-docs-title">
-  <header class="soli-panel__head">
+<section class="soli-docs-nested" aria-labelledby="soli-docs-title">
+  <header class="soli-docs-nested__head">
     <div>
-      <h3 id="soli-docs-title" class="soli-panel__title">Documentos</h3>
-      <p class="soli-panel__desc">
+      <h3 id="soli-docs-title" class="soli-docs-nested__title">Documentos</h3>
+      <p class="soli-docs-nested__desc">
         <ng-container *ngIf="s.hasSolicitudSeleccionada; else docsDescEmpty">
           Adjuntos de esta solicitud. Pulse un archivo para abrirlo.
         </ng-container>
@@ -110,3 +110,4 @@
     </div>
   </div>
 </section>
+
