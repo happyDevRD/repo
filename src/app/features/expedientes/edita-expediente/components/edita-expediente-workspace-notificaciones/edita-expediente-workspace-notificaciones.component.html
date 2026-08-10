@@ -26,41 +26,40 @@
 <div *ngIf="veonotificaciones">
   <app-data-table [items]="notificaciones" [loading]="cargando"
     emptyMessage="No hay notificaciones."
-    searchPlaceholder="Buscar…"
     exportFileName="notificaciones"
     [rowClass]="rowClassFor"
     (rowClick)="rowClick.emit($event)"
     (rowDblClick)="rowDoubleClick.emit($event)">
-    <app-table-column header="Ejercicio" field="ejeNotif" [sortable]="true" align="center" width="5%"></app-table-column>
-    <app-table-column header="Número" field="numNotif" [sortable]="true" align="center" width="5%"></app-table-column>
+    <app-table-column header="Ejercicio" field="ejeNotif" [sortable]="true" [filterable]="true" filterType="text" align="center" width="5%"></app-table-column>
+    <app-table-column header="Número" field="numNotif" [sortable]="true" [filterable]="true" filterType="text" align="center" width="5%"></app-table-column>
     <app-table-column header="Notificación" field="fecNotif" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="7%">
       <ng-template let-row>{{ row.fecNotif | date:'dd/MM/yyyy' }}</ng-template>
     </app-table-column>
     <app-table-column header="Situación" [sortValue]="situacionValue" [searchValue]="situacionValue" [sortable]="true" [filterable]="true" align="center" width="8%">
       <ng-template let-row>{{ situacionValue(row) }}</ng-template>
     </app-table-column>
-    <app-table-column header="Notificador" field="desNotificador" [sortable]="true" align="center" width="9%"></app-table-column>
-    <app-table-column header="Interesado" field="desPerEntid" [sortable]="true" width="12%"></app-table-column>
-    <app-table-column header="Documento" field="numDocum" [sortable]="true" align="center" width="6%"></app-table-column>
+    <app-table-column header="Notificador" field="desNotificador" [sortable]="true" [filterable]="true" filterType="text" align="center" width="9%"></app-table-column>
+    <app-table-column header="Interesado" field="desPerEntid" [sortable]="true" [filterable]="true" filterType="text" width="12%"></app-table-column>
+    <app-table-column header="Documento" field="numDocum" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
     <app-table-column header="Fecha envío" field="fecEnvio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="7%">
       <ng-template let-row>{{ row.fecEnvio | date:'dd/MM/yyyy' }}</ng-template>
     </app-table-column>
     <app-table-column header="Recepción/Devolución" field="fecRecNotif" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="8%">
       <ng-template let-row>{{ row.fecRecNotif | date:'dd/MM/yyyy' }}</ng-template>
     </app-table-column>
-    <app-table-column header="Número tarea" field="numTarea" [sortable]="true" align="center" width="6%"></app-table-column>
+    <app-table-column header="Número tarea" field="numTarea" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
     <app-table-column header="Fecha envío T.E.U." field="fecEmiBop" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="8%">
       <ng-template let-row>{{ row.fecEmiBop | date:'dd/MM/yyyy' }}</ng-template>
     </app-table-column>
-    <app-table-column header="Número T.E.U." field="numEnvioTeu" [sortable]="true" align="center" width="7%"></app-table-column>
+    <app-table-column header="Número T.E.U." field="numEnvioTeu" [sortable]="true" [filterable]="true" filterType="text" align="center" width="7%"></app-table-column>
     <app-table-column header="Situación BOE" [sortValue]="bopValue" [searchValue]="bopValue" [sortable]="true" [filterable]="true" align="center" width="7%">
       <ng-template let-row>{{ bopValue(row) }}</ng-template>
     </app-table-column>
     <app-table-column header="Fecha publicación BOE" field="fecPubBop" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="8%">
       <ng-template let-row>{{ row.fecPubBop | date:'dd/MM/yyyy' }}</ng-template>
     </app-table-column>
-    <app-table-column header="Número BOE" field="numBop" [sortable]="true" align="center" width="6%"></app-table-column>
-    <app-table-column header="Observaciones" field="observacion" [sortable]="true" width="10%"></app-table-column>
+    <app-table-column header="Número BOE" field="numBop" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
+    <app-table-column header="Observaciones" field="observacion" [sortable]="true" [filterable]="true" filterType="text" width="10%"></app-table-column>
     <app-table-column header="Acciones" [exportable]="false" align="center" width="6%">
       <ng-template let-row>
         <button *ngIf="row.idNotif" type="button" class="btn btn-sm btn-outline-primary" (click)="verNotificacion.emit(row.idNotif); $event.stopPropagation()" title="Ver notificación">

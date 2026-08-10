@@ -306,8 +306,7 @@ export class ModalManagerService {
 
   private clearFormErrors(modalId: string): void {
     const formMap: Record<string, string> = {
-      'NprocediModal': 'formNuevoProcedimiento',
-      'editarProcedimientoModal': 'formEditarProcedimiento',
+      'NprocediModal': 'formProcedimiento',
       'nuevoPermisoModal': 'formNuevoPermiso',
       'EditoAtributosModal': 'formEditarAtributos',
       'NAtributosModal': 'formNuevosAtributos',

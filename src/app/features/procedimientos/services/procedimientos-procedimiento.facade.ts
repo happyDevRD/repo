@@ -63,6 +63,8 @@ export class ProcedimientosProcedimientoFacade {
     ).subscribe({
       next: () => {
         this.notificationService.saveSuccess('Procedimiento');
+        host.limpiarErrores();
+        this.modalManagerService.closeModal('NprocediModal');
         if (host.isWorkspaceMode) {
           host.loadWorkspace(host.idprocedi);
           return;
@@ -70,10 +72,8 @@ export class ProcedimientosProcedimientoFacade {
         host.refrescaProcedimientos();
       },
       error: (err: HttpErrorResponse) => {
-        this.notificationService.error(err.error.message || 'No se pudo editar el procedimiento.');
-        if (!host.isWorkspaceMode) {
-          this.modalManagerService.keepModalOpen('editarProcedimientoModal');
-        }
+        this.notificationService.error(err.error?.message || 'No se pudo editar el procedimiento.');
+        this.modalManagerService.keepModalOpen('NprocediModal');
       },
     });
   }

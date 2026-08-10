@@ -378,7 +378,7 @@ export class SolicitudesSolicitudFacade {
         if (host.representanteexplistar?.desPerEntid) {
           host.personaFacade.representanteSolicitud = String(host.representanteexplistar.desPerEntid)
         }
-        host.cerrarModal('edicionSolicitudModal')
+        host.cerrarModal('nsolicitudModal')
         this.mostrarValidacionesModificarSolicitud = false
         this.gridFacade.refreshSolicitudesList(host, true)
         host.limpiarDatosModificar()
@@ -485,6 +485,13 @@ export class SolicitudesSolicitudFacade {
     host.editasolicitud.fecInicio = rowData.fecInicio;
     host.editasolicitud.estado = rowData.estado;
     host.editasolicitud.usuario = rowData.usuario;
+    host.editasolicitud.ejercicio = rowData.ejercicio != null ? String(rowData.ejercicio) : '';
+    host.editasolicitud.idPerso = rowData.idPerso;
+    host.editasolicitud.idHisPerso = rowData.idHisPerso;
+    host.editasolicitud.idDocum = Number(rowData.idDocum ?? 0);
+    host.editasolicitud.idHisDocum = Number(rowData.idHisDocum ?? 0);
+    host.editasolicitud.idRepre = rowData.idRepre;
+    host.editasolicitud.idHisRepre = rowData.idHisRepre;
     host.editasolicitud.motivoRechazo = '';
     this.mostrarValidacionesRechazar = false;
 

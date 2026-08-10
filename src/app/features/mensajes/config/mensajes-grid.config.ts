@@ -1,15 +1,9 @@
 import { environment } from 'src/environments/environment'
+import { escapeGridHtml } from '../../../shared/components/iflow-grid/iflow-grid-cell.util'
 import { formatIsoDateToGridCell } from '../helpers/mensajes-date.helper'
 
-const escapeHtml = (value: string): string =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-
 export const mensajesColumnRenderer = (defaultText?: string): string =>
-  `<div class="msg-grid-header">${escapeHtml(defaultText ?? '')}</div>`
+  `<div class="msg-grid-header">${escapeGridHtml(defaultText ?? '')}</div>`
 
 const estadoBadgeClass = (estado?: string | null): string => {
   switch (estado) {
@@ -29,17 +23,17 @@ const estadoBadgeClass = (estado?: string | null): string => {
 
 export const mensajesCellsRenderer = (_row: number, column: string, value: string): string => {
   if (column === 'estado') {
-    const label = value ? escapeHtml(value) : ''
+    const label = value ? escapeGridHtml(value) : ''
     return `<div class="msg-grid-cell"><span class="${estadoBadgeClass(value)}">${label || '—'}</span></div>`
   }
   if (column === 'descripcion') {
-    const text = value ? escapeHtml(String(value)) : ''
+    const text = value ? escapeGridHtml(String(value)) : ''
     return `<div class="msg-grid-cell msg-grid-cell--left">${text}</div>`
   }
   if (value == null || value === '') {
     return '<div class="msg-grid-cell msg-grid-cell--muted">—</div>'
   }
-  return `<div class="msg-grid-cell">${escapeHtml(String(value))}</div>`
+  return `<div class="msg-grid-cell">${escapeGridHtml(String(value))}</div>`
 }
 
 export const mensajesCellsRendererFecha = (_row: number, _column: string, value: string): string =>

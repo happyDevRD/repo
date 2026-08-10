@@ -21,7 +21,7 @@ import { ExpedientesService } from './expedientes.service';
 import { environment } from 'src/environments/environment';
 import { ProcedimientoService } from '../procedimientos/procedimiento.service';
 import { jqxGrid_ES } from 'src/translations/jqxGrid_translate'
-import { AtributosCrear, ProcediPermisosListar } from '../procedimientos/procedimiento';
+import { AtributosCrear, ProcediPermisos, ProcediPermisosListar } from '../procedimientos/procedimiento';
 import { SolicitudesService } from '../solicitudes/solicitudes.service';
 import { NotificationService } from "../../core/service/notification.service";
 import { ModalManagerService } from "../../core/service/modal-manager.service";
@@ -66,11 +66,53 @@ export class ExpedientesComponent {// pruebas de formularios
 
 
   public editExpedientes: boolean = false;
+  public formMode: 'crear' | 'editar' | 'ver' = 'crear'
+  public formInsideEstado = ''
+  public isModificandoExpediente = false
 
   /** true cuando hay fila seleccionada y la acci?n concreta aplica al estado del expediente */
   accionExpediente(requiere = true): boolean {
     return this.editExpedientes && requiere;
   }
+
+  get formReadonly(): boolean {
+    return this.formMode === 'ver'
+  }
+
+  get formTitle(): string {
+    if (this.formMode === 'editar') return 'Modificar Expediente'
+    if (this.formMode === 'ver') return 'Ver Expediente'
+    return 'Nuevo Expediente'
+  }
+
+  get formSubmitLabel(): string {
+    if (this.isCreandoExpediente) return 'Creando…'
+    if (this.isModificandoExpediente) return 'Guardando…'
+    if (this.formMode === 'editar') return 'Guardar cambios'
+    return 'Crear expediente'
+  }
+
+  get numeroExpedientePreview(): string {
+    const ejercicio = this.nuevoexpediente.ejercicio
+    const numero = this.nuevoexpediente.numero
+    if (ejercicio != null && String(ejercicio).trim() !== '' && numero != null && String(numero).trim() !== '') {
+      return `${ejercicio}/${numero}`
+    }
+    if (ejercicio != null && String(ejercicio).trim() !== '') {
+      return `${ejercicio}/—`
+    }
+    return 'Se asignará al guardar'
+  }
+
+  /** True si el instructor del formulario ya está en las opciones del select. */
+  get instructorEnLista(): boolean {
+    const actual = this.nuevoexpediente?.instructor
+    if (!actual) {
+      return true
+    }
+    return (this.procedipermiso ?? []).some((p) => p.usuario === actual)
+  }
+
   public verExpedientes: boolean = false;
   public title = 'Expedientes';
   public crearmensaje: CrearMensaje = new CrearMensaje();
@@ -81,6 +123,8 @@ export class ExpedientesComponent {// pruebas de formularios
   public cargandoAtributos: boolean = false;
   public guardandoAtributos: boolean = false;
   public procedipermisolistar!: ProcediPermisosListar[];
+  /** Usuarios con permiso de procedimiento (selector Instructor del formulario unificado). */
+  public procedipermiso: ProcediPermisos[] = [];
   procedimientos!: Procedimiento[];
   public nuevoexpediente: NuevoExpediente = new NuevoExpediente();
   public registrodocumento: RegistroDocumento = new RegistroDocumento();
@@ -136,6 +180,11 @@ export class ExpedientesComponent {// pruebas de formularios
         procedimientos => this.procedimientos = procedimientos
       );
 
+      this.procedimientoService.getPermisoProcedi().pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe(
+        procedipermisos => this.procedipermiso = procedipermisos ?? []
+      );
 
     } else {
       this.notificationService.warning(`Lo sentimos. El usuario  ${this.session.user}  No tiene acceso a Expedientes.`);
@@ -352,23 +401,28 @@ export class ExpedientesComponent {// pruebas de formularios
 
 
   /**
-   * Maneja el doble click en la tabla de expedientes
-   * Abre el modal de edici?n del expediente
+   * Doble clic: editar ficha si está ABIERTO; si no, ver en solo lectura.
    */
   public onExpedienteDoubleClick(rowData: ExpedienteListar): void {
+    this.marcaExpedienteNuevo(rowData)
     this.idexpediente = rowData.id
     this.expedientesService.getExpediente(this.idexpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(
-      verexpediente => {
+    ).subscribe({
+      next: (verexpediente) => {
         this.verexpediente = verexpediente
-        this.abrirModalVerExpediente()
-      }
-    )
+        this.veoCorreoVacio()
+        const editable = String(rowData.estado ?? verexpediente.estado ?? '').toUpperCase() === 'ABIERTO'
+        this.abrirFormularioDesdeSeleccion(editable ? 'editar' : 'ver', rowData)
+      },
+      error: () => {
+        this.notificationService.error('No se pudo cargar el expediente')
+      },
+    })
   }
 
   /**
-   * Abre el modal de ver expediente
+   * Abre el formulario unificado en modo ver (compatibilidad con acciones previas).
    */
   public abrirModalVerExpediente(): void {
     const idExp = this.getExpedienteIdSeleccionado();
@@ -385,7 +439,7 @@ export class ExpedientesComponent {// pruebas de formularios
       next: (verexpediente) => {
         this.verexpediente = verexpediente;
         this.veoCorreoVacio();
-        this.abrirModal('verexpedienteModal');
+        this.abrirFormularioDesdeSeleccion('ver');
       },
       error: () => {
         this.notificationService.error('No se pudo cargar el expediente');
@@ -465,6 +519,10 @@ export class ExpedientesComponent {// pruebas de formularios
     this.nuevoexpediente.usuario = '';
     this.nuevoexpediente.titulo = '';
     this.nuevoexpediente.email = '';
+    this.nuevoexpediente.estado = 'ABIERTO';
+    this.nuevoexpediente.instructor = this.session.user ?? '';
+    this.nuevoexpediente.numero = undefined as unknown as number;
+    this.formInsideEstado = '';
     this.consultadni = new ConsultaDni();
     this.representanteexplistar = new RepresentanteExpLIstar()
     this.expedienteFacade.resetSolicitudDni();
@@ -473,14 +531,138 @@ export class ExpedientesComponent {// pruebas de formularios
     // Resetear validaciones
     this.mostrarValidacionesExpediente = false;
     this.isCreandoExpediente = false;
+    this.isModificandoExpediente = false;
     this.FechaSistema();
 
+  }
+
+  public abrirFormularioCrear(): void {
+    this.formMode = 'crear'
+    this.limpiadatosnuevoexpediente()
+    this.modalManagerService.openModal('nexpedienteModal')
+  }
+
+  public abrirFormularioDesdeSeleccion(mode: 'editar' | 'ver', row?: ExpedienteListar): void {
+    this.formMode = mode
+    this.mostrarValidacionesExpediente = false
+    this.isModificandoExpediente = false
+    this.hydrateFormularioDesdeSeleccion(row)
+    this.modalManagerService.openModal('nexpedienteModal')
+  }
+
+  public hydrateFormularioDesdeSeleccion(row?: ExpedienteListar): void {
+    const v = this.verexpediente
+    const persona = v?.personaEntidad
+    this.nuevoexpediente.titulo = v?.titulo ?? ''
+    this.nuevoexpediente.fechaInicio = this.toDateInputValue(v?.fecInicio)
+    this.nuevoexpediente.forma_apertura = v?.formaApertura ?? ''
+    this.nuevoexpediente.procedimiento = String(v?.procedimiento?.id || v?.idProc || '')
+    this.nuevoexpediente.formaNotifi = this.toFormaNotifiNumber(v)
+    this.nuevoexpediente.email = this.verEmailDisplay === '—' ? '' : (this.verEmailDisplay || '')
+    this.nuevoexpediente.usuario = persona?.numDocum ?? ''
+    this.nuevoexpediente.instructor = v?.instructor ?? ''
+    this.nuevoexpediente.estado = v?.estado || 'ABIERTO'
+    this.nuevoexpediente.ejercicio = v?.ejercicio
+    this.nuevoexpediente.numero = v?.numero
+    this.nuevoexpediente.idPerso = persona?.idPerso ?? null
+    this.nuevoexpediente.idHisPerso = persona?.idHisPerso ?? null
+    this.formInsideEstado = row?.insideEstado || ''
+
+    if (persona?.numDocum || persona?.desPerEntid || persona?.nombre) {
+      this.expedienteFacade.dniok = true
+      this.expedienteFacade.existepersonaentidad = false
+      this.expedienteFacade.nombredni = this.verInteresadoNombreDisplay || persona.desPerEntid || persona.nombre || ''
+      this.expedienteFacade.direcciondni = persona.dirPosta || ''
+      this.expedienteFacade.cpdni = persona.codPosta != null ? String(persona.codPosta) : ''
+      this.expedienteFacade.provinciadni = persona.provincia || ''
+      this.expedienteFacade.nommunicipiodni = persona.municipio || ''
+    } else {
+      this.expedienteFacade.resetSolicitudDni()
+    }
+  }
+
+  public syncEdicionDesdeFormulario(): void {
+    this.editexpediente.titulo = this.nuevoexpediente.titulo
+    this.editexpediente.fecInicio = this.nuevoexpediente.fechaInicio
+    this.editexpediente.forma_apertura = this.nuevoexpediente.forma_apertura
+    this.editexpediente.procedimiento = String(this.nuevoexpediente.procedimiento ?? '')
+    this.editexpediente.dni = this.nuevoexpediente.usuario
+    this.editexpediente.email = this.nuevoexpediente.email
+    this.editexpediente.forNotif = this.nuevoexpediente.formaNotifi
+    this.editexpediente.instructor = this.nuevoexpediente.instructor
+    this.editexpediente.estado = this.nuevoexpediente.estado
+    if (this.nuevoexpediente.idPerso != null) {
+      this.editexpediente.idPerso = this.nuevoexpediente.idPerso
+    }
+  }
+
+  public cerrarFormularioExpediente(): void {
+    this.mostrarValidacionesExpediente = false
+    this.isCreandoExpediente = false
+    this.isModificandoExpediente = false
+    if (this.formMode === 'crear') {
+      this.limpiadatosnuevoexpediente()
+    }
+    this.formMode = 'crear'
+    this.modalManagerService.closeModal('nexpedienteModal')
+  }
+
+  public validateAndSubmitFormularioExpediente(): void {
+    if (this.formMode === 'ver') {
+      return
+    }
+    if (this.formMode === 'editar') {
+      this.mostrarValidacionesExpediente = true
+      this.syncEdicionDesdeFormulario()
+      if (
+        this.isTituloExpedienteInvalid()
+        || this.isFechaExpedienteInvalid()
+        || this.isFormaAperturaInvalid()
+        || this.isProcedimientoExpedienteInvalid()
+        || this.isFormaNotificacionInvalid()
+        || this.isInteresadoDNIInvalid()
+        || this.isEmailExpedienteInvalid()
+      ) {
+        this.notificationService.incompleteFields()
+        return
+      }
+      this.expedienteFacade.onEditarExpedienteSubmit(this)
+      return
+    }
+    this.onCrearExpedienteSubmit()
+  }
+
+  private toDateInputValue(value: unknown): string {
+    if (!value) {
+      return ''
+    }
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
+      return value.substring(0, 10)
+    }
+    const d = new Date(value as string)
+    if (isNaN(d.getTime())) {
+      return ''
+    }
+    return d.toISOString().substring(0, 10)
+  }
+
+  private toFormaNotifiNumber(v: VerExpediente | null | undefined): number {
+    if (!v) {
+      return null as unknown as number
+    }
+    if (v.forNotif === 0 || v.forNotif === '0') return 0
+    if (v.forNotif === 1 || v.forNotif === '1') return 1
+    const texto = String(v.formaNotificacion || v.forNotifTexto || '').toLowerCase()
+    if (texto.includes('telem')) return 1
+    if (texto.includes('postal') || texto.includes('correo')) return 0
+    return null as unknown as number
   }
 
   // Gesti?n de modales
   public abrirModal(modalId: string): void {
     if (modalId === 'nexpedienteModal') {
-      this.limpiadatosnuevoexpediente();
+      this.abrirFormularioCrear();
+      return;
     } else if (modalId === 'cancelarExpModal') {
       this.fechacancelacionexpedi = fechaHoyISO();
     } else if (modalId === 'cerrarExpModal') {
@@ -495,7 +677,8 @@ export class ExpedientesComponent {// pruebas de formularios
   public cerrarModal(modalId: string): void {
     // Resetea validaciones específicas según el modal
     if (modalId === 'nexpedienteModal') {
-      this.limpiadatosnuevoexpediente();
+      this.cerrarFormularioExpediente();
+      return;
     } else if (modalId === 'NAtributosModal2') {
       this.borraArrayAtributos();
     } else if (modalId === 'TareaExpedienteModal') {

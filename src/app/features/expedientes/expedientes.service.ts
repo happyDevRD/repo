@@ -786,7 +786,8 @@ export class ExpedientesService {
       "fecInicio": editartarexpediente.fecInicio,
       "interesado": editartarexpediente.dni,
       "email": editartarexpediente.email,
-      "forNotif": editartarexpediente.forNotif
+      "forNotif": editartarexpediente.forNotif,
+      "instructor": editartarexpediente.instructor,
     }
     let keys = JSON.stringify(varios);
     this.urleditaexpedientemail = `${environment.apiUrl}expediente/editar/${id}`

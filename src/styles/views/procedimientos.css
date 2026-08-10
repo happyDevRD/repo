@@ -5,6 +5,127 @@
   padding-top: 0.5rem;
 }
 
+/* Listado: ocupa el viewport y deja que la tabla crezca hacia abajo */
+.procedimientos-page--list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  min-height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  max-height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  margin-bottom: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Detalle / workspace: mismo alto de viewport */
+.procedimientos-page--workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  min-height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  max-height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  margin-bottom: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.proc-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.proc-detail-header__main {
+  min-width: 0;
+  flex: 1 1 18rem;
+}
+
+.proc-detail-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.2rem;
+  flex-wrap: wrap;
+}
+
+.proc-detail-header__nav .procedimientos-header__eyebrow {
+  margin: 0;
+}
+
+.proc-detail-header__title {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.proc-detail-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.proc-detail-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  padding-top: 0.15rem;
+}
+
+.proc-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  padding: 0.22rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(248, 249, 252, 0.95);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.proc-meta-chip i {
+  font-size: 0.85rem;
+  color: var(--iflow-primary);
+  opacity: 0.85;
+}
+
+.proc-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35rem;
+  margin-left: 0.15rem;
+  border-radius: 999px;
+  background: rgba(105, 120, 255, 0.12);
+  color: var(--iflow-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nav-link.active .proc-tab-count {
+  background: rgba(105, 120, 255, 0.18);
+}
+
 .procedimientos-header {
   display: flex;
   align-items: flex-end;
@@ -14,6 +135,143 @@
   padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border-subtle);
   flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.proc-toolbar {
+  flex-shrink: 0;
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.85rem 0.85rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.proc-toolbar__empty {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.proc-toolbar__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.15rem;
+}
+
+.proc-toolbar__selected {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.proc-toolbar__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.proc-toolbar__name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(36rem, 100%);
+}
+
+.proc-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  padding-top: 0.65rem;
+}
+
+.proc-toolbar__actions .btn-iflow--sm {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  min-height: 2.125rem;
+}
+
+.proc-toolbar__sep {
+  display: inline-block;
+  width: 1px;
+  height: 1.75rem;
+  margin: 0 0.25rem;
+  background: var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.proc-listado {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.proc-listado > app-data-table {
+  flex: 1 1 auto;
+  display: flex !important;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.proc-listado .data-table {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.proc-listado .data-table__toolbar {
+  flex-shrink: 0;
+}
+
+.proc-listado .data-table__footer {
+  flex-shrink: 0;
+}
+
+/* Anula el max-height encapsulado de data-table para que crezca de verdad */
+.proc-listado .data-table__scroll {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  max-height: none !important;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .procedimientos-page--list {
+    height: calc(100dvh - var(--topbar-height) - 2rem);
+    min-height: calc(100dvh - var(--topbar-height) - 2rem);
+    max-height: calc(100dvh - var(--topbar-height) - 2rem);
+  }
+
+  .proc-toolbar__sep {
+    display: none;
+  }
+
+  .proc-toolbar__actions .btn-iflow--sm {
+    flex: 1 1 calc(50% - 0.4rem);
+    min-width: 0;
+    justify-content: center;
+  }
 }
 
 .procedimientos-header__eyebrow {
@@ -74,11 +332,93 @@
 }
 
 .proc-workspace {
-  margin-bottom: 1.15rem;
-  padding: 0.85rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-bottom: 0;
+  padding: 0.55rem 0.85rem 0.75rem;
   border-radius: var(--border-radius);
   border: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.98);
+  overflow: hidden;
+}
+
+/* Anula flex:1 de .expediente-flujo-tabs (expedientes.css) que estiraba las pestañas */
+.proc-workspace-tabs.expediente-flujo-tabs,
+.proc-workspace .expediente-flujo-tabs {
+  flex: 0 0 auto;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: 0;
+  align-self: stretch;
+}
+
+.proc-workspace__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-top: 0.65rem;
+  overflow: hidden;
+}
+
+.proc-workspace__body > .proc-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.proc-panel--datos {
+  overflow: auto;
+}
+
+.proc-panel--grid > .proc-panel__head {
+  flex-shrink: 0;
+  margin-bottom: 0.65rem;
+}
+
+.proc-panel__body--grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.proc-panel__body--grid > app-data-table {
+  flex: 1 1 auto;
+  display: flex !important;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.proc-panel__body--grid .data-table {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.proc-panel__body--grid .data-table__toolbar,
+.proc-panel__body--grid .data-table__footer {
+  flex-shrink: 0;
+}
+
+.proc-panel__body--grid .data-table__scroll {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  max-height: none !important;
+  overflow-y: auto;
 }
 
 .proc-context {
@@ -119,13 +459,14 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.65rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.75rem;
   padding: 0.55rem 0.75rem;
   font-size: 0.84rem;
   color: var(--text-primary);
   background: rgba(25, 135, 84, 0.06);
   border: 1px solid rgba(25, 135, 84, 0.18);
   border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .proc-tarea-context i {
@@ -138,8 +479,8 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
   flex-wrap: wrap;
 }
 
@@ -169,8 +510,140 @@
   padding: 0;
 }
 
-.proc-panel__body--grid {
+.proc-form-fieldset {
+  border: 0;
+  margin: 0;
   padding: 0;
+  min-width: 0;
+}
+
+.proc-datos-resumen {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1.25rem;
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, rgba(248, 249, 252, 0.95), rgba(255, 255, 255, 0.98));
+}
+
+.proc-datos-resumen__item {
+  min-width: 0;
+}
+
+.proc-datos-resumen__item--full {
+  grid-column: 1 / -1;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.15rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.proc-datos-resumen dt {
+  margin: 0 0 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.proc-datos-resumen dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.proc-datos-resumen__item--full dd {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.proc-datos-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.proc-shortcut {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.proc-shortcut:hover {
+  border-color: rgba(105, 120, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(105, 120, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.proc-shortcut:focus-visible {
+  outline: 2px solid var(--iflow-primary);
+  outline-offset: 2px;
+}
+
+.proc-shortcut i {
+  font-size: 1.15rem;
+  color: var(--iflow-primary);
+}
+
+.proc-shortcut__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.proc-shortcut__value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.proc-shortcut__hint {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .proc-datos-resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .proc-datos-shortcuts {
+    grid-template-columns: 1fr;
+  }
+
+  .procedimientos-page--workspace {
+    height: calc(100dvh - var(--topbar-height) - 2rem);
+    min-height: calc(100dvh - var(--topbar-height) - 2rem);
+    max-height: calc(100dvh - var(--topbar-height) - 2rem);
+  }
+
+  .proc-detail-header__actions {
+    width: 100%;
+  }
+
+  .proc-detail-header__actions .btn-iflow {
+    flex: 1 1 calc(33.33% - 0.45rem);
+    min-width: 0;
+    justify-content: center;
+  }
 }
 
 .proc-empty-state {
@@ -232,12 +705,14 @@
   }
 
   .procedimientos-header,
+  .proc-detail-header,
   .proc-workspace-header__actions {
     flex-direction: column;
     align-items: stretch;
   }
 
   .procedimientos-header .btn-iflow,
+  .proc-detail-header__actions .btn-iflow,
   .proc-workspace-header__actions .btn-iflow {
     width: 100%;
     justify-content: center;

@@ -91,9 +91,28 @@ export class ProcedimientosComponent {
   public crearprocedi: CrearProcedi = new CrearProcedi();
   public isWorkspaceMode = false;
   public activeWorkspaceTab: ProcedimientoWorkspaceTab = 'datos';
+  /** Fila seleccionada en el listado (antes de entrar al workspace). */
+  public procedimientoSeleccionado: Procedimiento | null = null;
+  /** Modo del modal unificado de procedimiento (crear / editar / ver). */
+  public formMode: 'crear' | 'editar' | 'ver' = 'crear';
   materiaprocedimiento!: MateriaProcedimiento[];
   procedimientos: Procedimiento[] = [];
   cargandoProcedimientos: boolean = false;
+
+  get formReadonly(): boolean {
+    return this.formMode === 'ver';
+  }
+
+  get formTitle(): string {
+    if (this.formMode === 'editar') return 'Modificar Procedimiento';
+    if (this.formMode === 'ver') return 'Ver Procedimiento';
+    return 'Nuevo Procedimiento';
+  }
+
+  get formSubmitLabel(): string {
+    if (this.formMode === 'editar') return 'Guardar cambios';
+    return 'Guardar';
+  }
 
   // GESTIÓN DE ATRIBUTOS DE TAREAS
 
@@ -214,8 +233,106 @@ export class ProcedimientosComponent {
   }
 
   public abrirNuevoProcedimientoModal(): void {
+    this.formMode = 'crear';
     this.prepararFormularioNuevoProcedimiento();
-    this.abrirModal('NprocediModal');
+    clearFormValidation('formProcedimiento');
+    this.modalManagerService.openModal('NprocediModal');
+  }
+
+  public abrirFormularioProcedimiento(mode: 'editar' | 'ver', row?: Procedimiento): void {
+    const id = row?.id ?? this.procedimientoSeleccionado?.id ?? this.idprocedi;
+    if (!id) {
+      this.notificationService.warning('Debe seleccionar un procedimiento primero');
+      return;
+    }
+
+    this.formMode = mode;
+    this.procedimientoService.getProcedimiento(id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (proc) => {
+        this.hydrateFormularioProcedimiento(proc);
+        clearFormValidation('formProcedimiento');
+        this.modalManagerService.openModal('NprocediModal');
+      },
+      error: () => {
+        this.notificationService.error('No se pudo cargar el procedimiento');
+      },
+    });
+  }
+
+  public hydrateFormularioProcedimiento(proc: Procedimiento): void {
+    const deptRaw = proc.departamento as unknown;
+    const deptObj = deptRaw && !Array.isArray(deptRaw)
+      ? deptRaw as { idOrgan?: string; idOrgEleme?: string; desEleme?: string }
+      : Array.isArray(deptRaw) && deptRaw.length
+        ? deptRaw[0] as { idOrgan?: string; idOrgEleme?: string; desEleme?: string }
+        : null;
+    const idOrgEleme = String(deptObj?.idOrgEleme ?? this.session.idOrgEleme ?? '');
+    const idOrgan = String(deptObj?.idOrgan ?? this.session.idOrgEleme ?? '');
+
+    this.idprocedi = proc.id;
+    this.crearprocedi = new CrearProcedi();
+    this.crearprocedi.descripcion = proc.descripcion ?? '';
+    this.crearprocedi.codigoSia = proc.codigoSia ?? '';
+    this.crearprocedi.siglas = proc.siglas ?? '';
+    this.crearprocedi.modalidad = proc.modalidad as CrearProcedi['modalidad'];
+    this.crearprocedi.materia = proc.idMatProce as CrearProcedi['materia'];
+    this.crearprocedi.depart = idOrgEleme;
+    this.crearprocedi.departamento = { idOrgan, idOrgEleme };
+
+    this.editarprocedi = new EditarProcedi();
+    this.editarprocedi.id = proc.id;
+    this.editarprocedi.descripcion = proc.descripcion ?? '';
+    this.editarprocedi.codigoSia = proc.codigoSia ?? '';
+    this.editarprocedi.modalidad = proc.modalidad as EditarProcedi['modalidad'];
+    this.editarprocedi.materia = proc.idMatProce as EditarProcedi['materia'];
+    this.editarprocedi.departamento = { idOrgan, idOrgEleme };
+  }
+
+  public syncEdicionDesdeFormulario(): void {
+    this.editarprocedi.descripcion = this.crearprocedi.descripcion;
+    this.editarprocedi.codigoSia = this.crearprocedi.codigoSia;
+    this.editarprocedi.modalidad = this.crearprocedi.modalidad;
+    this.editarprocedi.materia = this.crearprocedi.materia;
+    if (!this.editarprocedi.departamento || Array.isArray(this.editarprocedi.departamento)) {
+      const idOrgEleme = this.session.idOrgEleme ?? '';
+      this.editarprocedi.departamento = { idOrgan: idOrgEleme, idOrgEleme };
+    }
+  }
+
+  public cerrarFormularioProcedimiento(): void {
+    clearFormValidation('formProcedimiento');
+    if (this.formMode === 'crear') {
+      this.prepararFormularioNuevoProcedimiento();
+    }
+    this.formMode = 'crear';
+    this.modalManagerService.closeModal('NprocediModal');
+  }
+
+  public validateAndSubmitProcedimiento(event: Event): void {
+    if (this.formMode === 'ver') {
+      return;
+    }
+    if (!validateBootstrapForm(event, this.notificationService)) {
+      return;
+    }
+    if (this.formMode === 'editar') {
+      this.syncEdicionDesdeFormulario();
+      this.procedimientoFacade.editar(this);
+      return;
+    }
+    if (this.crearprocedi.siglas?.length > 5) {
+      this.notificationService.error('Las siglas no pueden tener más de 5 caracteres');
+      return;
+    }
+    this.procedimientoFacade.crear(this);
+  }
+
+  public limpiarErrores(): void {
+    clearFormValidation('formProcedimiento');
+    this.formMode = 'crear';
+    this.prepararFormularioNuevoProcedimiento();
   }
 
   public idAtrib: any;
@@ -269,15 +386,6 @@ export class ProcedimientosComponent {
     this.cargarProcedimientos();
   }
 
-
-
-  public validateAndEditProcedimiento(event: Event): void {
-    if (!validateBootstrapForm(event, this.notificationService)) {
-      return;
-    }
-    this.procedimientoFacade.editar(this);
-  }
-
   //---------------------Eleazar
   cargarPermisos(id: any) {
     this.gridFacade.cargarPermisos(this, id);
@@ -313,8 +421,17 @@ export class ProcedimientosComponent {
 
   public verEliminaTarea: boolean = false;
 
-  public abrirProcedimiento(id: number): void {
-    this.router.navigate(['/procedimientos', id])
+  /** Resalta la fila del procedimiento seleccionado en el listado. */
+  public readonly procedimientoRowClass = (row: Procedimiento): Record<string, boolean> => ({
+    'table-active': row.id === this.procedimientoSeleccionado?.id,
+  });
+
+  public seleccionarProcedimiento(row: Procedimiento): void {
+    this.procedimientoSeleccionado = row;
+  }
+
+  public abrirProcedimiento(id: number, tab: ProcedimientoWorkspaceTab = 'datos'): void {
+    this.router.navigate(['/procedimientos', id], { queryParams: { tab } });
   }
 
   /**
@@ -366,29 +483,6 @@ export class ProcedimientosComponent {
 
   public atrasCrearPermisoProcedi(): void {
     this.permisosFacade.resetFormularioNuevo(this);
-  }
-
-  /**
-   * Limpia los errores visuales del formulario de Nuevo Procedimiento
-   */
-  public limpiarErrores(): void {
-    clearFormValidation('formNuevoProcedimiento');
-    this.prepararFormularioNuevoProcedimiento();
-  }
-
-
-  public validateAndCreateProcedimiento(event: Event): void {
-    if (!validateBootstrapForm(event, this.notificationService)) {
-      return;
-    }
-
-    if (this.crearprocedi.siglas && this.crearprocedi.siglas.length > 5) {
-      this.notificationService.error('El campo Siglas debe tener máximo 5 caracteres.');
-      event.preventDefault();
-      return;
-    }
-
-    this.procedimientoFacade.crear(this);
   }
 
   public deleteProcedimiento(dato: number): void {
@@ -451,9 +545,6 @@ export class ProcedimientosComponent {
   }
 
   public abrirModal(modalId: string): void {
-    if (modalId === 'NprocediModal') {
-      this.prepararFormularioNuevoProcedimiento();
-    }
     this.modalManagerService.openModal(modalId);
   }
 

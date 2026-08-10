@@ -308,20 +308,23 @@ export class ProcedimientoService {
 
   editaProcedi(editarprocedi: EditarProcedi, id: number): Observable<EditarProcedi> {
     let idprocedi: number = id;
-    let result = JSON.stringify(editarprocedi);
     this.identiprocedi = id;
 
-    let varios = {
+    const raw = editarprocedi.departamento as unknown;
+    const fromObject = raw && !Array.isArray(raw) ? raw as { idOrgan?: string; idOrgEleme?: string } : null;
+    const fromArray = Array.isArray(raw) && raw.length ? raw[0] as { idOrgan?: string; idOrgEleme?: string } : null;
+    const dept = fromObject ?? fromArray ?? {};
+    const idOrgEleme = dept.idOrgEleme ?? this.idOrgElemen ?? '';
+    const idOrgan = dept.idOrgan ?? this.idOrgElemen ?? '';
 
+    let varios = {
       "descripcion": editarprocedi.descripcion,
-      "idOrgan": editarprocedi.departamento.idOrgan,
-      "idOrgEleme": editarprocedi.departamento.idOrgEleme,
+      "idOrgan": idOrgan,
+      "idOrgEleme": idOrgEleme,
       "codigoSia": editarprocedi.codigoSia,
       "usuContr": this.user,
       "modalidad": editarprocedi.modalidad,
       "idMatProce": editarprocedi.materia
-
-
     }
     let keys = JSON.stringify(varios);
     let urlEdita: string = `${environment.apiUrl}procedimiento/editar/${id}`

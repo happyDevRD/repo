@@ -1,12 +1,12 @@
 <div class="soli-list-grid">
   <app-data-table [items]="s.solicitudesListado" [loading]="s.cargandoSolicitudesListado"
     emptyMessage="No hay solicitudes."
-    searchPlaceholder="Buscar…"
     exportFileName="solicitudes"
     [rowClass]="s.solicitudRowClass"
     (rowClick)="handleRowClick($event)"
     (rowDblClick)="handleRowDoubleClick($event)">
-    <app-table-column header="Nº" field="ejercicio" [sortable]="true" align="center" width="8%">
+    <app-table-column header="Nº" field="ejercicio" [sortValue]="s.numeroSolicitudValue" [searchValue]="s.numeroSolicitudValue"
+      [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%">
       <ng-template let-row>{{ row.ejercicio }}/{{ row.numero }}</ng-template>
     </app-table-column>
     <app-table-column header="Fecha" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="11%">
@@ -23,7 +23,7 @@
       [sortable]="true" [filterable]="true" filterType="text" width="17%">
       <ng-template let-row>{{ row.personaEntidad?.desPerEntid }}</ng-template>
     </app-table-column>
-    <app-table-column header="Expediente" [sortValue]="s.expedienteSolicitudValue" [searchValue]="s.expedienteSolicitudValue" [sortable]="true" align="center" width="10%">
+    <app-table-column header="Expediente" [sortValue]="s.expedienteSolicitudValue" [searchValue]="s.expedienteSolicitudValue" [sortable]="true" [filterable]="true" filterType="text" align="center" width="10%">
       <ng-template let-row>{{ s.expedienteSolicitudValue(row) || '—' }}</ng-template>
     </app-table-column>
   </app-data-table>

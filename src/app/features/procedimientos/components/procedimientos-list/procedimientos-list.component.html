@@ -1,4 +1,4 @@
-<div class="page-panel procedimientos-page">
+<div class="page-panel procedimientos-page procedimientos-page--list">
   <header class="procedimientos-header">
     <div class="procedimientos-header__text">
       <p class="procedimientos-header__eyebrow">Configuración del departamento</p>
@@ -14,21 +14,73 @@
     </button>
   </header>
 
-  <app-data-table [items]="p.procedimientos" [loading]="p.cargandoProcedimientos"
-    emptyMessage="No hay procedimientos configurados en este departamento."
-    searchPlaceholder="Buscar por descripción, código SIA o siglas…"
-    exportFileName="procedimientos"
-    (rowClick)="p.abrirProcedimiento($event.id)">
-    <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
-    <app-table-column header="Código SIA" field="codigoSia" [sortable]="true"></app-table-column>
-    <app-table-column header="Siglas" field="siglas" [sortable]="true"></app-table-column>
-    <app-table-column header="Modalidad" [sortValue]="modalidadValue" [searchValue]="modalidadValue" [sortable]="true"
-      [filterable]="true">
-      <ng-template let-row>{{ p.getModalidadLabelFor(row.modalidad) }}</ng-template>
-    </app-table-column>
-    <app-table-column header="Materia" [sortValue]="materiaValue" [searchValue]="materiaValue" [sortable]="true"
-      [filterable]="true">
-      <ng-template let-row>{{ p.getMateriaLabelFor(row.idMatProce) }}</ng-template>
-    </app-table-column>
-  </app-data-table>
+  <section class="proc-toolbar" aria-label="Acciones del procedimiento">
+    <p class="proc-toolbar__empty mb-0" *ngIf="!p.procedimientoSeleccionado">
+      Seleccione un procedimiento en la tabla para editarlo o gestionar sus tareas, permisos y atributos.
+    </p>
+
+    <ng-container *ngIf="p.procedimientoSeleccionado as sel">
+      <div class="proc-toolbar__top">
+        <div class="proc-toolbar__selected">
+          <span class="proc-toolbar__label">Seleccionado</span>
+          <strong class="proc-toolbar__name">{{ sel.descripcion }}</strong>
+          <span class="proc-badge" *ngIf="sel.siglas">{{ sel.siglas }}</span>
+        </div>
+      </div>
+      <nav class="proc-toolbar__actions" aria-label="Acciones del procedimiento seleccionado">
+        <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+          (click)="p.abrirFormularioProcedimiento('ver', sel)"
+          title="Ver los datos del procedimiento">
+          <i class="bi bi-eye" aria-hidden="true"></i>
+          Ver
+        </button>
+        <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
+          (click)="p.abrirFormularioProcedimiento('editar', sel)"
+          title="Editar los datos generales del procedimiento">
+          <i class="bi bi-pencil-square" aria-hidden="true"></i>
+          Editar
+        </button>
+        <span class="proc-toolbar__sep" aria-hidden="true"></span>
+        <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+          (click)="p.abrirProcedimiento(sel.id, 'tareas')"
+          title="Gestionar las tareas del procedimiento">
+          <i class="bi bi-list-task" aria-hidden="true"></i>
+          Tareas
+        </button>
+        <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+          (click)="p.abrirProcedimiento(sel.id, 'permisos')"
+          title="Gestionar permisos (requiere una tarea seleccionada)">
+          <i class="bi bi-shield-check" aria-hidden="true"></i>
+          Permisos
+        </button>
+        <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+          (click)="p.abrirProcedimiento(sel.id, 'atributos')"
+          title="Gestionar atributos del procedimiento">
+          <i class="bi bi-tags" aria-hidden="true"></i>
+          Atributos
+        </button>
+      </nav>
+    </ng-container>
+  </section>
+
+  <section class="proc-listado" aria-label="Listado de procedimientos">
+    <app-data-table [items]="p.procedimientos" [loading]="p.cargandoProcedimientos"
+      emptyMessage="No hay procedimientos configurados en este departamento."
+      exportFileName="procedimientos"
+      [rowClass]="p.procedimientoRowClass"
+      (rowClick)="p.seleccionarProcedimiento($event)"
+      (rowDblClick)="p.abrirFormularioProcedimiento('editar', $event)">
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+      <app-table-column header="Código SIA" field="codigoSia" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+      <app-table-column header="Siglas" field="siglas" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+      <app-table-column header="Modalidad" [sortValue]="modalidadValue" [searchValue]="modalidadValue" [sortable]="true"
+        [filterable]="true">
+        <ng-template let-row>{{ p.getModalidadLabelFor(row.modalidad) }}</ng-template>
+      </app-table-column>
+      <app-table-column header="Materia" [sortValue]="materiaValue" [searchValue]="materiaValue" [sortable]="true"
+        [filterable]="true">
+        <ng-template let-row>{{ p.getMateriaLabelFor(row.idMatProce) }}</ng-template>
+      </app-table-column>
+    </app-data-table>
+  </section>
 </div>

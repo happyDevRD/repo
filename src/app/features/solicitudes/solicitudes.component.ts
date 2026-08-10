@@ -101,6 +101,8 @@ export class SolicitudesComponent {
   public isIniciandoExpediente: boolean = false;
   public isModificandoSolicitud: boolean = false;
   public mostrarValidacionesNuevaSolicitud = false
+  /** Modo del formulario unificado (crear / editar / ver). */
+  public formMode: 'crear' | 'editar' | 'ver' = 'crear'
   filtroasunto!: string;
   filtrointeresado!: string;
   filtrorepresentante!: string;
@@ -268,16 +270,44 @@ export class SolicitudesComponent {
     return this.hasSolicitudSeleccionada && this.veoIniciarExp && this.veoRechazaSolici
   }
 
+  get formReadonly(): boolean {
+    return this.formMode === 'ver'
+  }
+
+  get formTitle(): string {
+    if (this.formMode === 'editar') return 'Modificar Solicitud'
+    if (this.formMode === 'ver') return 'Ver Solicitud'
+    return 'Nueva Solicitud'
+  }
+
+  abrirFormularioCrear(): void {
+    this.formMode = 'crear'
+    this.expsolicitud = ''
+    this.prepararNuevaSolicitud()
+    this.abrirModal('nsolicitudModal')
+  }
+
+  abrirFormularioDesdeSeleccion(mode: 'editar' | 'ver'): void {
+    if (!this.hasSolicitudSeleccionada) {
+      return
+    }
+    this.formMode = mode
+    this.mostrarValidacionesNuevaSolicitud = false
+    this.solicitudFacade.mostrarValidacionesModificarSolicitud = false
+    this.hydrateFormularioDesdeSeleccion()
+    this.abrirModal('nsolicitudModal')
+  }
+
   abrirEdicionSolicitudSeleccionada(): void {
     if (!this.hasSolicitudSeleccionada) {
       return
     }
     if (!this.modificoSolicitud) {
-      this.notificationService.warning('Esta solicitud no puede ser editada en su estado actual')
+      this.abrirFormularioDesdeSeleccion('ver')
       return
     }
     this.versolici(this.idsolicitud)
-    this.modalManagerService.openModal('edicionSolicitudModal')
+    this.abrirFormularioDesdeSeleccion('editar')
   }
 
   /**
@@ -298,8 +328,9 @@ export class SolicitudesComponent {
       this.limpiarDatosRechazar();
     } else if (modalId === 'iniciarExpedieModal') {
       this.expedienteFacade.mostrarValidacionesIniciarExpediente = false;
-    } else if (modalId === 'edicionSolicitudModal') {
+    } else if (modalId === 'edicionSolicitudModal' || modalId === 'nsolicitudModal') {
       this.solicitudFacade.mostrarValidacionesModificarSolicitud = false;
+      this.mostrarValidacionesNuevaSolicitud = false;
     }
     this.modalManagerService.closeModal(modalId);
   }
@@ -423,6 +454,7 @@ export class SolicitudesComponent {
   public borraDatosSolicitud() {
     this.creasolicitud = new CreaSolicitudNuevo()
     this.creasolicitud.usuario = ''
+    this.creasolicitud.estado = 'PENDIENTE'
     this.creasolicitud.tipPerso = ''
     this.creasolicitud.codProvi = ''
     this.creasolicitud.codMunic = ''
@@ -435,12 +467,88 @@ export class SolicitudesComponent {
     this.FechaSolicitud()
   }
 
-  /** Prepara el modal Nueva Solicitud: estado limpio + fecha de hoy (sin form.reset). */
+  /** Prepara el modal unificado en modo crear: estado limpio + fecha de hoy. */
   public prepararNuevaSolicitud(): void {
+    this.formMode = 'crear'
     this.mostrarValidacionesNuevaSolicitud = false
+    this.solicitudFacade.mostrarValidacionesModificarSolicitud = false
     this.borraDatosSolicitud()
-    const form = document.getElementById('formNuevaSolicitud') as HTMLFormElement | null
+    const form = document.getElementById('formSolicitud') as HTMLFormElement | null
     form?.classList.remove('was-validated')
+  }
+
+  /** Copia la solicitud seleccionada al modelo único del formulario (`creasolicitud`). */
+  public hydrateFormularioDesdeSeleccion(): void {
+    const e = this.editasolicitud
+    this.creasolicitud.asunto = e.asunto ?? ''
+    this.creasolicitud.fecInicio = e.fecInicio ?? ''
+    this.creasolicitud.estado = e.estado || 'PENDIENTE'
+    this.creasolicitud.usuario = e.usuario ?? ''
+    this.creasolicitud.numDocum = e.dni ?? ''
+    this.creasolicitud.idPerso = e.idPerso
+    this.creasolicitud.idHisPerso = e.idHisPerso
+    this.creasolicitud.idRepre = e.idRepre
+    this.creasolicitud.idHisRepre = e.idHisRepre
+    this.creasolicitud.idDocum = e.idDocum
+    this.creasolicitud.idHisDocum = e.idHisDocum
+
+    const ref = String(this.ejerNumeroSolicitud ?? '')
+    const parts = ref.split('/')
+    if (parts.length === 2 && parts[0] && parts[1]) {
+      this.creasolicitud.ejercicio = parts[0]
+      this.creasolicitud.numero = parts[1]
+    } else if (e.ejercicio) {
+      this.creasolicitud.ejercicio = e.ejercicio
+    }
+
+    if (this.personaFacade.InteresadoSolicitud || this.creasolicitud.numDocum) {
+      this.personaFacade.dniok = !!this.personaFacade.InteresadoSolicitud
+      this.personaFacade.existepersonaentidad = false
+      this.personaFacade.nombredni = this.personaFacade.InteresadoSolicitud || ''
+      this.personaFacade.direcciondni = this.personaFacade.dirPosta || ''
+      this.personaFacade.cpdni = this.personaFacade.codPosta || ''
+      this.personaFacade.provinciadni = this.personaFacade.provincia || ''
+      this.personaFacade.nommunicipiodni = this.personaFacade.Municipio || ''
+    }
+
+    if (this.creasolicitud.idPerso != null && this.creasolicitud.idHisPerso != null) {
+      this.personaFacade.cargarRepresentantesLista(
+        this.creasolicitud.idPerso,
+        this.creasolicitud.idHisPerso,
+      )
+    }
+
+    const form = document.getElementById('formSolicitud') as HTMLFormElement | null
+    form?.classList.remove('was-validated')
+  }
+
+  /** Sincroniza el formulario unificado hacia `editasolicitud` antes de guardar. */
+  public syncEdicionDesdeFormulario(): void {
+    this.editasolicitud.asunto = this.creasolicitud.asunto
+    this.editasolicitud.fecInicio = this.creasolicitud.fecInicio
+    this.editasolicitud.estado = this.creasolicitud.estado
+    this.editasolicitud.usuario = this.creasolicitud.usuario
+    this.editasolicitud.dni = this.creasolicitud.numDocum
+    if (this.creasolicitud.idPerso != null) {
+      this.editasolicitud.idPerso = Number(this.creasolicitud.idPerso)
+    }
+    if (this.creasolicitud.idHisPerso != null) {
+      this.editasolicitud.idHisPerso = Number(this.creasolicitud.idHisPerso)
+    }
+    this.editasolicitud.idRepre = this.creasolicitud.idRepre
+    this.editasolicitud.idHisRepre = this.creasolicitud.idHisRepre
+  }
+
+  public cerrarFormularioSolicitud(): void {
+    this.mostrarValidacionesNuevaSolicitud = false
+    this.solicitudFacade.mostrarValidacionesModificarSolicitud = false
+    if (this.formMode === 'crear') {
+      this.limpiarErroresSolicitud()
+    } else {
+      this.limpiaDatosEditarSolicitudes()
+    }
+    this.formMode = 'crear'
+    this.cerrarModal('nsolicitudModal')
   }
 
   public fsistema: string = new Date().toLocaleDateString()
@@ -450,6 +558,9 @@ export class SolicitudesComponent {
     this.fsistema = new Date().toLocaleDateString()
     this.fechaSistema = fechaHoyISO()
     this.creasolicitud.fecInicio = this.fechaSistema
+    this.creasolicitud.ejercicio = this.fechaSistema.substring(0, 4)
+    this.creasolicitud.numero = null
+    this.creasolicitud.estado = this.creasolicitud.estado || 'PENDIENTE'
   }
 
   public crearPersonaEntidad(dni: string) {
@@ -489,6 +600,29 @@ export class SolicitudesComponent {
     this.personaFacade.seleccionarRepresentanteLista(this, item)
   }
 
+  public validateAndSubmitFormularioSolicitud(event: Event): void {
+    event.preventDefault()
+    if (this.formMode === 'ver') {
+      return
+    }
+    if (this.formMode === 'editar') {
+      this.syncEdicionDesdeFormulario()
+      this.mostrarValidacionesNuevaSolicitud = true
+      this.solicitudFacade.mostrarValidacionesModificarSolicitud = true
+      if (this.isAsuntoFormInvalid() || this.isFechaFormInvalid() || this.isDniFormInvalid()) {
+        const form = event.target as HTMLFormElement
+        form?.classList.add('was-validated')
+        this.notificationService.incompleteFields()
+        this.modalManagerService.keepModalOpen('nsolicitudModal')
+        this.focusPrimerCampoInvalidoFormulario()
+        return
+      }
+      this.onModificarSolicitudSubmit()
+      return
+    }
+    this.validateAndCreateSolicitud(event)
+  }
+
   public validateAndCreateSolicitud(event: Event): void {
     event.preventDefault()
 
@@ -502,10 +636,9 @@ export class SolicitudesComponent {
       !this.personaFacade.dniok &&
       !this.personaFacade.existepersonaentidad
     const camposInvalidos =
-      this.isAsuntoNuevaInvalid() ||
-      this.isFechaNuevaInvalid() ||
-      this.isAsignadoNuevaInvalid() ||
-      this.isDniNuevaInvalid()
+      this.isAsuntoFormInvalid() ||
+      this.isFechaFormInvalid() ||
+      this.isDniFormInvalid()
 
     if (camposInvalidos || interesadoSinResolver) {
       form?.classList.add('was-validated')
@@ -519,27 +652,42 @@ export class SolicitudesComponent {
         this.notificationService.incompleteFields()
       }
       this.modalManagerService.keepModalOpen('nsolicitudModal')
-      this.focusPrimerCampoInvalidoNuevaSolicitud()
+      this.focusPrimerCampoInvalidoFormulario()
       return
     }
 
     this.creaSolicitud()
   }
 
-  public isAsuntoNuevaInvalid(): boolean {
+  public isAsuntoFormInvalid(): boolean {
     return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.asunto ?? '').trim()
   }
 
-  public isFechaNuevaInvalid(): boolean {
+  public isFechaFormInvalid(): boolean {
     return this.mostrarValidacionesNuevaSolicitud && !this.creasolicitud.fecInicio
   }
 
-  public isAsignadoNuevaInvalid(): boolean {
-    return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.usuario ?? '').trim()
+  public isDniFormInvalid(): boolean {
+    return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.numDocum ?? '').trim()
   }
 
+  /** @deprecated Usar isAsuntoFormInvalid */
+  public isAsuntoNuevaInvalid(): boolean {
+    return this.isAsuntoFormInvalid()
+  }
+
+  /** @deprecated Usar isFechaFormInvalid */
+  public isFechaNuevaInvalid(): boolean {
+    return this.isFechaFormInvalid()
+  }
+
+  public isAsignadoNuevaInvalid(): boolean {
+    return false
+  }
+
+  /** @deprecated Usar isDniFormInvalid */
   public isDniNuevaInvalid(): boolean {
-    return this.mostrarValidacionesNuevaSolicitud && !String(this.creasolicitud.numDocum ?? '').trim()
+    return this.isDniFormInvalid()
   }
 
   public handleBuscarInteresado(): void {
@@ -554,17 +702,20 @@ export class SolicitudesComponent {
     this.cancelarAltaRepresentante()
   }
 
-  private focusPrimerCampoInvalidoNuevaSolicitud(): void {
+  private focusPrimerCampoInvalidoFormulario(): void {
     const fieldIds = [
-      this.isAsuntoNuevaInvalid() ? 'soli-alta-asunto' : null,
-      this.isFechaNuevaInvalid() ? 'soli-alta-fecha' : null,
-      this.isAsignadoNuevaInvalid() ? 'soli-alta-asignado' : null,
-      this.isDniNuevaInvalid() ? 'soli-alta-interesado-doc' : null,
+      this.isAsuntoFormInvalid() ? 'soli-alta-asunto' : null,
+      this.isFechaFormInvalid() ? 'soli-alta-fecha' : null,
+      this.isDniFormInvalid() ? 'soli-alta-interesado-doc' : null,
     ].filter((id): id is string => !!id)
 
     const firstId = fieldIds[0] ?? 'soli-alta-interesado-doc'
     const el = document.getElementById(firstId) as HTMLElement | null
     el?.focus()
+  }
+
+  private focusPrimerCampoInvalidoNuevaSolicitud(): void {
+    this.focusPrimerCampoInvalidoFormulario()
   }
 
   public limpiarErroresSolicitud(): void {
@@ -655,6 +806,14 @@ export class SolicitudesComponent {
 
   public gestionEjercicio(): void {
     this.ejercicio = ejercicioActual();
+    const fecha = String(this.creasolicitud.fecInicio ?? '');
+    if (fecha.length >= 4) {
+      const nuevoEjercicio = fecha.substring(0, 4);
+      if (this.formMode === 'crear' && this.creasolicitud.ejercicio !== nuevoEjercicio) {
+        this.creasolicitud.numero = null;
+      }
+      this.creasolicitud.ejercicio = nuevoEjercicio;
+    }
   }
 
   public veoIniciarExp: boolean = true;
@@ -692,6 +851,13 @@ export class SolicitudesComponent {
     'table-active': row.id === this.idsolicitud,
   });
 
+  readonly numeroSolicitudValue = (row: SolicitudListar): string => {
+    if (!row.ejercicio || !row.numero) {
+      return '';
+    }
+    return `${row.ejercicio}/${row.numero}`;
+  };
+
   readonly interesadoSolicitudValue = (row: SolicitudListar): string => row.personaEntidad?.desPerEntid ?? '';
 
   readonly expedienteSolicitudValue = (row: SolicitudListar): string => {
@@ -710,20 +876,10 @@ export class SolicitudesComponent {
     return 'soli-badge';
   }
 
-  // Método para abrir modal de edición con doble click
+  // Método para abrir modal de edición/ver con doble click
   public abrirModalEdicionSolicitud(rowData: SolicitudListar) {
-    // Cargar todos los datos de la fila (interesado, representante, editasolicitud, modificoSolicitud...)
-    // igual que al hacer clic simple, ya que el doble clic puede llegar sin selección previa.
     this.selecsolicitudNueva(rowData);
-
-    // Solo abrir el modal si la solicitud es editable
-    if (this.modificoSolicitud) {
-      // Abrir el modal de edición usando ModalManagerService
-      this.modalManagerService.openModal('edicionSolicitudModal');
-    } else {
-      // Mostrar mensaje si la solicitud no es editable usando NotificationService
-      this.notificationService.warning('Esta solicitud no puede ser editada en su estado actual');
-    }
+    this.abrirFormularioDesdeSeleccion(this.modificoSolicitud ? 'editar' : 'ver')
   }
 
   public abrirModalVerDocumento(event: JqxGridRowEvent<DocumentosListar>) {

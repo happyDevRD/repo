@@ -2,6 +2,11 @@ import { environment } from 'src/environments/environment';
 import { GridRadioSelector } from '../../../core/helper/grid-radio-selector';
 import { INICIO_GRID_RENDERERS as R } from '../../inicio/shared/inicio-grid-renderers';
 
+export {
+  buildRepresentanteGridColumns as buildColumnsListRepre,
+  createRepresentanteGridAdapter as createRepresentantesAdapter,
+} from '../../../shared/components/iflow-grid/iflow-grid-representante.config';
+
 export interface ExpedientesGridRenderContext {
   valorEstado?: string;
   setUsuarioTarea?: (id: unknown) => void;
@@ -88,55 +93,18 @@ export const createExpedientesGridRenderers = (
     }
     return `<div style="text-align: center; font-family: Verdana; margin-top: 5px;">${display}</div>`;
   },
-  cellsrendererColor: (_row, _column, value) => {
-    if (value === 'VERDE') {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  ><img  src="assets/boton_verde.png" width="20" height="20"/></div>`;
-    }
-    if (value === 'AMARILLO') {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  ><img  src="assets/boton_amarillo.png" width="20" height="20"/></div>`;
-    }
-    if (value === 'ROJO') {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  ><img  src="assets/boton_rojo.png" width="20" height="20"/></div>`;
-    }
-    if (!value) {
-      return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    >SIN DATOS</div>`;
-    }
-    return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    ></div>`;
-  },
-  cellsrendererContieneArchivo: (_row, _column, value) => {
-    if (value) {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  ><img  src="assets/boton_verde.png" width="20" height="20"/></div>`;
-    }
-    return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    ><img  src="assets/boton_rojo.png" width="20" height="20"/></div>`;
-  },
+  // Idénticos a INICIO_GRID_RENDERERS (dashboard): reutilizados en vez de reimplementados.
+  cellsrendererColor: R.cellsrendererColor,
+  cellsrendererContieneArchivo: R.cellsrendererContieneArchivo,
+  cellsrendererArchivo: R.cellsrendererArchivo,
+  cellsrendererFechaPlazo: R.cellsrendererFechaPlazo,
   cellsrendererTramiteTarea: (_row, _column, value) => cellCenter(String(value ?? '')),
   cellsrendererPlazo: (_row, _column, value) => cellCenter(String(value ?? '')),
-  cellsrendererArchivo: (_row, _column, value) => {
-    if (value === '1') {
-      return `<div style="text-align: center; margin-top: 5px;"  type="button"  ><img  src="assets/boton_verde.png" width="20" height="20"/></div>`;
-    }
-    return `<div style="color:red;font-size: 9px;text-align: center; margin-top: 5px;"    ><img  src="assets/boton_rojo.png" width="20" height="20"/></div>`;
-  },
-  cellsrendererFechaPlazo: (_row, _column, value) => {
-    if (!value) {
-      return `<div style="text-align: center;margin-top: 5px;"  type="button"  >SIN FECHA</div>`;
-    }
-    return `<div style="text-align: center;margin-top: 5px;"  type="button" >${value}</div>`;
-  },
   columnseleccionTareaProcedi: GridRadioSelector.createRadioRenderer('TareaProcedi', 'Selecciona Tarea', true),
   columnseleccionPermisos: GridRadioSelector.createRadioRenderer('Permisos', 'Selecciona Permiso', true),
   columnseleccionTareasExpediente: GridRadioSelector.createRadioRenderer('TareasExpediente', 'Selecciona Tarea', true),
   columnseleccionAtributos: GridRadioSelector.createRadioRenderer('Atributos', 'Selecciona Atributo', true),
 });
-
-export const buildColumnsListRepre = (renderers: ExpedientesGridRenderers): any[] => [
-  { text: 'id', datafield: 'id', width: '1%', hidden: true },
-  { text: 'idPerso', datafield: 'idPerso', width: '1%', hidden: true },
-  { text: 'idHisPerso', datafield: 'idHisPerso', width: '1%', hidden: true },
-  { text: '', datafield: '', width: '1%', cellsrenderer: renderers.columnseleccion, renderer: renderers.columnrenderer },
-  { text: 'Nombre', datafield: 'desPerEntid', cellsrenderer: renderers.cellsrendererRepre, renderer: renderers.columnrenderer },
-  { text: 'Dirección', datafield: 'dirPosta', cellsrenderer: renderers.cellsrendererRepre, renderer: renderers.columnrenderer },
-];
 
 export const buildColumnsIndiceENI = (renderers: ExpedientesGridRenderers): any[] => [
   { text: 'total', datafield: 'total', width: '1%', hidden: true },
@@ -144,20 +112,6 @@ export const buildColumnsIndiceENI = (renderers: ExpedientesGridRenderers): any[
   { text: 'Nombre', datafield: 'nombre', cellsrenderer: renderers.cellsrendererIndiceENI, renderer: renderers.columnrendererIndiceENI },
   { text: 'Huella', datafield: 'huella', cellsrenderer: renderers.cellsrendererIndiceENI, renderer: renderers.columnrendererIndiceENI },
 ];
-
-export const createRepresentantesAdapter = (idPerso: number | string, idHisPerso: number | string): any =>
-  new jqx.dataAdapter({
-    dataType: 'json',
-    dataFields: [
-      { name: 'id', type: 'any' },
-      { name: 'idPerso', type: 'any' },
-      { name: 'idHisPerso', type: 'any' },
-      { name: 'desPerEntid', type: 'any' },
-      { name: 'dirPosta', type: 'any' },
-    ],
-    url: `${environment.apiUrl}personaRepresentante/listar/${idPerso}/${idHisPerso}`,
-    id: 'id',
-  });
 
 export const createTramiteAdapter = (idexpediente: number | string): any =>
   new jqx.dataAdapter({

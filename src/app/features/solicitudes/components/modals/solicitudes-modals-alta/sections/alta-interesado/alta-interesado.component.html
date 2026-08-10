@@ -3,7 +3,7 @@
     <span class="soli-alta__step" aria-hidden="true">2</span>
     <div>
       <h3 id="soli-alta-interesado-title" class="soli-alta__title">Interesado</h3>
-      <p class="soli-alta__desc">Obligatorio. Introduce el documento y pulsa Buscar.</p>
+      <p class="soli-alta__desc">Campo del listado. Introduce el documento y pulsa Buscar.</p>
     </div>
   </header>
 
@@ -20,14 +20,14 @@
           required
           placeholder=" "
           autocomplete="off"
-          [class.is-invalid]="s.isDniNuevaInvalid()"
-          [attr.aria-invalid]="s.isDniNuevaInvalid() || null"
-          [attr.aria-describedby]="s.isDniNuevaInvalid() ? 'soli-alta-interesado-doc-err' : null"
+          [class.is-invalid]="s.isDniFormInvalid()"
+          [attr.aria-invalid]="s.isDniFormInvalid() || null"
+          [attr.aria-describedby]="s.isDniFormInvalid() ? 'soli-alta-interesado-doc-err' : null"
           [attr.aria-busy]="s.personaFacade.buscandoInteresado || null"
         >
         <label class="required-field" for="soli-alta-interesado-doc">Documento (DNI / CIF / NIE)</label>
       </div>
-      <div *ngIf="s.isDniNuevaInvalid()" id="soli-alta-interesado-doc-err" class="invalid-feedback d-block" role="alert">
+      <div *ngIf="s.isDniFormInvalid()" id="soli-alta-interesado-doc-err" class="invalid-feedback d-block" role="alert">
         El documento del interesado es obligatorio
       </div>
     </div>

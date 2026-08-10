@@ -18,7 +18,7 @@
           emptyMessage="No hay tareas en curso."
           [rowClass]="rowClassFor"
           (rowClick)="pulsaAccionesTarea($event.id, $event.archivo)">
-          <app-table-column header="Expediente" field="id" [sortable]="true" align="center"></app-table-column>
+          <app-table-column header="Expediente" field="id" [sortable]="true" [filterable]="true" filterType="text" align="center"></app-table-column>
           <app-table-column header="Estado" align="center">
             <ng-template>—</ng-template>
           </app-table-column>
@@ -28,9 +28,9 @@
           <app-table-column header="Procedimiento" align="center">
             <ng-template>—</ng-template>
           </app-table-column>
-          <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
+          <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
           <app-table-column header="Fecha apertura" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center"></app-table-column>
-          <app-table-column header="Fecha calculada" field="propuestaResolucion" [sortable]="true" align="center"></app-table-column>
+          <app-table-column header="Fecha calculada" field="propuestaResolucion" [sortable]="true" [filterable]="true" filterType="text" align="center"></app-table-column>
           <app-table-column header="Alerta" align="center">
             <ng-template>—</ng-template>
           </app-table-column>

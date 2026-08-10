@@ -15,8 +15,8 @@
   </div>
   <div modalBody>
     <app-data-table [items]="solicitudesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
-      <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" align="center" width="7%"></app-table-column>
-      <app-table-column header="Número" field="numero" [sortable]="true" align="center" width="7%"></app-table-column>
+      <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" [filterable]="true" filterType="text" align="center" width="7%"></app-table-column>
+      <app-table-column header="Número" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="7%"></app-table-column>
       <app-table-column header="Fecha solicitud" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="11%">
         <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
       </app-table-column>
@@ -27,8 +27,8 @@
         [sortable]="true" [filterable]="true" filterType="text" width="18%">
         <ng-template let-row>{{ row.personaEntidad?.desPerEntid }}</ng-template>
       </app-table-column>
-      <app-table-column header="N. Registro" field="ejeNumRegis" [sortable]="true" align="center" width="9%"></app-table-column>
-      <app-table-column header="Expediente" [sortValue]="expedienteSolicitudValue" [searchValue]="expedienteSolicitudValue" [sortable]="true" align="center" width="9%">
+      <app-table-column header="N. Registro" field="ejeNumRegis" [sortable]="true" [filterable]="true" filterType="text" align="center" width="9%"></app-table-column>
+      <app-table-column header="Expediente" [sortValue]="expedienteSolicitudValue" [searchValue]="expedienteSolicitudValue" [sortable]="true" [filterable]="true" filterType="text" align="center" width="9%">
         <ng-template let-row>{{ expedienteSolicitudValue(row) || '—' }}</ng-template>
       </app-table-column>
     </app-data-table>
@@ -54,9 +54,9 @@
   </div>
   <div modalBody>
     <app-data-table [items]="expedientesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
-      <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" align="center" width="15%"></app-table-column>
-      <app-table-column header="Número" field="numero" [sortable]="true" align="center" width="15%"></app-table-column>
-      <app-table-column header="Título" field="titulo" [sortable]="true"></app-table-column>
+      <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" [filterable]="true" filterType="text" align="center" width="15%"></app-table-column>
+      <app-table-column header="Número" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="15%"></app-table-column>
+      <app-table-column header="Título" field="titulo" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
       <app-table-column header="Estado" field="estado" [sortable]="true" [filterable]="true" align="center" width="15%"></app-table-column>
       <app-table-column header="Fecha inicio" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="14%">
         <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
@@ -73,6 +73,7 @@
   titleId="modalTareasPendientesLabel"
   modalClass="dashboard-grid-modal"
   dialogClass="modal-xl modal-dialog-centered dashboard-grid-modal__dialog"
+  dialogMaxWidth="94vw"
   contentClass="dashboard-grid-modal__content"
   headerClass="dashboard-grid-modal__header"
   bodyClass="dashboard-grid-modal__body"
@@ -84,18 +85,18 @@
   </div>
   <div modalBody>
     <app-data-table [items]="tareasItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
-      <app-table-column header="Ejerc. Exp." field="ejeExped" [sortable]="true" align="center" width="6%"></app-table-column>
-      <app-table-column header="Núm. Exp." field="numExped" [sortable]="true" align="center" width="6%"></app-table-column>
-      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="6%"></app-table-column>
-      <app-table-column header="Descripción Tarea" field="descripcion" [sortable]="true" width="14%"></app-table-column>
-      <app-table-column header="Descripción Trámite" field="desTramite" [sortable]="true" width="14%"></app-table-column>
+      <app-table-column header="Ejerc. Exp." field="ejeExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
+      <app-table-column header="Núm. Exp." field="numExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
+      <app-table-column header="Descripción Tarea" field="descripcion" [sortable]="true" [filterable]="true" filterType="text" width="14%"></app-table-column>
+      <app-table-column header="Descripción Trámite" field="desTramite" [sortable]="true" [filterable]="true" filterType="text" width="14%"></app-table-column>
       <app-table-column header="Fecha Tarea" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="7%">
         <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
       </app-table-column>
       <app-table-column header="F. Finalización" field="fecFin" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="7%">
         <ng-template let-row>{{ row.fecFin | date:'dd/MM/yyyy' }}</ng-template>
       </app-table-column>
-      <app-table-column header="F. Plazo" field="fecPlazo" [sortable]="true" align="center" width="6%">
+      <app-table-column header="F. Plazo" field="fecPlazo" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%">
         <ng-template let-row>{{ row.fecPlazo || 'SIN FECHA' }}</ng-template>
       </app-table-column>
       <app-table-column header="Estado" field="color" align="center" width="4%">
@@ -110,7 +111,7 @@
           <img [src]="row.archivo ? 'assets/boton_verde.png' : 'assets/boton_rojo.png'" width="16" height="16" alt="">
         </ng-template>
       </app-table-column>
-      <app-table-column header="Nom. archivo" field="nombreArchivo" [sortable]="true" align="center" width="8%"></app-table-column>
+      <app-table-column header="Nom. archivo" field="nombreArchivo" [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%"></app-table-column>
       <app-table-column header="Firmado" field="firmado" align="center" width="5%">
         <ng-template let-row>
           <img [src]="row.firmado === '1' || row.firmado === 1 ? 'assets/boton_verde.png' : 'assets/boton_rojo.png'" width="16" height="16" alt="">
@@ -144,12 +145,12 @@
   </div>
   <div modalBody>
     <app-data-table [items]="firmasPendientesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
-      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" align="center" width="8%"></app-table-column>
-      <app-table-column header="Número" field="numExped" [sortable]="true" align="center" width="8%"></app-table-column>
-      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="8%"></app-table-column>
-      <app-table-column header="Título expediente" field="titulo" [sortable]="true" width="22%"></app-table-column>
-      <app-table-column header="Descripción" field="descripcion" [sortable]="true" width="22%"></app-table-column>
-      <app-table-column header="Archivo" field="nombreArchivo" [sortable]="true" width="18%"></app-table-column>
+      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%"></app-table-column>
+      <app-table-column header="Número" field="numExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%"></app-table-column>
+      <app-table-column header="Título expediente" field="titulo" [sortable]="true" [filterable]="true" filterType="text" width="22%"></app-table-column>
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text" width="22%"></app-table-column>
+      <app-table-column header="Archivo" field="nombreArchivo" [sortable]="true" [filterable]="true" filterType="text" width="18%"></app-table-column>
       <app-table-column header="Firmante" field="firmante" [sortable]="true" [filterable]="true" align="center" width="12%"></app-table-column>
     </app-data-table>
   </div>
@@ -174,12 +175,12 @@
   </div>
   <div modalBody>
     <app-data-table [items]="firmasTercerosItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
-      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" align="center" width="8%"></app-table-column>
-      <app-table-column header="Número" field="numExped" [sortable]="true" align="center" width="8%"></app-table-column>
-      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="8%"></app-table-column>
-      <app-table-column header="Título expediente" field="titulo" [sortable]="true" width="22%"></app-table-column>
-      <app-table-column header="Descripción" field="descripcion" [sortable]="true" width="22%"></app-table-column>
-      <app-table-column header="Archivo" field="nombreArchivo" [sortable]="true" width="18%"></app-table-column>
+      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%"></app-table-column>
+      <app-table-column header="Número" field="numExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="8%"></app-table-column>
+      <app-table-column header="Título expediente" field="titulo" [sortable]="true" [filterable]="true" filterType="text" width="22%"></app-table-column>
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text" width="22%"></app-table-column>
+      <app-table-column header="Archivo" field="nombreArchivo" [sortable]="true" [filterable]="true" filterType="text" width="18%"></app-table-column>
       <app-table-column header="Firmante" field="firmante" [sortable]="true" [filterable]="true" align="center" width="12%"></app-table-column>
     </app-data-table>
   </div>
@@ -204,11 +205,11 @@
   </div>
   <div modalBody>
     <app-data-table [items]="notificacionesItems" emptyMessage="No hay registros pendientes en esta consulta." exportFileName="listado">
-      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" align="center" width="9%"></app-table-column>
-      <app-table-column header="Número" field="numExped" [sortable]="true" align="center" width="9%"></app-table-column>
-      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" align="center" width="9%"></app-table-column>
-      <app-table-column header="Título expediente" field="titulo" [sortable]="true" width="28%"></app-table-column>
-      <app-table-column header="Descripción" field="descripcion" [sortable]="true" width="38%"></app-table-column>
+      <app-table-column header="Ejercicio" field="ejeExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="9%"></app-table-column>
+      <app-table-column header="Número" field="numExped" [sortable]="true" [filterable]="true" filterType="text" align="center" width="9%"></app-table-column>
+      <app-table-column header="Nº Tarea" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="9%"></app-table-column>
+      <app-table-column header="Título expediente" field="titulo" [sortable]="true" [filterable]="true" filterType="text" width="28%"></app-table-column>
+      <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text" width="38%"></app-table-column>
     </app-data-table>
   </div>
   <div modalFooter class="dashboard-grid-modal__footer">

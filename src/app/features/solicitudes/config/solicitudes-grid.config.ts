@@ -4,7 +4,14 @@ import {
   IflowGridColumns,
   IflowGridSource,
 } from '../../../shared/components/iflow-grid/iflow-grid.types';
+import { escapeGridHtml, formatIsoDateDdMmYyyy } from '../../../shared/components/iflow-grid/iflow-grid-cell.util';
 import { SolicitudListar } from '../models';
+
+export {
+  buildRepresentanteGridColumns as buildColumnsListRepre,
+  createRepresentanteGridAdapter as createRepresentantesAdapter,
+  createRepresentanteGridSourcePlain as createRepresentantesSourcePlain,
+} from '../../../shared/components/iflow-grid/iflow-grid-representante.config';
 
 export interface SolicitudesGridRenderContext {
   ejercicioSolicitud?: string;
@@ -42,14 +49,7 @@ const cellCenter = (value: string): string =>
   `<div style="text-align:center; margin-top:8px; padding:0 4px;">${value ?? ''}</div>`;
 
 const cellLeft = (value: string): string =>
-  `<div style="text-align:left; margin-top:8px; padding-left:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escapeHtml(value ?? '')}">${value ?? ''}</div>`;
-
-const escapeHtml = (value: string): string =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  `<div style="text-align:left; margin-top:8px; padding-left:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escapeGridHtml(value ?? '')}">${value ?? ''}</div>`;
 
 const resolveDatafield = (column: string | { datafield?: string }): string =>
   typeof column === 'string' ? column : (column?.datafield ?? '');
@@ -109,26 +109,10 @@ export const createSolicitudesGridRenderers = (
     return cellCenter(`${value.ejercicio}/${value.numero}`);
   },
   cellsrendererAnidadoEstado: (_row, _column, value) => cellCenter(value?.estado ?? ''),
-  cellsrendererFechaSolici: (_row, _column, value) => {
-    if (!value) {
-      return cellCenter('—');
-    }
-    const anio = value.substring(0, 4);
-    const mes = value.substring(5, 7);
-    const dia = value.substring(8, 10);
-    return cellCenter(`${dia}/${mes}/${anio}`);
-  },
+  cellsrendererFechaSolici: (_row, _column, value) => cellCenter(formatIsoDateDdMmYyyy(value, '—')),
   cellsrendererListDoc: (_row, _column, value) => cellCenter(String(value)),
   cellsrendererDescargaDoc: (_row, _column, value) => cellCenter(String(value)),
-  cellsrendererListDocFecha: (_row, _column, value) => {
-    if (!value) {
-      return cellCenter('');
-    }
-    const anio = value.substring(0, 4);
-    const mes = value.substring(5, 7);
-    const dia = value.substring(8, 10);
-    return cellCenter(`${dia}/${mes}/${anio}`);
-  },
+  cellsrendererListDocFecha: (_row, _column, value) => cellCenter(formatIsoDateDdMmYyyy(value)),
   columnseleccion: GridRadioSelector.createRadioRenderer('Solicitudes', 'Selecciona Solicitud'),
   columnseleccionDoc: GridRadioSelector.createRadioRenderer('Documentos', 'Selecciona Documento'),
 });
@@ -176,14 +160,6 @@ const EXPEDIENTES_DATA_FIELDS = [
   { name: 'estado', type: 'any' },
 ];
 
-const REPRESENTANTES_DATA_FIELDS = [
-  { name: 'id', type: 'any' },
-  { name: 'idPerso', type: 'any' },
-  { name: 'idHisPerso', type: 'any' },
-  { name: 'desPerEntid', type: 'any' },
-  { name: 'dirPosta', type: 'any' },
-];
-
 const buildSolicitudTailColumns = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
   { text: 'Representante', datafield: 'nomRepre', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
   { text: 'idRepre', datafield: 'idRepre', cellsrenderer: renderers.cellsrendererinteresado, renderer: renderers.columnrenderer, hidden: true },
@@ -226,15 +202,6 @@ export const buildColumnsListExpe = (renderers: SolicitudesGridRenderers): Iflow
   { text: 'Estado', datafield: 'estado', cellsrenderer: renderers.cellsrenderer, renderer: renderers.columnrenderer },
 ];
 
-export const buildColumnsListRepre = (renderers: SolicitudesGridRenderers): IflowGridColumns => [
-  { text: 'id', datafield: 'id', width: '1%', hidden: true },
-  { text: 'idPerso', datafield: 'idPerso', width: '1%', hidden: true },
-  { text: 'idHisPerso', datafield: 'idHisPerso', width: '1%', hidden: true },
-  { text: '', datafield: '', width: '1%', cellsrenderer: renderers.columnseleccion, renderer: renderers.columnrenderer },
-  { text: 'Nombre', datafield: 'desPerEntid', cellsrenderer: renderers.cellsrendererRepre, renderer: renderers.columnrenderer },
-  { text: 'Dirección', datafield: 'dirPosta', cellsrenderer: renderers.cellsrendererRepre, renderer: renderers.columnrenderer },
-];
-
 export const createDocumentosAdapter = (idsolicitud: number | string): IflowGridSource =>
   new jqx.dataAdapter({
     dataType: 'json',
@@ -262,31 +229,6 @@ export const createExpedientesSourcePlain = (idexpedienteAsoc: number | string):
   dataType: 'json',
   dataFields: EXPEDIENTES_DATA_FIELDS,
   url: `${environment.apiUrl}expediente/ver/${idexpedienteAsoc}`,
-  id: 'id',
-});
-
-export const createRepresentantesAdapter = (
-  idPerso: number | string,
-  idHisPerso: number | string,
-  withSort = false,
-): IflowGridSource => {
-  const config = {
-    dataType: 'json',
-    dataFields: REPRESENTANTES_DATA_FIELDS,
-    url: `${environment.apiUrl}personaRepresentante/listar/${idPerso}/${idHisPerso}`,
-    id: 'id',
-    ...(withSort ? { sortcolumn: 'id', sortdirection: 'desc' } : {}),
-  };
-  return new jqx.dataAdapter(config);
-};
-
-export const createRepresentantesSourcePlain = (
-  idPerso: number | string,
-  idHisPerso: number | string,
-): Record<string, unknown> => ({
-  dataType: 'json',
-  dataFields: REPRESENTANTES_DATA_FIELDS,
-  url: `${environment.apiUrl}personaRepresentante/listar/${idPerso}/${idHisPerso}`,
   id: 'id',
 });
 

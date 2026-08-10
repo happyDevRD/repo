@@ -41,8 +41,8 @@
   user-select: none;
 }
 
-#formNuevaSolicitud .was-validated .form-control:invalid,
-#formNuevaSolicitud .was-validated .form-select:invalid {
+#formSolicitud .was-validated .form-control:invalid,
+#formSolicitud .was-validated .form-select:invalid {
   border-color: #dc3545;
   outline: 2px solid rgba(220, 53, 69, 0.22);
   outline-offset: 0;

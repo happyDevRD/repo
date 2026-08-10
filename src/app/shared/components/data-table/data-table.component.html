@@ -1,6 +1,12 @@
 <div class="data-table">
   <div class="data-table__toolbar" *ngIf="filterableColumns.length || availableExportFormats.length">
     <div class="data-table__toolbar-start">
+      <button *ngIf="filterableColumns.length" type="button" class="data-table__toggle-filters"
+        [class.data-table__toggle-filters--active]="filtersVisible"
+        [attr.aria-expanded]="filtersVisible" aria-label="Mostrar u ocultar los filtros"
+        title="Mostrar u ocultar los filtros" (click)="toggleFiltersVisible()">
+        <i class="bi bi-funnel" aria-hidden="true"></i>
+      </button>
       <button *ngIf="hasActiveFilters" type="button" class="data-table__clear-filters" (click)="clearAllFilters()">
         <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar filtros
       </button>
@@ -50,24 +56,18 @@
       <thead>
         <tr>
           <th *ngFor="let col of columns" [style.width]="col.width || null"
-            class="data-table__filter-cell"
             [class.text-center]="col.align === 'center'" [class.text-end]="col.align === 'end'">
-            <div class="data-table__th-content">
-              <button *ngIf="col.sortable" type="button" class="data-table__sort-btn" (click)="toggleSort(col)">
-                {{ col.header }}
-                <i class="bi" [class]="sortIcon(col)" aria-hidden="true"></i>
-              </button>
-              <span *ngIf="!col.sortable">{{ col.header }}</span>
-
-              <button *ngIf="col.filterable" type="button" class="data-table__filter-icon-btn"
-                [class.data-table__filter-icon-btn--active]="isFilterActive(col)"
-                [attr.aria-label]="'Filtrar por ' + col.header" [attr.aria-expanded]="openFilterColumn === col"
-                (click)="toggleColumnFilter(col)">
-                <i class="bi bi-funnel-fill" aria-hidden="true"></i>
-              </button>
-            </div>
-
-            <div class="data-table__filter-popover" *ngIf="openFilterColumn === col" (keydown.escape)="openFilterColumn = null">
+            <button *ngIf="col.sortable" type="button" class="data-table__sort-btn" (click)="toggleSort(col)">
+              {{ col.header }}
+              <i class="bi" [class]="sortIcon(col)" aria-hidden="true"></i>
+            </button>
+            <span *ngIf="!col.sortable">{{ col.header }}</span>
+          </th>
+        </tr>
+        <tr *ngIf="filterableColumns.length && filtersVisible" class="data-table__filter-row">
+          <th *ngFor="let col of columns" [style.width]="col.width || null"
+            [class.text-center]="col.align === 'center'" [class.text-end]="col.align === 'end'">
+            <ng-container *ngIf="col.filterable">
               <!-- select / boolean: un único desplegable -->
               <select *ngIf="col.filterType === 'select' || col.filterType === 'boolean'"
                 class="form-select form-select-sm" [attr.aria-label]="'Filtrar por ' + col.header"
@@ -81,35 +81,22 @@
                 placeholder="Filtrar…" [attr.aria-label]="'Filtrar por ' + col.header" [ngModel]="getSimpleFilterValue(col)"
                 (ngModelChange)="setSimpleFilter(col, $event)">
 
-              <!-- rango de fechas: desde/hasta -->
+              <!-- rango de fechas: desde/hasta, uno junto al otro para no crecer la fila -->
               <div *ngIf="col.filterType === 'dateRange'" class="data-table__filter-range">
-                <label>Desde
-                  <input type="date" class="form-control form-control-sm"
-                    [ngModel]="getRangeFilter(col).from ?? ''" (ngModelChange)="setRangeFilter(col, 'from', $event)">
-                </label>
-                <label>Hasta
-                  <input type="date" class="form-control form-control-sm"
-                    [ngModel]="getRangeFilter(col).to ?? ''" (ngModelChange)="setRangeFilter(col, 'to', $event)">
-                </label>
+                <input type="date" class="form-control form-control-sm" [attr.aria-label]="'Filtrar ' + col.header + ' desde'"
+                  [ngModel]="getRangeFilter(col).from ?? ''" (ngModelChange)="setRangeFilter(col, 'from', $event)">
+                <input type="date" class="form-control form-control-sm" [attr.aria-label]="'Filtrar ' + col.header + ' hasta'"
+                  [ngModel]="getRangeFilter(col).to ?? ''" (ngModelChange)="setRangeFilter(col, 'to', $event)">
               </div>
 
               <!-- rango numérico: mínimo/máximo -->
               <div *ngIf="col.filterType === 'numberRange'" class="data-table__filter-range">
-                <label>Mínimo
-                  <input type="number" class="form-control form-control-sm"
-                    [ngModel]="getRangeFilter(col).from ?? ''" (ngModelChange)="setRangeFilter(col, 'from', $event)">
-                </label>
-                <label>Máximo
-                  <input type="number" class="form-control form-control-sm"
-                    [ngModel]="getRangeFilter(col).to ?? ''" (ngModelChange)="setRangeFilter(col, 'to', $event)">
-                </label>
+                <input type="number" class="form-control form-control-sm" [attr.aria-label]="'Filtrar ' + col.header + ' mínimo'"
+                  [ngModel]="getRangeFilter(col).from ?? ''" (ngModelChange)="setRangeFilter(col, 'from', $event)">
+                <input type="number" class="form-control form-control-sm" [attr.aria-label]="'Filtrar ' + col.header + ' máximo'"
+                  [ngModel]="getRangeFilter(col).to ?? ''" (ngModelChange)="setRangeFilter(col, 'to', $event)">
               </div>
-
-              <button *ngIf="isFilterActive(col)" type="button" class="data-table__filter-popover-clear"
-                (click)="clearFilter(col)">
-                <i class="bi bi-x-circle" aria-hidden="true"></i> Limpiar
-              </button>
-            </div>
+            </ng-container>
           </th>
         </tr>
       </thead>
@@ -123,7 +110,7 @@
             <ng-container *ngIf="col.template; else plainCell"
               [ngTemplateOutlet]="col.template" [ngTemplateOutletContext]="{ $implicit: row, row: row }">
             </ng-container>
-            <ng-template #plainCell>{{ displayValue(row, col.field) }}</ng-template>
+            <ng-template #plainCell><span class="data-table__cell-text">{{ displayValue(row, col.field) }}</span></ng-template>
           </td>
         </tr>
         <tr *ngIf="filteredItems.length === 0">
@@ -139,13 +126,15 @@
     <div class="data-table__page-size">
       <label for="dataTablePageSize">Mostrar</label>
       <select id="dataTablePageSize" class="form-select form-select-sm" [ngModel]="pageSize"
-        (ngModelChange)="setPageSize($event)">
+        (ngModelChange)="setPageSize($event)" aria-label="Registros por página">
         <option *ngFor="let size of pageSizeOptions" [ngValue]="size">{{ size }}</option>
       </select>
       <span>por página</span>
     </div>
 
-    <div class="data-table__pager" *ngIf="totalPages > 1">
+    <span class="data-table__page-range">{{ pageRangeLabel }}</span>
+
+    <div class="data-table__pager">
       <button type="button" class="data-table__pager-btn" [disabled]="currentPage === 1"
         (click)="goToPage(currentPage - 1)" aria-label="Página anterior">
         <i class="bi bi-chevron-left" aria-hidden="true"></i>

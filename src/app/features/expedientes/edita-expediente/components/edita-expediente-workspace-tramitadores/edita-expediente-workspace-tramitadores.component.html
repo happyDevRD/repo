@@ -2,12 +2,11 @@
 <div *ngIf="visible">
   <app-data-table [items]="tramitadores" [loading]="cargando"
     emptyMessage="No hay tramitadores asignados."
-    searchPlaceholder="Buscar…"
     exportFileName="tramitadores"
     [rowClass]="rowClassFor"
     (rowClick)="rowClick.emit($event)"
     (rowDblClick)="rowDoubleClick.emit($event)">
-    <app-table-column header="Usuario" field="usuario" [sortable]="true" align="center"></app-table-column>
+    <app-table-column header="Usuario" field="usuario" [sortable]="true" [filterable]="true" filterType="text" align="center"></app-table-column>
     <app-table-column header="Fecha asignación" field="fecAsignacion" [sortable]="true" [filterable]="true" filterType="dateRange" align="center">
       <ng-template let-row>{{ row.fecAsignacion | date:'dd/MM/yyyy' }}</ng-template>
     </app-table-column>

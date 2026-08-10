@@ -1,24 +1,26 @@
 <app-modal-shell
   modalId="nsolicitudModal"
-  title="Nueva Solicitud"
+  [title]="s.formTitle"
   titleId="nsolicitudModalLabel"
   modalClass="iflow-modal iflow-modal--fixed soli-alta-modal"
   dialogClass="modal-xl"
   [dismissOnClose]="false"
-  closeAriaLabel="Cerrar Nueva Solicitud"
+  [closeAriaLabel]="'Cerrar ' + s.formTitle"
   (closed)="handleCerrar()"
 >
   <form
     modalBody
-    id="formNuevaSolicitud"
+    id="formSolicitud"
     class="soli-alta"
     novalidate
     (ngSubmit)="handleSubmit($event)"
     aria-describedby="nsolicitudModalLabel"
   >
-    <app-solicitudes-alta-datos></app-solicitudes-alta-datos>
-    <app-solicitudes-alta-interesado></app-solicitudes-alta-interesado>
-    <app-solicitudes-alta-representante></app-solicitudes-alta-representante>
+    <fieldset class="soli-alta__fieldset" [disabled]="s.formReadonly">
+      <app-solicitudes-alta-datos></app-solicitudes-alta-datos>
+      <app-solicitudes-alta-interesado></app-solicitudes-alta-interesado>
+      <app-solicitudes-alta-representante></app-solicitudes-alta-representante>
+    </fieldset>
   </form>
 
   <div modalFooter class="modal-footer__actions">
@@ -27,12 +29,13 @@
       class="btn-iflow modal-footer__btn btn-iflow--secondary"
       (click)="handleCerrar()"
     >
-      Cancelar
+      {{ s.formReadonly ? 'Cerrar' : 'Cancelar' }}
     </button>
     <button
+      *ngIf="!s.formReadonly"
       type="submit"
       class="btn-iflow modal-footer__btn btn-iflow--primary"
-      form="formNuevaSolicitud"
+      form="formSolicitud"
     >
       Guardar
     </button>

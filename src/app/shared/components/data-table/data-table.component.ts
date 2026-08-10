@@ -8,11 +8,15 @@ import {
   Output,
   QueryList,
   SimpleChanges,
+  inject,
 } from '@angular/core'
 import { TableColumnComponent } from './table-column.component'
+import { DataTableExportService, ExportFormat } from './data-table-export.service'
+import { getFieldValue } from './data-table.utils'
+
+export type { ExportFormat }
 
 type SortDirection = 'asc' | 'desc' | null
-export type ExportFormat = 'excel' | 'csv' | 'pdf'
 
 interface RangeFilterValue {
   from?: string
@@ -43,16 +47,14 @@ const EXPORT_FORMAT_META: Record<ExportFormat, { label: string; icon: string }> 
   styleUrls: ['./data-table.component.css'],
 })
 export class DataTableComponent<T = any> implements OnChanges {
+  private readonly exportService = inject(DataTableExportService)
+
   @Input() items: T[] = []
   @Input() loading = false
   @Input() emptyMessage = 'No hay resultados.'
-  /** @deprecated Sustituido por el filtro por icono en cada columna; ya no dibuja nada, se mantiene para no romper bindings existentes. */
-  @Input() searchPlaceholder = 'Buscar…'
-  /** @deprecated Ver `searchPlaceholder`. */
-  @Input() showSearch = true
   @Input() showPagination = true
-  @Input() pageSize = 10
-  @Input() pageSizeOptions = [10, 25, 50]
+  @Input() pageSize = 20
+  @Input() pageSizeOptions = [10, 20, 50, 100]
   @Input() rowClass: (row: T) => Record<string, boolean> = () => ({})
   @Input() trackByField = 'id'
   @Input() exportFileName = 'tabla'
@@ -74,17 +76,13 @@ export class DataTableComponent<T = any> implements OnChanges {
   sortColumn: TableColumnComponent<T> | null = null
   sortDirection: SortDirection = null
   exportMenuOpen = false
-  /** Columna cuyo popover de filtro está abierto (estilo Excel: un icono por columna, un filtro a la vez). */
-  openFilterColumn: TableColumnComponent<T> | null = null
+  filtersVisible = true
   readonly activeFilters = new Map<TableColumnComponent<T>, FilterValue>()
 
   @HostListener('document:click', ['$event.target'])
   onDocumentClick(target: HTMLElement): void {
     if (this.exportMenuOpen && !target.closest('.data-table__export')) {
       this.exportMenuOpen = false
-    }
-    if (this.openFilterColumn && !target.closest('.data-table__filter-cell')) {
-      this.openFilterColumn = null
     }
   }
 
@@ -190,28 +188,24 @@ export class DataTableComponent<T = any> implements OnChanges {
     this.currentPage = 1
   }
 
-  clearFilter(column: TableColumnComponent<T>): void {
-    this.activeFilters.delete(column)
-    this.currentPage = 1
-  }
-
   clearAllFilters(): void {
     this.activeFilters.clear()
     this.currentPage = 1
   }
 
-  /** Icono de filtro "activo" (estilo Excel) cuando la columna tiene un filtro aplicado. */
-  isFilterActive(column: TableColumnComponent<T>): boolean {
-    const value = this.activeFilters.get(column)
-    return value !== undefined && this.isFilterValueSet(value)
-  }
-
-  toggleColumnFilter(column: TableColumnComponent<T>): void {
-    this.openFilterColumn = this.openFilterColumn === column ? null : column
-  }
-
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.filteredItems.length / this.pageSize))
+  }
+
+  get pageRangeLabel(): string {
+    const total = this.filteredItems.length
+    if (total === 0) {
+      return '0 registros'
+    }
+    const page = Math.min(this.currentPage, this.totalPages)
+    const start = (page - 1) * this.pageSize + 1
+    const end = Math.min(page * this.pageSize, total)
+    return `${start}–${end} de ${total}`
   }
 
   get pagedItems(): T[] {
@@ -267,29 +261,21 @@ export class DataTableComponent<T = any> implements OnChanges {
     }
   }
 
-  getFieldValue(row: T, field?: string): unknown {
-    if (!field) {
-      return undefined
-    }
-    return field.split('.').reduce<unknown>((acc, key) => {
-      if (acc == null) {
-        return acc
-      }
-      return (acc as Record<string, unknown>)[key]
-    }, row)
-  }
-
   trackByRow = (index: number, row: T): unknown => {
-    return this.getFieldValue(row, this.trackByField) ?? index
+    return getFieldValue(row, this.trackByField) ?? index
   }
 
   displayValue(row: T, field?: string): string {
-    const value = this.getFieldValue(row, field)
+    const value = getFieldValue(row, field)
     return value === null || value === undefined || value === '' ? '—' : String(value)
   }
 
   toggleExportMenu(): void {
     this.exportMenuOpen = !this.exportMenuOpen
+  }
+
+  toggleFiltersVisible(): void {
+    this.filtersVisible = !this.filtersVisible
   }
 
   closeExportMenu(): void {
@@ -298,151 +284,29 @@ export class DataTableComponent<T = any> implements OnChanges {
 
   runExport(format: ExportFormat): void {
     this.closeExportMenu()
-    if (format === 'excel') {
-      this.exportToExcel()
-    } else if (format === 'csv') {
-      this.exportToCsv()
-    } else {
-      this.exportToPdf()
-    }
-  }
-
-  /**
-   * Exporta las filas visibles (con la búsqueda/filtros/orden actuales
-   * aplicados, sin paginar) a un archivo abrible directamente en Excel.
-   * Se genera como una tabla HTML servida con el tipo MIME de Excel — no
-   * requiere ninguna librería nueva y Excel la abre nativamente.
-   */
-  exportToExcel(): void {
-    const columns = this.exportableColumns
-    const headerCells = columns.map((col) => `<th>${this.escapeHtml(col.header)}</th>`).join('')
-    const bodyRows = this.filteredItems
-      .map((row) => {
-        const cells = columns.map((col) => `<td>${this.escapeHtml(this.exportValueFor(row, col))}</td>`).join('')
-        return `<tr>${cells}</tr>`
-      })
-      .join('')
-
-    const html =
-      '<html><head><meta charset="UTF-8"></head><body><table border="1">' +
-      `<thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody>` +
-      '</table></body></html>'
-
-    // BOM (﻿) para que Excel detecte UTF-8 y no rompa los acentos.
-    this.downloadBlob(['﻿' + html], 'application/vnd.ms-excel', `${this.exportFileName}.xls`)
-  }
-
-  /** Exporta a CSV plano (separado por `;`, más cómodo que `,` para Excel en configuración regional española). */
-  exportToCsv(): void {
-    const columns = this.exportableColumns
-    const escapeCsv = (value: string): string => {
-      const needsQuotes = /[";\n]/.test(value)
-      const escaped = value.replace(/"/g, '""')
-      return needsQuotes ? `"${escaped}"` : escaped
-    }
-
-    const headerRow = columns.map((col) => escapeCsv(col.header)).join(';')
-    const bodyRows = this.filteredItems
-      .map((row) => columns.map((col) => escapeCsv(this.exportValueFor(row, col))).join(';'))
-      .join('\r\n')
-
-    const csv = `${headerRow}\r\n${bodyRows}`
-    // BOM para que Excel detecte UTF-8 y no rompa los acentos al abrir el CSV.
-    this.downloadBlob(['﻿' + csv], 'text/csv;charset=utf-8', `${this.exportFileName}.csv`)
-  }
-
-  /**
-   * Exporta a PDF vía el diálogo de impresión del navegador (destino "Guardar
-   * como PDF") — evita sumar una librería de generación de PDF solo para
-   * esto. Abre una ventana con una tabla formateada para impresión y dispara
-   * el diálogo automáticamente.
-   */
-  exportToPdf(): void {
-    const columns = this.exportableColumns
-    const headerCells = columns.map((col) => `<th>${this.escapeHtml(col.header)}</th>`).join('')
-    const bodyRows = this.filteredItems
-      .map((row) => {
-        const cells = columns.map((col) => `<td>${this.escapeHtml(this.exportValueFor(row, col))}</td>`).join('')
-        return `<tr>${cells}</tr>`
-      })
-      .join('')
-
-    const printWindow = window.open('', '_blank')
-    if (!printWindow) {
-      return
-    }
-
-    printWindow.document.write(`<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>${this.escapeHtml(this.exportFileName)}</title>
-<style>
-  body { font-family: Arial, Helvetica, sans-serif; color: #2c3e50; margin: 24px; }
-  h1 { font-size: 16px; margin-bottom: 12px; }
-  table { width: 100%; border-collapse: collapse; font-size: 11px; }
-  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; }
-  th { background: #f1f2fb; text-transform: uppercase; letter-spacing: 0.03em; }
-  tr:nth-child(even) td { background: #fafafa; }
-</style>
-</head>
-<body>
-<h1>${this.escapeHtml(this.exportFileName)} — ${this.filteredItems.length} registro(s)</h1>
-<table><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>
-</body>
-</html>`)
-    printWindow.document.close()
-    printWindow.focus()
-    printWindow.onload = () => printWindow.print()
-    // Fallback por si el navegador no dispara onload en una ventana ya escrita a mano.
-    setTimeout(() => printWindow.print(), 300)
-  }
-
-  private downloadBlob(parts: BlobPart[], type: string, fileName: string): void {
-    const blob = new Blob(parts, { type })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = fileName
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    this.exportService.export(format, {
+      columns: this.exportableColumns,
+      rows: this.filteredItems,
+      fileName: this.exportFileName,
+    })
   }
 
   private get exportableColumns(): TableColumnComponent<T>[] {
     return this.columns.filter((col) => col.exportable)
   }
 
-  private exportValueFor(row: T, column: TableColumnComponent<T>): string {
-    if (column.exportValue) {
-      const value = column.exportValue(row)
-      return value == null ? '' : String(value)
-    }
-    if (!column.template) {
-      const value = this.getFieldValue(row, column.field)
-      return value == null || value === '' ? '' : String(value)
-    }
-    // Columna con plantilla propia (badges, etc.): mejor aproximación en texto plano.
-    return this.searchTextFor(row, column)
-  }
-
-  private escapeHtml(value: string): string {
-    return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  }
-
   private searchTextFor(row: T, column: TableColumnComponent<T>): string {
-    const value = column.searchValue ? column.searchValue(row) : this.getFieldValue(row, column.field)
+    const value = column.searchValue ? column.searchValue(row) : getFieldValue(row, column.field)
     return value == null ? '' : String(value)
   }
 
   private sortValueFor(row: T, column: TableColumnComponent<T>): string | number | null | undefined {
-    return column.sortValue ? column.sortValue(row) : (this.getFieldValue(row, column.field) as string | number | null | undefined)
+    return column.sortValue ? column.sortValue(row) : (getFieldValue(row, column.field) as string | number | null | undefined)
   }
 
   /** Valor "crudo" de la fila para comparar en filtros de rango; usa `sortValue` si existe (suele ser el más cercano a un tipo comparable), si no `field`. */
   private rangeValueFor(row: T, column: TableColumnComponent<T>): unknown {
-    return column.sortValue ? column.sortValue(row) : this.getFieldValue(row, column.field)
+    return column.sortValue ? column.sortValue(row) : getFieldValue(row, column.field)
   }
 
   private matchesFilter(row: T, column: TableColumnComponent<T>, value: FilterValue): boolean {

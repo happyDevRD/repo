@@ -3,32 +3,28 @@
     <span class="soli-alta__step" aria-hidden="true">1</span>
     <div>
       <h3 id="soli-alta-datos-title" class="soli-alta__title">Solicitud</h3>
-      <p class="soli-alta__desc">Datos principales y asignación.</p>
+      <p class="soli-alta__desc">Nº, Fecha, Asunto, Estado, Instructor y Expediente.</p>
     </div>
   </header>
 
   <div class="row g-3">
-    <div class="col-12">
+    <div class="col-md-2">
       <div class="form-floating">
         <input
           type="text"
           class="form-control"
-          id="soli-alta-asunto"
-          name="asunto"
-          [(ngModel)]="s.creasolicitud.asunto"
-          required
+          id="soli-alta-numero"
+          name="numeroSolicitud"
+          [value]="numeroSolicitudPreview"
+          disabled
           placeholder=" "
-          [class.is-invalid]="s.isAsuntoNuevaInvalid()"
-          [attr.aria-invalid]="s.isAsuntoNuevaInvalid() || null"
-          [attr.aria-describedby]="s.isAsuntoNuevaInvalid() ? 'soli-alta-asunto-err' : null"
+          tabindex="-1"
         >
-        <label class="required-field" for="soli-alta-asunto">Asunto</label>
-      </div>
-      <div *ngIf="s.isAsuntoNuevaInvalid()" id="soli-alta-asunto-err" class="invalid-feedback d-block" role="alert">
-        El asunto es obligatorio
+        <label for="soli-alta-numero">Nº</label>
       </div>
     </div>
-    <div class="col-md-2">
+
+    <div class="col-md-3">
       <div class="form-floating">
         <input
           class="form-control"
@@ -39,40 +35,93 @@
           [(ngModel)]="s.creasolicitud.fecInicio"
           required
           placeholder=" "
-          [class.is-invalid]="s.isFechaNuevaInvalid()"
-          [attr.aria-invalid]="s.isFechaNuevaInvalid() || null"
-          [attr.aria-describedby]="s.isFechaNuevaInvalid() ? 'soli-alta-fecha-err' : null"
+          [disabled]="s.formReadonly"
+          [class.is-invalid]="s.isFechaFormInvalid()"
+          [attr.aria-invalid]="s.isFechaFormInvalid() || null"
+          [attr.aria-describedby]="s.isFechaFormInvalid() ? 'soli-alta-fecha-err' : null"
         >
         <label class="required-field" for="soli-alta-fecha">Fecha</label>
       </div>
-      <div *ngIf="s.isFechaNuevaInvalid()" id="soli-alta-fecha-err" class="invalid-feedback d-block" role="alert">
+      <div *ngIf="s.isFechaFormInvalid()" id="soli-alta-fecha-err" class="invalid-feedback d-block" role="alert">
         La fecha es obligatoria
       </div>
     </div>
+
+    <div class="col-md-3">
+      <div class="form-floating">
+        <select
+          class="form-select"
+          id="soli-alta-estado"
+          name="estado"
+          [(ngModel)]="s.creasolicitud.estado"
+          disabled
+          tabindex="-1"
+        >
+          <option value="PENDIENTE">Pendiente</option>
+          <option value="ACEPTADA">Aceptada</option>
+          <option value="RECHAZADA">Rechazada</option>
+        </select>
+        <label for="soli-alta-estado">Estado</label>
+      </div>
+    </div>
+
     <div class="col-md-4">
       <div class="form-floating">
         <select
           class="form-select"
-          id="soli-alta-asignado"
-          name="asignado"
+          id="soli-alta-instructor"
+          name="instructor"
           [(ngModel)]="s.creasolicitud.usuario"
-          required
+          [disabled]="s.formReadonly"
           [class.form-select--placeholder]="!s.creasolicitud.usuario"
-          [class.is-invalid]="s.isAsignadoNuevaInvalid()"
-          [attr.aria-invalid]="s.isAsignadoNuevaInvalid() || null"
-          [attr.aria-describedby]="s.isAsignadoNuevaInvalid() ? 'soli-alta-asignado-err' : null"
         >
-          <option [ngValue]="''" disabled>Selecciona un usuario</option>
+          <option [ngValue]="''">Sin instructor</option>
           <option *ngFor="let procedipermisos of s.procedipermiso; trackBy: trackByUsuario"
             [ngValue]="procedipermisos.usuario">{{ procedipermisos.usuario }}</option>
         </select>
-        <label class="required-field" for="soli-alta-asignado">Asignado a</label>
-      </div>
-      <div *ngIf="s.isAsignadoNuevaInvalid()" id="soli-alta-asignado-err" class="invalid-feedback d-block" role="alert">
-        Debe seleccionar un usuario asignado
+        <label for="soli-alta-instructor">Instructor</label>
       </div>
     </div>
-    <div class="col-md-6">
+
+    <div class="col-12">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control"
+          id="soli-alta-asunto"
+          name="asunto"
+          [(ngModel)]="s.creasolicitud.asunto"
+          required
+          placeholder=" "
+          [disabled]="s.formReadonly"
+          [class.is-invalid]="s.isAsuntoFormInvalid()"
+          [attr.aria-invalid]="s.isAsuntoFormInvalid() || null"
+          [attr.aria-describedby]="s.isAsuntoFormInvalid() ? 'soli-alta-asunto-err' : null"
+        >
+        <label class="required-field" for="soli-alta-asunto">Asunto</label>
+      </div>
+      <div *ngIf="s.isAsuntoFormInvalid()" id="soli-alta-asunto-err" class="invalid-feedback d-block" role="alert">
+        El asunto es obligatorio
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control"
+          id="soli-alta-expediente"
+          name="expediente"
+          [value]="expedientePreview"
+          disabled
+          placeholder=" "
+          tabindex="-1"
+        >
+        <label for="soli-alta-expediente">Expediente</label>
+      </div>
+    </div>
+
+    <div class="col-md-8">
       <div class="form-floating">
         <input
           type="text"

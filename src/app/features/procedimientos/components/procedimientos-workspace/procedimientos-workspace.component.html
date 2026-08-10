@@ -1,280 +1,294 @@
-<div class="page-panel procedimientos-page">
-     <header class="procedimientos-header">
-          <div class="procedimientos-header__text">
-               <p class="procedimientos-header__eyebrow">Detalle del procedimiento</p>
-               <h2 class="procedimientos-header__title">{{ p.descripProcedimiento }}</h2>
-               <p class="procedimientos-header__dept" *ngIf="p.siglas">
-                    <span class="proc-badge">{{ p.siglas }}</span>
-                    <span class="proc-header-meta">SIA {{ p.siaProcedimiento }}</span>
-               </p>
+<div class="page-panel procedimientos-page procedimientos-page--workspace">
+  <header class="proc-detail-header">
+    <div class="proc-detail-header__main">
+      <div class="proc-detail-header__nav">
+        <app-back-button [fallbackRoute]="'/procedimientos'"></app-back-button>
+        <p class="procedimientos-header__eyebrow">Detalle del procedimiento</p>
+      </div>
+      <h2 class="proc-detail-header__title">{{ p.descripProcedimiento || '—' }}</h2>
+      <div class="proc-detail-header__meta">
+        <span class="proc-badge" *ngIf="p.siglas">{{ p.siglas }}</span>
+        <span class="proc-meta-chip" *ngIf="p.siaProcedimiento">
+          <i class="bi bi-hash" aria-hidden="true"></i>
+          SIA {{ p.siaProcedimiento }}
+        </span>
+        <span class="proc-meta-chip" *ngIf="p.departProcedimiento">
+          <i class="bi bi-building" aria-hidden="true"></i>
+          {{ p.departProcedimiento }}
+        </span>
+        <span class="proc-meta-chip">
+          <i class="bi bi-laptop" aria-hidden="true"></i>
+          {{ p.getModalidadLabel() }}
+        </span>
+        <span class="proc-meta-chip">
+          <i class="bi bi-bookmark" aria-hidden="true"></i>
+          {{ p.getMateriaLabel() }}
+        </span>
+      </div>
+    </div>
+    <div class="proc-detail-header__actions">
+      <button type="button" class="btn-iflow btn-iflow--secondary btn-iflow--sm"
+        (click)="p.abrirFormularioProcedimiento('ver')"
+        title="Ver datos del procedimiento">
+        <i class="bi bi-eye" aria-hidden="true"></i>
+        Ver
+      </button>
+      <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
+        (click)="p.abrirFormularioProcedimiento('editar')"
+        title="Editar datos del procedimiento">
+        <i class="bi bi-pencil-square" aria-hidden="true"></i>
+        Editar
+      </button>
+      <button type="button" class="btn-iflow btn-iflow--danger btn-iflow--sm"
+        (click)="p.deleteProcedimiento(p.idprocedi)">
+        <i class="bi bi-trash" aria-hidden="true"></i>
+        Eliminar
+      </button>
+    </div>
+  </header>
+
+  <section class="proc-workspace" aria-label="Secciones del procedimiento">
+    <div class="proc-tarea-context" *ngIf="p.idverTarea" role="status">
+      <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+      <span>Tarea seleccionada: <strong>{{ p.descripcionT }}</strong></span>
+      <button type="button" class="btn-iflow btn-iflow--sm btn-iflow--secondary"
+        *ngIf="p.activeWorkspaceTab !== 'permisos'" (click)="p.setWorkspaceTab('permisos')">
+        Gestionar permisos
+      </button>
+    </div>
+
+    <ul class="nav nav-tabs expediente-flujo-tabs proc-workspace-tabs" role="tablist"
+      aria-label="Secciones del procedimiento">
+      <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab"
+          [class.active]="p.activeWorkspaceTab === 'datos'"
+          [attr.aria-selected]="p.activeWorkspaceTab === 'datos'"
+          (click)="p.setWorkspaceTab('datos')">
+          <i class="bi bi-card-text" aria-hidden="true"></i>
+          Datos
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab"
+          [class.active]="p.activeWorkspaceTab === 'tareas'"
+          [attr.aria-selected]="p.activeWorkspaceTab === 'tareas'"
+          (click)="p.setWorkspaceTab('tareas')">
+          <i class="bi bi-list-task" aria-hidden="true"></i>
+          Tareas
+          <span class="proc-tab-count" *ngIf="p.tareas?.length">{{ p.tareas.length }}</span>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab"
+          [class.active]="p.activeWorkspaceTab === 'permisos'"
+          [attr.aria-selected]="p.activeWorkspaceTab === 'permisos'"
+          (click)="p.setWorkspaceTab('permisos')">
+          <i class="bi bi-shield-check" aria-hidden="true"></i>
+          Permisos
+          <span class="proc-tab-count" *ngIf="p.idverTarea && p.permisos?.length">{{ p.permisos.length }}</span>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab"
+          [class.active]="p.activeWorkspaceTab === 'atributos'"
+          [attr.aria-selected]="p.activeWorkspaceTab === 'atributos'"
+          (click)="p.setWorkspaceTab('atributos')">
+          <i class="bi bi-tags" aria-hidden="true"></i>
+          Atributos
+          <span class="proc-tab-count" *ngIf="p.atributosList?.length">{{ p.atributosList.length }}</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="proc-workspace__body">
+      <!-- Tab: Datos -->
+      <section *ngIf="p.activeWorkspaceTab === 'datos'" class="proc-panel proc-panel--datos" role="tabpanel">
+        <header class="proc-panel__head">
+          <div>
+            <h3 class="proc-panel__title">Datos generales</h3>
+            <p class="proc-panel__desc">Información principal del procedimiento. Usa Editar para modificarla.</p>
           </div>
-          <div class="proc-workspace-header__actions">
-               <app-back-button [fallbackRoute]="'/procedimientos'"></app-back-button>
-               <button type="button" class="btn-iflow btn-iflow--danger btn-iflow--sm"
-                    (click)="p.deleteProcedimiento(p.idprocedi)">
-                    <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
-               </button>
+          <div class="proc-panel__actions">
+            <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
+              (click)="p.abrirFormularioProcedimiento('editar')">
+              <i class="bi bi-pencil-square" aria-hidden="true"></i>
+              Editar datos
+            </button>
           </div>
-     </header>
+        </header>
+        <div class="proc-panel__body">
+          <dl class="proc-datos-resumen">
+            <div class="proc-datos-resumen__item proc-datos-resumen__item--full">
+              <dt>Descripción</dt>
+              <dd>{{ p.descripProcedimiento || '—' }}</dd>
+            </div>
+            <div class="proc-datos-resumen__item">
+              <dt>Departamento</dt>
+              <dd>{{ p.departProcedimiento || '—' }}</dd>
+            </div>
+            <div class="proc-datos-resumen__item">
+              <dt>Código SIA</dt>
+              <dd>{{ p.siaProcedimiento || '—' }}</dd>
+            </div>
+            <div class="proc-datos-resumen__item">
+              <dt>Siglas</dt>
+              <dd>{{ p.siglas || '—' }}</dd>
+            </div>
+            <div class="proc-datos-resumen__item">
+              <dt>Modalidad</dt>
+              <dd>{{ p.getModalidadLabel() }}</dd>
+            </div>
+            <div class="proc-datos-resumen__item">
+              <dt>Materia</dt>
+              <dd>{{ p.getMateriaLabel() }}</dd>
+            </div>
+          </dl>
 
-     <section class="proc-workspace" aria-label="Secciones del procedimiento">
-          <div class="proc-context proc-context--activo">
-               <span class="proc-context__label">Departamento</span>
-               <span class="proc-context__value">{{ p.departProcedimiento }}</span>
-               <span class="proc-context__sep" aria-hidden="true"></span>
-               <span class="proc-context__label">Modalidad</span>
-               <span class="proc-context__value">{{ p.getModalidadLabel() }}</span>
-               <span class="proc-context__sep" aria-hidden="true"></span>
-               <span class="proc-context__label">Materia</span>
-               <span class="proc-context__value">{{ p.getMateriaLabel() }}</span>
+          <div class="proc-datos-shortcuts" aria-label="Accesos a configuración">
+            <button type="button" class="proc-shortcut" (click)="p.setWorkspaceTab('tareas')">
+              <i class="bi bi-list-task" aria-hidden="true"></i>
+              <span class="proc-shortcut__label">Tareas</span>
+              <span class="proc-shortcut__value">{{ p.tareas?.length || 0 }}</span>
+            </button>
+            <button type="button" class="proc-shortcut" (click)="p.setWorkspaceTab('atributos')">
+              <i class="bi bi-tags" aria-hidden="true"></i>
+              <span class="proc-shortcut__label">Atributos</span>
+              <span class="proc-shortcut__value">{{ p.atributosList?.length || 0 }}</span>
+            </button>
+            <button type="button" class="proc-shortcut" (click)="p.setWorkspaceTab('permisos')">
+              <i class="bi bi-shield-check" aria-hidden="true"></i>
+              <span class="proc-shortcut__label">Permisos</span>
+              <span class="proc-shortcut__hint">por tarea</span>
+            </button>
           </div>
+        </div>
+      </section>
 
-          <div class="proc-tarea-context" *ngIf="p.idverTarea" role="status">
-               <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
-               <span>Tarea seleccionada: <strong>{{ p.descripcionT }}</strong></span>
-               <button type="button" class="btn-iflow btn-iflow--sm btn-iflow--secondary"
-                    *ngIf="p.activeWorkspaceTab !== 'permisos'" (click)="p.setWorkspaceTab('permisos')">
-                    Gestionar permisos
-               </button>
+      <!-- Tab: Tareas -->
+      <section *ngIf="p.activeWorkspaceTab === 'tareas'" class="proc-panel proc-panel--grid" role="tabpanel">
+        <header class="proc-panel__head">
+          <div>
+            <h3 class="proc-panel__title">Tareas</h3>
+            <p class="proc-panel__desc">Selecciona una fila para gestionar sus permisos. Doble clic para editar.</p>
           </div>
+          <div class="proc-panel__actions">
+            <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+              (click)="p.borravaloresNuevaTarea(); p.abrirModal('tareasModal')">
+              <i class="bi bi-plus-lg" aria-hidden="true"></i> Nueva tarea
+            </button>
+            <button *ngIf="p.verEliminaTarea" class="btn-iflow btn-iflow--danger btn-iflow--sm"
+              type="button" (click)="p.deleteTareaProcedimiento()">
+              <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+            </button>
+          </div>
+        </header>
+        <div class="proc-panel__body proc-panel__body--grid">
+          <app-data-table [items]="p.tareas" [loading]="p.cargandoTareas"
+            emptyMessage="Este procedimiento no tiene tareas configuradas."
+            exportFileName="tareas-procedimiento"
+            [rowClass]="tareaRowClass"
+            (rowClick)="p.envioTareaProcedi($event)" (rowDblClick)="p.onRowDoubleClick($event)">
+            <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+            <app-table-column header="Acciones" [sortValue]="accionValue" [searchValue]="accionValue"
+              [sortable]="true" [filterable]="true">
+              <ng-template let-row>{{ p.getAccionLabel(row.accion) }}</ng-template>
+            </app-table-column>
+            <app-table-column header="Fase" field="faseTarea" [sortable]="true" [filterable]="true"></app-table-column>
+            <app-table-column header="Plazo" field="plazo" [sortable]="true" [filterable]="true"
+              filterType="numberRange"></app-table-column>
+            <app-table-column header="Tipo plazo" field="tipoPlazo" [sortable]="true" [filterable]="true"></app-table-column>
+          </app-data-table>
+        </div>
+      </section>
 
-          <ul class="nav nav-tabs expediente-flujo-tabs" role="tablist" aria-label="Secciones del procedimiento">
-               <li class="nav-item" role="presentation">
-                    <button type="button" class="nav-link" role="tab" [class.active]="p.activeWorkspaceTab === 'datos'"
-                         [attr.aria-selected]="p.activeWorkspaceTab === 'datos'" (click)="p.setWorkspaceTab('datos')">
-                         <i class="bi bi-card-text" aria-hidden="true"></i> Datos
-                    </button>
-               </li>
-               <li class="nav-item" role="presentation">
-                    <button type="button" class="nav-link" role="tab"
-                         [class.active]="p.activeWorkspaceTab === 'tareas'"
-                         [attr.aria-selected]="p.activeWorkspaceTab === 'tareas'" (click)="p.setWorkspaceTab('tareas')">
-                         <i class="bi bi-list-task" aria-hidden="true"></i> Tareas
-                    </button>
-               </li>
-               <li class="nav-item" role="presentation">
-                    <button type="button" class="nav-link" role="tab"
-                         [class.active]="p.activeWorkspaceTab === 'permisos'"
-                         [attr.aria-selected]="p.activeWorkspaceTab === 'permisos'" (click)="p.setWorkspaceTab('permisos')">
-                         <i class="bi bi-shield-check" aria-hidden="true"></i> Permisos
-                         <span class="badge bg-info text-dark ms-1" *ngIf="p.idverTarea">1</span>
-                    </button>
-               </li>
-               <li class="nav-item" role="presentation">
-                    <button type="button" class="nav-link" role="tab"
-                         [class.active]="p.activeWorkspaceTab === 'atributos'"
-                         [attr.aria-selected]="p.activeWorkspaceTab === 'atributos'"
-                         (click)="p.setWorkspaceTab('atributos')">
-                         <i class="bi bi-tags" aria-hidden="true"></i> Atributos
-                    </button>
-               </li>
-          </ul>
+      <!-- Tab: Permisos -->
+      <section *ngIf="p.activeWorkspaceTab === 'permisos'" class="proc-panel proc-panel--grid" role="tabpanel">
+        <div *ngIf="!p.idverTarea" class="proc-empty-state">
+          <i class="bi bi-shield-exclamation proc-empty-state__icon" aria-hidden="true"></i>
+          <h3 class="proc-empty-state__title">Ninguna tarea seleccionada</h3>
+          <p class="proc-empty-state__text">
+            Los permisos se asignan por tarea. Ve a <strong>Tareas</strong>, selecciona una fila y vuelve aquí.
+          </p>
+          <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
+            (click)="p.setWorkspaceTab('tareas')">
+            <i class="bi bi-list-task" aria-hidden="true"></i> Ir a Tareas
+          </button>
+        </div>
+        <ng-container *ngIf="p.idverTarea">
+          <header class="proc-panel__head">
+            <div>
+              <h3 class="proc-panel__title">Permisos</h3>
+              <p class="proc-panel__desc">Tarea: <strong>{{ p.descripcionT }}</strong></p>
+            </div>
+            <div class="proc-panel__actions">
+              <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+                (click)="p.activaFormNuevoPermiso(); p.abrirModal('nuevoPermisoModal')">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo permiso
+              </button>
+              <button *ngIf="p.veoBorrarTarea" class="btn-iflow btn-iflow--danger btn-iflow--sm"
+                type="button" (click)="p.deletePermisoProcedimiento()">
+                <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+              </button>
+            </div>
+          </header>
+          <div class="proc-panel__body proc-panel__body--grid">
+            <app-data-table [items]="p.permisos" [loading]="p.cargandoPermisos"
+              emptyMessage="Esta tarea no tiene permisos asignados."
+              exportFileName="permisos-tarea"
+              [rowClass]="permisoRowClass"
+              (rowClick)="p.idpermisosPermi($event)">
+              <app-table-column header="Usuario" field="usuario" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+              <app-table-column header="Procedimiento" field="desProce" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+              <app-table-column header="Tarea" field="desTareaProce" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+            </app-data-table>
+          </div>
+        </ng-container>
+      </section>
 
-          <!-- workspace-datos -->
-          <!-- Tab: Datos -->
-          <section *ngIf="p.activeWorkspaceTab === 'datos'" class="proc-panel" role="tabpanel">
-               <header class="proc-panel__head">
-                    <div>
-                         <h3 class="proc-panel__title">Datos generales</h3>
-                         <p class="proc-panel__desc">Edita la información principal del procedimiento.</p>
-                    </div>
-               </header>
-               <div class="proc-panel__body">
-                    <form id="formEditarProcedimiento" class="form-section"
-                         (ngSubmit)="p.validateAndEditProcedimiento($event)">
-                         <div class="row g-3">
-                              <div class="col-12">
-                                   <div class="form-floating">
-                                        <textarea class="form-control" id="descripcionEdit" name="descripcion"
-                                             [(ngModel)]="p.editarprocedi.descripcion" required placeholder=" "
-                                             style="min-height: 5rem"></textarea>
-                                        <label for="descripcionEdit">Descripción *</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-6">
-                                   <div class="form-floating">
-                                        <input class="form-control" id="departamentoEdit" name="departamento"
-                                             type="text" [value]="p.departProcedimiento" readonly placeholder=" ">
-                                        <label for="departamentoEdit">Departamento</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-6">
-                                   <div class="form-floating">
-                                        <input class="form-control" id="codigoSIAEdit" name="codigoSIA" type="text"
-                                             [(ngModel)]="p.editarprocedi.codigoSia" required placeholder=" ">
-                                        <label for="codigoSIAEdit">Código SIA *</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-6">
-                                   <div class="form-floating">
-                                        <select class="form-select" id="modalidadEdit" name="modalidad"
-                                             [(ngModel)]="p.editarprocedi.modalidad" required>
-                                             <option [ngValue]="null" disabled hidden></option>
-                                             <option [ngValue]="1">Presencial</option>
-                                             <option [ngValue]="2">Web con certificado</option>
-                                             <option [ngValue]="3">Web sin certificado</option>
-                                             <option [ngValue]="4">Presencial y Web con certificado</option>
-                                             <option [ngValue]="5">Presencial y Web sin certificado</option>
-                                        </select>
-                                        <label for="modalidadEdit">Modalidad *</label>
-                                   </div>
-                              </div>
-                              <div class="col-md-6">
-                                   <div class="form-floating">
-                                        <select class="form-select" id="MateriaEdit" name="Materia"
-                                             [(ngModel)]="p.editarprocedi.materia" required>
-                                             <option [ngValue]="null" disabled hidden></option>
-                                             <option *ngFor="let materiaprocedi of p.materiaprocedimiento"
-                                                  [ngValue]="materiaprocedi.idMatProce">
-                                                  {{ materiaprocedi.descripcion }}
-                                             </option>
-                                        </select>
-                                        <label for="MateriaEdit">Materia *</label>
-                                   </div>
-                              </div>
-                         </div>
-                         <div class="form-actions">
-                              <button type="button" class="btn-iflow btn-iflow--secondary"
-                                   (click)="p.volverAlListado()">Cancelar</button>
-                              <button type="submit" class="btn-iflow btn-iflow--primary">Guardar cambios</button>
-                         </div>
-                    </form>
-               </div>
-          </section>
-
-          <!-- workspace-tareas -->
-          <!-- Tab: Tareas -->
-          <section *ngIf="p.activeWorkspaceTab === 'tareas'" class="proc-panel" role="tabpanel">
-               <header class="proc-panel__head">
-                    <div>
-                         <h3 class="proc-panel__title">Tareas</h3>
-                         <p class="proc-panel__desc">Selecciona una fila para asignar permisos en la pestaña Permisos.
-                         </p>
-                    </div>
-                    <div class="proc-panel__actions">
-                         <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
-                              (click)="p.borravaloresNuevaTarea(); p.abrirModal('tareasModal')">
-                              <i class="bi bi-plus-lg" aria-hidden="true"></i> Nueva tarea
-                         </button>
-                         <button *ngIf="p.verEliminaTarea" class="btn-iflow btn-iflow--danger btn-iflow--sm"
-                              type="button" (click)="p.deleteTareaProcedimiento()">
-                              <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
-                         </button>
-                    </div>
-               </header>
-               <div class="proc-panel__body">
-                    <app-data-table [items]="p.tareas" [loading]="p.cargandoTareas"
-                         emptyMessage="Este procedimiento no tiene tareas configuradas."
-                         searchPlaceholder="Buscar por descripción, fase o acción…"
-                         exportFileName="tareas-procedimiento"
-                         [rowClass]="tareaRowClass"
-                         (rowClick)="p.envioTareaProcedi($event)" (rowDblClick)="p.onRowDoubleClick($event)">
-                         <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
-                         <app-table-column header="Acciones" [sortValue]="accionValue" [searchValue]="accionValue"
-                              [sortable]="true" [filterable]="true">
-                              <ng-template let-row>{{ p.getAccionLabel(row.accion) }}</ng-template>
-                         </app-table-column>
-                         <app-table-column header="Fase" field="faseTarea" [sortable]="true" [filterable]="true"></app-table-column>
-                         <app-table-column header="Plazo" field="plazo" [sortable]="true" [filterable]="true"
-                              filterType="numberRange"></app-table-column>
-                         <app-table-column header="Tipo plazo" field="tipoPlazo" [sortable]="true" [filterable]="true"></app-table-column>
-                    </app-data-table>
-               </div>
-          </section>
-
-          <!-- workspace-permisos -->
-          <!-- Tab: Permisos -->
-          <section *ngIf="p.activeWorkspaceTab === 'permisos'" class="proc-panel" role="tabpanel">
-               <div *ngIf="!p.idverTarea" class="proc-empty-state">
-                    <i class="bi bi-shield-exclamation proc-empty-state__icon" aria-hidden="true"></i>
-                    <h3 class="proc-empty-state__title">Ninguna tarea seleccionada</h3>
-                    <p class="proc-empty-state__text">
-                         Los permisos se asignan por tarea. Ve a <strong>Tareas</strong>, selecciona una fila y vuelve
-                         aquí.
-                    </p>
-                    <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
-                         (click)="p.setWorkspaceTab('tareas')">
-                         <i class="bi bi-list-task" aria-hidden="true"></i> Ir a Tareas
-                    </button>
-               </div>
-               <ng-container *ngIf="p.idverTarea">
-                    <header class="proc-panel__head">
-                         <div>
-                              <h3 class="proc-panel__title">Permisos</h3>
-                              <p class="proc-panel__desc">Tarea: <strong>{{ p.descripcionT }}</strong></p>
-                         </div>
-                         <div class="proc-panel__actions">
-                              <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
-                                   (click)="p.activaFormNuevoPermiso(); p.abrirModal('nuevoPermisoModal')">
-                                   <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo permiso
-                              </button>
-                              <button *ngIf="p.veoBorrarTarea" class="btn-iflow btn-iflow--danger btn-iflow--sm"
-                                   type="button" (click)="p.deletePermisoProcedimiento()">
-                                   <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
-                              </button>
-                         </div>
-                    </header>
-                    <div class="proc-panel__body">
-                         <app-data-table [items]="p.permisos" [loading]="p.cargandoPermisos"
-                              emptyMessage="Esta tarea no tiene permisos asignados."
-                              searchPlaceholder="Buscar por usuario…"
-                              exportFileName="permisos-tarea"
-                              [rowClass]="permisoRowClass"
-                              (rowClick)="p.idpermisosPermi($event)">
-                              <app-table-column header="Usuario" field="usuario" [sortable]="true"></app-table-column>
-                              <app-table-column header="Procedimiento" field="desProce" [sortable]="true"></app-table-column>
-                              <app-table-column header="Tarea" field="desTareaProce" [sortable]="true"></app-table-column>
-                         </app-data-table>
-                    </div>
-               </ng-container>
-          </section>
-
-          <!-- workspace-atributos -->
-          <!-- Tab: Atributos -->
-          <section *ngIf="p.activeWorkspaceTab === 'atributos'" class="proc-panel" role="tabpanel">
-               <header class="proc-panel__head">
-                    <div>
-                         <h3 class="proc-panel__title">Atributos</h3>
-                         <p class="proc-panel__desc">Metadatos y campos personalizados del trámite.</p>
-                    </div>
-                    <div class="proc-panel__actions">
-                         <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
-                              (click)="p.abrirModal('NAtributosModal')">
-                              <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo atributo
-                         </button>
-                         <button *ngIf="p.veoborraratributo" class="btn-iflow btn-iflow--danger btn-iflow--sm"
-                              type="button" (click)="p.deleteatributo()">
-                              <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
-                         </button>
-                    </div>
-               </header>
-               <div class="proc-panel__body">
-                    <app-data-table [items]="p.atributosList" [loading]="p.cargandoAtributosList"
-                         emptyMessage="Este procedimiento no tiene atributos configurados."
-                         searchPlaceholder="Buscar por etiqueta o descripción…"
-                         exportFileName="atributos-procedimiento"
-                         [rowClass]="atributoRowClass"
-                         (rowClick)="p.marcoAtributos($event)" (rowDblClick)="p.onAtributoDoubleClick($event)">
-                         <app-table-column header="Etiqueta" field="etiGruAtrib" [sortable]="true"></app-table-column>
-                         <app-table-column header="Descripción" field="desGruAtrib" [sortable]="true"></app-table-column>
-                         <app-table-column header="Requerido" [sortValue]="requeridoValue" [searchValue]="requeridoValue"
-                              align="center" [sortable]="true" [filterable]="true" filterType="boolean"
-                              filterTrueLabel="Si" filterFalseLabel="No">
-                              <ng-template let-row>
-                                   <span class="badge" [class.bg-success]="row.requerido == 1"
-                                        [class.bg-secondary]="row.requerido != 1">
-                                        {{ row.requerido == 1 ? 'SI' : 'NO' }}
-                                   </span>
-                              </ng-template>
-                         </app-table-column>
-                         <app-table-column header="Val.Inici" field="valInici"></app-table-column>
-                         <app-table-column header="Val.Minim" field="valMinim"></app-table-column>
-                         <app-table-column header="Val.Maxim" field="valMaxim"></app-table-column>
-                         <app-table-column header="Tipo" field="tipo" [sortable]="true" [filterable]="true"></app-table-column>
-                         <app-table-column header="Longitud" field="longitud" [sortable]="true"></app-table-column>
-                    </app-data-table>
-               </div>
-          </section>
-
-     </section>
+      <!-- Tab: Atributos -->
+      <section *ngIf="p.activeWorkspaceTab === 'atributos'" class="proc-panel proc-panel--grid" role="tabpanel">
+        <header class="proc-panel__head">
+          <div>
+            <h3 class="proc-panel__title">Atributos</h3>
+            <p class="proc-panel__desc">Metadatos y campos personalizados del trámite. Doble clic para editar.</p>
+          </div>
+          <div class="proc-panel__actions">
+            <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+              (click)="p.abrirModal('NAtributosModal')">
+              <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo atributo
+            </button>
+            <button *ngIf="p.veoborraratributo" class="btn-iflow btn-iflow--danger btn-iflow--sm"
+              type="button" (click)="p.deleteatributo()">
+              <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+            </button>
+          </div>
+        </header>
+        <div class="proc-panel__body proc-panel__body--grid">
+          <app-data-table [items]="p.atributosList" [loading]="p.cargandoAtributosList"
+            emptyMessage="Este procedimiento no tiene atributos configurados."
+            exportFileName="atributos-procedimiento"
+            [rowClass]="atributoRowClass"
+            (rowClick)="p.marcoAtributos($event)" (rowDblClick)="p.onAtributoDoubleClick($event)">
+            <app-table-column header="Etiqueta" field="etiGruAtrib" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+            <app-table-column header="Descripción" field="desGruAtrib" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+            <app-table-column header="Requerido" [sortValue]="requeridoValue" [searchValue]="requeridoValue"
+              align="center" [sortable]="true" [filterable]="true" filterType="boolean"
+              filterTrueLabel="Si" filterFalseLabel="No">
+              <ng-template let-row>
+                <span class="badge" [class.bg-success]="row.requerido == 1"
+                  [class.bg-secondary]="row.requerido != 1">
+                  {{ row.requerido == 1 ? 'SI' : 'NO' }}
+                </span>
+              </ng-template>
+            </app-table-column>
+            <app-table-column header="Val.Inici" field="valInici"></app-table-column>
+            <app-table-column header="Val.Minim" field="valMinim"></app-table-column>
+            <app-table-column header="Val.Maxim" field="valMaxim"></app-table-column>
+            <app-table-column header="Tipo" field="tipo" [sortable]="true" [filterable]="true"></app-table-column>
+            <app-table-column header="Longitud" field="longitud" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+          </app-data-table>
+        </div>
+      </section>
+    </div>
+  </section>
 </div>

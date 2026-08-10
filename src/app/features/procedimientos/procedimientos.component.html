@@ -4,12 +4,9 @@
   </app-access-denied>
 
   <ng-container *ngIf="session.canManageProcedimientos">
-    <ng-container *ngIf="!isWorkspaceMode">
-      <app-procedimientos-list></app-procedimientos-list>
-      <app-procedimientos-modals-alta></app-procedimientos-modals-alta>
-    </ng-container>
-
+    <app-procedimientos-list *ngIf="!isWorkspaceMode"></app-procedimientos-list>
     <app-procedimientos-workspace *ngIf="isWorkspaceMode"></app-procedimientos-workspace>
+    <app-procedimientos-modals-alta></app-procedimientos-modals-alta>
     <app-procedimientos-modals></app-procedimientos-modals>
   </ng-container>
 </app-shell>

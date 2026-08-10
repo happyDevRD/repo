@@ -1,3 +1,5 @@
+import { formatIsoDateDdMmYyyy } from '../../../shared/components/iflow-grid/iflow-grid-cell.util';
+
 /** Renderers jqxGrid compartidos del módulo inicio (dashboard y vistas relacionadas). */
 export const INICIO_GRID_RENDERERS = {
   columnseleccionTareaTramite(_value: unknown): string {
@@ -32,10 +34,7 @@ export const INICIO_GRID_RENDERERS = {
     if (!value) {
       return '<div style="font-size: 10px;text-align: center; color:red;margin-top: 5px;"></div>';
     }
-    const dia = value.substring(8, 10);
-    const mes = value.substring(5, 7);
-    const anio = value.substring(0, 4);
-    return `<div style="text-align: center; margin-top: 5px;">${dia}/${mes}/${anio}</div>`;
+    return `<div style="text-align: center; margin-top: 5px;">${formatIsoDateDdMmYyyy(value)}</div>`;
   },
 
   cellsrendererFechaPlazo(_row: unknown, _column: unknown, value: unknown): string {
@@ -107,10 +106,7 @@ export const INICIO_GRID_RENDERERS = {
     if (!value) {
       return '<div style="font-size: 10px;text-align: center; color:red;margin-top: 5px;">-</div>';
     }
-    const dia = value.substring(8, 10);
-    const mes = value.substring(5, 7);
-    const anio = value.substring(0, 4);
-    return `<div style="text-align: center; margin-top: 5px;">${dia}/${mes}/${anio}</div>`;
+    return `<div style="text-align: center; margin-top: 5px;">${formatIsoDateDdMmYyyy(value)}</div>`;
   },
 
   cellsrendererDashboardTextLeft(_row: unknown, _column: unknown, value: unknown): string {

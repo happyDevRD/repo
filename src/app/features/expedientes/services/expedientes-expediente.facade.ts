@@ -419,7 +419,7 @@ export class ExpedientesExpedienteFacade {
   }
 
   editExpediente(host: ExpedientesExpedienteHost): void {
-    host.editexpediente.idPerso = host.consultadni.idPerso;
+    host.editexpediente.idPerso = host.consultadni?.idPerso ?? host.editexpediente.idPerso;
     this.expedientesService.editarExpediente(host.editexpediente, host.idexpediente).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
@@ -431,6 +431,39 @@ export class ExpedientesExpedienteFacade {
         this.notificationService.error('No se pudo actualizar el expediente');
       },
     });
+  }
+
+  onEditarExpedienteSubmit(host: ExpedientesSeleccionHost & {
+    isModificandoExpediente: boolean
+    cerrarFormularioExpediente: () => void
+    syncEdicionDesdeFormulario: () => void
+  }): void {
+    host.mostrarValidacionesExpediente = true
+    host.syncEdicionDesdeFormulario()
+
+    this.notificationService.confirm('¿Está seguro de modificar este expediente?').then((result) => {
+      if (!result.isConfirmed) {
+        return
+      }
+
+      host.isModificandoExpediente = true
+      host.editexpediente.idPerso = host.nuevoexpediente.idPerso ?? host.editexpediente.idPerso
+      this.expedientesService.editarExpediente(host.editexpediente, host.idexpediente).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
+        next: () => {
+          host.isModificandoExpediente = false
+          host.tituloExp = host.nuevoexpediente.titulo
+          this.gridFacade.refreshExpedientesList(host, this.session.user ?? '', true)
+          host.cerrarFormularioExpediente()
+          this.notificationService.success('Expediente actualizado correctamente')
+        },
+        error: () => {
+          host.isModificandoExpediente = false
+          this.notificationService.error('No se pudo actualizar el expediente')
+        },
+      })
+    })
   }
 
   abrirExpediente(host: ExpedientesExpedienteHost): void {

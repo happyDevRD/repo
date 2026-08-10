@@ -2,13 +2,12 @@
 <div *ngIf="vertramite" class="exp-tramites-table">
      <app-data-table [items]="tramites" [loading]="cargando"
           emptyMessage="No hay trámites registrados."
-          searchPlaceholder="Buscar…"
           exportFileName="tramites"
           [rowClass]="rowClassFor"
           (rowClick)="rowClick.emit($event)"
           (rowDblClick)="rowDoubleClick.emit($event)">
-          <app-table-column header="Número" field="numero" [sortable]="true" align="center" width="10%"></app-table-column>
-          <app-table-column header="Descripción" field="descripcion" [sortable]="true"></app-table-column>
+          <app-table-column header="Número" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="10%"></app-table-column>
+          <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
           <app-table-column header="Fase" field="fase" [sortable]="true" [filterable]="true" align="center" width="14%"></app-table-column>
           <app-table-column header="Fecha trámite" field="fecTramite" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="14%">
                <ng-template let-row>{{ row.fecTramite | date:'dd/MM/yyyy' }}</ng-template>

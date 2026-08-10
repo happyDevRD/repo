@@ -157,7 +157,30 @@
    PÁGINA EXPEDIENTES
    ================================ */
 .expedientes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   padding-top: 0.5rem;
+  /* Alto fijo del viewport: la tabla puede crecer en el espacio restante */
+  height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  min-height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  max-height: calc(100dvh - var(--topbar-height) - 2.5rem);
+  margin-bottom: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.expedientes-page > app-expedientes-header,
+.expedientes-page > app-expedientes-acciones {
+  flex-shrink: 0;
+  display: block;
+}
+
+.expedientes-page > app-expedientes-list {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .expedientes-header {
@@ -168,6 +191,7 @@
   margin-bottom: 1rem;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
 }
 
 .expedientes-header__eyebrow {
@@ -189,6 +213,7 @@
 
 .expediente-workspace {
   margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .expediente-toolbar,
@@ -288,13 +313,69 @@
   flex-shrink: 0;
 }
 
+.expedientes-listado {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.expedientes-listado__head {
+  flex-shrink: 0;
+}
+
+.expedientes-listado > app-data-table {
+  flex: 1 1 auto;
+  display: flex !important;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.expedientes-listado .data-table {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.expedientes-listado .data-table__toolbar {
+  flex-shrink: 0;
+}
+
+.expedientes-listado .data-table__footer {
+  flex-shrink: 0;
+}
+
+/* Anula el max-height: 34rem encapsulado de data-table para que crezca de verdad */
+.expedientes-page .expedientes-listado .data-table__scroll {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  max-height: none !important;
+  overflow-y: auto;
+}
+
 .expedientes-listado__titulo {
-  margin: 0 0 0.65rem;
+  margin: 0;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .expedientes-page {
+    height: calc(100dvh - var(--topbar-height) - 2rem);
+    min-height: calc(100dvh - var(--topbar-height) - 2rem);
+    max-height: calc(100dvh - var(--topbar-height) - 2rem);
+  }
 }
 
 .grid-compacto {
@@ -326,13 +407,27 @@
    MODALES EXPEDIENTE (variantes de entidad — tamaños aquí, no en modals.css)
    ================================ */
 
-/* Nuevo / Ver expediente: fit al contenido, sin scroll interno habitual */
-.iflow-modal--fit.exp-expediente-modal .modal-dialog {
-  max-height: min(94vh, 760px);
+/* Nuevo / Modificar / Ver expediente: mismo tamaño fijo que soli-alta-modal
+   (misma lógica de formulario soli-alta; alto constante al mostrar interesado). */
+.iflow-modal--fixed.exp-expediente-modal .modal-dialog {
+  max-width: min(94vw, 1240px);
+  height: min(90vh, 860px);
+  max-height: min(90vh, 860px);
 }
 
-.iflow-modal--fit.exp-expediente-modal .modal-content {
-  max-height: min(94vh, 760px);
+.iflow-modal--fixed.exp-expediente-modal .modal-content {
+  height: min(90vh, 860px);
+  max-height: min(90vh, 860px);
+}
+
+.exp-expediente-modal .modal-body {
+  padding-top: 0.95rem;
+  padding-bottom: 0.65rem;
+}
+
+.exp-expediente-modal .modal-footer {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
 }
 
 .exp-expediente-modal__interesado-slot {

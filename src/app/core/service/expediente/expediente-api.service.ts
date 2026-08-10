@@ -68,7 +68,7 @@ export class ExpedienteApiService {
       fecInicio: nuevoexpediente.fechaInicio,
       formaApertura: nuevoexpediente.forma_apertura || 'OFICIO',
       titulo: nuevoexpediente.titulo,
-      instructor: this.instructor,
+      instructor: nuevoexpediente.instructor || this.instructor,
       procedimiento: nuevoexpediente.procedimiento,
       usuContr: this.usuContr,
       departamento: this.idOrgElemen,

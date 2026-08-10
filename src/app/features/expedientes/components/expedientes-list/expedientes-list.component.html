@@ -1,5 +1,5 @@
 <section class="expedientes-listado" aria-label="Listado de expedientes">
-  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+  <div class="expedientes-listado__head d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
     <h3 class="expedientes-listado__titulo mb-0">Listado</h3>
     <div class="d-flex flex-wrap align-items-center gap-2">
       <span *ngIf="e.insideDryRun" class="badge bg-info text-dark" title="Sin acceso REDSARA">
@@ -24,14 +24,13 @@
 
   <app-data-table [items]="e.expedientesListado" [loading]="e.cargandoExpedientesListado"
     emptyMessage="No hay expedientes."
-    searchPlaceholder="Buscar por título, procedimiento o interesado…"
     exportFileName="expedientes"
     [rowClass]="e.expedienteRowClass"
     (rowClick)="e.marcaExpedienteNuevo($event)"
     (rowDblClick)="e.onExpedienteDoubleClick($event)">
-    <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" align="center" width="6%"></app-table-column>
-    <app-table-column header="Número" field="numero" [sortable]="true" align="center" width="6%"></app-table-column>
-    <app-table-column header="Título" field="titulo" [sortable]="true"></app-table-column>
+    <app-table-column header="Ejercicio" field="ejercicio" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
+    <app-table-column header="Número" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="6%"></app-table-column>
+    <app-table-column header="Título" field="titulo" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
     <app-table-column header="Forma apertura" field="formaApertura" [sortable]="true" [filterable]="true" align="center"></app-table-column>
     <app-table-column header="Estado" field="estado" [sortable]="true" [filterable]="true" align="center">
       <ng-template let-row>
@@ -47,11 +46,11 @@
     <app-table-column header="Fecha expediente" field="fecInicio" [sortable]="true" [filterable]="true" filterType="dateRange" align="center">
       <ng-template let-row>{{ row.fecInicio | date:'dd/MM/yyyy' }}</ng-template>
     </app-table-column>
-    <app-table-column header="Procedimiento" [sortValue]="e.procedimientoDescripcionValue" [searchValue]="e.procedimientoDescripcionValue" [sortable]="true">
+    <app-table-column header="Procedimiento" [sortValue]="e.procedimientoDescripcionValue" [searchValue]="e.procedimientoDescripcionValue" [sortable]="true" [filterable]="true" filterType="text">
       <ng-template let-row>{{ row.procedimiento?.descripcion }}</ng-template>
     </app-table-column>
     <app-table-column header="Instructor" field="instructor" [sortable]="true" [filterable]="true" align="center"></app-table-column>
-    <app-table-column header="Interesado" [sortValue]="e.interesadoNombreValue" [searchValue]="e.interesadoNombreValue" [sortable]="true">
+    <app-table-column header="Interesado" [sortValue]="e.interesadoNombreValue" [searchValue]="e.interesadoNombreValue" [sortable]="true" [filterable]="true" filterType="text">
       <ng-template let-row>{{ row.personaEntidad?.desPerEntid }}</ng-template>
     </app-table-column>
   </app-data-table>
