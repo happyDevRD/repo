@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment'
 import { VerExpediente } from '../../models/expediente-domain.model'
 import { InsideEnvioRegistro } from '../../models/inside/inside-envio.models'
 import { InsideSoapResponse } from '../../models/inside'
-import { etiquetaInsideDryRunHtml } from '../../constants/inside-simulacion.constants'
+import { etiquetaEstadoEnvioInside, etiquetaInsideDryRunHtml, calcularEstadoResumenInside, mapEstadosPorTareaInside } from '../../constants/inside-simulacion.constants'
 import { NotificationService } from '../notification.service'
 import { InsideExpedienteOrchestrator } from './inside-expediente.orchestrator'
 import { InsideService } from './inside.service'
@@ -36,6 +36,12 @@ export interface EditaExpedienteInsideHost {
   insideRemision: InsideRemisionForm;
   insideUltimaRespuesta: InsideSoapResponse | null;
   insideUltimoEnvio: InsideEnvioRegistro | null;
+  /** Último estado INSIDE por id de tarea (documento). */
+  insideEstadosPorTarea?: Record<number, string>;
+  /** Estado INSIDE agregado por id de trámite. */
+  insideEstadosPorTramite?: Record<number, string>;
+  /** Trámite seleccionado (para refresco optimista). */
+  idTramite?: number;
   abrirModal(modalId: string): void;
   cerrarModal(modalId: string): void;
 }
@@ -90,13 +96,48 @@ export class InsideAccionesFacade {
   }
 
   cargarEstadoEnvio(expedienteId: number, host: EditaExpedienteInsideHost): void {
-    this.envioRegistroService.obtenerUltimo(expedienteId).pipe(
+    this.envioRegistroService.listarPorExpediente(expedienteId).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (ultimo) => {
-        host.insideUltimoEnvio = ultimo;
+      next: (envios) => {
+        const locales = this.envioRegistroService.listarLocalPorExpediente(expedienteId)
+        const fusion = envios?.length ? envios : locales
+        const resumen = calcularEstadoResumenInside(fusion)
+          || (fusion[0]?.estadoResumen ? String(fusion[0].estadoResumen).toUpperCase() : '')
+
+        const ultimoBase = fusion[0] ?? null
+        host.insideUltimoEnvio = ultimoBase
+          ? { ...ultimoBase, estadoResumen: resumen || ultimoBase.estadoResumen }
+          : {
+              expedienteId,
+              operacion: '',
+              fecha: new Date().toISOString(),
+              dryRun: false,
+              estadoResumen: resumen,
+            }
+
+        const porTareaApiFallback = mapEstadosPorTareaInside(fusion)
+        host.insideEstadosPorTarea = { ...porTareaApiFallback }
       },
-    });
+    })
+
+    this.envioRegistroService.obtenerEstadosPorTarea(expedienteId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (porTarea) => {
+        if (porTarea && Object.keys(porTarea).length) {
+          host.insideEstadosPorTarea = { ...porTarea }
+        }
+      },
+    })
+
+    this.envioRegistroService.obtenerEstadosPorTramite(expedienteId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (porTramite) => {
+        host.insideEstadosPorTramite = { ...(porTramite ?? {}) }
+      },
+    })
   }
 
   handleVerHistorialEnvios(host: EditaExpedienteInsideHost): void {
@@ -109,10 +150,17 @@ export class InsideAccionesFacade {
           return;
         }
 
+        const resumenCalc = calcularEstadoResumenInside(envios)
+        const resumenLabel = etiquetaEstadoEnvioInside(resumenCalc || envios[0]?.estadoResumen)
+        const resumen = resumenLabel && resumenLabel !== '—'
+          ? `<p class="text-start mb-2"><strong>Estado expediente:</strong> ${resumenLabel}</p>`
+          : ''
+
         const filas = envios.map((envio) => `
           <tr>
             <td>${envio.operacion}</td>
-            <td>${envio.estadoEnvio ?? '-'}</td>
+            <td>${envio.idTarea != null ? envio.idTarea : '—'}</td>
+            <td>${etiquetaEstadoEnvioInside(envio.estadoEnvio)}</td>
             <td>${envio.identificador ?? '-'}</td>
             <td>${envio.csv ?? '-'}</td>
           </tr>
@@ -121,12 +169,13 @@ export class InsideAccionesFacade {
         this.notificationService.custom({
           title: 'Historial INSIDE',
           html: `
+            ${resumen}
             <table class="table table-sm table-bordered text-start">
-              <thead><tr><th>Operación</th><th>Estado</th><th>ID ENI</th><th>CSV</th></tr></thead>
+              <thead><tr><th>Operación</th><th>Tarea</th><th>Estado</th><th>ID ENI</th><th>CSV</th></tr></thead>
               <tbody>${filas}</tbody>
             </table>
           `,
-          width: '48rem',
+          width: '52rem',
           icon: 'info',
         });
       },
@@ -268,7 +317,7 @@ export class InsideAccionesFacade {
           }
           this.notificationService.success({
             title: 'INSIDE',
-            text: `Se procesaron ${respuestas.length} documento(s) correctamente.${host.insideDryRun ? ' (simulación)' : ''}`,
+            text: `Se procesaron ${respuestas.length} documento(s) correctamente.`,
           });
         },
         error: (error) => this.mostrarError(host, error),
@@ -388,9 +437,49 @@ export class InsideAccionesFacade {
     host.insideEnviando = false;
     host.insideUltimaRespuesta = respuesta;
     this.registrarEnvio(host.idExpediente, operacion, respuesta, { idTarea });
+
+    // UI inmediata: documento → PARCIAL; expediente → ENVIADO (no esperar al API)
+    const dryRun = environment.inside.dryRun === true
+    const estadoFila = dryRun ? 'SIMULADO' : 'ENVIADO'
+    if (idTarea != null) {
+      host.insideEstadosPorTarea = { ...(host.insideEstadosPorTarea ?? {}), [idTarea]: estadoFila }
+      if (host.idTramite) {
+        host.insideEstadosPorTramite = {
+          ...(host.insideEstadosPorTramite ?? {}),
+          [host.idTramite]: estadoFila,
+        }
+      }
+      host.insideUltimoEnvio = {
+        expedienteId: host.idExpediente,
+        idTarea,
+        operacion,
+        estadoEnvio: estadoFila,
+        estadoResumen: 'PARCIAL',
+        fecha: new Date().toISOString(),
+        codigoRespuesta: respuesta.codigoRespuesta,
+        descripcionRespuesta: respuesta.descripcionRespuesta,
+        identificador: respuesta.identificador,
+        csv: respuesta.csv,
+        dryRun,
+      }
+    } else if (operacion.includes('Expediente') || operacion.includes('expediente')) {
+      host.insideUltimoEnvio = {
+        expedienteId: host.idExpediente,
+        operacion,
+        estadoEnvio: estadoFila,
+        estadoResumen: estadoFila,
+        fecha: new Date().toISOString(),
+        codigoRespuesta: respuesta.codigoRespuesta,
+        descripcionRespuesta: respuesta.descripcionRespuesta,
+        identificador: respuesta.identificador,
+        csv: respuesta.csv,
+        dryRun,
+      }
+    }
+
     this.actualizarEstadoEnvio(host);
     this.notificationService.success({
-      title: `${titulo}${host.insideDryRun ? ' (simulación)' : ''}`,
+      title: titulo,
       html: `
         ${this.etiquetaDryRun(host.insideDryRun)}
         <p><strong>Código:</strong> ${respuesta.codigoRespuesta ?? '-'}</p>

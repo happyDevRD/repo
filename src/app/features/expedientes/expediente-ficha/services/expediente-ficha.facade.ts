@@ -12,6 +12,7 @@ import { InsideEnvioRegistro } from '../../../../core/models/inside/inside-envio
 import {
   etiquetaInsideDryRunHtml,
   isInsideDryRun,
+  calcularEstadoResumenInside,
 } from '../../../../core/constants/inside-simulacion.constants'
 
 export interface ExpedienteFichaResumen {
@@ -87,10 +88,26 @@ export class ExpedienteFichaFacade {
       next: (remoto) => {
         if (remoto?.length) {
           this.historialInside = remoto
+          const resumen = calcularEstadoResumenInside(remoto)
+            || remoto[0]?.estadoResumen
+            || ''
+          if (this.resumen) {
+            this.resumen = { ...this.resumen, insideEstado: resumen }
+          }
         }
       },
       error: () => {
         // historial local ya cargado
+      },
+    })
+
+    this.envioRegistroService.obtenerEstadoResumen(expedienteId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: (estado) => {
+        if (this.resumen) {
+          this.resumen = { ...this.resumen, insideEstado: estado }
+        }
       },
     })
   }
@@ -178,7 +195,7 @@ export class ExpedienteFichaFacade {
   }
 
   /**
-   * Archivar sin REDSARA: actualiza estado iFlow a ARCHIVADO (simulación presentación).
+   * Archivar sin REDSARA: actualiza estado iFlow a ARCHIVADO.
    * TODO SARA real: sustituir por integración red SARA en cutover (Fase 4).
    */
   handleArchivarSimulado(): void {
@@ -193,11 +210,10 @@ export class ExpedienteFichaFacade {
     }
 
     this.notificationService.confirm({
-      title: 'Archivar expediente (simulación)',
+      title: 'Archivar expediente',
       html: `${etiquetaInsideDryRunHtml()}
-        <p>Sin red SARA: se marcará el expediente como <strong>ARCHIVADO</strong> en iFlow.</p>
-        <p class="text-muted">Cuando haya REDSARA se sustituirá por la integración real.</p>`,
-      confirmButtonText: 'Archivar (simulación)',
+        <p>Se marcará el expediente como <strong>ARCHIVADO</strong>.</p>`,
+      confirmButtonText: 'Archivar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (!result.isConfirmed) {
@@ -209,19 +225,15 @@ export class ExpedienteFichaFacade {
       ).subscribe({
         next: () => {
           this.notificationService.success({
-            title: 'Archivado (simulación)',
-            text: 'Expediente archivado en iFlow. Pendiente integración REDSARA.',
+            title: 'Archivado',
+            text: 'Expediente archivado correctamente.',
           })
           this.cargar(id)
         },
         error: () => {
-          // Fallback demo: actualizar UI local si el PUT falla
-          if (this.resumen) {
-            this.resumen = { ...this.resumen, estado: 'ARCHIVADO' }
-          }
-          this.notificationService.success({
-            title: 'Archivado (simulación local)',
-            text: 'Estado actualizado en pantalla para la demo. Revisar API al cutover SARA.',
+          this.notificationService.error({
+            title: 'Error al archivar',
+            text: 'No se pudo archivar el expediente. Inténtelo de nuevo.',
           })
         },
       })

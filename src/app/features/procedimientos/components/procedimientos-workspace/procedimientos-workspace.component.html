@@ -148,12 +148,12 @@
             <button type="button" class="proc-shortcut" (click)="p.setWorkspaceTab('tareas')">
               <i class="bi bi-list-task" aria-hidden="true"></i>
               <span class="proc-shortcut__label">Tareas</span>
-              <span class="proc-shortcut__value">{{ p.tareas?.length || 0 }}</span>
+              <span class="proc-shortcut__value">{{ p.tareas.length || 0 }}</span>
             </button>
             <button type="button" class="proc-shortcut" (click)="p.setWorkspaceTab('atributos')">
               <i class="bi bi-tags" aria-hidden="true"></i>
               <span class="proc-shortcut__label">Atributos</span>
-              <span class="proc-shortcut__value">{{ p.atributosList?.length || 0 }}</span>
+              <span class="proc-shortcut__value">{{ p.atributosList.length || 0 }}</span>
             </button>
             <button type="button" class="proc-shortcut" (click)="p.setWorkspaceTab('permisos')">
               <i class="bi bi-shield-check" aria-hidden="true"></i>

@@ -51,18 +51,14 @@
                 role="tab"
                 [attr.aria-selected]="pestanaFlujo === 'inside'">
           INSIDE
-          <span *ngIf="insideDryRun" class="badge bg-info text-dark ms-1">sim.</span>
         </button>
       </li>
     </ul>
     <div class="edita-toolbar__meta">
       <span class="expediente-numero">{{ expedienteEjercicio }}/{{ expedienteNumero }}</span>
-      <span *ngIf="insideUltimoEnvio?.estadoEnvio === 'PENDIENTE'" class="badge bg-warning text-dark">pendiente</span>
-      <span *ngIf="insideUltimoEnvio?.estadoEnvio === 'ENVIADO' || insideUltimoEnvio?.estadoEnvio === 'SIMULADO'"
-            class="badge bg-success">
-        {{ insideUltimoEnvio?.estadoEnvio === 'SIMULADO' ? 'simulado' : 'enviado' }}
-      </span>
-      <span *ngIf="insideUltimoEnvio?.estadoEnvio === 'ERROR'" class="badge bg-danger">error</span>
+      <span *ngIf="estadoResumenInside"
+            class="estado-badge"
+            [ngClass]="insideBadgeClass">{{ etiquetaResumenInside }}</span>
     </div>
   </div>
 
@@ -127,4 +123,59 @@
       </button>
     </div>
   </nav>
+</section>
+
+<section
+  *ngIf="botonVerNotifi && vertramite && expediente?.id && expediente as exp"
+  class="edita-expediente-card"
+  aria-label="Expediente seleccionado"
+>
+  <dl class="edita-expediente-card__grid">
+    <div>
+      <dt>Expediente</dt>
+      <dd>{{ exp.ejercicio }}/{{ exp.numero }}</dd>
+    </div>
+    <div>
+      <dt>Estado</dt>
+      <dd>
+        <span
+          class="estado-badge"
+          [ngClass]="'estado-badge--' + (exp.estado || '').toLowerCase()"
+        >
+          {{ exp.estado || '—' }}
+        </span>
+        <span *ngIf="estadoResumenInside"
+              class="estado-badge ms-1"
+              [ngClass]="insideBadgeClass">INSIDE {{ etiquetaResumenInside }}</span>
+      </dd>
+    </div>
+    <div>
+      <dt>Título</dt>
+      <dd [title]="exp.titulo || ''">{{ exp.titulo || 'Sin título' }}</dd>
+    </div>
+    <div>
+      <dt>Procedimiento</dt>
+      <dd [title]="procedimientoLabel">{{ procedimientoLabel }}</dd>
+    </div>
+    <div>
+      <dt>Instructor</dt>
+      <dd [title]="exp.instructor || ''">{{ exp.instructor || '—' }}</dd>
+    </div>
+    <div>
+      <dt>Fase</dt>
+      <dd>{{ exp.fase || '—' }}</dd>
+    </div>
+    <div>
+      <dt>Fecha inicio</dt>
+      <dd>{{ formatearFecha(exp.fecInicio) || '—' }}</dd>
+    </div>
+    <div>
+      <dt>Interesado</dt>
+      <dd [title]="interesadoLabel">{{ interesadoLabel }}</dd>
+    </div>
+    <div>
+      <dt>Documento</dt>
+      <dd>{{ documentoLabel }}</dd>
+    </div>
+  </dl>
 </section>

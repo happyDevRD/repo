@@ -32,6 +32,52 @@ export class InsideEnvioApiService {
     )
   }
 
+  obtenerEstadoResumen(expedienteId: number): Observable<string> {
+    return this.http.get<{ estadoResumen?: string }>(
+      `${this.baseUrl}/expediente/${expedienteId}/estado-resumen`,
+    ).pipe(
+      map((response) => response?.estadoResumen ?? ''),
+      catchError(() => of('')),
+    )
+  }
+
+  /** Mapa idTarea → estadoEnvio (último envío de documento por tarea). */
+  obtenerEstadosPorTarea(expedienteId: number): Observable<Record<number, string>> {
+    return this.mapIdEstado(
+      this.http.get<Record<string, string>>(
+        `${this.baseUrl}/expediente/${expedienteId}/por-tarea`,
+      ),
+    )
+  }
+
+  /** Mapa idTramite → estadoEnvio agregado desde tareas enviadas. */
+  obtenerEstadosPorTramite(expedienteId: number): Observable<Record<number, string>> {
+    return this.mapIdEstado(
+      this.http.get<Record<string, string>>(
+        `${this.baseUrl}/expediente/${expedienteId}/por-tramite`,
+      ),
+    )
+  }
+
+  private mapIdEstado(source$: Observable<Record<string, string>>): Observable<Record<number, string>> {
+    return source$.pipe(
+      map((response) => {
+        const result: Record<number, string> = {}
+        if (!response) {
+          return result
+        }
+        for (const [key, value] of Object.entries(response)) {
+          const id = Number(key)
+          if (!Number.isNaN(id) && value) {
+            result[id] = value
+          }
+        }
+        return result
+      }),
+      catchError(() => of({})),
+    )
+  }
+
   private mapFromApi(item: InsideEnvioRegistro & {
     idExpediente?: number
     identificadorEni?: string
@@ -43,8 +89,9 @@ export class InsideEnvioApiService {
       idEnvio: item.idEnvio,
       expedienteId: item.expedienteId ?? item.idExpediente ?? 0,
       idTarea: item.idTarea,
-      operacion: item.operacion,
+      operacion: item.operacion ?? '',
       estadoEnvio: item.estadoEnvio,
+      estadoResumen: item.estadoResumen,
       fecha: item.fecha ?? item.fecEnvio ?? item.fecContr ?? new Date().toISOString(),
       codigoRespuesta: item.codigoRespuesta,
       descripcionRespuesta: item.descripcionRespuesta,

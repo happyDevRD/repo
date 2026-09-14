@@ -19,6 +19,18 @@ export class InsideEnvioRegistroService {
     return this.api.obtenerUltimo(expedienteId)
   }
 
+  obtenerEstadoResumen(expedienteId: number): Observable<string> {
+    return this.api.obtenerEstadoResumen(expedienteId)
+  }
+
+  obtenerEstadosPorTarea(expedienteId: number): Observable<Record<number, string>> {
+    return this.api.obtenerEstadosPorTarea(expedienteId)
+  }
+
+  obtenerEstadosPorTramite(expedienteId: number): Observable<Record<number, string>> {
+    return this.api.obtenerEstadosPorTramite(expedienteId)
+  }
+
   registrar(registro: InsideEnvioRegistro): void {
     this.api.registrar({
       idExpediente: registro.expedienteId,

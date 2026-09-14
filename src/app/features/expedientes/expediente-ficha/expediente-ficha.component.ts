@@ -1,9 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import {
-  INSIDE_SIMULACION_BADGE,
-  INSIDE_SIMULACION_TITLE,
-} from '../../../core/constants/inside-simulacion.constants'
+import { etiquetaEstadoEnvioInside } from '../../../core/constants/inside-simulacion.constants'
 import { ExpedienteFichaFacade } from './services/expediente-ficha.facade'
 
 @Component({
@@ -16,8 +13,7 @@ export class ExpedienteFichaComponent implements OnInit {
   readonly ficha = inject(ExpedienteFichaFacade)
   private readonly route = inject(ActivatedRoute)
 
-  readonly simulacionBadge = INSIDE_SIMULACION_BADGE
-  readonly simulacionTitle = INSIDE_SIMULACION_TITLE
+  readonly etiquetaEstadoInside = etiquetaEstadoEnvioInside
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'))

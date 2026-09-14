@@ -8,6 +8,7 @@
         [tramites]="edita.listartramites"
         [cargando]="edita.cargandoTramites"
         [idTramiteSeleccionado]="edita.idTramite"
+        [insideEstadosPorTramite]="edita.insideEstadosPorTramite"
         (rowClick)="edita.clickTramiteNuevo($event)"
         (rowDoubleClick)="edita.onTramiteDoubleClick($event)"
         (rowAction)="handleTramiteRowAction($event)">
@@ -25,6 +26,7 @@
         [tareas]="edita.tareatramiteexpedientelistar"
         [idTarea]="edita.idTarea"
         [tareasCargando]="edita.tareasCargando"
+        [insideEstadosPorTarea]="edita.insideEstadosPorTarea"
         (action)="handleTareaAction($event)"
         (rowAction)="handleTareaRowAction($event)"
         (tareaSelect)="edita.clicktareaNueva($event)"

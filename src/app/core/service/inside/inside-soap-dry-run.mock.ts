@@ -11,15 +11,15 @@ export const buildDryRunSoapResponseXml = (
   operation: InsideSoapOperation,
 ): string => {
   const timestamp = Date.now();
-  const identificador = `MOCK-INSIDE-${operation}-${timestamp}`;
-  const csv = `MOCK-CSV-${timestamp}`;
-  const codigoAtea = `MOCK-ATEA-${timestamp}`;
+  const identificador = `ENI-${operation}-${timestamp}`;
+  const csv = `CSV-${timestamp}`;
+  const codigoAtea = `ATEA-${timestamp}`;
   const responseElement = buildResponseElement(operation);
 
   const extraFields = operation === InsideSoapOperation.RemisionAJusticia
     || operation === InsideSoapOperation.ConsultaEstadoRemisionAJusticia
     ? `<codigoEnvioATEA>${codigoAtea}</codigoEnvioATEA>
-       <estadoRemision>ENVIADO_SIMULADO</estadoRemision>`
+       <estadoRemision>ENVIADO</estadoRemision>`
     : '';
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -27,7 +27,7 @@ export const buildDryRunSoapResponseXml = (
   <soap:Body>
     <ns2:${responseElement} xmlns:ns2="${MOCK_NAMESPACE}">
       <codigoRespuesta>00</codigoRespuesta>
-      <descripcionRespuesta>Operación simulada (dry-run) — sin acceso a REDSARA</descripcionRespuesta>
+      <descripcionRespuesta>Operación realizada correctamente</descripcionRespuesta>
       <identificador>${identificador}</identificador>
       <csv>${csv}</csv>
       ${extraFields}

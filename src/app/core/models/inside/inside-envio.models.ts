@@ -4,6 +4,8 @@ export interface InsideEnvioRegistro {
   idTarea?: number
   operacion: string
   estadoEnvio?: string
+  /** Estado agregado del expediente (PARCIAL / ENVIADO / …), no el de la fila. */
+  estadoResumen?: string
   fecha: string
   codigoRespuesta?: string
   descripcionRespuesta?: string

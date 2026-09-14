@@ -40,6 +40,8 @@ export class ModalInsideAccionesComponent implements OnChanges, EditaExpedienteI
   insideRemision: InsideRemisionForm = crearRemisionVacia()
   insideUltimaRespuesta: InsideSoapResponse | null = null
   insideUltimoEnvio: InsideEnvioRegistro | null = null
+  insideEstadosPorTarea: Record<number, string> = {}
+  insideEstadosPorTramite: Record<number, string> = {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idExpediente'] && this.idExpediente) {

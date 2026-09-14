@@ -15,11 +15,6 @@
         <p class="expediente-ficha__hint mb-0" *ngIf="ficha.resumen">{{ ficha.resumen.titulo }}</p>
       </div>
       <div class="expediente-ficha__header-actions">
-        <span *ngIf="ficha.insideDryRun"
-              class="badge bg-info text-dark"
-              [title]="simulacionTitle">
-          {{ simulacionBadge }}
-        </span>
         <app-back-button [fallbackRoute]="'/expedientes'"></app-back-button>
       </div>
     </header>
@@ -124,7 +119,6 @@
                aria-label="INSIDE">
         <p class="expediente-ficha__hint">
           Interoperabilidad ENI / REDSARA.
-          <span *ngIf="ficha.insideDryRun">Modo simulación (sin red SARA).</span>
         </p>
         <div class="expediente-ficha__acciones-fila">
           <button type="button" class="btn-iflow btn-iflow--primary btn-iflow--sm"
@@ -134,6 +128,21 @@
         </div>
 
         <h4 class="expediente-ficha__subtitle">Historial</h4>
+        <p class="expediente-ficha__hint mb-2"
+           *ngIf="ficha.historialInside.length && ficha.historialInside[0].estadoResumen">
+          Estado expediente:
+          <span class="badge"
+                [ngClass]="{
+                  'bg-warning text-dark': ficha.historialInside[0].estadoResumen === 'PENDIENTE'
+                    || ficha.historialInside[0].estadoResumen === 'PARCIAL',
+                  'bg-success': ficha.historialInside[0].estadoResumen === 'ENVIADO'
+                    || ficha.historialInside[0].estadoResumen === 'SIMULADO',
+                  'bg-danger': ficha.historialInside[0].estadoResumen === 'ERROR',
+                  'bg-secondary': !ficha.historialInside[0].estadoResumen
+                }">
+            {{ etiquetaEstadoInside(ficha.historialInside[0].estadoResumen) }}
+          </span>
+        </p>
         <div *ngIf="!ficha.historialInside.length" class="expediente-ficha__empty">
           Sin envíos todavía.
         </div>
@@ -141,14 +150,15 @@
           <li *ngFor="let item of ficha.historialInside">
             <span class="badge"
                   [ngClass]="{
-                    'bg-warning text-dark': item.estadoEnvio === 'PENDIENTE',
+                    'bg-warning text-dark': item.estadoEnvio === 'PENDIENTE' || item.estadoEnvio === 'PARCIAL',
                     'bg-success': item.estadoEnvio === 'ENVIADO' || item.estadoEnvio === 'SIMULADO',
                     'bg-danger': item.estadoEnvio === 'ERROR',
                     'bg-secondary': !item.estadoEnvio
                   }">
-              {{ item.estadoEnvio || '—' }}
+              {{ etiquetaEstadoInside(item.estadoEnvio) }}
             </span>
             <strong>{{ item.operacion }}</strong>
+            <span class="text-muted" *ngIf="item.idTarea != null">tarea #{{ item.idTarea }}</span>
             <span class="text-muted">{{ item.fecha | date: 'dd/MM/yyyy HH:mm' }}</span>
           </li>
         </ul>

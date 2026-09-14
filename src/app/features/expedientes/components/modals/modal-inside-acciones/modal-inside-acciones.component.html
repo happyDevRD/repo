@@ -9,11 +9,6 @@
      [dismissOnClose]="false"
      (closed)="cerrar()">
      <div modalBody>
-          <p class="text-secondary mb-3" *ngIf="insideDryRun">
-               <span class="badge bg-info text-dark">simulación</span>
-               Las operaciones INSIDE se están ejecutando en modo simulación (dry-run).
-          </p>
-
           <div class="expediente-acciones__fila">
                <button type="button"
                        class="btn-iflow btn-iflow--secondary btn-iflow--sm"

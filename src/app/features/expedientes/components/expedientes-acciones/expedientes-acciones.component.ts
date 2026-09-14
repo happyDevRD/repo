@@ -13,6 +13,10 @@ export class ExpedientesAccionesComponent {
     const e = this.e
     return [
       {
+        id: 'atributo', label: 'Atributo', icon: 'bi bi-node-plus', tone: 'secondary',
+        disabled: !e.accionExpediente(e.veoAtributos), title: 'Atributos',
+      },
+      {
         id: 'tramitar', label: 'Tramitar', icon: 'bi bi-journal-check', tone: 'primary',
         disabled: !e.accionExpediente(e.cerrarexp), title: 'Tramitar expediente',
       },
@@ -31,10 +35,6 @@ export class ExpedientesAccionesComponent {
       {
         id: 'tareas', label: 'Tareas', icon: 'bi bi-list-task', tone: 'secondary',
         disabled: !e.accionExpediente(e.cerrarexp && e.veoAsignoTramitador), title: 'Tareas del expediente',
-      },
-      {
-        id: 'atributo', label: 'Atributo', icon: 'bi bi-node-plus', tone: 'secondary',
-        disabled: !e.accionExpediente(e.veoAtributos), title: 'Atributos',
       },
       {
         id: 'devolver', label: 'Devolver', icon: 'bi bi-arrow-return-left', tone: 'secondary',

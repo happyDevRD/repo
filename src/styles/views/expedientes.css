@@ -93,6 +93,26 @@
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
+/* Variantes INSIDE (misma píldora que Estado) */
+.estado-badge--pendiente,
+.estado-badge--parcial {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.estado-badge--enviado {
+  background: rgba(34, 197, 94, 0.14);
+  color: #15803d;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.estado-badge--error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 /* Spinner overlay global */
 .spinner-overlay {
   position: fixed;
@@ -898,9 +918,95 @@
   min-width: 0;
 }
 
+.exp-tarea-ops__bar .btn-iflow--sm {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  min-height: 2.125rem;
+}
+
 .exp-tramites-table {
   width: 100%;
   min-width: 0;
+}
+
+/* Tarjeta resumen del expediente: cabeceras arriba, valores abajo, ancho completo */
+.edita-expediente-card {
+  width: 100%;
+  margin: 0 0 0.75rem;
+  padding: 0.45rem 0.85rem 0.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(105, 120, 255, 0.22);
+  background: linear-gradient(
+    90deg,
+    rgba(105, 181, 255, 0.12) 0%,
+    rgba(105, 120, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.94) 100%
+  );
+}
+
+.edita-expediente-card__grid {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 0.15rem 0.75rem;
+  width: 100%;
+  margin: 0;
+}
+
+.edita-expediente-card__grid > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.edita-expediente-card__grid dt {
+  margin: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.edita-expediente-card__grid dd {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-height: 1.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edita-expediente-card__grid dd .estado-badge {
+  flex-shrink: 0;
+}
+
+@media (max-width: 1200px) {
+  .edita-expediente-card__grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    row-gap: 0.45rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .edita-expediente-card__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .edita-expediente-card__grid dd {
+    white-space: normal;
+  }
 }
 
 .edita-page-head {
@@ -1228,10 +1334,12 @@
   padding: 0.25rem 0;
 }
 
-.exp-tarea__actions .btn-iflow--sm {
+.exp-tarea__actions .btn-iflow--sm.btn-iflow--icon {
+  width: 2.125rem;
+  height: 2.125rem;
+  min-height: 2.125rem;
   min-width: 2.125rem;
-  padding-left: 0.55rem;
-  padding-right: 0.55rem;
+  padding: 0;
 }
 
 .exp-tarea__icon {

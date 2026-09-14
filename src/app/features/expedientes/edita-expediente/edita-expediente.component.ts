@@ -691,6 +691,8 @@ export class EditaExpedienteComponent
   public insideDryRun = environment.inside?.dryRun === true;
   public insideUltimaRespuesta: InsideSoapResponse | null = null;
   public insideUltimoEnvio: InsideEnvioRegistro | null = null;
+  public insideEstadosPorTarea: Record<number, string> = {};
+  public insideEstadosPorTramite: Record<number, string> = {};
   public insideRemision: InsideRemisionForm = {
     idexpEni: '',
     dir3Juzgado: '',

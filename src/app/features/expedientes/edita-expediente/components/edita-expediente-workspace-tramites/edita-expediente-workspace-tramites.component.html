@@ -1,31 +1,46 @@
 <!-- Tabla de Trámites (título y Nuevo trámite viven en la cabecera de página) -->
 <div *ngIf="vertramite" class="exp-tramites-table">
-     <app-data-table [items]="tramites" [loading]="cargando"
-          emptyMessage="No hay trámites registrados."
-          exportFileName="tramites"
-          [rowClass]="rowClassFor"
-          (rowClick)="rowClick.emit($event)"
-          (rowDblClick)="rowDoubleClick.emit($event)">
-          <app-table-column header="Número" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="10%"></app-table-column>
-          <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
-          <app-table-column header="Fase" field="fase" [sortable]="true" [filterable]="true" align="center" width="14%"></app-table-column>
-          <app-table-column header="Fecha trámite" field="fecTramite" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="14%">
-               <ng-template let-row>{{ row.fecTramite | date:'dd/MM/yyyy' }}</ng-template>
-          </app-table-column>
-          <app-table-column header="Acciones" align="center" width="8%">
-               <ng-template let-row>
-                    <button
-                         *ngIf="puedeBorrar"
-                         type="button"
-                         class="btn-iflow btn-iflow--sm btn-iflow--icon btn-iflow--danger"
-                         title="Borrar trámite"
-                         aria-label="Borrar trámite"
-                         (click)="handleBorrar($event, row)"
-                    >
-                         <i class="bi bi-trash" aria-hidden="true"></i>
-                    </button>
-               </ng-template>
-          </app-table-column>
-     </app-data-table>
+  <app-data-table
+    [items]="tramites"
+    [loading]="cargando"
+    emptyMessage="No hay trámites registrados."
+    exportFileName="tramites"
+    [rowClass]="rowClassFor"
+    (rowClick)="rowClick.emit($event)"
+    (rowDblClick)="rowDoubleClick.emit($event)"
+  >
+    <app-table-column header="Número" field="numero" [sortable]="true" [filterable]="true" filterType="text" align="center" width="10%"></app-table-column>
+    <app-table-column header="Descripción" field="descripcion" [sortable]="true" [filterable]="true" filterType="text"></app-table-column>
+    <app-table-column header="Fase" field="fase" [sortable]="true" [filterable]="true" align="center" width="12%"></app-table-column>
+    <app-table-column header="Fecha trámite" field="fecTramite" [sortable]="true" [filterable]="true" filterType="dateRange" align="center" width="12%">
+      <ng-template let-row>{{ row.fecTramite | date:'dd/MM/yyyy' }}</ng-template>
+    </app-table-column>
+    <app-table-column header="INSIDE" align="center" width="12%">
+      <ng-template let-row>
+        <span *ngIf="tieneEnvioInside(row); else sinInside"
+              class="estado-badge"
+              [ngClass]="insideBadgeClass(row)">
+          {{ etiquetaInsideTramite(row) }}
+        </span>
+        <ng-template #sinInside>
+          <span class="text-muted">—</span>
+        </ng-template>
+      </ng-template>
+    </app-table-column>
+    <app-table-column header="Acciones" align="center" width="8%">
+      <ng-template let-row>
+        <button
+          *ngIf="puedeBorrar"
+          type="button"
+          class="btn-iflow btn-iflow--sm btn-iflow--danger"
+          title="Borrar trámite"
+          aria-label="Borrar trámite"
+          (click)="handleBorrar($event, row)"
+        >
+          <i class="bi bi-trash" aria-hidden="true"></i>
+          <span class="visually-hidden">Borrar trámite</span>
+        </button>
+      </ng-template>
+    </app-table-column>
+  </app-data-table>
 </div>
-

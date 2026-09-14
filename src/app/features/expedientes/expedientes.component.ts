@@ -40,7 +40,7 @@ import { ExpedientesGridFacade } from './services/expedientes-grid.facade';
 import { ExpedientesExpedienteFacade } from './services/expedientes-expediente.facade';
 import { ExpedientesInsideFacade, ExpedientesInsideHost } from './services/expedientes-inside.facade';
 import { AtributoEditable, esTipoFecha, esTipoNumerico, ExpedientesAtributosFacade } from './services/expedientes-atributos.facade';
-import { isInsideDryRun } from '../../core/constants/inside-simulacion.constants';
+import { isInsideDryRun, etiquetaEstadoEnvioInside, insideEstadoBadgeClass } from '../../core/constants/inside-simulacion.constants';
 import { JqxGridRowEvent } from '../../core/helper/jqx-grid-event.model';
 
 
@@ -807,15 +807,14 @@ export class ExpedientesComponent {// pruebas de formularios
   public insidePendientesCount = 0;
   public insidePendientesErrorCount = 0;
 
-  /** Clase de badge Bootstrap según el estado de envío INSIDE (listado de expedientes). */
+  /** Modificador de `estado-badge` según el estado de envío INSIDE (listado de expedientes). */
   public insideBadgeClass(estado: string): string {
-    switch (String(estado ?? '').toUpperCase()) {
-      case 'PENDIENTE': return 'bg-warning text-dark';
-      case 'ENVIADO': return 'bg-success';
-      case 'SIMULADO': return 'bg-info text-dark';
-      case 'ERROR': return 'bg-danger';
-      default: return 'bg-secondary';
-    }
+    return insideEstadoBadgeClass(estado);
+  }
+
+  /** Etiqueta visible: SIMULADO se muestra como ENVIADO (demo transparente). */
+  public etiquetaEstadoInside(estado: string): string {
+    return etiquetaEstadoEnvioInside(estado);
   }
 
   /** Resalta en el listado la fila del expediente actualmente seleccionado. */

@@ -25,7 +25,7 @@ const TRAMITE_ACTION_DEFS: ReadonlyArray<Omit<ModalAction, 'visible'>> = [
     id: 'borrarTramite',
     label: 'Borrar trámite',
     icon: 'bi bi-trash',
-    tone: 'secondary',
+    tone: 'danger',
     order: 2,
     title: 'Borrar Trámite',
   },

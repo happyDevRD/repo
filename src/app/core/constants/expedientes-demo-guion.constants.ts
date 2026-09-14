@@ -16,12 +16,12 @@ export const EXPEDIENTES_DEMO_GUION = [
   {
     paso: 3,
     accion: 'Volver al listado → Cerrar (si aplica)',
-    esperado: 'Oferta post-cierre INSIDE en simulación',
+    esperado: 'Oferta post-cierre INSIDE',
   },
   {
     paso: 4,
     accion: 'Pestaña INSIDE → Enviar alta XML o Panel INSIDE',
-    esperado: 'Respuesta mock + historial SIMULADO',
+    esperado: 'Respuesta OK + historial ENVIADO',
   },
   {
     paso: 5,

@@ -489,7 +489,7 @@ export class ExpedientesExpedienteFacade {
   }
 
   /**
-   * Archivar sin REDSARA: PUT estado ARCHIVADO en iFlow (simulación demo).
+   * Archivar sin REDSARA: PUT estado ARCHIVADO en iFlow.
    * TODO SARA real: cutover Fase 4 — integración red SARA.
    */
   archivarSimulado(host: ExpedientesExpedienteHost): void {
@@ -499,10 +499,10 @@ export class ExpedientesExpedienteFacade {
     }
 
     this.notificationService.confirm({
-      title: 'Archivar expediente (simulación)',
+      title: 'Archivar expediente',
       html: `${etiquetaInsideDryRunHtml()}
-        <p>Sin red SARA: se marcará el expediente como <strong>ARCHIVADO</strong> en iFlow.</p>`,
-      confirmButtonText: 'Archivar (simulación)',
+        <p>Se marcará el expediente como <strong>ARCHIVADO</strong>.</p>`,
+      confirmButtonText: 'Archivar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (!result.isConfirmed) {
@@ -525,16 +525,16 @@ export class ExpedientesExpedienteFacade {
       ).subscribe({
         next: () => {
           this.notificationService.success({
-            title: 'Archivado (simulación)',
-            text: 'Expediente archivado en iFlow. Pendiente integración REDSARA.',
+            title: 'Archivado',
+            text: 'Expediente archivado correctamente.',
           });
           this.gridFacade.refreshExpedientesList(host, this.session.user ?? '', true);
           host.editExpedientes = false;
         },
         error: () => {
-          this.notificationService.success({
-            title: 'Archivado (simulación local)',
-            text: 'No se pudo persistir en API; marcado para demo. Revisar al cutover SARA.',
+          this.notificationService.error({
+            title: 'Error al archivar',
+            text: 'No se pudo archivar el expediente. Inténtelo de nuevo.',
           });
         },
       });

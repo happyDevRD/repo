@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { etiquetaCortaEstadoInside, etiquetaEstadoEnvioInside } from '../../../../../core/constants/inside-simulacion.constants'
 import { ModalAction, ModalActionEvent } from '../../../../../shared/modals/modal-action.model'
 import { TareaTramiteSeleccionRow } from '../../tareas/tareas-seleccion.helper'
 
@@ -21,6 +22,8 @@ export class EditaExpedienteWorkspaceTareasComponent {
   @Input() tareas: TareaTramiteSeleccionRow[] = []
   @Input() idTarea: number | null = null
   @Input() tareasCargando = false
+  /** Último estado INSIDE por id de tarea. */
+  @Input() insideEstadosPorTarea: Record<number, string> = {}
 
   @Output() action = new EventEmitter<ModalActionEvent>()
   @Output() tareaSelect = new EventEmitter<TareaTramiteSeleccionRow>()
@@ -62,21 +65,55 @@ export class EditaExpedienteWorkspaceTareasComponent {
     'tablonAnuncios',
   ])
 
+  /** Acciones de gestión de la tarea (barra ops; en fila van iconOnly). */
+  private static readonly TAREAS_IDS = new Set([
+    'finalizarTarea',
+    'borrarTarea',
+  ])
+
   get accionesDocumento(): ModalAction[] {
-    return (this.toolbarActions ?? []).filter((a) =>
-      EditaExpedienteWorkspaceTareasComponent.DOC_IDS.has(a.id),
+    return this.filtrarGrupo(
+      this.toolbarActions,
+      EditaExpedienteWorkspaceTareasComponent.DOC_IDS,
     )
   }
 
   get accionesFirma(): ModalAction[] {
-    return (this.toolbarActions ?? []).filter((a) =>
-      EditaExpedienteWorkspaceTareasComponent.FIRMA_IDS.has(a.id),
+    return this.filtrarGrupo(
+      this.toolbarActions,
+      EditaExpedienteWorkspaceTareasComponent.FIRMA_IDS,
     )
   }
 
   get accionesTramite(): ModalAction[] {
-    return (this.toolbarActions ?? []).filter((a) =>
-      EditaExpedienteWorkspaceTareasComponent.TRAMITE_IDS.has(a.id),
+    return this.filtrarGrupo(
+      this.toolbarActions,
+      EditaExpedienteWorkspaceTareasComponent.TRAMITE_IDS,
+    )
+  }
+
+  get accionesTareas(): ModalAction[] {
+    return this.filtrarGrupo(
+      this.rowActions,
+      EditaExpedienteWorkspaceTareasComponent.TAREAS_IDS,
+    ).map((a) => ({ ...a, iconOnly: false }))
+  }
+
+  get tieneOperacionesTarea(): boolean {
+    return (
+      this.accionesDocumento.length > 0
+      || this.accionesFirma.length > 0
+      || this.accionesTramite.length > 0
+      || this.accionesTareas.length > 0
+    )
+  }
+
+  private filtrarGrupo(
+    actions: ModalAction[] | null | undefined,
+    ids: Set<string>,
+  ): ModalAction[] {
+    return (actions ?? []).filter(
+      (a) => ids.has(a.id) && a.visible !== false,
     )
   }
 
@@ -110,7 +147,7 @@ export class EditaExpedienteWorkspaceTareasComponent {
   /** Acciones de la fila: contextuales si está activa; si no, acceso rápido al documento. */
   accionesFila(tarea: TareaTramiteSeleccionRow): ModalAction[] {
     if (this.idTarea === tarea.id) {
-      return this.rowActions ?? []
+      return (this.rowActions ?? []).filter((a) => a.visible !== false)
     }
     if (!tarea.archivo) {
       return []
@@ -155,6 +192,39 @@ export class EditaExpedienteWorkspaceTareasComponent {
 
   esFirmado(tarea: TareaTramiteSeleccionRow): boolean {
     return String(tarea.firmado ?? '') === '1'
+  }
+
+  estadoInsideTarea(tarea: TareaTramiteSeleccionRow): string {
+    return String(this.insideEstadosPorTarea?.[tarea.id] ?? '').toUpperCase()
+  }
+
+  tieneEnvioInside(tarea: TareaTramiteSeleccionRow): boolean {
+    return !!this.estadoInsideTarea(tarea)
+  }
+
+  etiquetaInsideTarea(tarea: TareaTramiteSeleccionRow): string {
+    const estado = this.estadoInsideTarea(tarea)
+    if (!estado) {
+      return ''
+    }
+    if (estado === 'ERROR') {
+      return 'INSIDE error'
+    }
+    return `INSIDE ${etiquetaCortaEstadoInside(estado) || etiquetaEstadoEnvioInside(estado).toLowerCase()}`
+  }
+
+  insideBadgeClass(tarea: TareaTramiteSeleccionRow): string {
+    switch (this.estadoInsideTarea(tarea)) {
+      case 'ERROR':
+        return 'exp-tarea-badge--danger'
+      case 'PENDIENTE':
+        return 'exp-tarea-badge--warn'
+      case 'ENVIADO':
+      case 'SIMULADO':
+        return 'exp-tarea-badge--ok'
+      default:
+        return 'exp-tarea-badge--muted'
+    }
   }
 
   estadoLabel(tarea: TareaTramiteSeleccionRow): string {

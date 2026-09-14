@@ -2,9 +2,6 @@
   <div class="expedientes-listado__head d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
     <h3 class="expedientes-listado__titulo mb-0">Listado</h3>
     <div class="d-flex flex-wrap align-items-center gap-2">
-      <span *ngIf="e.insideDryRun" class="badge bg-info text-dark" title="Sin acceso REDSARA">
-        INSIDE simulación
-      </span>
       <span *ngIf="e.insidePendientesCount > 0" class="badge bg-warning text-dark">
         {{ e.insidePendientesCount }} pendiente(s) INSIDE
       </span>
@@ -39,7 +36,9 @@
     </app-table-column>
     <app-table-column header="INSIDE" field="insideEstado" [sortable]="true" [filterable]="true" align="center">
       <ng-template let-row>
-        <span *ngIf="row.insideEstado; else sinInside" class="badge" [ngClass]="e.insideBadgeClass(row.insideEstado)">{{ row.insideEstado }}</span>
+        <span *ngIf="row.insideEstado; else sinInside"
+              class="estado-badge"
+              [ngClass]="e.insideBadgeClass(row.insideEstado)">{{ e.etiquetaEstadoInside(row.insideEstado) }}</span>
         <ng-template #sinInside>-</ng-template>
       </ng-template>
     </app-table-column>

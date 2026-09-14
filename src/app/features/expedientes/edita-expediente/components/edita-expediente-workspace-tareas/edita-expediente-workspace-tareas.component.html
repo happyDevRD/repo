@@ -46,6 +46,9 @@
               {{ sel.descripcion || 'Tarea seleccionada' }}
             </h3>
             <span class="exp-tarea-badge" [ngClass]="estadoBadgeClass(sel)">{{ estadoLabel(sel) }}</span>
+            <span *ngIf="tieneEnvioInside(sel)" class="exp-tarea-badge" [ngClass]="insideBadgeClass(sel)">
+              {{ etiquetaInsideTarea(sel) }}
+            </span>
           </div>
           <div class="exp-tarea-context__meta">
             <span class="exp-tarea-context__label">Inicio</span>
@@ -80,9 +83,9 @@
       </ng-template>
     </section>
 
-    <!-- Acciones de la tarea seleccionada, agrupadas por tipo -->
+    <!-- Acciones de la tarea seleccionada, agrupadas por tipo (solo las activas) -->
     <nav
-      *ngIf="verAccionesdeTarea && toolbarActions?.length"
+      *ngIf="verAccionesdeTarea && tieneOperacionesTarea"
       class="exp-tarea-ops"
       aria-label="Operaciones de la tarea"
     >
@@ -110,6 +113,15 @@
           containerClass="exp-tarea-ops__bar"
           size="sm"
           [actions]="accionesTramite"
+          (action)="handleAction($event)">
+        </app-modal-action-bar>
+      </div>
+      <div class="exp-tarea-ops__group" *ngIf="accionesTareas.length">
+        <span class="exp-tarea-ops__label">Tareas</span>
+        <app-modal-action-bar
+          containerClass="exp-tarea-ops__bar"
+          size="sm"
+          [actions]="accionesTareas"
           (action)="handleAction($event)">
         </app-modal-action-bar>
       </div>
@@ -157,6 +169,9 @@
             </span>
             <span class="exp-tarea__side">
               <span class="exp-tarea-badge" [ngClass]="estadoBadgeClass(tarea)">{{ estadoLabel(tarea) }}</span>
+              <span *ngIf="tieneEnvioInside(tarea)" class="exp-tarea-badge" [ngClass]="insideBadgeClass(tarea)">
+                {{ etiquetaInsideTarea(tarea) }}
+              </span>
               <span *ngIf="tarea.archivo" class="exp-tarea__flag" title="Con archivo" aria-label="Con archivo">
                 <i class="bi bi-paperclip" aria-hidden="true"></i>
               </span>
@@ -171,11 +186,10 @@
               <button
                 *ngFor="let item of acciones; trackBy: trackByActionId"
                 type="button"
-                class="btn-iflow btn-iflow--sm"
+                class="btn-iflow btn-iflow--sm btn-iflow--icon"
                 [class.btn-iflow--secondary]="(item.tone || 'secondary') === 'secondary'"
                 [class.btn-iflow--primary]="item.tone === 'primary'"
                 [class.btn-iflow--danger]="item.tone === 'danger'"
-                [disabled]="!!item.disabled || !!item.busy"
                 [attr.title]="item.title || item.label"
                 [attr.aria-label]="item.title || item.label"
                 (click)="handleRowAction(tarea, item.id)"
