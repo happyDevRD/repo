@@ -290,6 +290,8 @@ export class VerExpediente {
   email!: string;
   forNotifTexto!: string;
   nomRepre!: string;
+  /** Presente cuando el expediente nace de un registro de entrada. */
+  idHisDocum?: number | string | null;
   
   // Nuevas propiedades para el modal de edición
   formaNotificacion!: string;

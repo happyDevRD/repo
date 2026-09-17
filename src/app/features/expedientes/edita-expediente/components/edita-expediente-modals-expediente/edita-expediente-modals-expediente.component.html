@@ -1,0 +1,320 @@
+<!-- Atributos del expediente -->
+<app-modal-shell
+  modalId="NAtributosModal2"
+  title="Atributos del expediente"
+  titleId="EditaNAtributosModal2Label"
+  modalClass="iflow-modal iflow-modal--fit exp-atributos-modal"
+  dialogClass="modal-lg"
+  [dismissOnClose]="false"
+  (closed)="edita.cerrarModalAtributos()">
+  <form modalBody id="editaDynamicFormAtributos" (ngSubmit)="edita.envioAtributos()">
+    <p *ngIf="edita.tituloExp" class="text-secondary small mb-3">
+      <i class="bi bi-folder2-open me-1" aria-hidden="true"></i>{{ edita.tituloExp }}
+    </p>
+
+    <div *ngIf="edita.cargandoAtributos" class="text-center text-secondary py-4" role="status">
+      <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+      Cargando atributos…
+    </div>
+
+    <div *ngIf="!edita.cargandoAtributos && edita.atributosEditables.length === 0"
+         class="alert alert-light border mb-0" role="status">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      Este expediente no tiene atributos configurados.
+    </div>
+
+    <div *ngIf="!edita.cargandoAtributos && edita.atributosEditables.length > 0" class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Atributo</th>
+            <th>Valor</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let attr of edita.atributosEditables; let i = index">
+            <td>
+              <div class="fw-semibold">{{ attr.desGruAtrib }}</div>
+              <div class="text-secondary small" *ngIf="attr.requerido">Obligatorio</div>
+            </td>
+            <td>
+              <input *ngIf="edita.esTipoFechaAtributo(attr.tipo)"
+                     type="date" class="form-control form-control-sm"
+                     [id]="'editaAtributoValor' + i"
+                     [ngModel]="attr.fechaInput" name="editaFecha{{i}}"
+                     (ngModelChange)="edita.actualizarFechaAtributo(attr, $event)">
+              <input *ngIf="!edita.esTipoFechaAtributo(attr.tipo)"
+                     type="text" class="form-control form-control-sm"
+                     [id]="'editaAtributoValorText' + i"
+                     [attr.inputmode]="edita.esTipoNumericoAtributo(attr.tipo) ? 'numeric' : null"
+                     [attr.maxlength]="attr.longitud || 255"
+                     [(ngModel)]="attr.valor" name="editaValor{{i}}">
+            </td>
+            <td class="text-end">
+              <button type="button" class="btn-iflow btn-iflow--danger btn-iflow--sm"
+                      title="Eliminar atributo" (click)="edita.borraAtributo(attr)">
+                <i class="bi bi-trash-fill" aria-hidden="true"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+            (click)="edita.cerrarModalAtributos()">
+      Cerrar
+    </button>
+    <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+            form="editaDynamicFormAtributos"
+            [disabled]="edita.guardandoAtributos">
+      <span *ngIf="edita.guardandoAtributos" class="spinner-border spinner-border-sm me-2" role="status"></span>
+      {{ edita.guardandoAtributos ? 'Guardando…' : 'Guardar' }}
+    </button>
+  </div>
+</app-modal-shell>
+
+<!-- Asignar tramitador -->
+<app-modal-shell
+  modalId="EditaAsignarTramitadorModal"
+  title="Asignar Tramitador"
+  titleId="EditaAsignarTramitadorModalLabel"
+  modalClass="iflow-modal iflow-modal--fit exp-asignar-tramitador-modal"
+  dialogClass="modal-lg"
+  [keyboard]="false"
+  [dismissOnClose]="false"
+  (closed)="edita.cerrarAsignarTramitador()">
+  <form modalBody id="editaFormAsignarTramitador" (ngSubmit)="edita.onAsignarTramitadorSubmit()">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="form-floating">
+          <select class="form-select" id="editaAsignarTramitadorTarea" name="tarea"
+                  [ngModel]="edita.tareaSeleccionadaAsignar"
+                  (ngModelChange)="edita.seleccionarTareaAsignar($event)"
+                  required [disabled]="edita.cargandoTareasAsignar"
+                  [class.form-select--placeholder]="!edita.tareaSeleccionadaAsignar"
+                  [class.is-invalid]="edita.isTareaAsignarInvalid()">
+            <option [ngValue]="null" disabled>
+              {{ edita.cargandoTareasAsignar ? 'Cargando tareas…' : 'Selecciona una tarea' }}
+            </option>
+            <option *ngFor="let tarea of edita.tareasAsignarTramitador" [ngValue]="tarea">{{ tarea.descripcion }}</option>
+          </select>
+          <label class="required-field" for="editaAsignarTramitadorTarea">Tarea</label>
+        </div>
+        <div *ngIf="edita.isTareaAsignarInvalid()" class="invalid-feedback d-block">
+          Selecciona una tarea
+        </div>
+        <div *ngIf="!edita.cargandoTareasAsignar && edita.errorTareasAsignar" class="invalid-feedback d-block">
+          No se han podido cargar las tareas del procedimiento
+        </div>
+        <p *ngIf="!edita.cargandoTareasAsignar && !edita.errorTareasAsignar && edita.tareasAsignarTramitador.length === 0"
+           class="form-text mb-0">
+          Este procedimiento no tiene tareas definidas
+        </p>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-floating">
+          <select class="form-select" id="editaAsignarTramitadorPersona" name="persona"
+                  [ngModel]="edita.personaSeleccionadaAsignar"
+                  (ngModelChange)="edita.seleccionarPersonaAsignar($event)"
+                  required [disabled]="!edita.tareaSeleccionadaAsignar || edita.cargandoPermisosAsignar"
+                  [class.form-select--placeholder]="!edita.personaSeleccionadaAsignar"
+                  [class.is-invalid]="edita.isPersonaAsignarInvalid()">
+            <option [ngValue]="null" disabled>
+              {{ !edita.tareaSeleccionadaAsignar ? 'Selecciona antes una tarea' : (edita.cargandoPermisosAsignar ? 'Cargando personas…' : 'Selecciona una persona') }}
+            </option>
+            <option *ngFor="let persona of edita.permisosAsignarTramitador" [ngValue]="persona">{{ persona.usuario }}</option>
+          </select>
+          <label class="required-field" for="editaAsignarTramitadorPersona">Persona</label>
+        </div>
+        <div *ngIf="edita.isPersonaAsignarInvalid()" class="invalid-feedback d-block">
+          Selecciona una persona
+        </div>
+        <div *ngIf="edita.tareaSeleccionadaAsignar && !edita.cargandoPermisosAsignar && edita.errorPermisosAsignar"
+             class="invalid-feedback d-block">
+          No se han podido cargar las personas con permiso para esta tarea
+        </div>
+        <p *ngIf="edita.tareaSeleccionadaAsignar && !edita.cargandoPermisosAsignar && !edita.errorPermisosAsignar && edita.permisosAsignarTramitador.length === 0"
+           class="form-text mb-0">
+          Nadie tiene permiso para esta tarea. Revisa los permisos del procedimiento.
+        </p>
+      </div>
+
+      <div class="col-12">
+        <div class="form-floating">
+          <input type="text" class="form-control"
+                 name="editaDescripcionMensaje" id="editaDescripcionMensaje"
+                 [(ngModel)]="edita.crearmensaje.descripcion"
+                 required [class.is-invalid]="edita.isDescripcionMensajeInvalid()" placeholder=" ">
+          <label class="required-field" for="editaDescripcionMensaje">Asunto</label>
+        </div>
+        <div *ngIf="edita.isDescripcionMensajeInvalid()" class="invalid-feedback d-block">
+          El asunto es obligatorio
+        </div>
+      </div>
+    </div>
+  </form>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+            (click)="edita.cerrarAsignarTramitador()">Cancelar</button>
+    <button type="submit" class="btn-iflow modal-footer__btn btn-iflow--primary"
+            form="editaFormAsignarTramitador"
+            [disabled]="edita.isAsignandoTramitador">
+      <span *ngIf="edita.isAsignandoTramitador" class="spinner-border spinner-border-sm me-2" role="status"></span>
+      {{ edita.isAsignandoTramitador ? 'Enviando…' : 'Ofrecer expediente' }}
+    </button>
+  </div>
+</app-modal-shell>
+
+<!-- Tareas del expediente -->
+<app-modal-shell
+  modalId="EditaTareaExpedienteModal"
+  title="Tareas del Expediente"
+  titleId="EditaTareaExpedienteModalLabel"
+  modalClass="iflow-modal iflow-modal--fit exp-tareas-modal"
+  dialogClass="modal-xl modal-dialog-scrollable"
+  [dismissOnClose]="false"
+  (closed)="edita.cerrarTareasExpediente()">
+  <div modalBody>
+    <div class="d-flex justify-content-end mb-3" *ngIf="edita.numeroArchivoTareasExp">
+      <button class="btn-iflow btn-iflow--primary btn-iflow--sm" type="button"
+              title="Descargar Documento Original" (click)="edita.abreArchivoTareaExpediente()">
+        <i class="bi bi-cloud-arrow-down me-1" aria-hidden="true"></i>
+        Descargar documento
+      </button>
+    </div>
+
+    <div *ngIf="edita.cargandoTareasExpediente" class="text-center text-secondary py-4" role="status">
+      <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+      Cargando tareas del expediente…
+    </div>
+
+    <div *ngIf="!edita.cargandoTareasExpediente && edita.tareasExpedienteVacio"
+         class="alert alert-light border mb-0" role="status">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      Este expediente no tiene tareas registradas.
+    </div>
+
+    <div *ngIf="!edita.cargandoTareasExpediente && !edita.tareasExpedienteVacio" class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Descripción</th>
+            <th>Trámite</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>Usuario</th>
+            <th>Firmado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tarea of edita.tareasExpedienteList"
+              [class.table-active]="tarea.archivo && edita.numeroArchivoTareasExp === +tarea.archivo"
+              [style.cursor]="tarea.archivo ? 'pointer' : null"
+              (click)="edita.clickTareaExpediente(tarea)">
+            <td class="fw-normal">{{ tarea.numero }}</td>
+            <td class="fw-normal">{{ tarea.descripcion }}</td>
+            <td class="fw-normal">{{ tarea.desTramite || '—' }}</td>
+            <td class="fw-normal">{{ (tarea.fecInicio || '') | slice:0:10 }}</td>
+            <td class="fw-normal">{{ tarea.fecFin ? (tarea.fecFin | slice:0:10) : '—' }}</td>
+            <td class="fw-normal">{{ tarea.usuario }}</td>
+            <td>
+              <span class="badge" [class.bg-success]="tarea.firmado" [class.bg-secondary]="!tarea.firmado">
+                {{ tarea.firmado ? 'Sí' : 'No' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+            (click)="edita.cerrarTareasExpediente()">
+      Cerrar
+    </button>
+  </div>
+</app-modal-shell>
+
+<!-- Interesados: misma tabla que app-interesado-list -->
+<app-modal-shell
+  modalId="EditaInteresadosModal"
+  title="Interesados del expediente"
+  titleId="EditaInteresadosModalLabel"
+  modalClass="iflow-modal iflow-modal--fit exp-interesados-listado-modal"
+  dialogClass="modal-xl"
+  [dismissOnClose]="false"
+  (closed)="edita.cerrarModal('EditaInteresadosModal')">
+  <div modalBody>
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+      <span class="expediente-numero">
+        {{ edita.verExpediente.ejercicio }}/{{ edita.verExpediente.numero }}
+      </span>
+      <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn-iflow btn-iflow--icon" title="Nuevo interesado"
+                aria-label="Nuevo interesado" (click)="handleNuevoInteresado()">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        </button>
+        <button *ngIf="edita.verborrarinteresado" type="button" class="btn-iflow btn-iflow--icon"
+                title="Borrar interesado" aria-label="Borrar interesado"
+                (click)="edita.borrarInteresados()">
+          <i class="bi bi-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="!edita.listarinteresadosdto?.length" class="alert alert-light border mb-0" role="status">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      Este expediente no tiene interesados registrados.
+    </div>
+
+    <div *ngIf="edita.listarinteresadosdto?.length" class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Interesado</th>
+            <th>Documento</th>
+            <th>Principal</th>
+            <th>Representante</th>
+            <th>Documento representante</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let interesado of edita.listarinteresadosdto; trackBy: trackById"
+              [class.table-active]="edita.idInteresado === interesado.id"
+              style="cursor: pointer;"
+              (click)="handleClickInteresado(interesado)">
+            <td class="fw-normal">
+              <i class="bi bi-person me-1 text-secondary" aria-hidden="true"></i>{{ interesado.nomInter }}
+            </td>
+            <td class="fw-normal">{{ interesado.numDocumInter }}</td>
+            <td>
+              <span class="badge"
+                    [class.bg-success]="interesado.principal == 1"
+                    [class.bg-secondary]="interesado.principal != 1">
+                {{ interesado.principal == 1 ? 'Sí' : 'No' }}
+              </span>
+            </td>
+            <td class="fw-normal">
+              <ng-container *ngIf="interesado.nomRepre">
+                <i class="bi bi-person-badge me-1 text-secondary" aria-hidden="true"></i>{{ interesado.nomRepre }}
+              </ng-container>
+              <span *ngIf="!interesado.nomRepre">—</span>
+            </td>
+            <td class="fw-normal">{{ interesado.numDocumRepre || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div modalFooter class="modal-footer__actions">
+    <button type="button" class="btn-iflow modal-footer__btn btn-iflow--secondary"
+            (click)="edita.cerrarModal('EditaInteresadosModal')">
+      Cerrar
+    </button>
+  </div>
+</app-modal-shell>

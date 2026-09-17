@@ -59,6 +59,8 @@ export interface EditaExpedienteCargaHost {
   /** Aplica la vista inicial (Notificaciones/Tramitadores) indicada por el query param `vista`. */
   verNotificaciones?(): void
   veotramitadores?(): void
+  onExpedienteContextoCargado?(): void
+  irAInteresados?(): void
 }
 
 export interface EditaExpedienteExpedienteHost {
@@ -179,6 +181,7 @@ export class EditaExpedienteLifecycleFacade {
           host.verExpediente = verExpediente
           host.inicializarSourceListarNotifi()
           host.getListarInteresado(host.idExpediente)
+          host.onExpedienteContextoCargado?.()
           this.cargarLeerNotificaciones(host)
 
           const vista = activatedRoute.snapshot.queryParamMap.get('vista')
@@ -193,6 +196,8 @@ export class EditaExpedienteLifecycleFacade {
                 host.veotramitadores?.()
               }
             }, 600)
+          } else if (vista === 'interesados') {
+            setTimeout(() => host.irAInteresados?.(), 0)
           }
         },
         error: (error) => {

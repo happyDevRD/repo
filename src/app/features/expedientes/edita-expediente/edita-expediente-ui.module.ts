@@ -14,6 +14,7 @@ import { EditaExpedienteModalsNotificacionesComponent } from './components/edita
 import { EditaExpedienteModalsInteresadosComponent } from './components/edita-expediente-modals-interesados/edita-expediente-modals-interesados.component'
 import { EditaExpedienteModalsOperacionesComponent } from './components/edita-expediente-modals-operaciones/edita-expediente-modals-operaciones.component'
 import { EditaExpedienteModalsTramitesComponent } from './components/edita-expediente-modals-tramites/edita-expediente-modals-tramites.component'
+import { EditaExpedienteModalsExpedienteComponent } from './components/edita-expediente-modals-expediente/edita-expediente-modals-expediente.component'
 import { EditaModalEnvioNotifiComponent } from './components/modals/operaciones/modal-envio-notifi/modal-envio-notifi.component'
 import { EditaModalMetadatosModalComponent } from './components/modals/operaciones/modal-metadatos-modal/modal-metadatos-modal.component'
 import { EditaModalRecepNotifiComponent } from './components/modals/operaciones/modal-recep-notifi/modal-recep-notifi.component'
@@ -59,6 +60,7 @@ const PANELS = [
   EditaExpedienteModalsInteresadosComponent,
   EditaExpedienteModalsOperacionesComponent,
   EditaExpedienteModalsTramitesComponent,
+  EditaExpedienteModalsExpedienteComponent,
   EditaModalEnvioNotifiComponent,
   EditaModalMetadatosModalComponent,
   EditaModalRecepNotifiComponent,

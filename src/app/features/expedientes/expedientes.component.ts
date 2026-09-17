@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AtributosModificar,
@@ -39,7 +39,13 @@ import { TareaProcedimientoDTO } from '../../core/models/tarea-procedimiento.dto
 import { ExpedientesGridFacade } from './services/expedientes-grid.facade';
 import { ExpedientesExpedienteFacade } from './services/expedientes-expediente.facade';
 import { ExpedientesInsideFacade, ExpedientesInsideHost } from './services/expedientes-inside.facade';
-import { AtributoEditable, esTipoFecha, esTipoNumerico, ExpedientesAtributosFacade } from './services/expedientes-atributos.facade';
+import {
+  AtributoEditable,
+  esTipoFecha,
+  esTipoNumerico,
+  ExpedientesAtributosFacade,
+} from './services/expedientes-atributos.facade';
+import { ModalInsideAccionesComponent } from './components/modals/modal-inside-acciones/modal-inside-acciones.component';
 import { isInsideDryRun, etiquetaEstadoEnvioInside, insideEstadoBadgeClass } from '../../core/constants/inside-simulacion.constants';
 import { JqxGridRowEvent } from '../../core/helper/jqx-grid-event.model';
 
@@ -457,6 +463,7 @@ export class ExpedientesComponent {// pruebas de formularios
 
   public marcaExpedienteNuevo(rowData: ExpedienteListar) {
     this.expedienteFacade.marcarExpedienteSeleccionado(this, rowData)
+    this.idExpedienteParaInside = rowData.id
     this.pestanaFlujo = 'tramitacion'
   }
 
@@ -668,8 +675,6 @@ export class ExpedientesComponent {// pruebas de formularios
     } else if (modalId === 'cerrarExpModal') {
       this.fechacierreexpedi = fechaHoyISO();
       this.serieDocumental = this.serieDocumental ?? '';
-    } else if (modalId === 'AsignarTramitadorModal') {
-      this.lanzaTareaProcedi();
     }
     this.modalManagerService.openModal(modalId);
   }
@@ -679,12 +684,6 @@ export class ExpedientesComponent {// pruebas de formularios
     if (modalId === 'nexpedienteModal') {
       this.cerrarFormularioExpediente();
       return;
-    } else if (modalId === 'NAtributosModal2') {
-      this.borraArrayAtributos();
-    } else if (modalId === 'TareaExpedienteModal') {
-      this.limpioSourceTareasExpediente();
-    } else if (modalId === 'AsignarTramitadorModal') {
-      this.limpiarDatosAsignarTramitador();
     }
 
     this.modalManagerService.closeModal(modalId);
@@ -840,6 +839,67 @@ export class ExpedientesComponent {// pruebas de formularios
 
   public idExpedienteParaInside: number | null = null;
 
+  @ViewChild('insideAcciones') insideAcciones?: ModalInsideAccionesComponent
+
+  get insideAccionesEnviando(): boolean {
+    return !!this.insideAcciones?.insideEnviando
+  }
+
+  /** Prepara el host INSIDE del expediente seleccionado (sin abrir el modal Acciones). */
+  public ensureInsideAccionesHost(): boolean {
+    const id = this.getExpedienteIdSeleccionado() || this.idexpediente
+    if (!id) {
+      this.notificationService.warning('Seleccione un expediente')
+      return false
+    }
+    this.idExpedienteParaInside = Number(id)
+    this.cdr.detectChanges()
+    return true
+  }
+
+  public handleInsideHistorialDesdeListado(): void {
+    if (!this.ensureInsideAccionesHost()) {
+      return
+    }
+    setTimeout(() => this.insideAcciones?.handleVerHistorialEnvios())
+  }
+
+  public handleInsideValidarDesdeListado(): void {
+    if (!this.ensureInsideAccionesHost()) {
+      return
+    }
+    setTimeout(() => this.insideAcciones?.handleValidarExpediente())
+  }
+
+  public handleInsideExpedienteDesdeListado(): void {
+    if (!this.ensureInsideAccionesHost()) {
+      return
+    }
+    setTimeout(() => this.insideAcciones?.handleEnviarExpedienteCompleto())
+  }
+
+  public handleInsideAltaXmlDesdeListado(): void {
+    if (!this.ensureInsideAccionesHost()) {
+      return
+    }
+    setTimeout(() => this.insideAcciones?.handleAltaExpedienteEniXml())
+  }
+
+  public handleInsideDocumentosDesdeListado(): void {
+    if (!this.ensureInsideAccionesHost()) {
+      return
+    }
+    setTimeout(() => this.insideAcciones?.handleEnviarDocumentosExpediente())
+  }
+
+  public handleInsideRemisionDesdeListado(): void {
+    if (!this.ensureInsideAccionesHost()) {
+      return
+    }
+    setTimeout(() => this.insideAcciones?.handleAbrirModalRemisionJusticia())
+  }
+
+  /** @deprecated El listado ya muestra las acciones INSIDE en la toolbar. */
   public abrirModalInsideDesdeListado(idexpediente: number): void {
     this.idExpedienteParaInside = idexpediente;
     this.cdr.detectChanges();

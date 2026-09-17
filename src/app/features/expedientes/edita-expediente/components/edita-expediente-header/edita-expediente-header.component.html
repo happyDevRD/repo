@@ -54,74 +54,24 @@
         </button>
       </li>
     </ul>
-    <div class="edita-toolbar__meta">
-      <span class="expediente-numero">{{ expedienteEjercicio }}/{{ expedienteNumero }}</span>
-      <span *ngIf="estadoResumenInside"
-            class="estado-badge"
-            [ngClass]="insideBadgeClass">{{ etiquetaResumenInside }}</span>
-    </div>
   </div>
 
   <nav class="expediente-acciones" aria-label="Barra de acciones">
-    <div class="expediente-acciones__fila" *ngIf="pestanaFlujo === 'tramitacion'" role="tabpanel">
-      <button type="button"
-              class="btn-iflow btn-iflow--primary btn-iflow--sm"
-              title="Notificaciones"
-              (click)="handleVerNotificaciones()">
-        <i class="bi bi-bell" aria-hidden="true"></i> Notificaciones
-      </button>
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Tramitadores"
-              (click)="handleVeotramitadores()">
-        <i class="bi bi-people" aria-hidden="true"></i> Tramitadores
-      </button>
-    </div>
+    <app-modal-action-bar
+      *ngIf="pestanaFlujo === 'tramitacion'"
+      containerClass="expediente-acciones__fila"
+      size="sm"
+      [actions]="actionsTramitacion"
+      (action)="handleAccionTramitacion($event)">
+    </app-modal-action-bar>
 
-    <div class="expediente-acciones__fila" *ngIf="pestanaFlujo === 'inside'" role="tabpanel">
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Historial de envíos INSIDE"
-              [disabled]="insideEnviando"
-              (click)="handleVerHistorialEnviosInside()">
-        <i class="bi bi-clock-history" aria-hidden="true"></i> Historial
-      </button>
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Validar expediente"
-              [disabled]="insideEnviando"
-              (click)="handleValidarExpedienteInside()">
-        <i class="bi bi-shield-check" aria-hidden="true"></i> Validar
-      </button>
-      <button type="button"
-              class="btn-iflow btn-iflow--primary btn-iflow--sm"
-              title="INSIDE Expediente"
-              [disabled]="insideEnviando"
-              (click)="handleEnviarExpedienteInside()">
-        <i class="bi bi-cloud-upload" aria-hidden="true"></i> INSIDE Expediente
-      </button>
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Alta XML Expediente"
-              [disabled]="insideEnviando"
-              (click)="handleAltaExpedienteEniXmlInside()">
-        <i class="bi bi-file-earmark-code" aria-hidden="true"></i> Alta XML
-      </button>
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="INSIDE Documentos"
-              [disabled]="insideEnviando"
-              (click)="handleEnviarDocumentosInside()">
-        <i class="bi bi-files" aria-hidden="true"></i> Documentos
-      </button>
-      <button type="button"
-              class="btn-iflow btn-iflow--secondary btn-iflow--sm"
-              title="Remisión a Justicia"
-              [disabled]="insideEnviando"
-              (click)="handleAbrirModalRemisionJusticia()">
-        <i class="bi bi-bank" aria-hidden="true"></i> Remisión Justicia
-      </button>
-    </div>
+    <app-modal-action-bar
+      *ngIf="pestanaFlujo === 'inside'"
+      containerClass="expediente-acciones__fila"
+      size="sm"
+      [actions]="actionsInside"
+      (action)="handleAccionInside($event)">
+    </app-modal-action-bar>
   </nav>
 </section>
 
@@ -131,11 +81,11 @@
   aria-label="Expediente seleccionado"
 >
   <dl class="edita-expediente-card__grid">
-    <div>
+    <div class="edita-expediente-card__cell">
       <dt>Expediente</dt>
       <dd>{{ exp.ejercicio }}/{{ exp.numero }}</dd>
     </div>
-    <div>
+    <div class="edita-expediente-card__cell">
       <dt>Estado</dt>
       <dd>
         <span
@@ -149,33 +99,33 @@
               [ngClass]="insideBadgeClass">INSIDE {{ etiquetaResumenInside }}</span>
       </dd>
     </div>
-    <div>
-      <dt>Título</dt>
-      <dd [title]="exp.titulo || ''">{{ exp.titulo || 'Sin título' }}</dd>
-    </div>
-    <div>
-      <dt>Procedimiento</dt>
-      <dd [title]="procedimientoLabel">{{ procedimientoLabel }}</dd>
-    </div>
-    <div>
-      <dt>Instructor</dt>
-      <dd [title]="exp.instructor || ''">{{ exp.instructor || '—' }}</dd>
-    </div>
-    <div>
+    <div class="edita-expediente-card__cell">
       <dt>Fase</dt>
       <dd>{{ exp.fase || '—' }}</dd>
     </div>
-    <div>
+    <div class="edita-expediente-card__cell">
       <dt>Fecha inicio</dt>
       <dd>{{ formatearFecha(exp.fecInicio) || '—' }}</dd>
     </div>
-    <div>
+    <div class="edita-expediente-card__cell">
+      <dt>Instructor</dt>
+      <dd [title]="exp.instructor || ''">{{ exp.instructor || '—' }}</dd>
+    </div>
+    <div class="edita-expediente-card__cell">
       <dt>Interesado</dt>
       <dd [title]="interesadoLabel">{{ interesadoLabel }}</dd>
     </div>
-    <div>
+    <div class="edita-expediente-card__cell">
       <dt>Documento</dt>
       <dd>{{ documentoLabel }}</dd>
+    </div>
+    <div class="edita-expediente-card__cell edita-expediente-card__cell--wide">
+      <dt>Título</dt>
+      <dd class="edita-expediente-card__text" [title]="exp.titulo || ''">{{ exp.titulo || 'Sin título' }}</dd>
+    </div>
+    <div class="edita-expediente-card__cell edita-expediente-card__cell--wide">
+      <dt>Procedimiento</dt>
+      <dd class="edita-expediente-card__text" [title]="procedimientoLabel">{{ procedimientoLabel }}</dd>
     </div>
   </dl>
 </section>

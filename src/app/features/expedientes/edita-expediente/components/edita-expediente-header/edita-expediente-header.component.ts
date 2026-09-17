@@ -6,6 +6,8 @@ import {
 } from '../../../../../core/constants/inside-simulacion.constants'
 import { InsideEnvioRegistro } from '../../../../../core/models/inside/inside-envio.models'
 import { VerExpediente } from '../../../expedientes'
+import { ModalAction, ModalActionEvent } from '../../../../../shared/modals/modal-action.model'
+import { fromVisibilityMap } from '../../../../../shared/modals/modal-actions.util'
 
 @Component({
   selector: 'app-edita-expediente-header',
@@ -21,13 +23,13 @@ export class EditaExpedienteHeaderComponent {
   @Input() insideEnviando = false
   @Input() insideUltimoEnvio: InsideEnvioRegistro | null = null
   @Input() expediente: VerExpediente | null = null
+  @Input() veoRegistro = false
 
   get estadoResumenInside(): string {
     const explicito = String(this.insideUltimoEnvio?.estadoResumen ?? '').toUpperCase()
     if (explicito) {
       return explicito
     }
-    // Backend antiguo: un envío de documento no debe verse como expediente ENVIADO
     if (this.insideUltimoEnvio?.idTarea != null) {
       const estado = String(this.insideUltimoEnvio.estadoEnvio ?? '').toUpperCase()
       if (estado === 'ERROR') {
@@ -85,6 +87,52 @@ export class EditaExpedienteHeaderComponent {
     return num || '—'
   }
 
+  get expedienteAbierto(): boolean {
+    return String(this.expediente?.estado ?? '').toUpperCase() === 'ABIERTO'
+  }
+
+  private readonly defsTramitacion: ReadonlyArray<Omit<ModalAction, 'visible'>> = [
+    { id: 'atributos', label: 'Atributos', icon: 'bi bi-node-plus', tone: 'secondary', order: 10, title: 'Atributos del expediente' },
+    { id: 'interesados', label: 'Interesados', icon: 'bi bi-people', tone: 'secondary', order: 20, title: 'Interesados del expediente' },
+    { id: 'registro', label: 'Registro', icon: 'bi bi-file-earmark-text', tone: 'secondary', order: 30, title: 'Registro de entrada' },
+    { id: 'historico', label: 'Histórico', icon: 'bi bi-clock-history', tone: 'secondary', order: 40, title: 'Histórico del expediente' },
+    { id: 'asignarTramitador', label: 'Asignar', icon: 'bi bi-person-plus', tone: 'secondary', order: 50, title: 'Asignar tramitador' },
+    { id: 'tareasExpediente', label: 'Tareas exp.', icon: 'bi bi-list-task', tone: 'secondary', order: 60, title: 'Tareas del expediente' },
+    { id: 'notificaciones', label: 'Notificaciones', icon: 'bi bi-bell', tone: 'primary', order: 70, title: 'Notificaciones' },
+    { id: 'tramitadores', label: 'Tramitadores', icon: 'bi bi-people', tone: 'secondary', order: 80, title: 'Tramitadores' },
+  ]
+
+  private readonly defsInside: ReadonlyArray<Omit<ModalAction, 'visible' | 'disabled'>> = [
+    { id: 'historial', label: 'Historial', icon: 'bi bi-clock-history', tone: 'secondary', order: 10, title: 'Historial de envíos INSIDE' },
+    { id: 'validar', label: 'Validar', icon: 'bi bi-shield-check', tone: 'secondary', order: 20, title: 'Validar expediente' },
+    { id: 'insideExpediente', label: 'INSIDE Expediente', icon: 'bi bi-cloud-upload', tone: 'primary', order: 30, title: 'INSIDE Expediente' },
+    { id: 'altaXml', label: 'Alta XML', icon: 'bi bi-file-earmark-code', tone: 'secondary', order: 40, title: 'Alta XML Expediente' },
+    { id: 'documentos', label: 'Documentos', icon: 'bi bi-files', tone: 'secondary', order: 50, title: 'INSIDE Documentos' },
+    { id: 'remisionJusticia', label: 'Remisión Justicia', icon: 'bi bi-bank', tone: 'secondary', order: 60, title: 'Remisión a Justicia' },
+  ]
+
+  get actionsTramitacion(): ModalAction[] {
+    const abierto = this.expedienteAbierto
+    return fromVisibilityMap(this.defsTramitacion, {
+      atributos: abierto,
+      interesados: true,
+      registro: this.veoRegistro,
+      historico: true,
+      asignarTramitador: abierto,
+      tareasExpediente: abierto,
+      notificaciones: true,
+      tramitadores: true,
+    })
+  }
+
+  get actionsInside(): ModalAction[] {
+    return this.defsInside.map((def) => ({
+      ...def,
+      visible: true,
+      disabled: this.insideEnviando,
+    }))
+  }
+
   @Output() verHistorialEnviosInside = new EventEmitter<void>()
   @Output() validarExpedienteInside = new EventEmitter<void>()
   @Output() enviarExpedienteInside = new EventEmitter<void>()
@@ -95,6 +143,12 @@ export class EditaExpedienteHeaderComponent {
   @Output() veotramitadores = new EventEmitter<void>()
   @Output() volverListadoExpedientes = new EventEmitter<void>()
   @Output() nuevoTramite = new EventEmitter<void>()
+  @Output() abrirAtributos = new EventEmitter<void>()
+  @Output() irAInteresados = new EventEmitter<void>()
+  @Output() mostrarRegistro = new EventEmitter<void>()
+  @Output() abrirAsignarTramitador = new EventEmitter<void>()
+  @Output() abrirTareasExpediente = new EventEmitter<void>()
+  @Output() abrirHistorico = new EventEmitter<void>()
 
   pestanaFlujo: 'tramitacion' | 'inside' = 'tramitacion'
 
@@ -118,36 +172,28 @@ export class EditaExpedienteHeaderComponent {
     this.nuevoTramite.emit()
   }
 
-  handleVerHistorialEnviosInside(): void {
-    this.verHistorialEnviosInside.emit()
+  handleAccionTramitacion(event: ModalActionEvent): void {
+    switch (event.id) {
+      case 'atributos': this.abrirAtributos.emit(); break
+      case 'interesados': this.irAInteresados.emit(); break
+      case 'registro': this.mostrarRegistro.emit(); break
+      case 'historico': this.abrirHistorico.emit(); break
+      case 'asignarTramitador': this.abrirAsignarTramitador.emit(); break
+      case 'tareasExpediente': this.abrirTareasExpediente.emit(); break
+      case 'notificaciones': this.verNotificaciones.emit(); break
+      case 'tramitadores': this.veotramitadores.emit(); break
+    }
   }
 
-  handleValidarExpedienteInside(): void {
-    this.validarExpedienteInside.emit()
-  }
-
-  handleEnviarExpedienteInside(): void {
-    this.enviarExpedienteInside.emit()
-  }
-
-  handleAltaExpedienteEniXmlInside(): void {
-    this.altaExpedienteEniXmlInside.emit()
-  }
-
-  handleEnviarDocumentosInside(): void {
-    this.enviarDocumentosInside.emit()
-  }
-
-  handleAbrirModalRemisionJusticia(): void {
-    this.abrirModalRemisionJusticia.emit()
-  }
-
-  handleVerNotificaciones(): void {
-    this.verNotificaciones.emit()
-  }
-
-  handleVeotramitadores(): void {
-    this.veotramitadores.emit()
+  handleAccionInside(event: ModalActionEvent): void {
+    switch (event.id) {
+      case 'historial': this.verHistorialEnviosInside.emit(); break
+      case 'validar': this.validarExpedienteInside.emit(); break
+      case 'insideExpediente': this.enviarExpedienteInside.emit(); break
+      case 'altaXml': this.altaExpedienteEniXmlInside.emit(); break
+      case 'documentos': this.enviarDocumentosInside.emit(); break
+      case 'remisionJusticia': this.abrirModalRemisionJusticia.emit(); break
+    }
   }
 
   handleVolverListadoExpedientes(): void {

@@ -27,7 +27,10 @@ import {
   TemaDocumentoListar,
   TramiteExpListar,
   VerExpediente,
-  VerMetadatos
+  VerMetadatos,
+  Atributosleer,
+  RegistroDocumento,
+  TareaTramiteExpporExpedi,
 } from '../expedientes';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router'
@@ -128,6 +131,13 @@ import {
 import { EditaExpedienteWorkspaceRootHost } from './services/edita-expediente-workspace-host';
 import { InsideSoapResponse } from '../../../core/models/inside';
 import { InsideEnvioRegistro } from '../../../core/models/inside/inside-envio.models';
+import {
+  AtributoEditable,
+  esTipoFecha,
+  esTipoNumerico,
+  ExpedientesAtributosFacade,
+} from '../services/expedientes-atributos.facade';
+import { EditaExpedienteContextoFacade } from './services/edita-expediente-contexto.facade';
 
 
 @Component({
@@ -148,6 +158,8 @@ import { InsideEnvioRegistro } from '../../../core/models/inside/inside-envio.mo
     EditaExpedienteNotificacionesCrudFacade,
     EditaExpedienteNotificacionesUiFacade,
     EditaExpedienteLifecycleFacade,
+    ExpedientesAtributosFacade,
+    EditaExpedienteContextoFacade,
   ],
 })
 export class EditaExpedienteComponent
@@ -211,6 +223,7 @@ export class EditaExpedienteComponent
     public readonly workspaceFacade: EditaExpedienteWorkspaceFacade,
     public readonly notifUiFacade: EditaExpedienteNotificacionesUiFacade,
     public readonly lifecycleFacade: EditaExpedienteLifecycleFacade,
+    public readonly contextoFacade: EditaExpedienteContextoFacade,
   ) {
     this.initWorkspaceGrids();
   }
@@ -590,6 +603,37 @@ export class EditaExpedienteComponent
   public tareatramiteprocedimiento: TareaProcedimientoDTO;
 
   public idExpediente!: number;
+  public idexpediente!: number;
+  public tituloExp = '';
+  public atributosleer: Atributosleer[] = [];
+  public atributosEditables: AtributoEditable[] = [];
+  public veoAtributos = false;
+  public cargandoAtributos = false;
+  public guardandoAtributos = false;
+  public registrodocumento: RegistroDocumento = new RegistroDocumento();
+  public VeoRegDoc = false;
+  public tareasAsignarTramitador: TareaProcedimientoDTO[] = [];
+  public permisosAsignarTramitador: ProcediPermisosListar[] = [];
+  public tareaSeleccionadaAsignar: TareaProcedimientoDTO | null = null;
+  public personaSeleccionadaAsignar: ProcediPermisosListar | null = null;
+  public cargandoTareasAsignar = false;
+  public cargandoPermisosAsignar = false;
+  public errorTareasAsignar = false;
+  public errorPermisosAsignar = false;
+  public usuarioTarea: string | undefined;
+  public usuarioPermiso: string | number | undefined;
+  public isAsignandoTramitador = false;
+  public mostrarValidacionesAsignarTramitador = false;
+  public tareasExpedienteList: TareaTramiteExpporExpedi[] = [];
+  public cargandoTareasExpediente = false;
+  public tareasExpedienteVacio = false;
+  public numeroArchivoTareasExp: number | undefined;
+  public readonly esTipoFechaAtributo = esTipoFecha;
+  public readonly esTipoNumericoAtributo = esTipoNumerico;
+
+  get expedienteAbierto(): boolean {
+    return String(this.verExpediente?.estado ?? '').toUpperCase() === 'ABIERTO';
+  }
 
   public modalAnteriorId: string | null = null;
   public mostrarModalOperacion = false;
@@ -1213,5 +1257,90 @@ export class EditaExpedienteComponent
 
   public handleVerHistorialEnviosInside(): void {
     this.operacionesFacade.handleVerHistorialEnvios(this);
+  }
+
+  public abrirAtributos(): void {
+    this.contextoFacade.abrirAtributos(this);
+  }
+
+  public envioAtributos(): void {
+    this.contextoFacade.envioAtributos(this);
+  }
+
+  public borraAtributo(attr: AtributoEditable): void {
+    this.contextoFacade.borraAtributo(this, attr);
+  }
+
+  public actualizarFechaAtributo(attr: AtributoEditable, isoValue: string): void {
+    this.contextoFacade.actualizarFechaAtributo(attr, isoValue);
+  }
+
+  public cerrarModalAtributos(): void {
+    this.contextoFacade.cerrarModalAtributos(this);
+  }
+
+  public mostrarRegistroDocumento(): void {
+    this.contextoFacade.mostrarRegistro(this);
+  }
+
+  public abrirAsignarTramitador(): void {
+    this.contextoFacade.abrirAsignarTramitador(this);
+  }
+
+  public seleccionarTareaAsignar(tarea: TareaProcedimientoDTO | null): void {
+    this.contextoFacade.seleccionarTareaAsignar(this, tarea);
+  }
+
+  public seleccionarPersonaAsignar(persona: ProcediPermisosListar | null): void {
+    this.contextoFacade.seleccionarPersonaAsignar(this, persona);
+  }
+
+  public isTareaAsignarInvalid(): boolean {
+    return this.contextoFacade.isTareaAsignarInvalid(this);
+  }
+
+  public isPersonaAsignarInvalid(): boolean {
+    return this.contextoFacade.isPersonaAsignarInvalid(this);
+  }
+
+  public isDescripcionMensajeInvalid(): boolean {
+    return this.contextoFacade.isDescripcionMensajeInvalid(this);
+  }
+
+  public onAsignarTramitadorSubmit(): void {
+    this.contextoFacade.onAsignarTramitadorSubmit(this);
+  }
+
+  public cerrarAsignarTramitador(): void {
+    this.contextoFacade.cerrarAsignarTramitador(this);
+  }
+
+  public abrirTareasExpediente(): void {
+    this.contextoFacade.abrirTareasExpediente(this);
+  }
+
+  public clickTareaExpediente(tarea: TareaTramiteExpporExpedi): void {
+    this.contextoFacade.clickTareaExpediente(this, tarea);
+  }
+
+  public abreArchivoTareaExpediente(): void {
+    this.contextoFacade.abreArchivoTareaExpediente(this);
+  }
+
+  public cerrarTareasExpediente(): void {
+    this.contextoFacade.cerrarTareasExpediente(this);
+  }
+
+  public irAInteresados(): void {
+    this.modalManagerService.openModal('EditaInteresadosModal')
+  }
+
+  public abrirHistoricoExpediente(): void {
+    this.abrirModal('verExpedienteEditaModal')
+  }
+
+  public onExpedienteContextoCargado(): void {
+    this.contextoFacade.sincronizarHostIds(this)
+    this.contextoFacade.cargarRegistroSiAplica(this)
   }
 }

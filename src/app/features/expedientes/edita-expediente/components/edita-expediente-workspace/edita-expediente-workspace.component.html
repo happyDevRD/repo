@@ -1,5 +1,4 @@
 ﻿<section class="exp-workspace" aria-label="Espacio de trabajo del expediente">
-  <!-- Trámites + Tareas: mismo patrón master-detail que solicitudes -->
   <div class="exp-split">
     <section class="exp-panel exp-split__list" aria-label="Listado de trámites">
       <app-edita-expediente-workspace-tramites
@@ -48,23 +47,4 @@
       </ng-template>
     </aside>
   </div>
-
-  <app-edita-expediente-workspace-tabs
-    [expedienteEjercicio]="edita.verExpediente.ejercicio"
-    [expedienteNumero]="edita.verExpediente.numero"
-    [idExpediente]="edita.idExpediente"
-    [verojointeresado]="edita.verojointeresado"
-    [verborrarinteresado]="edita.verborrarinteresado"
-    [listarinteresadosdto]="edita.listarinteresadosdto"
-    [verxml]="edita.verxml"
-    [verEditartareatramite]="edita.verEditartareatramite"
-    [tareaDescripcion]="edita.tareatramiteexpedientever.descripcion"
-    [verNuevaNotifi]="edita.verNuevaNotifi"
-    [verformnuevatarea]="edita.verformnuevatarea"
-    [cargando]="edita.tareasFacade.cargando"
-    (nuevoInteresado)="handleNuevoInteresado()"
-    (borrarInteresados)="edita.borrarInteresados()"
-    (seleccionaInteresado)="edita.seleccionaInteresado($event)"
-    (verHistoricoExpediente)="edita.abrirModal('verExpedienteEditaModal')">
-  </app-edita-expediente-workspace-tabs>
 </section>

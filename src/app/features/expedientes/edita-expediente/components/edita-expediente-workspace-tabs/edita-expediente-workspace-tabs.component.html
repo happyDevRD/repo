@@ -1,8 +1,35 @@
-﻿<!-- Tab Content para secciones adicionales -->
-<div class="tab-content" id="myTabContent">
+﻿<ul class="nav nav-tabs expediente-flujo-tabs mb-3" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button type="button"
+            class="nav-link"
+            [class.active]="tabActiva === 'interesados'"
+            (click)="handleTab('interesados')"
+            role="tab"
+            [attr.aria-selected]="tabActiva === 'interesados'"
+            id="interesado-tab">
+      Interesados
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button type="button"
+            class="nav-link"
+            [class.active]="tabActiva === 'historico'"
+            (click)="handleTab('historico')"
+            role="tab"
+            [attr.aria-selected]="tabActiva === 'historico'"
+            id="historico-tab">
+      Histórico
+    </button>
+  </li>
+</ul>
 
-  <!-- Sección de Interesados -->
-  <div aria-labelledby="interesado-tab" class="tab-pane fade" data-bs-backdrop="static" id="interesado" role="tabpanel">
+<div class="tab-content" id="myTabContent">
+  <div aria-labelledby="interesado-tab"
+       class="tab-pane fade"
+       [class.show]="tabActiva === 'interesados'"
+       [class.active]="tabActiva === 'interesados'"
+       id="interesado"
+       role="tabpanel">
     <div class="seccion-interesados">
       <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
         <div>
@@ -22,7 +49,6 @@
           </button>
         </div>
       </header>
-
     </div>
     <p class="text-secondary small mb-2">Asignados al expediente {{ idExpediente }}</p>
     <div class="table-responsive">
@@ -37,7 +63,6 @@
             <th>Tipo Notificación</th>
             <th>Email</th>
             <th>Acciones</th>
-
           </tr>
         </thead>
         <tbody *ngFor="let listarinteresado of listarinteresadosdto; trackBy: trackById">
@@ -54,16 +79,18 @@
             <th class="fw-normal">{{ listarinteresado.forNotif }}</th>
             <th class="fw-normal">{{ listarinteresado.emailNotif }}</th>
             <th class="fw-normal text-muted">—</th>
-
           </tr>
         </tbody>
       </table>
     </div>
-  </div><!--  FIN  INTERESADO-->
+  </div>
 
-
-  <!-- HISTORICO -->
-  <div aria-labelledby="historico-tab" class="tab-pane fade" data-bs-backdrop="static" id="historico" role="tabpanel">
+  <div aria-labelledby="historico-tab"
+       class="tab-pane fade"
+       [class.show]="tabActiva === 'historico'"
+       [class.active]="tabActiva === 'historico'"
+       id="historico"
+       role="tabpanel">
     <div class="seccion-historico">
       <header class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3 pb-3 border-bottom">
         <div>
@@ -78,14 +105,9 @@
         </div>
       </header>
     </div>
-  </div><!-- FIN HISTORICO -->
-
-
-
+  </div>
 </div>
 
-
-<!-- spinner -->
 <div *ngIf="cargando" class="spinner-overlay">
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Cargando...</span>

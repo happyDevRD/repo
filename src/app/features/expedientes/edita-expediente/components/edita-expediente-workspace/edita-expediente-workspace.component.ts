@@ -10,7 +10,6 @@ import { NotificationService } from '../../../../../core/service/notification.se
 import { ModalActionEvent } from '../../../../../shared/modals/modal-action.model'
 import { fechaHoyISO } from '../../../../../core/helper/fecha-legacy.helper'
 import { CrearTablonAnuncio } from '../../../../../core/models/expediente-domain.model'
-import { CrearInteresado } from '../../../expedientes'
 import { TareaRowActionEvent } from '../edita-expediente-workspace-tareas/edita-expediente-workspace-tareas.component'
 import { TramiteRowActionEvent } from '../edita-expediente-workspace-tramites/edita-expediente-workspace-tramites.component'
 
@@ -116,14 +115,5 @@ export class EditaExpedienteWorkspaceComponent {
     }
     this.edita.clicktareaNueva(event.tarea)
     this.handleTareaAction({ id: event.actionId })
-  }
-
-  handleNuevoInteresado(): void {
-    this.edita.crearinteresado = new CrearInteresado()
-    this.edita.crearinteresado.fechaInicio = fechaHoyISO()
-    this.edita.crearinteresado.tipForNotif = null as unknown as number
-    this.edita.crearinteresado.email = ''
-    this.edita.lifecycleFacade.dniok = false
-    this.modalManager.openModal('ninteresadoModal')
   }
 }

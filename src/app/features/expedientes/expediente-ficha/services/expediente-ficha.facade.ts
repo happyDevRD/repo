@@ -135,7 +135,10 @@ export class ExpedienteFichaFacade {
     if (!id) {
       return
     }
-    this.router.navigate(['/interesado/interesado', id])
+    this.router.navigate(['/expedientes', id, 'tramitar'], {
+      state: { returnUrl: this.router.url.split('?')[0] || '/expedientes' },
+      queryParams: { vista: 'interesados' },
+    })
   }
 
   puedeTramitar(): boolean {
