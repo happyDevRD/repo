@@ -97,7 +97,6 @@ export class EditaExpedienteHeaderComponent {
     { id: 'registro', label: 'Registro', icon: 'bi bi-file-earmark-text', tone: 'secondary', order: 30, title: 'Registro de entrada' },
     { id: 'historico', label: 'Histórico', icon: 'bi bi-clock-history', tone: 'secondary', order: 40, title: 'Histórico del expediente' },
     { id: 'asignarTramitador', label: 'Asignar', icon: 'bi bi-person-plus', tone: 'secondary', order: 50, title: 'Asignar tramitador' },
-    { id: 'tareasExpediente', label: 'Tareas exp.', icon: 'bi bi-list-task', tone: 'secondary', order: 60, title: 'Tareas del expediente' },
     { id: 'notificaciones', label: 'Notificaciones', icon: 'bi bi-bell', tone: 'primary', order: 70, title: 'Notificaciones' },
     { id: 'tramitadores', label: 'Tramitadores', icon: 'bi bi-people', tone: 'secondary', order: 80, title: 'Tramitadores' },
   ]
@@ -119,7 +118,6 @@ export class EditaExpedienteHeaderComponent {
       registro: this.veoRegistro,
       historico: true,
       asignarTramitador: abierto,
-      tareasExpediente: abierto,
       notificaciones: true,
       tramitadores: true,
     })
