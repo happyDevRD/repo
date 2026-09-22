@@ -1,21 +1,26 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { NotificacionesService } from './notificaciones.service';
-import { environment } from 'src/environments/environment';
+import { TestBed } from '@angular/core/testing'
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
+import { NotificacionesService } from './notificaciones.service'
+import { environment } from 'src/environments/environment'
+import { applyAppConfig } from 'src/app/core/config/runtime-config'
 
 describe('NotificacionesService', () => {
-  let service: NotificacionesService;
-  let httpMock: HttpTestingController;
+  let service: NotificacionesService
+  let httpMock: HttpTestingController
 
   beforeEach(() => {
+    applyAppConfig({
+      apiUrl: 'http://localhost:8090/api/gos/',
+      apiUrlhttps: 'http://localhost:8090/api/gos/',
+    })
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [NotificacionesService]
-    });
-    service = TestBed.inject(NotificacionesService);
-    httpMock = TestBed.inject(HttpTestingController);
-    sessionStorage.setItem('user', 'gos');
-  });
+    })
+    service = TestBed.inject(NotificacionesService)
+    httpMock = TestBed.inject(HttpTestingController)
+    sessionStorage.setItem('user', 'gos')
+  })
 
   afterEach(() => {
     httpMock.verify();

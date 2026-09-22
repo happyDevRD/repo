@@ -1,9 +1,20 @@
+import { runtimeConfig } from '../app/core/config/runtime-config'
+
+/**
+ * Entorno de desarrollo (ng serve).
+ * apiUrl / apiUrlhttps se cargan en runtime desde assets/config.json (APP_INITIALIZER).
+ * Por defecto el JSON apunta a http://localhost:8090/api/gos/.
+ */
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8090/api/gos/',
-  apiUrlhttps: 'http://localhost:8090/api/gos/',
 
+  get apiUrl(): string {
+    return runtimeConfig.apiUrl
+  },
 
+  get apiUrlhttps(): string {
+    return runtimeConfig.apiUrlhttps
+  },
 
   entidad: `Greenaall`,
 
@@ -39,4 +50,4 @@ export const environment = {
     ofrecerEnvioTrasCierre: true,
     autoEnvioOnClose: false,
   },
-};
+}

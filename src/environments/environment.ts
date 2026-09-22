@@ -1,12 +1,20 @@
+import { runtimeConfig } from '../app/core/config/runtime-config'
+
 /**
  * Entorno de producción / build por defecto.
- * Sustituir IFLOW_API_URL e IFLOW_API_URL_HTTPS en CI o vía fileReplacements.
- * No versionar IPs internas reales: usar environment.development.local.ts (gitignored).
+ * apiUrl / apiUrlhttps se cargan en runtime desde assets/config.json (APP_INITIALIZER).
+ * Editar dist/.../assets/config.json tras el despliegue; no hace falta recompilar.
  */
 export const environment = {
   production: true,
-  apiUrl: '${IFLOW_API_URL}',
-  apiUrlhttps: '${IFLOW_API_URL_HTTPS}',
+
+  get apiUrl(): string {
+    return runtimeConfig.apiUrl
+  },
+
+  get apiUrlhttps(): string {
+    return runtimeConfig.apiUrlhttps
+  },
 
   entidad: `Greenaall`,
 
@@ -41,4 +49,4 @@ export const environment = {
     ofrecerEnvioTrasCierre: true,
     autoEnvioOnClose: false,
   },
-};
+}

@@ -26,14 +26,31 @@ Plantilla: `src/app/core/service/inside/` + facades en `features/expedientes/edi
 - Interfaces tipadas en `src/app/core/models/*.dto.ts` / `*.model.ts`.
 - No duplicar modelos legacy junto al componente de dominio (`expedientes.ts`, etc.) en código nuevo.
 
-## Entornos
+## Entornos y URL del API (runtime)
 
 | Archivo | Uso |
 |---------|-----|
-| `environment.ts` | Build prod; placeholders `${IFLOW_API_URL}` / `${IFLOW_API_URL_HTTPS}` |
-| `environment.development.ts` | `ng serve` / desarrollo local |
+| `assets/config.json` | **Fuente de verdad** de `apiUrl` / `apiUrlhttps`. Se copia al `dist` y se puede editar tras el despliegue sin recompilar. |
+| `environment.ts` / `environment.development.ts` | Build-time (iconos, INSIDE, `production`). Los getters `apiUrl` / `apiUrlhttps` leen el store rellenado en el arranque. |
+| `core/config/app-config.service.ts` | `APP_INITIALIZER` carga `config.json` (`cache: no-store`, respeta `base-href`). |
 
-Sustituir placeholders en CI. No committear IPs internas.
+### Cambiar el backend sin recompilar
+
+1. Desplegar el build (`npm run build:prod` → `dist/iFlow/`).
+2. Editar en el servidor: `dist/iFlow/assets/config.json` (o la ruta equivalente bajo el `base-href`, p. ej. `/iFlow/assets/config.json`):
+
+```json
+{
+  "apiUrl": "http://HOST:8090/api/gos/",
+  "apiUrlhttps": "https://HOST:8443/api/gos/"
+}
+```
+
+3. Recargar la aplicación en el navegador (no hace falta reiniciar el servidor de aplicaciones estáticas).
+
+En desarrollo (`ng serve`), el mismo `src/assets/config.json` apunta por defecto a `http://localhost:8090/api/gos/`.
+
+Si falta o es inválido el JSON, el arranque falla de forma explícita (fail-fast). No usar el antiguo `configurador.txt`.
 
 ## Servicios InSide
 
